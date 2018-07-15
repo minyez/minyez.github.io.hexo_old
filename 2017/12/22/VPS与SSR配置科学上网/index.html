@@ -142,17 +142,17 @@
               <li><a href="/tags" style="font-size: 20px; font-family: 'Calibri Light',Arial">All Tags</a><span></span></li>
               <li class="divider"></li>
               
-              <li><a href="/tags/VASP/" style="font-size: 15px; font-family: 微软雅黑">VASP<span></span></a></li>
+              <li><a href="/tags/macOS/" style="font-size: 15px; font-family: 微软雅黑">macOS<span></span></a></li>
               
               <li><a href="/tags/Shadowsocks/" style="font-size: 15px; font-family: 微软雅黑">Shadowsocks<span></span></a></li>
               
               <li><a href="/tags/Network/" style="font-size: 15px; font-family: 微软雅黑">Network<span></span></a></li>
               
-              <li><a href="/tags/Hexo/" style="font-size: 15px; font-family: 微软雅黑">Hexo<span></span></a></li>
-              
-              <li><a href="/tags/Freemind/" style="font-size: 15px; font-family: 微软雅黑">Freemind<span></span></a></li>
-              
               <li><a href="/tags/Scientific-Computation/" style="font-size: 15px; font-family: 微软雅黑">Scientific Computation<span></span></a></li>
+              
+              <li><a href="/tags/VASP/" style="font-size: 15px; font-family: 微软雅黑">VASP<span></span></a></li>
+              
+              <li><a href="/tags/Compilation/" style="font-size: 15px; font-family: 微软雅黑">Compilation<span></span></a></li>
               
               <li><a href="/tags/VPS/" style="font-size: 15px; font-family: 微软雅黑">VPS<span></span></a></li>
               
@@ -203,8 +203,7 @@
 	  		
 
 	  <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文简单介绍了使用Shadowsocks翻越GFW实现对包括Google、Youtube、Twitter在内的国外网站的访问，叙述了基于Vultr公司服务器的SSR服务端部署和macOS/Windows客户端使用方法。 <a id="more"></a></p>
-<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>谷歌搜索对于学术研究的重要性无须赘述，Youtube上原创的优秀的讲座、课程录像和视频教程对于自学者来说也是非常好的资源。Facebook和Twitter也能帮助我们取得与外国同学的联系。但对于非IPv6用户而言，由于GFW的存在，直接连接这些网站的尝试最后都是徒劳。目前的解决方案包括hosts文件、VPN以及Shadowsocks。hosts文件指定域名解析IP，避免DNS污染，但通常隔一段时间需要更换，且周期不定。VPN通常价格较高，且同时使用的终端数量一般是受限的。Shadowsocks本身只是一个协议，它需要境外服务器支持，但使用VPS作为服务器，可以在较低价格情况下(￥15/月)同时保证10台左右终端的正常流量需求，且只要VPS的IP不被屏蔽，可以一直使用下去，不必更换。</p>
-<p>VPN越来越贵，hosts不灵的频率越来越高，于是以最近一次hosts失效为契机，我研究了一下。</p>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>谷歌搜索对于学术研究的重要性无须赘述，Youtube上原创的优秀的讲座、课程录像和视频教程对于自学者来说也是非常好的资源。Facebook和Twitter也能帮助我们取得与外国同学的联系。但对于非IPv6用户而言，由于GFW的存在，直接连接这些网站的尝试最后都是徒劳。目前的解决方案包括hosts文件、VPN以及Shadowsocks。hosts文件指定域名解析IP，避免DNS污染，但通常隔一段时间需要更换，且周期不定。VPN通常价格较高，且同时使用的终端数量一般是受限的。Shadowsocks本身只是一个协议，它需要境外服务器支持，但使用VPS作为服务器，可以在较低价格情况下(￥15/月)同时保证10台左右终端的正常流量需求，且只要VPS的IP不被屏蔽，可以一直使用下去，不必更换。VPN越来越贵，hosts不灵的频率越来越高，于是以最近一次hosts失效为契机，我研究了一下SS的架设，自己配置了SS服务器和客户端。</p>
 <div class="alert alert-info"><i class="fa fa-info  float-left"></i>  <p>最近在BBS上看到别人推荐<a href="https://github.com/v2ray/v2ray-core" target="_blank" rel="noopener">V2Ray项目</a>，待以后补充。</p>
 </div>
 <h2 id="名词解释"><a href="#名词解释" class="headerlink" title="名词解释"></a>名词解释</h2><h3 id="Virtual-Private-Server-VPS"><a href="#Virtual-Private-Server-VPS" class="headerlink" title="Virtual Private Server (VPS)"></a>Virtual Private Server (VPS)</h3><p>虚拟专有服务器, 是&quot;将一台服务器分区成多个虚拟专享服务器的服务&quot;(<a href="https://zh.wikipedia.org/wiki/%E8%99%9A%E6%8B%9F%E4%B8%93%E7%94%A8%E6%9C%8D%E5%8A%A1%E5%99%A8" target="_blank" rel="noopener">中文维基</a>)，通常是由专门的VPS供应商提供。它的核心是基于虚拟机技术，将单个物理服务器的硬盘、网络、CPU计算、内存等资源进行隔离，模拟出多个独立服务器的使用体验。不同VPS在软件上相互独立，都可以独立地安装操作系统、启动与重启，用户在其上拥有超级用户权限，可进行自由配置和软件安装。缺点是，由于多个VPS用户在同一个物理服务器上，硬件资源会相互影响，特别是当供应商超卖导致超负荷时。专有服务器(Dedicated server)不存在这种情形，但也因为单个用户独占物理服务器，价格要比VPS高很多。</p>
@@ -221,7 +220,7 @@
 </li>
 </ul>
 <p>接下来我们一条条看。</p>
-<h3 id="购买服务器"><a href="#购买服务器" class="headerlink" title="购买服务器"></a>购买服务器</h3><p>境外服务器选择<a href="www.vultr.com">Vultr</a>公司。访问主页(如下图)，注册账号后登录到个人页面管理。<br><img src="vultr-homepage.png" alt="Vultr首页"><br>个人页面如下所示，点击右上角加号部署新服务器<br><img src="vultr-mypage.png" alt="Vultr个人页面"><br>在新服务器的配置中，需要选择以下项目</p>
+<h3 id="购买服务器"><a href="#购买服务器" class="headerlink" title="购买服务器"></a>购买服务器</h3><p>境外服务器选择<a href="www.vultr.com">Vultr</a>公司。访问主页(如下图)，注册账号后登录到个人页面管理。<br><img src="vultr-homepage.png" alt="Figure 2. Vultr首页"><br>个人页面如下所示，点击右上角加号部署新服务器<br><img src="vultr-mypage.png" alt="Figure 3. Vultr个人页面"><br>在新服务器的配置中，需要选择以下项目</p>
 <h4 id="Server-Location"><a href="#Server-Location" class="headerlink" title="Server Location"></a>Server Location</h4><p>服务器位置。根据自己的网络情况选择最佳的服务器，一般判断标准是PING延迟，以及是否有较便宜的规模可供选择<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> ping hnd-jp-ping.vultr.com    # Tokyo</span><br><span class="line"><span class="meta">$</span> ping sgp-ping.vult.com        # Singapore</span><br><span class="line"><span class="meta">$</span> ping sjo-ca-us-ping.vultr.com # Silicon Valley, CA</span><br><span class="line"><span class="meta">$</span> ping lax-ca-us-ping.vultr.com # Los Angeles, CA</span><br><span class="line"><span class="meta">$</span> ping fra-de-ping.vultr.com    # Frankfurt</span><br><span class="line"><span class="meta">$</span> ping nj-us-ping.vultr.com     # NY, New Jersey</span><br><span class="line"><span class="meta">$</span> ping il-us-ping.vultr.com     # Chicago, Illinois</span><br><span class="line"><span class="meta">$</span> ping fl-us-ping.vultr.com     # Miami, Florida</span><br><span class="line"><span class="meta">$</span> ping syd-au-ping.vultr.com    # Sydney, Australia</span><br><span class="line"><span class="meta">$</span> ping lon-gb-ping.vultr.com    # London, UK</span><br></pre></td></tr></table></figure></p>
 <h4 id="Server-Type"><a href="#Server-Type" class="headerlink" title="Server Type"></a>Server Type</h4><p>操作系统。推荐选择比较稳定的Linux发行版，如CentOS, Ubuntu LTS等。推荐CentOS。</p>
 <h4 id="Server-Size"><a href="#Server-Size" class="headerlink" title="Server Size"></a>Server Size</h4><p>服务器资费方案。一般来说，最低\$2.5的500G带宽足够个人或者三五同学公用的需求。但近日(20180714)发现这个方案已经不再分配公网IPv4，所以改用\$5的方案。这个价格比某些廉价VPN要贵不少，所以推荐多人分摊公用，这样既不浪费带宽，也能省些钱。</p>
@@ -243,7 +242,7 @@
 <h3 id="部署客户端"><a href="#部署客户端" class="headerlink" title="部署客户端"></a>部署客户端</h3><h4 id="macOS"><a href="#macOS" class="headerlink" title="macOS"></a>macOS</h4><p>推荐使用<a href="https://github.com/shadowsocks/ShadowsocksX-NG" target="_blank" rel="noopener">ShadowsocksX-NG</a>作为客户端。在GitHub上下载最新版本(Release标签内)，解压缩、安装。启用后单击右上角标记，按照上一步中的服务端部署方式，编辑服务器设置。<br><img src="ssr-client.png" alt="ShadowsocksX-NG服务器设置"><br>编辑完后点击&quot;打开Shadowsocks&quot;，即可使用。</p>
 <h4 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h4><p>推荐使用<a href="https://github.com/shadowsocks/shadowsocks-windows" target="_blank" rel="noopener">Shadowsocks-windows</a>。下载解压后运行，双击任务栏中SS图标，弹出服务器配置窗口。具体配置方法与macOS类似。</p>
 <h4 id="PAC分流"><a href="#PAC分流" class="headerlink" title="PAC分流"></a>PAC分流</h4><p>以上客户端均允许对访问请求进行分流，即仅对必须绕过GFW才能访问的地址使用sock5协议，这对应于PAC模式。一般通过<a href="https://github.com/gfwlist/gfwlist" target="_blank" rel="noopener">GFW List</a>设置PAC地址列表。用户也可以进行自定义: 对于ShadowsocksX-NG，可以在&quot;代理设置-编辑PAC用户自定义规则&quot;中设置。对于Shadowsocks-windows，&quot;PAC-编辑本地PAC文件&quot;，手动编辑<code>pac.txt</code>中的<code>domains</code>变量。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>回顾从VPN、hosts到SS的过程，其实是自己心态变化的过程。一开始什么也不懂，依靠别人的VPN过活; 后来看到了免费的hosts，自己也愿意稍微折腾一下，但渐渐也受不了每个hosts文件的短暂寿命和找hosts的痛苦，最后走上了折腾钱折腾时间但是一定程度上&quot;一劳永逸&quot;的SS(感谢开源项目开发者们和脚本作者)。也许之后还会继续折腾到V2Ray吧。谨把这Vultr VPS+SSR搭建过程献给与GFW战斗的勇者们。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>回顾从VPN、hosts到SS的过程，其实是自己能力和心态逐渐变化的过程。一开始什么也不懂，依靠别人的VPN过活; 后来看到了免费的hosts，自己也愿意稍微折腾一下，但渐渐也受不了每个hosts文件的短暂寿命和找hosts的痛苦，最后走上了折腾钱折腾时间但是一定程度上&quot;一劳永逸&quot;的SS(感谢开源项目开发者们和脚本作者)。也许之后还会继续折腾到V2Ray吧。谨把这Vultr VPS+SSR搭建过程献给与GFW战斗的勇者们。</p>
 	  
 	</div>
 
