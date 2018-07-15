@@ -305,11 +305,7 @@ libsystem_platfor  00007FFF6C6DEF5A  _sigtramp             Unknown  Unknown
 fish: 'vasp' terminated by signal SIGABRT (Abort)
 ```
 
-用`nm`命令检查`libstdc++.a`和`libstdc++.dylib`中，
-
-可以看到`__ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEC1Ev`都是有定义的，但始终链接不上去。
-
-可以看到主要错误是`dyld`没有找到symbol，因此可能需要考虑`dyld`的搜索路径`DYLD_LD_LIBRARY`。将`/usr/local/Cellar/gcc/7.2.0/lib/gcc/7`添加到环境变量`DYLD_LD_LIBRARY`中后重新编译`libparser.a`，再编译`vasp`就能成功运行。
+主要错误是`dyld`没有找到symbol。用`nm`命令检查`libstdc++.a`和`libstdc++.dylib`，可以看到`__ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEC1Ev`都是有定义的，但始终链接不上去。考虑`dyld`的搜索路径`DYLD_LD_LIBRARY`。将`/usr/local/Cellar/gcc/7.2.0/lib/gcc/7`添加到环境变量`DYLD_LD_LIBRARY`中后重新编译`libparser.a`，再编译`vasp`就能成功运行。
 
 
 
@@ -318,7 +314,8 @@ fish: 'vasp' terminated by signal SIGABRT (Abort)
 ```bash
 $ echo $DYLD_LIBRARY_PATH
 /usr/local/Cellar/gcc/7.2.0/lib/gcc/7:/usr/local/Cellar/gcc/7.2.0/lib/gcc/7/gcc/x86_64-apple-darwin17.0.0/7.2.0/:/Users/stevezhang/software/compiler/mpich/3.2.1/intel/18.0.1/lib:/opt/intel/compilers_and_libraries_2018.1.126/mac/compiler/lib:/opt/intel/compilers_and_libraries_2018.1.126/mac/compiler/lib/intel64:/opt/intel/compilers_and_libraries_2018.1.126/mac/ipp/lib:/opt/intel/compilers_and_libraries_2018.1.126/mac/compiler/lib:/opt/intel/compilers_and_libraries_2018.1.126/mac/mkl/lib:/opt/intel/compilers_and_libraries_2018.1.126/mac/tbb/lib:/opt/intel/compilers_and_libraries_2018.1.126/mac/tbb/lib:/opt/intel/compilers_and_libraries_2018.1.126/mac/daal/lib:/opt/intel/compilers_and_libraries_2018.1.126/mac/daal/../tbb/lib:/usr/local/opt/tcl-tk/lib:/usr/local/lib:/usr/lib:
-$ echo $LIBRARYR_PATH # 和DYLD一样
+$ echo $LIBRARYR_PATH 
+... # 和DYLD一样
 $ echo $LD_LIBRARY_PATH
 /usr/local/Cellar/gcc/7.2.0/lib/gcc/7:/usr/local/Cellar/gcc/7.2.0/lib/gcc/7/gcc/x86_64-apple-darwin17.0.0/7.2.0/:/Users/stevezhang/software/mathlib/scalapack/2.0.2/intel/18.0.1/:/Users/stevezhang/software/mathlib/fftw/3.3.7/intel/18.0.1/lib:/Users/stevezhang/software/compiler/mpich/3.2.1/intel/18.0.1/lib:/usr/local/opt/tcl-tk/lib:/usr/local/lib:/usr/lib:
 ```
