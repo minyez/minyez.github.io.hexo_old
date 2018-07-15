@@ -142,17 +142,17 @@
               <li><a href="/tags" style="font-size: 20px; font-family: 'Calibri Light',Arial">All Tags</a><span></span></li>
               <li class="divider"></li>
               
-              <li><a href="/tags/macOS/" style="font-size: 15px; font-family: 微软雅黑">macOS<span></span></a></li>
+              <li><a href="/tags/VASP/" style="font-size: 15px; font-family: 微软雅黑">VASP<span></span></a></li>
               
               <li><a href="/tags/Shadowsocks/" style="font-size: 15px; font-family: 微软雅黑">Shadowsocks<span></span></a></li>
               
               <li><a href="/tags/Network/" style="font-size: 15px; font-family: 微软雅黑">Network<span></span></a></li>
               
+              <li><a href="/tags/Hexo/" style="font-size: 15px; font-family: 微软雅黑">Hexo<span></span></a></li>
+              
+              <li><a href="/tags/Freemind/" style="font-size: 15px; font-family: 微软雅黑">Freemind<span></span></a></li>
+              
               <li><a href="/tags/Scientific-Computation/" style="font-size: 15px; font-family: 微软雅黑">Scientific Computation<span></span></a></li>
-              
-              <li><a href="/tags/VASP/" style="font-size: 15px; font-family: 微软雅黑">VASP<span></span></a></li>
-              
-              <li><a href="/tags/Compilation/" style="font-size: 15px; font-family: 微软雅黑">Compilation<span></span></a></li>
               
               <li><a href="/tags/VPS/" style="font-size: 15px; font-family: 微软雅黑">VPS<span></span></a></li>
               
@@ -206,7 +206,7 @@
 <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>之前代码从来都是习惯在组里LinuxPC或者学校HPC上写的，但时常会因为不在随手可及的地方觉得不安。年前从学长手中购入MBP作为自己今后的代码生产主力，同时跑一点简单的科学代码，也想着把Linux和原笔记本上的一些代码项目移植到Mac上。这自然就包括了这个Hexo博客。<br>尽管技术写作和笔记并没有停滞，但是一直处于比较粗浅的笔记状态，就没有敢上传到这里(还是希望比较成型后再传)。更主要的一个原因是觉得这个博客的界面配置还始终是未完成状态，自己不甚满意，平时也没有时间好好研究JavaScript和Nodejs代码，最后就没有上传笔记的动力了，导致这个个人域名完全处于浪费钱的状态。于是想趁着春节假期把博客框架好好整一整。【结果拖到了暑假<br>这篇文章内所有命令均在macOS High Sierra (10.13)下执行。默认Homebrew基本配置完成，包括本文所涉及的Git和Nodejs开发环境等，执行命令前需要拥有GitHub账户并完成Git全局配置。</p>
 <h2 id="基本配置"><a href="#基本配置" class="headerlink" title="基本配置"></a>基本配置</h2><h3 id="GitHub-Pages"><a href="#GitHub-Pages" class="headerlink" title="GitHub Pages"></a>GitHub Pages</h3><p>个人博客服务端使用<a href="https://pages.github.com" target="_blank" rel="noopener">Git Pages</a>，它是GitHub专为个人、组织用户和代码项目提供的页面服务，通过Git将本地HTML和CSS文件结构部署(deploy)到Page仓库master分支来实现。创建个人页面的方法是</p>
 <ol>
-<li>类似于一般代码仓库，在GitHub主页上创建名为<a href="mailto:`username@github.io" target="_blank" rel="noopener">`username@github.io</a><code>的仓库。以我的主页为例的话就是</code><a href="mailto:minyez@github.io" target="_blank" rel="noopener">minyez@github.io</a>`。个人主页必须以此种方式命名；</li>
+<li>类似于一般代码仓库，在GitHub主页上创建名为<code>username\@github.io</code>的仓库。以我的主页为例的话就是<code>minyez\@github.io</code>。个人主页必须以此种方式命名；</li>
 <li>进入新建的仓库，点击Setting标签，在<code>Options</code>下翻到<code>GitHub Pages</code>标签，可以看到这一部分处于激活模式。可与你的其他一般仓库(没有制作<code>doc</code>分支用于文档网站)进行对比。一般代码仓库也可以通过<code>Setting-&gt;Options-&gt;GitHub Pages</code>配置项目文档页面，需要选择<code>doc</code>分支承载HTML文件结构。</li>
 <li>回到Code标签，新建<code>hexo</code>分支，并将其设为默认分支。之后<code>master</code>分支用来存储静态网页，<code>hexo</code>分支存储博文和主题的源文件。</li>
 </ol>
