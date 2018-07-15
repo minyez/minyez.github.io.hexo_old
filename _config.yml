@@ -1,0 +1,115 @@
+# Hexo Configuration
+## Docs: https://hexo.io/docs/configuration.html
+## Source: https://github.com/hexojs/hexo/
+
+# Site
+title: Shigaro
+subtitle: 
+description: Shigaro's Blog
+author: Shigaro
+language: default
+timezone:
+
+# URL
+## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
+url: http://minyez.github.io
+root: /
+permalink: :year/:month/:day/:title/
+permalink_defaults:
+
+# Directory
+source_dir: source
+public_dir: public
+tag_dir: tags
+archive_dir: archives
+category_dir: categories
+code_dir: downloads/code
+i18n_dir: :lang
+skip_render:
+
+# Writing
+new_post_name: :year-:month-:day-:title.md # File name of new posts
+new_draft_name: :year-:month-:day-:title.md # File name of new posts
+#new_post_name: :title.md
+default_layout: post
+titlecase: false # Transform title into titlecase
+external_link: true # Open external links in new tab
+filename_case: 0
+render_drafts: false
+post_asset_folder: true
+relative_link: false
+word_count: true
+future: true
+highlight:
+  enable: true
+  line_number: true
+  auto_detect: false
+  tab_replace:
+
+# Category & Tag
+default_category: uncategorized
+category_map:
+tag_map:
+
+# Date / Time format
+## Hexo uses Moment.js to parse and display date
+## You can customize the date format as defined in
+## http://momentjs.com/docs/#/displaying/format/
+date_format: YYYY-MM-DD
+time_format: HH:mm:ss
+
+#tag_generator:
+#  per_page: 0
+
+#category_generator:
+# per_page: 0
+
+
+# Pagination
+## Set per_page to 0 to disable pagination
+per_page: 5
+pagination_dir: page
+
+# Extensions
+## Plugins: https://hexo.io/plugins/
+Plugins:
+  - hexo-generator-feed
+  - hexo-generator-sitemap
+  - hexo-renderer-mathjax
+#  - hexo-generator-douban
+## Themes: https://hexo.io/themes/
+## git clone https://github.com/iissnan/hexo-theme-next themes/next (e.g. next) for new theme
+theme: freemind
+#plugins:
+#- hexo-math
+
+#math:
+#  engine: 'mathjax'
+
+# Deployment
+## Docs: https://hexo.io/docs/deployment.html
+deploy:
+  type: git
+  repo: https://github.com/minyez/minyez.github.io.git
+  branch: master
+
+marked:
+  gfm: true
+  pedantic: false
+  sanitize: false
+  smartypants: false
+  autolink: true
+  
+search:
+  path: search.xml
+  field: post
+
+#livereload: # deprecated
+#  port: 4001
+
+# douban_generator
+# douban:
+#   user: shigaro
+
+# comment
+disqus_shortname: shigaro

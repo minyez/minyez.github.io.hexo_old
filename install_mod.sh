@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+wdk=`pwd`
+cd $wdk
+
+# Freemind
+npm install hexo-deployer-git --save
+npm install hexo-generator-sitemap --save
+npm install hexo-generator-feed --save
+npm install hexo-generator-search --save
+npm install hexo-tag-bootstrap --save
+# Use MathJax
+npm install hexo-renderer-mathjax --save
+
+# clone theme
+cd themes/
+git clone git@github.com:minyez/hexo-theme-freemind.git freemind
+cd ..
+
+# change the default markdown renderering of escape 
+# in node_modules/marked/lib/marked.js
+cd node_modules/marked/lib/
+sed -i 's/escape: \/^\\\\(\[\\\\`\*{}\\\[\\\]()#+\\-\.!_>\])\/,/escape: \/^\\\\(\[`\*\\\[\\\]()#+\\-\.!_>\])\/,/g' marked.js
+cd ../../..
