@@ -93,11 +93,11 @@
               
               <li><a href="/2018/05/15/f2py-1/" style="font-size: 15px; font-family: 微软雅黑">F2PY - 在Python中调用Fortran函数或...<span></span></a></li>
               
-              <li><a href="/2018/02/15/Hexo配置完全回顾/" style="font-size: 15px; font-family: 微软雅黑">Hexo配置完全回顾<span></span></a></li>
+              <li><a href="/2018/02/15/Hexo-1/" style="font-size: 15px; font-family: 微软雅黑">Hexo配置（一）——安装与初探<span></span></a></li>
               
-              <li><a href="/2018/01/02/在macOS上编译VASP/" style="font-size: 15px; font-family: 微软雅黑">在macOS上编译VASP<span></span></a></li>
+              <li><a href="/2018/01/02/compile_VASP_on_macOS/" style="font-size: 15px; font-family: 微软雅黑">在macOS上编译VASP<span></span></a></li>
               
-              <li><a href="/2017/12/22/VPS与SSR配置科学上网/" style="font-size: 15px; font-family: 微软雅黑">VPS与SSR配置科学上网<span></span></a></li>
+              <li><a href="/2017/12/22/VPS_and_SSR/" style="font-size: 15px; font-family: 微软雅黑">VPS与SSR配置科学上网<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -210,7 +210,7 @@
 <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>相比较VASP、WIEN2k、QE等主流材料几何和电子结构计算程序，GPAW具有的最大特点就是它是一个Python模块，而不是一个独立的程序。你可以像读其他Python模块代码一样读它，查看它属性和docstring，函数依赖参数明确。GPAW中体系构筑依赖于<a href="https://wiki.fysik.dtu.dk/ase" target="_blank" rel="noopener">ASE</a>，一个集成度很高的原子模拟函数模块，作为各种DFT calculator的接口和数据处理及可视化模块被广泛使用。事实上GPAW和ASE都是DTU Thygesen课题组开发维护，因此可以把GPAW看成是ASE自己的first-principles calculator。GPAW中一些performance-critical组件由NumPy或自编的C扩展实现，因此GPAW的计算效率也是有保证的。</p>
 <p>我对GPAW的了解始于对低维体系准粒子能带结构的研究，在这方面Thygesen课题组做了很多重要的工作，这些自然是在GPAW中进行的代码实现，包括参数收敛测试和analytical correction to long wavelength limit，尤其后者是我们希望在LAPW框架下实现的。在读懂代码之前，总应该先熟悉它的使用吧。于是想到了做这个系列。这一回从编译安装开始。</p>
 <p>GPAW安装基于Python模块ASE、NumPy，线性代数库BLAS/LAPACK以及交换关联泛函库LIBXC。快速傅里叶变换可以通过链接FFTW3加速，并行计算可(大规模并行时必须)链接ScaLAPACK。本文将利用以上所有的库，其中线性代数库和ScaLAPACK用Intel MKL代替。</p>
-<p>以下过程所用的<code>python</code>均为在<a href="hpc.pku.edu.cn">北京大学高性能计算平台</a>上anaconda/2-4.4.0.1模块[<code>anaconda (version 1.6.3)</code>]内的<code>python 2.7.15</code>，C扩展的编译器为Intel 2017 update 1的<code>mpiicc</code>，FFTW3(3.3.4)和LIBXC(4.2.3)均由该版本Intel编译器编译。</p>
+<p>以下过程所用的<code>python</code>均为在<a href="https://hpc.pku.edu.cn" target="_blank" rel="noopener">北京大学高性能计算平台</a>上anaconda/2-4.4.0.1模块[<code>anaconda (version 1.6.3)</code>]内的<code>python 2.7.15</code>，C扩展的编译器为Intel 2017 update 1的<code>mpiicc</code>，FFTW3(3.3.4)和LIBXC(4.2.3)均由该版本Intel编译器编译。</p>
 <h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p>作为Python模块，GPAW在<a href="">Python Package Index</a>有项目记录，因此可以使用</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> pip install gpaw --user</span></span><br></pre></td></tr></table></figure>
 <p>将其安装到本地用户目录。但这种安装方式不容易控制和自定义外部库的链接，因此我们采用从源码手动安装的方式。主要分以下几步进行。</p>
