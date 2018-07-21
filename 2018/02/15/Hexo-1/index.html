@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Hexo配置（一）——安装与初探 | Shigaro</title>
+  <title>Hexo配置(一)——安装, Markdown写作及主题 | Shigaro</title>
   <meta name="author" content="Shigaro">
   
   <meta name="description" content="Shigaro&#39;s Blog">
@@ -11,7 +11,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="Hexo配置（一）——安装与初探"/>
+  <meta property="og:title" content="Hexo配置(一)——安装, Markdown写作及主题"/>
   <meta property="og:site_name" content="Shigaro"/>
 
   
@@ -91,9 +91,9 @@
               
               <li><a href="/2018/07/20/gpaw-1/" style="font-size: 15px; font-family: 微软雅黑">GPAW教程(一)——安装及测试<span></span></a></li>
               
-              <li><a href="/2018/05/15/f2py-1/" style="font-size: 15px; font-family: 微软雅黑">F2PY - 在Python中调用Fortran函数或...<span></span></a></li>
+              <li><a href="/2018/05/15/f2py-1/" style="font-size: 15px; font-family: 微软雅黑">F2PY——在Python中调用Fortran函数或子程序<span></span></a></li>
               
-              <li><a href="/2018/02/15/Hexo-1/" style="font-size: 15px; font-family: 微软雅黑">Hexo配置（一）——安装与初探<span></span></a></li>
+              <li><a href="/2018/02/15/Hexo-1/" style="font-size: 15px; font-family: 微软雅黑">Hexo配置(一)——安装, Markdown写作及主题<span></span></a></li>
               
               <li><a href="/2018/01/02/compile_VASP_on_macOS/" style="font-size: 15px; font-family: 微软雅黑">在macOS上编译VASP<span></span></a></li>
               
@@ -189,7 +189,7 @@
 
 	
 		<div class="page-header">		
-			<h1> Hexo配置（一）——安装与初探</h1>
+			<h1> Hexo配置(一)——安装, Markdown写作及主题</h1>
 		</div>		
 	
 
@@ -222,7 +222,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── _config.yml</span><br><span class="line">├── node_modules</span><br><span class="line">├── package-lock.json</span><br><span class="line">├── package.json</span><br><span class="line">├── scaffolds</span><br><span class="line">├── source</span><br><span class="line">└── themes</span><br></pre></td></tr></table></figure>
 <p><code>node_modules</code>内包含在搭建网站时可能需要的模块，比如数学渲染模块<code>hexo-renderer-mathjax</code>和Git部署模块<code>hexo-deployer-git</code>，后者是我们通过Git部署GitHub Pages所必须的。安装模块通过<code>npm</code>完成，如</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
-<span class="label label-info">注</span><code>save</code>选项会更新<code>package.json</code>内的包依赖。 <code>--save</code>和<code>--save-dev</code>选项的比较可见这篇<a href="http://pwcong.me/2017/01/05/npm引入模块时--save-与--save-dev-的区别/" target="_blank" rel="noopener">文章</a>。<br><br>修改<code>_config.yml</code>中网络链接和与部署方法相关的代码块<br><br><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># URL</span></span><br><span class="line"><span class="attr">url:</span> <span class="attr">http://minyez.github.io</span></span><br><span class="line"><span class="comment"># deploy method. By Git</span></span><br><span class="line"><span class="attr">deploy:</span></span><br><span class="line"><span class="attr">    type:</span> <span class="string">git</span></span><br><span class="line"><span class="attr">    repo:</span> <span class="attr">https://github.com/minyez/minyez.github.io.git</span></span><br><span class="line"><span class="attr">    branch:</span> <span class="string">master</span></span><br></pre></td></tr></table></figure>
+<span class="label label-info">注</span><code>save</code>选项会更新<code>package.json</code>内的包依赖。 <code>--save</code>和<code>--save-dev</code>选项的比较可见这篇<a href="http://pwcong.me/2017/01/05/npm引入模块时--save-与--save-dev-的区别/" target="_blank" rel="noopener">文章</a>。<br><br>修改<code>_config.yml</code>中网络链接和与部署方法相关的代码块<br><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># URL</span></span><br><span class="line"><span class="attr">url:</span> <span class="attr">http://minyez.github.io</span></span><br><span class="line"><span class="comment"># deploy method. By Git</span></span><br><span class="line"><span class="attr">deploy:</span></span><br><span class="line"><span class="attr">    type:</span> <span class="string">git</span></span><br><span class="line"><span class="attr">    repo:</span> <span class="attr">https://github.com/minyez/minyez.github.io.git</span></span><br><span class="line"><span class="attr">    branch:</span> <span class="string">master</span></span><br></pre></td></tr></table></figure>
 <p>这样一来，通过Hexo发布自己个人GitHub Pages博客的必要准备已经完成了。在<code>my-hexo-dir</code>下键入以下命令生成静态博客<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ hexo g         <span class="comment"># 使用Hexo生成HTML</span></span><br><span class="line">$ hexo s -p 4000 <span class="comment"># 生成本地网址，端口为4000</span></span><br></pre></td></tr></table></figure></p>
 <p>在浏览器访问<a href="https://localhost:4000" target="_blank" rel="noopener">https://localhost:4000</a> 即可看到生成的Hexo博客。</p>
 <h3 id="主题选择"><a href="#主题选择" class="headerlink" title="主题选择"></a>主题选择</h3><p>本博客使用的是从<a href="https://github.com/PytLab/hexo-theme-freemind" target="_blank" rel="noopener">PytLab</a>处Fork来的<a href="https://github.com/minyez/hexo-theme-freemind" target="_blank" rel="noopener">Freemind</a>主题。首先将仓库下载到本地<code>themes</code>文件夹内<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> themes</span><br><span class="line">$ git <span class="built_in">clone</span> https://github.com/minyez/hexo-theme-freemind freemind</span><br></pre></td></tr></table></figure></p>
@@ -243,10 +243,10 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> npm install hexo-renderer-mathjax --save</span></span><br></pre></td></tr></table></figure>
 <p>安装完就可以正常使用。如果出现无法渲染的情况，在<code>_config.yml</code>中加入:</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">plugins:</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">hexo-renderer-mathjax</span></span><br></pre></td></tr></table></figure>
-<p>行内公式输入</p>
+<p>输入行内公式可使用<code>$math$</code>，例如</p>
 <figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="formula">$P=iGG, G=<span class="tag">\<span class="name">frac</span><span class="string">&#123;1&#125;</span><span class="string">&#123;\omega - \hat&#123;H&#125;</span></span>_&#123;<span class="tag">\<span class="name">text</span><span class="string">&#123;KS&#125;</span></span>&#125;&#125;$</span></span><br></pre></td></tr></table></figure>
 <p>效果：$P=iGG, G=\frac{1}{\omega - \hat{H}_{\text{KS}}}$</p>
-<p>公式块输入</p>
+<p>输入公式块可使用<code>$$mathblock$$</code>，例如</p>
 <figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="formula">$$ <span class="tag">\<span class="name">nabla</span></span>^2 <span class="tag">\<span class="name">phi</span> = </span>-<span class="tag">\<span class="name">rho</span></span> $$</span></span><br></pre></td></tr></table></figure>
 <p>效果：</p>
 <p>$$\nabla^2 \phi = -\rho$$</p>
@@ -260,12 +260,12 @@
 <p>移除marked对花括号和反斜线的渲染。如果出现下划线渲染问题，再将<code>em:</code>一行改为</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">em: <span class="regexp">/^\*((?:\*\*|[\s\S])+?)\*(?!\*)/</span>,</span><br></pre></td></tr></table></figure>
 <p>以移除对下划线<code>_</code>的转换。</p>
-<h3 id="链接自己博客内的文章"><a href="#链接自己博客内的文章" class="headerlink" title="链接自己博客内的文章"></a>链接自己博客内的文章</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% post_link md-filename-wo-extension/blog-title %&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="链接自己博客内的文章"><a href="#链接自己博客内的文章" class="headerlink" title="链接自己博客内的文章"></a>链接自己博客内的文章</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% post_link md-filename-wo-extension %&#125;</span><br></pre></td></tr></table></figure>
 <p>如</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% post_link 在macOS上编译VASP %&#125;</span><br></pre></td></tr></table></figure>
-
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% post_link compile_VASP_on_macOS %&#125;</span><br></pre></td></tr></table></figure>
+<a href="/2018/01/02/compile_VASP_on_macOS/" title="在macOS上编译VASP">在macOS上编译VASP</a>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% post_link f2py-1 %&#125;</span><br></pre></td></tr></table></figure>
-<a href="/2018/05/15/f2py-1/" title="F2PY - 在Python中调用Fortran函数或子程序">F2PY - 在Python中调用Fortran函数或子程序</a>
+<a href="/2018/05/15/f2py-1/" title="F2PY——在Python中调用Fortran函数或子程序">F2PY——在Python中调用Fortran函数或子程序</a>
 <h2 id="Freemind特性"><a href="#Freemind特性" class="headerlink" title="Freemind特性"></a>Freemind特性</h2><h3 id="首页摘要"><a href="#首页摘要" class="headerlink" title="首页摘要"></a>首页摘要</h3><p>在要作为摘要的文字后面加上<code>&lt;!--more--&gt;</code>，首页将只显示<code>&lt;!--more--&gt;</code>前面的内容，同时出现&quot;Read More&quot;的按钮。摘要内容仍然会在正文中显示。</p>
 <h3 id="标签插件"><a href="#标签插件" class="headerlink" title="标签插件"></a>标签插件</h3><p>使用标签插件(Tag plugins)可以使得文章的可读性更好。在这里我参考了wxpan提供的<a href="https://github.com/PytLab/hexo-theme-freemind/blob/source/_posts/tag-plugins-cn.md" target="_blank" rel="noopener">样例</a>。<del>总结一些tag plugins用法，包括一般Hexo和Bootstrap的tag plugins。</del>在使用插件前，需要先安装<a href="https://github.com/wzpan/hexo-tag-bootstrap" target="_blank" rel="noopener">Bootstrap</a></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-tag-bootstrap --save</span><br></pre></td></tr></table></figure>
