@@ -99,6 +99,8 @@
               
               <li><a href="/2017/12/22/VPS_and_SSR/" style="font-size: 15px; font-family: 微软雅黑">VPS与SSR配置科学上网<span></span></a></li>
               
+              <li><a href="/2017/10/12/make-1/" style="font-size: 15px; font-family: 微软雅黑">GNU/Make(一)——以一个质数判断程序为例<span></span></a></li>
+              
               <li class="divider"></li>
             </ul>
           </li>
@@ -118,13 +120,13 @@
               <li><a href="/categories" style="font-size: 20px; font-family: 'Calibri Light',Arial">All Categories</a><span></span></li>
               <li class="divider"></li>
               
-              <li><a href="/categories/Software/" style="font-size: 15px; font-family: 微软雅黑">Software<span></span></a></li>
-              
-              <li><a href="/categories/Life/" style="font-size: 15px; font-family: 微软雅黑">Life<span></span></a></li>
-              
               <li><a href="/categories/Programming/" style="font-size: 15px; font-family: 微软雅黑">Programming<span></span></a></li>
               
+              <li><a href="/categories/Software/" style="font-size: 15px; font-family: 微软雅黑">Software<span></span></a></li>
+              
               <li><a href="/categories/Tutorial/" style="font-size: 15px; font-family: 微软雅黑">Tutorial<span></span></a></li>
+              
+              <li><a href="/categories/Life/" style="font-size: 15px; font-family: 微软雅黑">Life<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -152,13 +154,13 @@
               
               <li><a href="/tags/Compilation/" style="font-size: 15px; font-family: 微软雅黑">Compilation<span></span></a></li>
               
-              <li><a href="/tags/Shadowsocks/" style="font-size: 15px; font-family: 微软雅黑">Shadowsocks<span></span></a></li>
+              <li><a href="/tags/Make/" style="font-size: 15px; font-family: 微软雅黑">Make<span></span></a></li>
               
-              <li><a href="/tags/VASP/" style="font-size: 15px; font-family: 微软雅黑">VASP<span></span></a></li>
+              <li><a href="/tags/Hexo/" style="font-size: 15px; font-family: 微软雅黑">Hexo<span></span></a></li>
               
-              <li><a href="/tags/Network/" style="font-size: 15px; font-family: 微软雅黑">Network<span></span></a></li>
+              <li><a href="/tags/Freemind/" style="font-size: 15px; font-family: 微软雅黑">Freemind<span></span></a></li>
               
-              <li><a href="/tags/macOS/" style="font-size: 15px; font-family: 微软雅黑">macOS<span></span></a></li>
+              <li><a href="/tags/Python/" style="font-size: 15px; font-family: 微软雅黑">Python<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -225,14 +227,14 @@
 </ul>
 <p>接下来我们一条条看。</p>
 <h3 id="购买服务器"><a href="#购买服务器" class="headerlink" title="购买服务器"></a>购买服务器</h3><p>境外服务器选择<a href="www.vultr.com">Vultr</a>公司。访问主页(如下图)，注册账号后登录到个人页面管理。<br><img src="vultr-homepage.png" alt="Figure 2. Vultr首页"><br>个人页面如下所示，点击右上角加号部署新服务器<br><img src="vultr-mypage.png" alt="Figure 3. Vultr个人页面"><br>在新服务器的配置中，需要选择以下项目</p>
-<h4 id="Server-Location"><a href="#Server-Location" class="headerlink" title="Server Location"></a>Server Location</h4><p>服务器位置。根据自己的网络情况选择最佳的服务器，一般判断标准是PING延迟，以及是否有较便宜的规模可供选择<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> ping hnd-jp-ping.vultr.com    # Tokyo</span><br><span class="line"><span class="meta">$</span> ping sgp-ping.vult.com        # Singapore</span><br><span class="line"><span class="meta">$</span> ping sjo-ca-us-ping.vultr.com # Silicon Valley, CA</span><br><span class="line"><span class="meta">$</span> ping lax-ca-us-ping.vultr.com # Los Angeles, CA</span><br><span class="line"><span class="meta">$</span> ping fra-de-ping.vultr.com    # Frankfurt</span><br><span class="line"><span class="meta">$</span> ping nj-us-ping.vultr.com     # NY, New Jersey</span><br><span class="line"><span class="meta">$</span> ping il-us-ping.vultr.com     # Chicago, Illinois</span><br><span class="line"><span class="meta">$</span> ping fl-us-ping.vultr.com     # Miami, Florida</span><br><span class="line"><span class="meta">$</span> ping syd-au-ping.vultr.com    # Sydney, Australia</span><br><span class="line"><span class="meta">$</span> ping lon-gb-ping.vultr.com    # London, UK</span><br></pre></td></tr></table></figure></p>
+<h4 id="Server-Location"><a href="#Server-Location" class="headerlink" title="Server Location"></a>Server Location</h4><p>服务器位置。根据自己的网络情况选择最佳的服务器，一般判断标准是PING延迟，以及是否有较便宜的规模可供选择<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ping hnd-jp-ping.vultr.com    <span class="comment"># Tokyo</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ping sgp-ping.vult.com        <span class="comment"># Singapore</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ping sjo-ca-us-ping.vultr.com <span class="comment"># Silicon Valley, CA</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ping lax-ca-us-ping.vultr.com <span class="comment"># Los Angeles, CA</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ping fra-de-ping.vultr.com    <span class="comment"># Frankfurt</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ping nj-us-ping.vultr.com     <span class="comment"># NY, New Jersey</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ping il-us-ping.vultr.com     <span class="comment"># Chicago, Illinois</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ping fl-us-ping.vultr.com     <span class="comment"># Miami, Florida</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ping syd-au-ping.vultr.com    <span class="comment"># Sydney, Australia</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ping lon-gb-ping.vultr.com    <span class="comment"># London, UK</span></span></span><br></pre></td></tr></table></figure></p>
 <h4 id="Server-Type"><a href="#Server-Type" class="headerlink" title="Server Type"></a>Server Type</h4><p>操作系统。推荐选择比较稳定的Linux发行版，如CentOS, Ubuntu LTS等。推荐CentOS。</p>
 <h4 id="Server-Size"><a href="#Server-Size" class="headerlink" title="Server Size"></a>Server Size</h4><p>服务器资费方案。一般来说，最低\$2.5的500G带宽足够个人或者三五同学公用的需求。但近日(20180714)发现这个方案已经不再分配公网IPv4，所以改用\$5的方案。这个价格比某些廉价VPN要贵不少，所以推荐多人分摊公用，这样既不浪费带宽，也能省些钱。</p>
 <h4 id="Additional-Features"><a href="#Additional-Features" class="headerlink" title="Additional Features"></a>Additional Features</h4><p>额外特性。建议启用IPv6和DDoS保护(部分地区服务器支持)。</p>
 <h4 id="完成"><a href="#完成" class="headerlink" title="完成"></a>完成</h4><p>选择好后点击deploy完成部署，等待自动安装。完成后点击主页上刚刚部署的服务器右侧的三个小点，选择Server Details，记下IP Address和Password。Vultr网站上的准备到这里就完成了。 </p>
-<h3 id="部署服务端"><a href="#部署服务端" class="headerlink" title="部署服务端"></a>部署服务端</h3><p>在终端上用<code>ssh</code>登录刚刚部署的服务器(CentOS)，用户为root(根用户)。首次登录最好先进行更新，同时改掉初始密码<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> ssh root@vultrip  # with Password</span><br><span class="line"><span class="meta">$</span> yum update        # for first login</span><br><span class="line"><span class="meta">$</span> passwd            # change password</span><br></pre></td></tr></table></figure></p>
-<p>登录后部署服务端。我们使用秋水逸冰的<a href="https://teddysun.com/486.html" target="_blank" rel="noopener">一键安装脚本</a><br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> wget --no-check-certificate -O shadowsocks-all.sh https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks-all.sh</span><br></pre></td></tr></table></figure></p>
-<p>加上执行权限后运行之<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> chmod +x shadowsocks-all.sh</span><br><span class="line"><span class="meta">$</span> ./shadowsocks-all.sh 2&gt;&amp;1 | tee shadowsocks-all.log</span><br></pre></td></tr></table></figure></p>
+<h3 id="部署服务端"><a href="#部署服务端" class="headerlink" title="部署服务端"></a>部署服务端</h3><p>在终端上用<code>ssh</code>登录刚刚部署的服务器(CentOS)，用户为root(根用户)。首次登录最好先进行更新，同时改掉初始密码<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ssh root@vultrip  <span class="comment"># with Password</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> yum update        <span class="comment"># for first login</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> passwd            <span class="comment"># change password</span></span></span><br></pre></td></tr></table></figure></p>
+<p>登录后部署服务端。我们使用秋水逸冰的<a href="https://teddysun.com/486.html" target="_blank" rel="noopener">一键安装脚本</a><br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> wget --no-check-certificate -O shadowsocks-all.sh https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks-all.sh</span></span><br></pre></td></tr></table></figure></p>
+<p>加上执行权限后运行之<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> chmod +x shadowsocks-all.sh</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ./shadowsocks-all.sh 2&gt;&amp;1 | tee shadowsocks-all.log</span></span><br></pre></td></tr></table></figure></p>
 <p>过程中需要依次对以下内容进行设置</p>
 <ul>
 <li>SS版本。选择SSR (2)。</li>
@@ -263,7 +265,7 @@
         <li><a href="/"><i class="fa fa-archive"></i>Archive</a></li>
 
 		
-          <li class="next disabled"><a>Next<i class="fa fa-arrow-circle-o-right"></i></a></li>
+		   <li class="next"><a href="/2017/10/12/make-1/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
         
 	
 </ul>
