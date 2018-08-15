@@ -4,6 +4,7 @@ date: 2018-01-02
 tags: [Scientific Computation, VASP, Compilation, macOS, Intel]
 categories: Software
 toc: true
+comment: true
 ---
 
 
