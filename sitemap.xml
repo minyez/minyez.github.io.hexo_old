@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://minyez.github.io/2018/02/15/Hexo-1/</loc>
+    
+    <lastmod>2018-09-03T11:00:51.030Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://minyez.github.io/about/index.html</loc>
     
     <lastmod>2018-08-15T02:02:33.880Z</lastmod>
@@ -12,13 +19,6 @@
     <loc>http://minyez.github.io/2017/10/12/make-1/</loc>
     
     <lastmod>2018-08-12T06:02:43.123Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://minyez.github.io/2018/02/15/Hexo-1/</loc>
-    
-    <lastmod>2018-07-21T01:58:07.689Z</lastmod>
     
   </url>
   
@@ -51,14 +51,14 @@
   </url>
   
   <url>
-    <loc>http://minyez.github.io/tags/index.html</loc>
+    <loc>http://minyez.github.io/categories/index.html</loc>
     
     <lastmod>2018-07-15T09:39:29.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://minyez.github.io/categories/index.html</loc>
+    <loc>http://minyez.github.io/tags/index.html</loc>
     
     <lastmod>2018-07-15T09:39:29.000Z</lastmod>
     
