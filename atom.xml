@@ -60,11 +60,11 @@
       <category term="Tutorial" scheme="http://minyez.github.io/categories/Tutorial/"/>
     
     
-      <category term="GPAW" scheme="http://minyez.github.io/tags/GPAW/"/>
-    
       <category term="Scientific Computation" scheme="http://minyez.github.io/tags/Scientific-Computation/"/>
     
       <category term="Intel" scheme="http://minyez.github.io/tags/Intel/"/>
+    
+      <category term="GPAW" scheme="http://minyez.github.io/tags/GPAW/"/>
     
       <category term="Compilation" scheme="http://minyez.github.io/tags/Compilation/"/>
     
