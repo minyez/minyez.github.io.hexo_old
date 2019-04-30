@@ -16,7 +16,7 @@ feature: Shadowsocks_logo.png
 
 谷歌搜索对于学术研究的重要性无须赘述，Youtube上原创的优秀的讲座、课程录像和视频教程对于自学者来说也是非常好的资源。Facebook和Twitter也能帮助我们取得与外国同学的联系。但对于非IPv6用户而言，由于GFW的存在，直接连接这些网站的尝试最后都是徒劳。目前的解决方案包括hosts文件、VPN以及Shadowsocks。hosts文件指定域名解析IP，避免DNS污染，但通常隔一段时间需要更换，且周期不定。VPN通常价格较高，且同时使用的终端数量一般是受限的。Shadowsocks本身只是一个协议，它需要境外服务器支持，但使用VPS作为服务器，可以在较低价格情况下(￥15/月)同时保证10台左右终端的正常流量需求，且只要VPS的IP不被屏蔽，可以一直使用下去，不必更换。VPN越来越贵，hosts不灵的频率越来越高，于是以最近一次hosts失效为契机，我研究了一下SS的架设，自己配置了SS服务器和客户端。
 
-{%alert info%} 最近在BBS上看到别人推荐[V2Ray项目](https://github.com/v2ray/v2ray-core)，待以后补充。{%endalert%}
+{%alert info%} 最近在BBS上看到别人推荐[V2Ray项目](https://github.com/v2ray/v2ray-core)。{%endalert%}
 
 ## 名词解释
 
@@ -40,6 +40,10 @@ function FindProxyForURL(url, host){
     //如果服务器没有响应，则通过www直接访问
 }
 ```
+
+### Dynamics Domain Name System (DDNS)
+
+
 
 
 
@@ -84,7 +88,7 @@ $ ping lon-gb-ping.vultr.com    # London, UK
 #### Server Size
 服务器资费方案。一般来说，最低\$2.5的500G带宽足够个人或者三五同学公用的需求。但近日(20180714)发现这个方案已经不再分配公网IPv4，所以改用\$5的方案。这个价格比某些廉价VPN要贵不少，所以推荐多人分摊公用，这样既不浪费带宽，也能省些钱。
 #### Additional Features
-额外特性。建议启用IPv6和DDoS保护(部分地区服务器支持)。
+额外特性。建议启用IPv6和DDoS保护(部分地区服务器支持)。注意，2018年9月后Vultr DDoS防护价格飙升，不知道是否同
 #### 完成
 选择好后点击deploy完成部署，等待自动安装。完成后点击主页上刚刚部署的服务器右侧的三个小点，选择Server Details，记下IP Address和Password。Vultr网站上的准备到这里就完成了。 
 
@@ -129,6 +133,18 @@ $ ./shadowsocks-all.sh 2>&1 | tee shadowsocks-all.log
 
 
 
+## 增加动态域名系统
+
+
+
+
+
 ## 总结
 
 回顾从VPN、hosts到SS的过程，其实是自己能力和心态逐渐变化的过程。一开始什么也不懂，依靠别人的VPN过活; 后来看到了免费的hosts，自己也愿意稍微折腾一下，但渐渐也受不了每个hosts文件的短暂寿命和找hosts的痛苦，最后走上了折腾钱折腾时间但是一定程度上"一劳永逸"的SS(感谢开源项目开发者们和脚本作者)。也许之后还会继续折腾到V2Ray吧。谨把这Vultr VPS+SSR搭建过程献给与GFW战斗的勇者们。
+
+
+
+## 更新日志
+
+- [x] 2018-10-15 增加DDNS部分
