@@ -89,6 +89,8 @@
               <li><a href="/archives" style="font-size: 20px; font-family: 'Calibri Light',Arial">All Archives</a><span></span></li>
               <li class="divider"></li>
               
+              <li><a href="/2019/01/02/pandoc-md-to-latex/" style="font-size: 15px; font-family: 微软雅黑">利用Pandoc将Markdown转化为PDF<span></span></a></li>
+              
               <li><a href="/2018/07/20/gpaw-1/" style="font-size: 15px; font-family: 微软雅黑">GPAW教程(一)——安装及测试<span></span></a></li>
               
               <li><a href="/2018/05/15/f2py-1/" style="font-size: 15px; font-family: 微软雅黑">F2PY——在Python中调用Fortran函数或子程序<span></span></a></li>
@@ -120,13 +122,19 @@
               <li><a href="/categories" style="font-size: 20px; font-family: 'Calibri Light',Arial">All Categories</a><span></span></li>
               <li class="divider"></li>
               
-              <li><a href="/categories/Programming/" style="font-size: 15px; font-family: 微软雅黑">Programming<span></span></a></li>
-              
               <li><a href="/categories/Software/" style="font-size: 15px; font-family: 微软雅黑">Software<span></span></a></li>
+              
+              <li><a href="/categories/Programming/" style="font-size: 15px; font-family: 微软雅黑">Programming<span></span></a></li>
               
               <li><a href="/categories/Tutorial/" style="font-size: 15px; font-family: 微软雅黑">Tutorial<span></span></a></li>
               
               <li><a href="/categories/Life/" style="font-size: 15px; font-family: 微软雅黑">Life<span></span></a></li>
+              
+              <li><a href="/categories/VASP/" style="font-size: 15px; font-family: 微软雅黑">VASP<span></span></a></li>
+              
+              <li><a href="/categories/VASP/GW/" style="font-size: 15px; font-family: 微软雅黑">GW<span></span></a></li>
+              
+              <li><a href="/categories/VASP/GW/BSE/" style="font-size: 15px; font-family: 微软雅黑">BSE<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -148,19 +156,19 @@
               <li><a href="/tags" style="font-size: 20px; font-family: 'Calibri Light',Arial">All Tags</a><span></span></li>
               <li class="divider"></li>
               
-              <li><a href="/tags/Compilation/" style="font-size: 15px; font-family: 微软雅黑">Compilation<span></span></a></li>
-              
               <li><a href="/tags/Scientific-Computation/" style="font-size: 15px; font-family: 微软雅黑">Scientific Computation<span></span></a></li>
               
               <li><a href="/tags/Intel/" style="font-size: 15px; font-family: 微软雅黑">Intel<span></span></a></li>
               
-              <li><a href="/tags/Make/" style="font-size: 15px; font-family: 微软雅黑">Make<span></span></a></li>
+              <li><a href="/tags/Compilation/" style="font-size: 15px; font-family: 微软雅黑">Compilation<span></span></a></li>
+              
+              <li><a href="/tags/GPAW/" style="font-size: 15px; font-family: 微软雅黑">GPAW<span></span></a></li>
               
               <li><a href="/tags/Python/" style="font-size: 15px; font-family: 微软雅黑">Python<span></span></a></li>
               
-              <li><a href="/tags/F2PY/" style="font-size: 15px; font-family: 微软雅黑">F2PY<span></span></a></li>
+              <li><a href="/tags/Fortran/" style="font-size: 15px; font-family: 微软雅黑">Fortran<span></span></a></li>
               
-              <li><a href="/tags/GPAW/" style="font-size: 15px; font-family: 微软雅黑">GPAW<span></span></a></li>
+              <li><a href="/tags/F2PY/" style="font-size: 15px; font-family: 微软雅黑">F2PY<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -259,9 +267,15 @@
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">escape</span>: <span class="regexp">/^\\([\\`*&#123;&#125;\[\]()#+\-.!_&gt;])/</span>,</span><br></pre></td></tr></table></figure>
 <p>改为</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">escape</span>: <span class="regexp">/^\\([`*\[\]()# +\-.!_&gt;])/</span>,</span><br></pre></td></tr></table></figure>
-<p>移除marked对花括号和反斜线的渲染。如果出现下划线渲染问题，再将<code>em:</code>一行改为</p>
+<p>移除marked对花括号和反斜线的渲染。如果出现下划线渲染问题，再将<code>em:</code>一行从</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">em: <span class="regexp">/^_([^\s_](?:[^_]|__)+?[^\s_])_\b|^\*((?:\*\*|[^*])+?)\*(?!\*)/</span></span><br></pre></td></tr></table></figure>
+<p>改为</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">em: <span class="regexp">/^\*((?:\*\*|[\s\S])+?)\*(?!\*)/</span>,</span><br></pre></td></tr></table></figure>
-<p>以移除对下划线<code>_</code>的转换。</p>
+<p>以移除对下划线<code>_</code>的渲染。</p>
+<p><strong>补记一</strong>：没有找到解决星号渲染问题的办法，一种替代方案是用<code>\ast</code>代替常用的<code>*</code>。如果有朋友知道该怎么做的话请一定告诉我：）</p>
+<p><strong>补记二</strong>：可以把<code>em</code>设为<code>noop</code>来消除全部的单下划线和星号的em(斜体)渲染，但这样同时会影响正文。发现在原来的<code>em</code>并不影响公式里下划线<code>_</code>的渲染，因此我改成把<code>*</code>部分删掉，于是这一行变成</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">em: <span class="regexp">/^_([^\s_]|(?:[^_]|__)+?[^\s_])_/</span></span><br></pre></td></tr></table></figure>
+<p>测试：<code>_hexo_=</code><em>hexo</em>，测试星号渲染<code>*hexo*=</code>*hexo*。问题解决：）</p>
 <h3 id="链接自己博客内的文章"><a href="#链接自己博客内的文章" class="headerlink" title="链接自己博客内的文章"></a>链接自己博客内的文章</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% post_link md-filename-wo-extension %&#125;</span><br></pre></td></tr></table></figure>
 <p>如</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% post_link compile_VASP_on_macOS %&#125;</span><br></pre></td></tr></table></figure>
@@ -394,7 +408,7 @@ s.setAttribute('data-timestamp', +new Date());
     <ul id="categorys" class="tag_box list-unstyled collapse in">
           
   <li>
-    <li><a href="/categories/Software/">Software<span class="badge">2</span></a></li>
+    <li><a href="/categories/Software/">Software<span class="badge">3</span></a></li>
   </li>
 
     </ul>
@@ -450,7 +464,7 @@ var disqus_shortname = 'shigaro';
   <div class="container-narrow">
   <footer> <p>
   
-  &copy; copyright 2018 by <a href="http://minyez.github.io"> Shigaro </a>
+  &copy; copyright 2019 by <a href="http://minyez.github.io"> Shigaro </a>
   
       &nbsp; <a href="http://github.com/minyez/hexo-theme-freemind/">Theme</a> by <a href="http://minyez.github.io/">minyez</a> based on two freemind themes by <a href="https://github.com/wzpan/hexo-theme-freemind/">wzpan</a> and <a href="https://github.com/PytLab/hexo-theme-freemind/">PytLab</a> 
 </p>

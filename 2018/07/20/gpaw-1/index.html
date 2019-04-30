@@ -89,6 +89,8 @@
               <li><a href="/archives" style="font-size: 20px; font-family: 'Calibri Light',Arial">All Archives</a><span></span></li>
               <li class="divider"></li>
               
+              <li><a href="/2019/01/02/pandoc-md-to-latex/" style="font-size: 15px; font-family: 微软雅黑">利用Pandoc将Markdown转化为PDF<span></span></a></li>
+              
               <li><a href="/2018/07/20/gpaw-1/" style="font-size: 15px; font-family: 微软雅黑">GPAW教程(一)——安装及测试<span></span></a></li>
               
               <li><a href="/2018/05/15/f2py-1/" style="font-size: 15px; font-family: 微软雅黑">F2PY——在Python中调用Fortran函数或子程序<span></span></a></li>
@@ -120,13 +122,19 @@
               <li><a href="/categories" style="font-size: 20px; font-family: 'Calibri Light',Arial">All Categories</a><span></span></li>
               <li class="divider"></li>
               
-              <li><a href="/categories/Programming/" style="font-size: 15px; font-family: 微软雅黑">Programming<span></span></a></li>
-              
               <li><a href="/categories/Software/" style="font-size: 15px; font-family: 微软雅黑">Software<span></span></a></li>
+              
+              <li><a href="/categories/Programming/" style="font-size: 15px; font-family: 微软雅黑">Programming<span></span></a></li>
               
               <li><a href="/categories/Tutorial/" style="font-size: 15px; font-family: 微软雅黑">Tutorial<span></span></a></li>
               
               <li><a href="/categories/Life/" style="font-size: 15px; font-family: 微软雅黑">Life<span></span></a></li>
+              
+              <li><a href="/categories/VASP/" style="font-size: 15px; font-family: 微软雅黑">VASP<span></span></a></li>
+              
+              <li><a href="/categories/VASP/GW/" style="font-size: 15px; font-family: 微软雅黑">GW<span></span></a></li>
+              
+              <li><a href="/categories/VASP/GW/BSE/" style="font-size: 15px; font-family: 微软雅黑">BSE<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -148,19 +156,19 @@
               <li><a href="/tags" style="font-size: 20px; font-family: 'Calibri Light',Arial">All Tags</a><span></span></li>
               <li class="divider"></li>
               
-              <li><a href="/tags/Compilation/" style="font-size: 15px; font-family: 微软雅黑">Compilation<span></span></a></li>
-              
               <li><a href="/tags/Scientific-Computation/" style="font-size: 15px; font-family: 微软雅黑">Scientific Computation<span></span></a></li>
               
               <li><a href="/tags/Intel/" style="font-size: 15px; font-family: 微软雅黑">Intel<span></span></a></li>
               
-              <li><a href="/tags/Make/" style="font-size: 15px; font-family: 微软雅黑">Make<span></span></a></li>
+              <li><a href="/tags/Compilation/" style="font-size: 15px; font-family: 微软雅黑">Compilation<span></span></a></li>
+              
+              <li><a href="/tags/GPAW/" style="font-size: 15px; font-family: 微软雅黑">GPAW<span></span></a></li>
               
               <li><a href="/tags/Python/" style="font-size: 15px; font-family: 微软雅黑">Python<span></span></a></li>
               
-              <li><a href="/tags/F2PY/" style="font-size: 15px; font-family: 微软雅黑">F2PY<span></span></a></li>
+              <li><a href="/tags/Fortran/" style="font-size: 15px; font-family: 微软雅黑">Fortran<span></span></a></li>
               
-              <li><a href="/tags/GPAW/" style="font-size: 15px; font-family: 微软雅黑">GPAW<span></span></a></li>
+              <li><a href="/tags/F2PY/" style="font-size: 15px; font-family: 微软雅黑">F2PY<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -208,7 +216,7 @@
 	<div class="mypage">		
 	  		
 
-	  <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本系列将介绍如何使用第一性原理电子结构计算Python包<a href="https://wiki.fysik.dtu.dk/gpaw/index.html" target="_blank" rel="noopener">GPAW</a>，进行材料的电子结构模拟，包括最基本的DFT基态计算以及更高级的准粒子<em>GW</em>和BSE的光谱性质计算。本文作为该系列的第一篇文章，对GPAW在本地和集群上的安装、样例测试进行介绍，总结了这一过程中遇到的问题和解决方案。<br> <a id="more"></a></p>
+	  <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本系列将介绍如何使用第一性原理电子结构计算Python包<a href="https://wiki.fysik.dtu.dk/gpaw/index.html" target="_blank" rel="noopener">GPAW</a>，进行材料的电子结构模拟，包括最基本的DFT基态计算以及更高级的准粒子*GW*和BSE的光谱性质计算。本文作为该系列的第一篇文章，对GPAW在本地和集群上的安装、样例测试进行介绍，总结了这一过程中遇到的问题和解决方案。<br> <a id="more"></a></p>
 <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>相比较VASP、WIEN2k、QE等主流材料几何和电子结构计算程序，GPAW具有的最大特点就是它是一个Python模块，而不是一个独立的程序。你可以像读其他Python模块代码一样读它，查看它属性和docstring，函数依赖参数明确。GPAW中体系构筑依赖于<a href="https://wiki.fysik.dtu.dk/ase" target="_blank" rel="noopener">ASE</a>，一个集成度很高的原子模拟函数模块，作为各种DFT calculator的接口和数据处理及可视化模块被广泛使用。事实上GPAW和ASE都是DTU Thygesen课题组开发维护，因此可以把GPAW看成是ASE自己的first-principles calculator。GPAW中一些performance-critical组件由NumPy或自编的C扩展实现，因此GPAW的计算效率也是有保证的。</p>
 <p>我对GPAW的了解始于对低维体系准粒子能带结构的研究，在这方面Thygesen课题组做了很多重要的工作，这些自然是在GPAW中进行的代码实现，包括参数收敛测试和analytical correction to long wavelength limit，尤其后者是我们希望在LAPW框架下实现的。在读懂代码之前，总应该先熟悉它的使用吧。于是想到了做这个系列。这一回从编译安装开始。</p>
 <p>GPAW安装基于Python模块ASE、NumPy，线性代数库BLAS/LAPACK以及交换关联泛函库LIBXC。快速傅里叶变换可以通过链接FFTW3加速，并行计算可(大规模并行时必须)链接ScaLAPACK。本文将利用以上所有的库，其中线性代数库和ScaLAPACK用Intel MKL代替。</p>
@@ -227,7 +235,7 @@
 <h3 id="修改customize-py"><a href="#修改customize-py" class="headerlink" title="修改customize.py"></a>修改<code>customize.py</code></h3><p>经过各种标准的和愚蠢的试错，一个可行的自定义文件写法为</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">compiler = <span class="string">'mpiicc -fPIC'</span></span><br><span class="line">mpicompiler = <span class="string">'mpiicc -fPIC'</span>  <span class="comment"># use None if you don't want to build a gpaw-python</span></span><br><span class="line">mpilinker = mpicompiler</span><br><span class="line"></span><br><span class="line"><span class="comment"># the following variables should be defined according to your own environment </span></span><br><span class="line">FFTW3_HOME = <span class="string">'/path/to/FFTW3'</span></span><br><span class="line">MKLROOT    = <span class="string">'/path/to/mkl'</span></span><br><span class="line">LIBXC_HOME = <span class="string">'/path/to/libxc'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># the order is adapted from Intel MKL link advisor</span></span><br><span class="line">libraries = [ </span><br><span class="line">              <span class="string">'mkl_scalapack_lp64'</span>, </span><br><span class="line">              <span class="string">'mkl_intel_lp64'</span> ,<span class="string">'mkl_sequential'</span> ,<span class="string">'mkl_core'</span>,</span><br><span class="line">              <span class="string">'mkl_blacs_intelmpi_lp64'</span>,</span><br><span class="line">              <span class="string">'pthread'</span>,<span class="string">'m'</span>,<span class="string">'dl'</span>, </span><br><span class="line">            ]</span><br><span class="line">mpi_libraries = []</span><br><span class="line"></span><br><span class="line">library_dirs = [ MKLROOT+<span class="string">'/lib/intel64/'</span> , FFTW3_HOME+<span class="string">'/lib/'</span>]</span><br><span class="line"><span class="comment"># include numpy header to use array object</span></span><br><span class="line">include_dirs += [np.get_include(), MKLROOT+<span class="string">'/include/'</span>, FFTW3_HOME+<span class="string">'/include/'</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># switch on ScaLAPACK</span></span><br><span class="line">scalapack = <span class="keyword">True</span></span><br><span class="line"><span class="keyword">if</span> scalapack:</span><br><span class="line">    define_macros += [(<span class="string">'GPAW_NO_UNDERSCORE_CBLACS'</span>, <span class="string">'1'</span>)]</span><br><span class="line">    define_macros += [(<span class="string">'GPAW_NO_UNDERSCORE_CSCALAPACK'</span>, <span class="string">'1'</span>)]</span><br><span class="line"></span><br><span class="line"><span class="comment"># - dynamic linking LIBXC (requires rpath or setting LD_LIBRARY_PATH at runtime):</span></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">True</span>:</span><br><span class="line">    include_dirs += [LIBXC_HOME+<span class="string">'/include'</span>]</span><br><span class="line">    library_dirs += [LIBXC_HOME+<span class="string">'/lib'</span>]</span><br><span class="line">    <span class="comment"># You can use rpath to avoid changing LD_LIBRARY_PATH:</span></span><br><span class="line">    extra_link_args += [<span class="string">'-Wl,-rpath=%s/lib'</span> % LIBXC_HOME]</span><br><span class="line">    <span class="keyword">if</span> <span class="string">'xc'</span> <span class="keyword">not</span> <span class="keyword">in</span> libraries:</span><br><span class="line">        libraries.append(<span class="string">'xc'</span>)</span><br></pre></td></tr></table></figure>
 <span class="label label-danger">问题</span> 之前在这里遇到过一个问题是，当设置<code>compiler=icc</code>时，尽管可以编译通过，但在运行测试时会报错<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">libmkl_blacs_intelmpi_lp64.so: undefined symbol 'MPI_Finalize'</span><br></pre></td></tr></table></figure>
-<span class="label label-success">解决</span>事实上<code>MPI_Finalize</code>本就不是在BLACS里定义的符号，而是MPI库中<code>libmpi.so.12</code>中定义的。这个错误的原因在于<code>libraries</code>是由<code>compiler</code>和<code>mpicompiler</code>公用的链接选项，尽管<code>mpiicc</code>会自动链接<code>libmpi.so</code>，但<code>icc</code>不会，所以会缺少MPI符号定义。将<code>compiler=icc</code>改成<code>compiler=mpiicc</code>即可解决问题。另一种办法是在<code>libraries</code>中增加成员<code>mpi</code>，同时在<code>library_dirs</code>和<code>library_include</code>中分别增加MPI库的lib和include，但这就比较繁琐了。<br><br><span class="label label-info">其他尝试</span> 在出现上面错误的时候，我也尝试了不链接ScaLAPACK和BLACS的办法(<code>scalapack=False</code>)，可以正常通过所有串行和并行测试，但在做Diamond (两原子) <em>GW</em>的全节点32核并行计算时报错<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AttributeError: BLACS is unavailable. GPAW must be compiled with BLACS/ScaLAPACK, and must run in MPI-enabled interpreter (gpaw-python)</span><br></pre></td></tr></table></figure>
+<span class="label label-success">解决</span>事实上<code>MPI_Finalize</code>本就不是在BLACS里定义的符号，而是MPI库中<code>libmpi.so.12</code>中定义的。这个错误的原因在于<code>libraries</code>是由<code>compiler</code>和<code>mpicompiler</code>公用的链接选项，尽管<code>mpiicc</code>会自动链接<code>libmpi.so</code>，但<code>icc</code>不会，所以会缺少MPI符号定义。将<code>compiler=icc</code>改成<code>compiler=mpiicc</code>即可解决问题。另一种办法是在<code>libraries</code>中增加成员<code>mpi</code>，同时在<code>library_dirs</code>和<code>library_include</code>中分别增加MPI库的lib和include，但这就比较繁琐了。<br><br><span class="label label-info">其他尝试</span> 在出现上面错误的时候，我也尝试了不链接ScaLAPACK和BLACS的办法(<code>scalapack=False</code>)，可以正常通过所有串行和并行测试，但在做Diamond (两原子) *GW*的全节点32核并行计算时报错<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AttributeError: BLACS is unavailable. GPAW must be compiled with BLACS/ScaLAPACK, and must run in MPI-enabled interpreter (gpaw-python)</span><br></pre></td></tr></table></figure>
 <p>所以看来在做大规模并行时，GPAW要求BLACS/ScaLAPACK是必须的，从计算的经济性角度上来看也是可以理解的，帮用户省些钱。我也尝试了用GCC(4.8.5)编译依赖和GPAW，但在链接ScaLAPACK时遇到了问题，要求我用<code>-fPIC</code>选项重新编译所有静态库，但其实我在编译时一直带着该选项。在此注明。</p>
 <h3 id="开始编译"><a href="#开始编译" class="headerlink" title="开始编译"></a>开始编译</h3><p>在GPAW根目录下，输入</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> python setup.py install --user</span></span><br></pre></td></tr></table></figure>
@@ -256,9 +264,9 @@
 	<div class="pagination">
 <ul class="pagination">
 	 
-		
-          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
-        
+				
+    	<li class="prev"><a href="/2019/01/02/pandoc-md-to-latex/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
 
         <li><a href="/"><i class="fa fa-archive"></i>Archive</a></li>
 
@@ -344,7 +352,7 @@ s.setAttribute('data-timestamp', +new Date());
 	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
     <ul id="tags" class="tag_box list-unstyled collapse in">	  
 	    
-  <li><a href="/tags/Scientific-Computation/">Scientific Computation<span class="badge">2</span></a></li> <li><a href="/tags/Intel/">Intel<span class="badge">2</span></a></li> <li><a href="/tags/GPAW/">GPAW<span class="badge">1</span></a></li> <li><a href="/tags/Compilation/">Compilation<span class="badge">2</span></a></li>
+  <li><a href="/tags/GPAW/">GPAW<span class="badge">1</span></a></li> <li><a href="/tags/Scientific-Computation/">Scientific Computation<span class="badge">2</span></a></li> <li><a href="/tags/Intel/">Intel<span class="badge">2</span></a></li> <li><a href="/tags/Compilation/">Compilation<span class="badge">2</span></a></li>
 
     </ul>
 	</div>
@@ -387,7 +395,7 @@ var disqus_shortname = 'shigaro';
   <div class="container-narrow">
   <footer> <p>
   
-  &copy; copyright 2018 by <a href="http://minyez.github.io"> Shigaro </a>
+  &copy; copyright 2019 by <a href="http://minyez.github.io"> Shigaro </a>
   
       &nbsp; <a href="http://github.com/minyez/hexo-theme-freemind/">Theme</a> by <a href="http://minyez.github.io/">minyez</a> based on two freemind themes by <a href="https://github.com/wzpan/hexo-theme-freemind/">wzpan</a> and <a href="https://github.com/PytLab/hexo-theme-freemind/">PytLab</a> 
 </p>
