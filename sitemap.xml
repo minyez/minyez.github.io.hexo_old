@@ -2,6 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://minyez.github.io/2019/04/20/wien2k-libxc-mgga-error/</loc>
+    
+    <lastmod>2019-05-01T07:24:58.390Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://minyez.github.io/2019/03/20/vasp-set_indpw_full-error/</loc>
+    
+    <lastmod>2019-05-01T07:23:17.187Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://minyez.github.io/2019/04/20/wien2k-fftw3-multi-def/</loc>
+    
+    <lastmod>2019-05-01T07:19:05.403Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://minyez.github.io/2019/03/23/valgrind-1/</loc>
+    
+    <lastmod>2019-05-01T07:07:54.440Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://minyez.github.io/2017/10/12/make-1/</loc>
     
     <lastmod>2019-05-01T05:41:46.777Z</lastmod>
