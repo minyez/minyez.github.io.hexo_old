@@ -150,15 +150,15 @@
               <li><a href="/tags" style="font-size: 20px; font-family: 'Calibri Light',Arial">All Tags</a><span></span></li>
               <li class="divider"></li>
               
+              <li><a href="/tags/Pandoc/" style="font-size: 15px; font-family: 微软雅黑">Pandoc<span></span></a></li>
+              
+              <li><a href="/tags/Markdown/" style="font-size: 15px; font-family: 微软雅黑">Markdown<span></span></a></li>
+              
               <li><a href="/tags/Scientific-Computation/" style="font-size: 15px; font-family: 微软雅黑">Scientific Computation<span></span></a></li>
               
               <li><a href="/tags/Intel/" style="font-size: 15px; font-family: 微软雅黑">Intel<span></span></a></li>
               
               <li><a href="/tags/Compilation/" style="font-size: 15px; font-family: 微软雅黑">Compilation<span></span></a></li>
-              
-              <li><a href="/tags/Pandoc/" style="font-size: 15px; font-family: 微软雅黑">Pandoc<span></span></a></li>
-              
-              <li><a href="/tags/Markdown/" style="font-size: 15px; font-family: 微软雅黑">Markdown<span></span></a></li>
               
               <li><a href="/tags/Python/" style="font-size: 15px; font-family: 微软雅黑">Python<span></span></a></li>
               
@@ -252,7 +252,7 @@
 <figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Tags: &lt;span class="badge badge-warn"&gt;\#todo&lt;/span&gt; ,</span><br><span class="line">&lt;span class="badge badge-warn"&gt;\#todo()&lt;/span&gt; ,</span><br><span class="line">&lt;span class="badge badge-warn"&gt;\#todo(today)&lt;/span&gt; ,</span><br><span class="line">&lt;span class="badge badge-warn"&gt;\#todo(today, tomorrow)&lt;/span&gt;</span><br><span class="line"></span><br><span class="line">People: &lt;span class="badge badge-info"&gt;@todo&lt;/span&gt; ,</span><br><span class="line">&lt;span class="badge badge-info"&gt;@todo&lt;/span&gt;() ,</span><br><span class="line">&lt;span class="badge badge-info"&gt;@todo&lt;/span&gt;(today) ,</span><br><span class="line">&lt;span class="badge badge-info"&gt;@todo&lt;/span&gt;(today, tomorrow)</span><br></pre></td></tr></table></figure>
 <p>可以看到以<code>#</code>为前缀的都正确转化了, 而以<code>@</code>前缀的, 含括号的字符串都没有正确转化. </p>
 <p>由于在<code>re.fullmatch</code>中<code>#</code>和<code>@</code>是同样处理的, 出现这种情形只有可能是在<code>pf.Span</code>转化字符串时对<code>#</code>和<code>@</code>做了区别对待. 为了验证, 我们看一下<code>convert_text</code>的结果</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; md2 = &quot;&lt;span&gt;@todo(today,tomorrow)&lt;/span&gt;&quot;</span><br><span class="line">[Para(Span(Cite(Str(@todo)) Str((today,) Space Str(tomorrow))))]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; md2 = &quot;@todo(today, tomorrow)&quot;</span><br><span class="line">&gt;&gt;&gt; convert_text(md2)</span><br><span class="line">[Para(Cite(Str(@todo)) Str((today,) Space Str(tomorrow)))]</span><br></pre></td></tr></table></figure>
 <p>可见<code>Str</code>对象<code>@todo</code>是<code>Cite</code>对象的子对象, 跟括号所含字符串对应的<code>Str</code>完全分开了, 而我上面的代码没有考虑这个问题. </p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文基于panflute编写了几个pandoc过滤器, 用途包括将原始Markdown标题结构转化为适用于Hexo博文的, 将<code>#tag</code>形式的标签转化为可用Bootstrap CSS渲染的HTML源码.</p>
 	  
