@@ -361,8 +361,9 @@ People: <span class="badge badge-info">@todo</span> ,
 由于在`re.fullmatch`中`#`和`@`是同样处理的, 出现这种情形只有可能是在`pf.Span`转化字符串时对`#`和`@`做了区别对待. 为了验证, 我们看一下`convert_text`的结果
 
 ``` ipython
->>> md2 = "<span>@todo(today,tomorrow)</span>"
-[Para(Span(Cite(Str(@todo)) Str((today,) Space Str(tomorrow))))]
+>>> md2 = "@todo(today, tomorrow)"
+>>> convert_text(md2)
+[Para(Cite(Str(@todo)) Str((today,) Space Str(tomorrow)))]
 ```
 
 可见`Str`对象`@todo`是`Cite`对象的子对象, 跟括号所含字符串对应的`Str`完全分开了, 而我上面的代码没有考虑这个问题. 
