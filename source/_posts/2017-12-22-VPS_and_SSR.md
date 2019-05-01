@@ -5,7 +5,6 @@ tags: [Shadowsocks, VPS, Network]
 categories: Life
 comment: true
 toc: true
-feature: Shadowsocks_logo.png
 ---
 
 ## 前言
@@ -133,18 +132,12 @@ $ ./shadowsocks-all.sh 2>&1 | tee shadowsocks-all.log
 
 
 
-## 增加动态域名系统
-
-
-
-
-
 ## 总结
 
 回顾从VPN、hosts到SS的过程，其实是自己能力和心态逐渐变化的过程。一开始什么也不懂，依靠别人的VPN过活; 后来看到了免费的hosts，自己也愿意稍微折腾一下，但渐渐也受不了每个hosts文件的短暂寿命和找hosts的痛苦，最后走上了折腾钱折腾时间但是一定程度上"一劳永逸"的SS(感谢开源项目开发者们和脚本作者)。也许之后还会继续折腾到V2Ray吧。谨把这Vultr VPS+SSR搭建过程献给与GFW战斗的勇者们。
 
 
 
-## 更新日志
+## TODO
 
-- [x] 2018-10-15 增加DDNS部分
+- [ ] 2018-10-15 增加DDNS部分
