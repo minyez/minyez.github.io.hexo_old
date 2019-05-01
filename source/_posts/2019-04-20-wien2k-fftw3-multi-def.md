@@ -8,6 +8,7 @@ tags:
 - Bugfix
 - Intel
 - FFTW
+- Compilation
 categories: Software
 ---
 

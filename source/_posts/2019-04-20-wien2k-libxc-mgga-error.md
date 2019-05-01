@@ -8,6 +8,7 @@ tags:
 - Bugfix
 - LIBXC
 - Intel
+- Compilation
 categories: Software
 ---
 
