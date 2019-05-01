@@ -1,0 +1,469 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>使用panflute编写pandoc过滤器 | Shigaro</title>
+  <meta name="author" content="minyez">
+  
+  <meta name="description" content="minyez&#39;s blog on life, science and programming">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="使用panflute编写pandoc过滤器"/>
+  <meta property="og:site_name" content="Shigaro"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  
+    <link rel="alternative" href="/true" title="Shigaro" type="application/atom+xml">
+  
+  
+    <link href="/assets/images/favicon/icon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/bootstrap.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-111612868-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+	  <a class="navbar-brand" href="/"></a>
+      <div class="collapse navbar-collapse nav-menu">
+		    <ul class="nav navbar-nav">
+		      
+
+          <!-- Categories -->
+          
+          <li>
+            <a href="/" title="Shigaro's Home" style="font-weight: normal; font-family: Calibri,Arial; font-size: 18px">
+              <i class="fa fa-bank"></i>Home
+            </a>
+          </li>
+          
+		      
+
+          <!-- Categories -->
+          
+          <!-- Archives -->
+          <li class="dropdown">
+            <a href="/archives" class="dropdown-toggle" data-toggle="dropdown" title="All the articles." style="font-weight: normal; font-family: Calibri,Arial; font-size:     18px">
+            <i class="fa fa-archive"></i>Archives
+            <b class="caret"></b>   
+            </a>
+            <ul class="dropdown-menu">
+              <li class="divider"></li>
+              <li><a href="/archives" style="font-size: 20px; font-family: 'Calibri Light',Arial">All Archives</a><span></span></li>
+              <li class="divider"></li>
+              
+              <li><a href="/2019/01/05/panflute_practice/" style="font-size: 15px; font-family: 微软雅黑">使用panflute编写pandoc过滤器<span></span></a></li>
+              
+              <li><a href="/2019/01/02/pandoc-md-to-pdf/" style="font-size: 15px; font-family: 微软雅黑">利用Pandoc将Markdown转化为PDF<span></span></a></li>
+              
+              <li><a href="/2018/07/20/gpaw-1/" style="font-size: 15px; font-family: 微软雅黑">GPAW教程(一)——安装及测试<span></span></a></li>
+              
+              <li><a href="/2018/05/15/f2py-1/" style="font-size: 15px; font-family: 微软雅黑">F2PY——在Python中调用Fortran函数或子程序<span></span></a></li>
+              
+              <li><a href="/2018/02/15/Hexo-1/" style="font-size: 15px; font-family: 微软雅黑">Hexo配置(一)——安装, Markdown写作及主题<span></span></a></li>
+              
+              <li><a href="/2018/01/02/compile_VASP_on_macOS/" style="font-size: 15px; font-family: 微软雅黑">在macOS上编译VASP<span></span></a></li>
+              
+              <li><a href="/2017/12/22/VPS_and_SSR/" style="font-size: 15px; font-family: 微软雅黑">VPS与SSR配置科学上网<span></span></a></li>
+              
+              <li class="divider"></li>
+            </ul>
+          </li>
+
+          
+		      
+
+          <!-- Categories -->
+          
+		      <li class="dropdown">
+            <a href="/categories" class="dropdown-toggle" data-toggle="dropdown" title="All the categories." style="font-weight: normal; font-family: Calibri,Arial; font-size:     18px">
+		    	  <i class="fa fa-folder"></i>Categories
+            <b class="caret"></b>   
+		    	  </a>
+            <ul class="dropdown-menu">
+              <li class="divider"></li>
+              <li><a href="/categories" style="font-size: 20px; font-family: 'Calibri Light',Arial">All Categories</a><span></span></li>
+              <li class="divider"></li>
+              
+              <li><a href="/categories/Software/" style="font-size: 15px; font-family: 微软雅黑">Software<span></span></a></li>
+              
+              <li><a href="/categories/Programming/" style="font-size: 15px; font-family: 微软雅黑">Programming<span></span></a></li>
+              
+              <li><a href="/categories/Life/" style="font-size: 15px; font-family: 微软雅黑">Life<span></span></a></li>
+              
+              <li><a href="/categories/Tutorial/" style="font-size: 15px; font-family: 微软雅黑">Tutorial<span></span></a></li>
+              
+              <li class="divider"></li>
+            </ul>
+		      </li>
+
+          
+		      
+
+          <!-- Categories -->
+          
+          <!-- Tags -->
+          <li class="dropdown">
+            <a href="/tags" class="dropdown-toggle" data-toggle="dropdown" title="All the tags." style="font-weight: normal; font-family: Calibri,Arial; font-size:     18px">
+            <i class="fa fa-tags"></i>Tags
+            <b class="caret"></b>   
+            </a>
+            <ul class="dropdown-menu">
+              <li class="divider"></li>
+              <li><a href="/tags" style="font-size: 20px; font-family: 'Calibri Light',Arial">All Tags</a><span></span></li>
+              <li class="divider"></li>
+              
+              <li><a href="/tags/Scientific-Computation/" style="font-size: 15px; font-family: 微软雅黑">Scientific Computation<span></span></a></li>
+              
+              <li><a href="/tags/Intel/" style="font-size: 15px; font-family: 微软雅黑">Intel<span></span></a></li>
+              
+              <li><a href="/tags/Compilation/" style="font-size: 15px; font-family: 微软雅黑">Compilation<span></span></a></li>
+              
+              <li><a href="/tags/Pandoc/" style="font-size: 15px; font-family: 微软雅黑">Pandoc<span></span></a></li>
+              
+              <li><a href="/tags/Markdown/" style="font-size: 15px; font-family: 微软雅黑">Markdown<span></span></a></li>
+              
+              <li><a href="/tags/Python/" style="font-size: 15px; font-family: 微软雅黑">Python<span></span></a></li>
+              
+              <li><a href="/tags/Fortran/" style="font-size: 15px; font-family: 微软雅黑">Fortran<span></span></a></li>
+              
+              <li class="divider"></li>
+            </ul>
+          </li>
+          
+          
+		      
+
+          <!-- Categories -->
+          
+          <li>
+            <a href="/about" title="About me." style="font-weight: normal; font-family: Calibri,Arial; font-size: 18px">
+              <i class="fa fa-user"></i>About
+            </a>
+          </li>
+          
+		      
+		    </ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+
+
+	
+		<div class="page-header">		
+			<h1> 使用panflute编写pandoc过滤器</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div id="top_meta"></div>
+	<div class="col-md-9">
+	
+
+	<!-- content -->
+	<div class="mypage">		
+	  		
+
+	  <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文简单介绍了笔者学习通过panflute编写pandoc过滤器的过程, 实现了一个将<code>#anytag(date, mood)</code>转化为可用Bootstrap CSS渲染的HTML源码的过滤器.</p>
+<a id="more"></a>
+<p>在<a href="/2019/01/02/pandoc-md-to-pdf/" title="利用Pandoc将Markdown转化为PDF">利用Pandoc将Markdown转化为PDF</a>一文里我尝试用HTML和LaTeX转化Markdown文本到PDF, 包括用CSS和LaTeX模板自定义PDF输出. 但有时我们需要在转化时对Markdown文本本身进行on-the-fly的修改. 这是仅仅修改样式无法完成的, 需要借助<a href="https://pandoc.org/filters.html" target="_blank" rel="noopener">pandoc过滤器</a>直接修改抽象语义树(abstract syntax tree, AST)</p>
+<p>过滤器原则上需要用Haskell写. 对于不会写Haskell的开发人员, jfm老师提供了它的Python包装<a href="https://github.com/jgm/pandocfilters" target="_blank" rel="noopener">pandocfilters</a>. 它的一个替代品是<a href="http://scorreia.com/software/panflute/" target="_blank" rel="noopener">panflute</a>, 特点是提供了额外的帮助函数, 便于debug等等. 下面过滤器代码都是基于panflute的.</p>
+<h2 id="学习简单例子"><a href="#学习简单例子" class="headerlink" title="学习简单例子"></a>学习简单例子</h2><h3 id="强调转删除线"><a href="#强调转删除线" class="headerlink" title="强调转删除线"></a>强调转删除线</h3><p>官网上一个将<code>*x*</code>强调文字换成<code>~~x~~</code>删除线文字</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="comment"># filename: emph_so.py</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">Replace Emph elements with Strikeout elements</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="keyword">from</span> panflute <span class="keyword">import</span> Emph, Strikeout, run_filter</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">action</span><span class="params">(elem, doc)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> isinstance(elem, Emph):</span><br><span class="line">        <span class="keyword">return</span> Strikeout(*elem.content)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">(doc=None)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> run_filter(action, doc=doc)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+<p>运行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pandoc sometext.md --filter emph_so.py -t gfm -o filtered.md</span><br></pre></td></tr></table></figure>
+<p>下面的文字可作为测试</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">这里有一句<span class="emphasis">*本来被强调的文字*</span>. 处理后会和这一段~~被删除的文字~~一样.</span><br></pre></td></tr></table></figure>
+<h3 id="删除注释"><a href="#删除注释" class="headerlink" title="删除注释"></a>删除注释</h3><p>用的是Panflute GitHub repo里的例子<a href="https://github.com/sergiocorreia/panflute/blob/master/examples/panflute/comments.py" target="_blank" rel="noopener">comments.py</a>. 注意原链接17行(这里19行)应该是<code>el.format</code>, 而不是<code>doc.format</code>. </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="comment"># filename: comments.py</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">Pandoc filter that causes everything between</span></span><br><span class="line"><span class="string">'&lt;!-- BEGIN COMMENT --&gt;' and '&lt;!-- END COMMENT --&gt;'</span></span><br><span class="line"><span class="string">to be ignored.  The comment lines must appear on</span></span><br><span class="line"><span class="string">lines by themselves, with blank lines surrounding</span></span><br><span class="line"><span class="string">them.</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> panflute <span class="keyword">as</span> pf</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">prepare</span><span class="params">(doc)</span>:</span></span><br><span class="line">    doc.ignore = <span class="keyword">False</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">comment</span><span class="params">(el, doc)</span>:</span></span><br><span class="line">    is_relevant = (type(el) == pf.RawBlock) <span class="keyword">and</span> (el.format == <span class="string">'html'</span>)</span><br><span class="line">    <span class="keyword">if</span> is_relevant <span class="keyword">and</span> re.search(<span class="string">"&lt;!-- BEGIN COMMENT --&gt;"</span>, el.text):</span><br><span class="line">        doc.ignore = <span class="keyword">True</span></span><br><span class="line">    <span class="keyword">if</span> doc.ignore:</span><br><span class="line">        <span class="keyword">if</span> is_relevant <span class="keyword">and</span> re.search(<span class="string">"&lt;!-- END COMMENT --&gt;"</span>, el.text):</span><br><span class="line">            doc.ignore = <span class="keyword">False</span></span><br><span class="line">        <span class="keyword">return</span> []</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    pf.toJSONFilter(comment, prepare=prepare)</span><br></pre></td></tr></table></figure>
+<p>以下文字可供测试：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- BEGIN COMMENT --&gt;</span><br><span class="line"></span><br><span class="line">在这里的文字在经过comments.py过滤后会消失. </span><br><span class="line"></span><br><span class="line">&lt;!-- END COMMENT --&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="将所有标题上升一层"><a href="#将所有标题上升一层" class="headerlink" title="将所有标题上升一层"></a>将所有标题上升一层</h3><p>自己的原始Markdown笔记都是以h1开始, 这样在LaTeX转化时可以正常转为section. 但Hexo博文正文标题是h2开始的, 因此将原始Markdown笔记转化为Hexo博文中需要修改标题层级结构</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/local/bin/python3</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">Set headers to 1 level higher. </span></span><br><span class="line"><span class="string">Remove h6, and add '.' at the end if there was no '.'</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> panflute <span class="keyword">import</span> Header, Para, run_filter, Block, Str</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">action</span><span class="params">(el, doc)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> isinstance(el, Header):</span><br><span class="line">        <span class="keyword">if</span> el.level &lt; <span class="number">6</span>:</span><br><span class="line">            el.level += <span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            _contents = el.content</span><br><span class="line">            _lastcont = _contents[<span class="number">-1</span>]</span><br><span class="line">            <span class="keyword">if</span> isinstance(_lastcont, Str):</span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">not</span> _lastcont.text.endswith(<span class="string">'.'</span>):</span><br><span class="line">                    _lastcont.text += <span class="string">'.'</span></span><br><span class="line">            <span class="keyword">return</span> Para(*el.content)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">(doc=None)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> run_filter(action, doc=doc) </span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+<p>这段代码还处理了h6的特殊情况. 下面的文字可以作为测试</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># was a level-1 header</span></span><br><span class="line"></span><br><span class="line"><span class="section">## was a level-2 header</span></span><br><span class="line"></span><br><span class="line"><span class="section">### was a level-3 header</span></span><br><span class="line"></span><br><span class="line"><span class="section">#### was a level-4 header</span></span><br><span class="line"></span><br><span class="line"><span class="section">##### was a level-5 header</span></span><br><span class="line"></span><br><span class="line"><span class="section">###### was a level-6 header</span></span><br></pre></td></tr></table></figure>
+<h2 id="进阶尝试-转换-lt-badge-gt"><a href="#进阶尝试-转换-lt-badge-gt" class="headerlink" title="进阶尝试: 转换&lt;badge /&gt;"></a>进阶尝试: 转换<code>&lt;badge /&gt;</code></h2><p>基于上面<a href="#删除注释">删除注释</a>的例子, 写了一个这样的一个例子, 目的是将<code>&lt;badge id=id text=text /&gt;</code>形式的HTML文本转换为<code>&lt;span class=&quot;badge badge-id&quot;&gt;text&lt;/span&gt;</code>, 后者可以被Bootstrap CSS渲染. 代码如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">Pandoc filter that turns the inline &lt;xxx id=id text=text /&gt;</span></span><br><span class="line"><span class="string">to &lt;span class="xxx xxx-id"&gt;text&lt;/span&gt;</span></span><br><span class="line"><span class="string">xxx equals to 'badge, label' currently</span></span><br><span class="line"><span class="string">text should have no space</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> panflute <span class="keyword">as</span> pf</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">extract_id_text</span><span class="params">(raw_inline)</span>:</span></span><br><span class="line">    <span class="string">'''return (id, string) tuple</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    _ide = <span class="string">''</span></span><br><span class="line">    _str = <span class="string">''</span></span><br><span class="line">    iden = re.findall(<span class="string">'(id=[\"\']?\w+[\"\']?[ ]*[/&gt;]?)'</span>, raw_inline)</span><br><span class="line">    text = re.findall(<span class="string">'(text=[\"\']?\w+[\"\']?[ ]*[/&gt;]?)'</span>, raw_inline)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> len(iden) != <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">if</span> iden[<span class="number">0</span>] != <span class="string">''</span>:</span><br><span class="line">            _ide = iden[<span class="number">0</span>][<span class="number">3</span>:<span class="number">-1</span>].strip()</span><br><span class="line">    <span class="keyword">if</span> len(text) != <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">if</span> text[<span class="number">0</span>] != <span class="string">''</span>:</span><br><span class="line">            _str = text[<span class="number">0</span>][<span class="number">5</span>:<span class="number">-1</span>].strip()</span><br><span class="line"></span><br><span class="line">    _ret = [_ide, _str]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i, token <span class="keyword">in</span> enumerate(_ret):</span><br><span class="line">        <span class="keyword">if</span> token != <span class="string">''</span>:</span><br><span class="line">            <span class="keyword">if</span> token.startswith((<span class="string">"\'"</span>, <span class="string">"\""</span>)):</span><br><span class="line">                _ret[i] = _ret[i][<span class="number">1</span>:]</span><br><span class="line">            <span class="keyword">if</span> token.endswith((<span class="string">"\'"</span>, <span class="string">"\""</span>)):</span><br><span class="line">                _ret[i] = _ret[i][:<span class="number">-1</span>]</span><br><span class="line">    <span class="keyword">return</span> tuple(_ret)</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">rawinline_label_badge</span><span class="params">(el, doc)</span>:</span></span><br><span class="line">    is_rawinline = isinstance(el, pf.RawInline) <span class="keyword">and</span> (el.format == <span class="string">'html'</span>)</span><br><span class="line">    <span class="keyword">if</span> is_rawinline:</span><br><span class="line">        <span class="keyword">if</span> re.match(<span class="string">"&lt;label"</span>, el.text) <span class="keyword">or</span> re.match(<span class="string">"&lt;badge"</span>, el.text):</span><br><span class="line">            __cls = re.findall(<span class="string">'(&lt;\w+)'</span>, el.text)</span><br><span class="line">            __cls[<span class="number">0</span>] = __cls[<span class="number">0</span>][<span class="number">1</span>:]</span><br><span class="line">            identi, text = extract_id_text(el.text)</span><br><span class="line">            <span class="keyword">if</span> identi != <span class="string">''</span>:</span><br><span class="line">                __cls.append(__cls[<span class="number">0</span>] + <span class="string">'-'</span> + identi)</span><br><span class="line">            <span class="keyword">return</span> pf.Span(pf.Str(text), classes=__cls)</span><br><span class="line">    <span class="keyword">return</span> el</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    pf.toJSONFilter(rawinline_label_badge)</span><br></pre></td></tr></table></figure>
+<p>由于转化基于<code>RawInline</code>对象, 所以单独为一行的badge或者label是无法正常转化的. 例如</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">右侧两个是可以的 &lt;badge id="warn" text="badge-warn"&gt; &lt;badge id="info" text="badge-info"&gt;</span><br></pre></td></tr></table></figure>
+<p>下面有一个单独成行的<code>badge-danger</code>是在这个脚本下是渲染不出来的. </p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;badge id="danger" text="单独成行的badge-danger"&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="过滤器调试"><a href="#过滤器调试" class="headerlink" title="过滤器调试"></a>过滤器调试</h2><p>直接用<code>--filter</code>选项套用过滤器比较难调试. 可以用以下方法来调试, 其中pandoc输出格式必须作为过滤器的第一个变量声明. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pandoc -t json | ./filter.py latex | pandoc -f json -t latex</span><br></pre></td></tr></table></figure>
+<p>等价于</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pandoc --filter./filter.py -f json -t latex</span><br></pre></td></tr></table></figure>
+<p>也可以使用<code>convert_text</code>来检查自己对一段文字的AST的理解</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; from panflute import *</span><br><span class="line">&gt;&gt;&gt; tag1 = &apos;Some #Tag(abc, cde)&apos;</span><br><span class="line">&gt;&gt;&gt; convert_text(tag1)</span><br><span class="line">[Para(Str(Some) Space Str(#Tag(abc,) Space Str(cde)))]</span><br></pre></td></tr></table></figure>
+<h2 id="实际例子-转化行内带-的标签"><a href="#实际例子-转化行内带-的标签" class="headerlink" title="实际例子: 转化行内带#的标签"></a>实际例子: 转化行内带<code>#</code>的标签</h2><p>这个例子的目的是转化<code>#anytag(date, mood)</code>到HTML源码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;span class=&quot;badge badge-tag&quot;&gt;#anytag(date, mood)</span><br></pre></td></tr></table></figure>
+<p>之所以想做这个转化是因为在笔记软件里会用<code>#tag</code>做笔记分类, 想在转化时把这个tag转化成bootstrap的徽章, 这样在借助HTML转化时就能用BS渲染标签.</p>
+<p>在上面过滤器调试的<code>tag1</code>例子里, 我们看到如果<code>date</code>和<code>mod</code>之间如果有空格时, 上面的tag会转化成两个<code>[Str Space Str]</code>. 这个时候就要用到前面<code>comments.py</code>中的<code>doc.ignore</code>来判断一个标签是否完成, 以及处理中间出现的空间. </p>
+<p>最后的代码如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/local/bin/python3</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">Pandoc filter that turns </span></span><br><span class="line"><span class="string">   "#XXX(...)" to '&lt;span class="badge badge-warn"&gt;#XXX(...)&lt;/span&gt;'</span></span><br><span class="line"><span class="string">and</span></span><br><span class="line"><span class="string">   "@XXX(...)" to &lt;span class="badge badge-info"&gt;@XXX(...)&lt;/span&gt;</span></span><br><span class="line"><span class="string">letters, numbers, comas, underscore, hyphon and space are allowed in the parenthese</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> panflute <span class="keyword">as</span> pf</span><br><span class="line"></span><br><span class="line">str_to_replace = <span class="string">''</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">prepare</span><span class="params">(doc)</span>:</span></span><br><span class="line">    <span class="string">'''ignore represents whether in the tag/people environment</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    doc.ignore = <span class="keyword">False</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">convert_tag_people</span><span class="params">(el, doc)</span>:</span></span><br><span class="line"></span><br><span class="line">    dict_tag_people = &#123;<span class="string">"#"</span>: <span class="string">"warn"</span>, <span class="string">"@"</span>: <span class="string">"info"</span>&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">global</span> str_to_replace</span><br><span class="line">    is_str = isinstance(el, pf.Str)</span><br><span class="line">    <span class="keyword">if</span> is_str:</span><br><span class="line">        _text = el.text</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> doc.ignore:</span><br><span class="line">            <span class="comment"># outside the tag/people, check if meet a tag/people</span></span><br><span class="line">            <span class="keyword">if</span> re.fullmatch(<span class="string">"[#@][\w-]+\([\w,-]*\)"</span>, _text):</span><br><span class="line">                <span class="comment"># direct return the span if the string has both left parenthese and right parenthese</span></span><br><span class="line">                str_to_replace = <span class="string">''</span></span><br><span class="line">                <span class="keyword">return</span> pf.Span(pf.Str(_text), \</span><br><span class="line">                        classes=[<span class="string">"badge"</span>, <span class="string">"badge"</span>+<span class="string">'-'</span>+dict_tag_people[_text[<span class="number">0</span>]]])</span><br><span class="line">            <span class="keyword">if</span> re.fullmatch(<span class="string">"[#@][\w-]+"</span>, _text):</span><br><span class="line">                <span class="comment"># direct return span if the string has noparenthese</span></span><br><span class="line">                str_to_replace = <span class="string">''</span></span><br><span class="line">                <span class="keyword">return</span> pf.Span(pf.Str(_text), \</span><br><span class="line">                        classes=[<span class="string">"badge"</span>, <span class="string">"badge"</span>+<span class="string">'-'</span>+dict_tag_people[_text[<span class="number">0</span>]]])</span><br><span class="line">            <span class="keyword">if</span> re.fullmatch(<span class="string">"[#@][\w-]+\([\w,-]*"</span>, _text):</span><br><span class="line">                <span class="comment"># string with left parenthese in it, but with no right parenthese</span></span><br><span class="line">                <span class="comment"># initialize the str_to_replace</span></span><br><span class="line">                str_to_replace = _text</span><br><span class="line">                doc.ignore = <span class="keyword">True</span></span><br><span class="line">                <span class="keyword">return</span> []</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># inside the tag/people, check if end the tag/people.</span></span><br><span class="line">            <span class="comment"># Found right parenthese at the end, return the whole string</span></span><br><span class="line">            <span class="keyword">if</span> re.fullmatch(<span class="string">"[^#@][\w,-]+\)"</span>, _text):</span><br><span class="line">                doc.ignore = <span class="keyword">False</span></span><br><span class="line">                str_to_replace += _text</span><br><span class="line">                new_Str = pf.Str(str_to_replace)</span><br><span class="line">                <span class="keyword">return</span> pf.Span(new_Str, \</span><br><span class="line">                        classes=[<span class="string">"badge"</span>, <span class="string">"badge"</span>+<span class="string">'-'</span>+dict_tag_people[str_to_replace[<span class="number">0</span>]]])</span><br><span class="line"></span><br><span class="line">            <span class="comment"># no right parenthese found, purge it to str_to_replace, return empty element</span></span><br><span class="line">            str_to_replace += _text</span><br><span class="line">            <span class="keyword">return</span> []</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="comment"># Not a normal string. If within the tag/people and is a space, add space to str_to_replace</span></span><br><span class="line">        <span class="comment"># otherwise, just give it back to AST</span></span><br><span class="line">        <span class="keyword">if</span> doc.ignore:</span><br><span class="line">            <span class="keyword">if</span> isinstance(el, pf.Space):</span><br><span class="line">                str_to_replace += <span class="string">' '</span></span><br><span class="line">            <span class="keyword">return</span> []</span><br><span class="line">    <span class="keyword">return</span> el</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    pf.toJSONFilter(convert_tag_people, prepare=prepare)</span><br></pre></td></tr></table></figure>
+<p>这个脚本里还对<code>@</code>开头做进行了同样处理, 在Agenda里它用来代表人名. 尝试转化下面的文字:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Tags: #todo , #todo() , #todo(today) , #todo(today, tomorrow)</span><br><span class="line">People: @todo , @todo() , @todo(today) , @todo(today, tomorrow)</span><br></pre></td></tr></table></figure>
+<p>转化结果</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Tags: &lt;span class="badge badge-warn"&gt;\#todo&lt;/span&gt; ,</span><br><span class="line">&lt;span class="badge badge-warn"&gt;\#todo()&lt;/span&gt; ,</span><br><span class="line">&lt;span class="badge badge-warn"&gt;\#todo(today)&lt;/span&gt; ,</span><br><span class="line">&lt;span class="badge badge-warn"&gt;\#todo(today, tomorrow)&lt;/span&gt;</span><br><span class="line"></span><br><span class="line">People: &lt;span class="badge badge-info"&gt;@todo&lt;/span&gt; ,</span><br><span class="line">&lt;span class="badge badge-info"&gt;@todo&lt;/span&gt;() ,</span><br><span class="line">&lt;span class="badge badge-info"&gt;@todo&lt;/span&gt;(today) ,</span><br><span class="line">&lt;span class="badge badge-info"&gt;@todo&lt;/span&gt;(today, tomorrow)</span><br></pre></td></tr></table></figure>
+<p>可以看到以<code>#</code>为前缀的都正确转化了, 而以<code>@</code>前缀的, 含括号的字符串都没有正确转化. </p>
+<p>由于在<code>re.fullmatch</code>中<code>#</code>和<code>@</code>是同样处理的, 出现这种情形只有可能是在<code>pf.Span</code>转化字符串时对<code>#</code>和<code>@</code>做了区别对待. 为了验证, 我们看一下<code>convert_text</code>的结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; md2 = &quot;&lt;span&gt;@todo(today,tomorrow)&lt;/span&gt;&quot;</span><br><span class="line">[Para(Span(Cite(Str(@todo)) Str((today,) Space Str(tomorrow))))]</span><br></pre></td></tr></table></figure>
+<p>可见<code>Str</code>对象<code>@todo</code>是<code>Cite</code>对象的子对象, 跟括号所含字符串对应的<code>Str</code>完全分开了, 而我上面的代码没有考虑这个问题. </p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文基于panflute编写了几个pandoc过滤器, 用途包括将原始Markdown标题结构转化为适用于Hexo博文的, 将<code>#tag</code>形式的标签转化为可用Bootstrap CSS渲染的HTML源码.</p>
+	  
+	</div>
+
+    
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+		
+          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+        
+
+        <li><a href="/"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/2019/01/02/pandoc-md-to-pdf/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+    
+	
+    <!-- bdshare -->
+    
+        
+
+        
+
+    
+
+	<!-- comment -->
+    
+<section id="comment">
+  <h2 class="title">Comments</h2>
+
+  
+<div id="disqus_thread"></div>
+<script>
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://shigaro.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  
+</section>
+
+
+	</div> <!-- col-md-9/col-md-12 -->
+		
+	
+	<div id="side_meta">
+		<div class="col-md-3" id="post_meta"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2019-01-05 
+	</div>
+	
+
+	<!-- categories -->
+    
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#categorys"><i class="fa fa-folder"></i></a>	
+    <ul id="categorys" class="tag_box list-unstyled collapse in">
+          
+  <li>
+    <li><a href="/categories/Software/">Software<span class="badge">4</span></a></li>
+  </li>
+
+    </ul>
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Pandoc/">Pandoc<span class="badge">2</span></a></li> <li><a href="/tags/Markdown/">Markdown<span class="badge">2</span></a></li> <li><a href="/tags/Panflute/">Panflute<span class="badge">1</span></a></li> <li><a href="/tags/AST/">AST<span class="badge">1</span></a></li> <li><a href="/tags/Bootstrap/">Bootstrap<span class="badge">1</span></a></li>
+
+    </ul>
+	</div>
+		
+
+	<!-- toc -->
+	<div class="meta-widget">
+	
+	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
+	   <div id="toc" class="toc collapse in">
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#前言"><span class="toc-article-text">前言</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#学习简单例子"><span class="toc-article-text">学习简单例子</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#强调转删除线"><span class="toc-article-text">强调转删除线</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#删除注释"><span class="toc-article-text">删除注释</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#将所有标题上升一层"><span class="toc-article-text">将所有标题上升一层</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#进阶尝试-转换-lt-badge-gt"><span class="toc-article-text">进阶尝试: 转换&lt;badge /&gt;</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#过滤器调试"><span class="toc-article-text">过滤器调试</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#实际例子-转化行内带-的标签"><span class="toc-article-text">实际例子: 转化行内带#的标签</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#总结"><span class="toc-article-text">总结</span></a></li></ol>
+		</div>
+	
+	</div>
+	
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	</div>
+		
+
+</div><!-- row -->
+
+<script type="text/javascript">
+var disqus_shortname = 'shigaro';
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer> <p>
+  
+  &copy; copyright 2019 by <a href="http://minyez.github.io"> minyez </a>
+  
+      &nbsp; <a href="http://github.com/minyez/hexo-theme-freemind/">Theme</a> by <a href="http://minyez.github.io/">minyez</a> based on two freemind themes by <a href="https://github.com/wzpan/hexo-theme-freemind/">wzpan</a> and <a href="https://github.com/PytLab/hexo-theme-freemind/">PytLab</a> 
+</p>
+ </footer>
+</div> <!-- container-narrow -->
+  
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/search.js"></script> 
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+
+   <script type="text/javascript">      
+     var search_path = "search.xml";
+	 if (search_path.length == 0) {
+	 	search_path = "search.xml";
+	 }
+	 var path = "/" + search_path;
+     searchFunc(path, 'local-search-input', 'local-search-result');
+   </script>
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<!-- added 2018-07-12 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-111612868-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-111612868-1');
+</script>
+
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        },
+        TeX: {equationNumbers: { autoNumber: "AMS" }}
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+</body>
+   </html>
