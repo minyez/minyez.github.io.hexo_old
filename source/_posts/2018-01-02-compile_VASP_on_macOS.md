@@ -7,9 +7,9 @@ toc: true
 comment: true
 ---
 
+## 前言
 
 本文介绍了笔者在macOS High Sierra上编译VASP.5.4.4时遇到的问题及解决问题的过程。 <!--more-->
-
 
 ## 问题背景
 
@@ -83,6 +83,8 @@ LLIBS      += -Lparser -lparser -lstdc++
 # Normally no need to change this
 SRCDIR     = ../../src
 BINDIR     = ../../bin
+
+### GPU stuff below
 ```
 
 输入命令
@@ -315,7 +317,7 @@ fish: 'vasp' terminated by signal SIGABRT (Abort)
 ```bash
 $ echo $DYLD_LIBRARY_PATH
 /usr/local/Cellar/gcc/7.2.0/lib/gcc/7:/usr/local/Cellar/gcc/7.2.0/lib/gcc/7/gcc/x86_64-apple-darwin17.0.0/7.2.0/:/Users/stevezhang/software/compiler/mpich/3.2.1/intel/18.0.1/lib:/opt/intel/compilers_and_libraries_2018.1.126/mac/compiler/lib:/opt/intel/compilers_and_libraries_2018.1.126/mac/compiler/lib/intel64:/opt/intel/compilers_and_libraries_2018.1.126/mac/ipp/lib:/opt/intel/compilers_and_libraries_2018.1.126/mac/compiler/lib:/opt/intel/compilers_and_libraries_2018.1.126/mac/mkl/lib:/opt/intel/compilers_and_libraries_2018.1.126/mac/tbb/lib:/opt/intel/compilers_and_libraries_2018.1.126/mac/tbb/lib:/opt/intel/compilers_and_libraries_2018.1.126/mac/daal/lib:/opt/intel/compilers_and_libraries_2018.1.126/mac/daal/../tbb/lib:/usr/local/opt/tcl-tk/lib:/usr/local/lib:/usr/lib:
-$ echo $LIBRARYR_PATH 
+$ echo $LIBRARY_PATH 
 ... # 和DYLD一样
 $ echo $LD_LIBRARY_PATH
 /usr/local/Cellar/gcc/7.2.0/lib/gcc/7:/usr/local/Cellar/gcc/7.2.0/lib/gcc/7/gcc/x86_64-apple-darwin17.0.0/7.2.0/:/Users/stevezhang/software/mathlib/scalapack/2.0.2/intel/18.0.1/:/Users/stevezhang/software/mathlib/fftw/3.3.7/intel/18.0.1/lib:/Users/stevezhang/software/compiler/mpich/3.2.1/intel/18.0.1/lib:/usr/local/opt/tcl-tk/lib:/usr/local/lib:/usr/lib:
@@ -327,7 +329,9 @@ $ echo $LD_LIBRARY_PATH
 source compilervars.sh intel64
 ```
 
-来添加的，可见`compilervars.sh`并没有编辑`LD_LIBRARY_PATH`这一变量。include文件如下
+来添加的，可见`compilervars.sh`并没有编辑`LD_LIBRARY_PATH`这一变量。
+
+最终可用的include文件如下
 
 ```makefile
 # Precompiler options
@@ -394,7 +398,7 @@ BINDIR     = ../../bin
 
 #================================================
 # GPU Stuff
-... # skipped for clarity
+#... # skipped for clarity
 ```
 
 
@@ -411,13 +415,21 @@ macOS的操作系统是Darwin。
 
 ## 附录
 
-在编译成功5.4.4后，我在几乎所有的modulefile中增加了`prepend-path DYLD_LIBRARY_PATH`行，在module load时出现警告
+编译成功后，我在几乎所有的modulefile中增加了`prepend-path DYLD_LIBRARY_PATH`行，在module load它们时出现警告
 
 ```bash
 dyld: warning, unknown environment variable: DYLD_LIBRARY_PATH_modshare
 ```
 
-这个错误在跑vasp的时候也会产生。可能是`dyld`和Tcl版的`module`之前存在不兼容，但具体是什么导致的还不清楚。不过因为只是警告，并不影响`DYLD_LIBRARY_PATH`的定义。不过频繁出现实在太烦人了，因此我从modulefile中将`prepend-path DYLD_LIBRARY_PATH`删去，改在`.bashrc`内添加`DYLD_LIBRARY_PATH`。
+这个错误在跑vasp的时候也会产生。出现原因是`dyld`和Tcl版的`module`之间不兼容。~~不过因为只是警告，并不影响`DYLD_LIBRARY_PATH`的定义。不过频繁出现实在太烦人了，因此我从modulefile中将`prepend-path DYLD_LIBRARY_PATH`删去，改在`.bashrc`内添加`DYLD_LIBRARY_PATH`。~~更新到最新版本的Environment module可以解决这个问题. 
+
+
+
+## 更新
+
+### 2019-05-02
+
+Environment module 4.2.1已经修正了`DYLD_LIBRARY_PATH`的问题, 美滋滋 XD
 
 
 
