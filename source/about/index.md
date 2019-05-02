@@ -7,14 +7,16 @@ layout: page
 
 I'm currently a Ph.D candidate at College of Chemistry and Molecular Engineering (CCME), Peking University (PKU).
 
-My research topics focus on developping electronic structure methods beyond density functional theory (DFT).
+My research topics focus on developing electronic structure methods beyond density functional theory (DFT).
+
+My mother tongue is Chinese. I also learned English and Japanese.
 
 ## Educations
 
 | Period| Content |
 |--:|:--|
 |2015 - 2020| Graduate study at CCME, PKU|
-|2011 - 2015| BS, CCME, PKU|
+|2011 - 2015| B. S. , CCME, PKU|
 
 ## Publications
 
@@ -24,9 +26,7 @@ My research topics focus on developping electronic structure methods beyond dens
 
 I love reading literature, especially classics.
 
-I love basketball and play for the team of graduate school. 
-
-My mother tongue is Chinese. I also learned English and Japanese.
+I love basketball and play for the team of CCME graduate school. 
 
 ACG is panacea.
 

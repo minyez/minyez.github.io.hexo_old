@@ -354,7 +354,9 @@ biblatexoptions:
 ![This is my website logo.](icon.jpg){width=50% #fig:favicon}
 ```
 
-在正文可以用在制作表格时, pandoc支持单元格含多行文字的表格, 也能非常方便的调整列的对齐方式, 比如以下三列分别是左中右对齐的.
+可在正文中插入`+@fig:favicon`以引用. 为了得到正确的交叉引用链接, 需要安装[pandoc-fignos](https://github.com/tomduck/pandoc-fignos)作为过滤器.
+
+在制作表格时, pandoc支持单元格含多行文字的表格, 也能非常方便的调整列的对齐方式, 比如以下三列分别是左中右对齐的.
 
 ```markdown
 |left | center | right|
@@ -368,18 +370,20 @@ Table: demo left-center-right table {#tbl:demo-tbl}
 | :--- | :----: | ----: |
 | l    |   c    |     r |
 
+在正文中插入`+@tbl:demo-tbl`以引用. 类似的, 转化时用[pandoc-tablenos](https://github.com/tomduck/pandoc-tablenos)过滤后才能得到正确的交叉引用链接.
+
 ## 实例: 转换`demo.md`到`demo.pdf`
 
-最后放一个用`markdown+pandoc+xelatex+bibtex`的实际例子, 所需要文件都在[压缩包](demo.tar.gz)里, 用`make`编译需要有pandoc和TeXLive等LaTeX发行版. 
+最后放一个用`markdown+pandoc+xelatex+bibtex`的实际例子, 所需文件都在[压缩包](demo.tar.gz)里, 欢迎下载. `make`编译需要有pandoc和TeXLive等LaTeX发行版. 
 
-- demo.md：Markdown源文件
-- Makefile: 产生需要的`template.tex`和`HW.md`, 执行LaTeX工具链
-- demo.bib: 用到的参考文献
-- icon.jpg: 要插的图片, 就是我的网站图标啦. 
+- `demo.md`：Markdown源文件
+- `Makefile`: 产生需要的`template.tex`和`HW.md`, 执行LaTeX工具链
+- `demo.bib`: 用到的参考文献
+- `icon.jpg`: 要插的图片, 就是我的网站图标啦. 
 
-作为参考, 在[这个gist](https://gist.github.com/maxogden/97190db73ac19fc6c1d9beee1a6e4fc8)里作者也详细介绍了如何将markdown转化成paper. 但在转化pizza图片出现的奇怪的地方是, markdown下用的`![It's a pizza]`作为图片注释, 而在转化到PDF后图片注释变成了`Figure 1`. 我这里倒是没有这个问题. 
+作为参考, 在[这个gist](https://gist.github.com/maxogden/97190db73ac19fc6c1d9beee1a6e4fc8)里作者也详细介绍了如何将markdown转化成paper. 但对于其中的pizza图片, markdown下用的`![It's a pizza]`作为图片注释, 转化到PDF后图片注释却变成了`Figure 1`. 我这里倒是没有这个问题. 
 
-用HTML的转化比较直接, 所需要的就是找个喜欢的CSS, 就不展示了 :) 
+另外, 由于用HTML的转化比较直接, 所需要的就是找个喜欢的CSS, 就不展示了 :P 
 
 ## 总结
 

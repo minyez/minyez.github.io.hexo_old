@@ -18,9 +18,9 @@ toc: True
 
 <!-- more -->
 
-在{% post_link pandoc-md-to-pdf %}一文里我尝试用HTML和LaTeX转化Markdown文本到PDF, 包括用CSS和LaTeX模板自定义PDF输出. 但有时我们需要在转化时对Markdown文本本身进行on-the-fly的修改. 这是仅仅修改样式无法完成的, 需要借助[pandoc过滤器](https://pandoc.org/filters.html)直接修改抽象语义树(abstract syntax tree, AST)
+在{% post_link pandoc-md-to-pdf %}一文里我尝试用HTML和LaTeX转化Markdown文本到PDF, 包括用CSS和LaTeX模板自定义PDF输出. 但有时我们需要在转化时对Markdown文本本身进行on-the-fly的修改. 这是仅仅修改样式无法完成的, 需要借助[pandoc过滤器](https://pandoc.org/filters.html)直接修改抽象语义树(abstract syntax tree, AST).
 
-过滤器原则上需要用Haskell写. 对于不会写Haskell的开发人员, jfm老师提供了它的Python包装[pandocfilters](https://github.com/jgm/pandocfilters). 它的一个替代品是[panflute](http://scorreia.com/software/panflute/), 特点是提供了额外的帮助函数, 便于debug等等. 下面过滤器代码都是基于panflute的.
+过滤器原则上需要用Haskell写. 对于不会写Haskell的开发人员, jgm老师提供了它的Python包装[pandocfilters](https://github.com/jgm/pandocfilters). 它的一个替代品是[panflute](http://scorreia.com/software/panflute/), 特点是提供了额外的帮助函数, 便于debug等等. 下面过滤器代码都是基于panflute的.
 
 ## 学习简单例子
 
@@ -112,6 +112,7 @@ if __name__ == "__main__":
 ```python
 #!/usr/local/bin/python3
 # -*- coding: utf-8 -*-
+# filename: header-up.py
 """
 Set headers to 1 level higher. 
 Remove h6, and add '.' at the end if there was no '.'
@@ -161,6 +162,7 @@ if __name__ == '__main__':
 ``` python
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# filename: badge_span.py
 """
 Pandoc filter that turns the inline <xxx id=id text=text />
 to <span class="xxx xxx-id">text</span>
@@ -241,7 +243,7 @@ pandoc --filter./filter.py -f json -t latex
 
 也可以使用`convert_text`来检查自己对一段文字的AST的理解
 
-``` ipython
+``` python
 >>> from panflute import *
 >>> tag1 = 'Some #Tag(abc, cde)'
 >>> convert_text(tag1)
@@ -253,7 +255,7 @@ pandoc --filter./filter.py -f json -t latex
 这个例子的目的是转化`#anytag(date, mood)`到HTML源码
 
 ```
-<span class="badge badge-tag">#anytag(date, mood)
+<span class="badge badge-tag">#anytag(date, mood)</span>
 ```
 
 之所以想做这个转化是因为在笔记软件里会用`#tag`做笔记分类, 想在转化时把这个tag转化成bootstrap的徽章, 这样在借助HTML转化时就能用BS渲染标签.
@@ -265,6 +267,7 @@ pandoc --filter./filter.py -f json -t latex
 ``` python
 #!/usr/local/bin/python3
 # -*- coding: utf-8 -*-
+# filename: tag_span.py
 """
 Pandoc filter that turns 
    "#XXX(...)" to '<span class="badge badge-warn">#XXX(...)</span>'
@@ -309,7 +312,7 @@ def convert_tag_people(el, doc):
                 doc.ignore = True
                 return []
         else:
-            # inside the tag/people, check if end the tag/people.
+            # inside the tag/people, check if the tag/people string ends.
             # Found right parenthese at the end, return the whole string
             if re.fullmatch("[^#@][\w,-]+\)", _text):
                 doc.ignore = False
@@ -329,7 +332,6 @@ def convert_tag_people(el, doc):
                 str_to_replace += ' '
             return []
     return el
-
 
 if __name__ == "__main__":
     pf.toJSONFilter(convert_tag_people, prepare=prepare)
@@ -360,7 +362,7 @@ People: <span class="badge badge-info">@todo</span> ,
 
 由于在`re.fullmatch`中`#`和`@`是同样处理的, 出现这种情形只有可能是在`pf.Span`转化字符串时对`#`和`@`做了区别对待. 为了验证, 我们看一下`convert_text`的结果
 
-``` ipython
+``` python
 >>> md2 = "@todo(today, tomorrow)"
 >>> convert_text(md2)
 [Para(Cite(Str(@todo)) Str((today,) Space Str(tomorrow)))]
