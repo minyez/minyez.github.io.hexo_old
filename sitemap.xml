@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://minyez.github.io/about/index.html</loc>
+    
+    <lastmod>2019-05-02T06:32:58.790Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://minyez.github.io/2018/05/15/f2py-1/</loc>
     
     <lastmod>2019-05-02T04:28:07.840Z</lastmod>
@@ -82,13 +89,6 @@
     <loc>http://minyez.github.io/2018/02/15/Hexo-1/</loc>
     
     <lastmod>2018-10-03T08:34:22.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://minyez.github.io/about/index.html</loc>
-    
-    <lastmod>2018-08-15T02:02:33.000Z</lastmod>
     
   </url>
   

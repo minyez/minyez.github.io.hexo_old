@@ -1,0 +1,224 @@
+title: About
+layout: page
+---
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <span class="fa fa-male"></span>
+        <strong>Introduction / 简介</strong>
+    </div>
+    <ul class="list-group">
+        <li class="list-group-item">
+            <div class="about-info-icon"><span class="fa fa-info-circle"></span></div>
+            <div class="about-info-content">
+                Hi there! My name is Minye Zhang, currently a PhD candidate in Theoretical Chemistry in Peking university, China, specialized in electronic structure method for material simulation. This blog is intended to function as my knowledge repository, which is not limited to my major. <br>
+                你好! 我的名字是<strong>张旻烨</strong>, 现在北京大学攻读理论化学博士学位, 方向为材料模拟的电子结构方法. 我将这个博客用作我的知识库, 其中内容不仅限于我的专业.
+            </div>
+        </li>
+        <!--<li class="list-group-item">
+            <div class="about-info-icon"><span class="fa fa-terminal"></span></div>
+            <div class="about-info-content">
+            </div>
+    </li>-->
+        <li class="list-group-item">
+            <div class="about-info-icon"><span class="fa fa-battery-full"></span></div>
+            <div class="about-info-content">
+                <strong>Unlocked skills / 已解锁的技能：</strong><br>
+                <ul>
+                    <li>C</li>
+                    <li>Fortran90</li>
+                    <li>Python (NumPy, SciPy, Pandas, Matplotlib, Spglib)</li>
+            <li>F2PY & SWIG</li>
+            <li>MPI</li>
+            <li>LAPACK & MKL</li>
+            <li>FFTW</li>
+            <li>Density functional theory (DFT) calculations (<a href="https://www.vasp.at/" target="_blank">VASP</a>, <a href="www.abinit.org" target="_blank">Abinit</a>, <a href="http://susi.theochem.tuwien.ac.at/index.html" target="_blank">WIEN2k</a>)</li>
+            <li>Makefile</li>
+            <li>Git</li>
+                </ul>
+            </div>
+        </li>
+        <li class="list-group-item">
+            <div class="about-info-icon"><span class="fa fa-battery-half"></span></div>
+            <div class="about-info-content">
+                <strong>Skills being unlocked / 正解锁的技能：</strong><br>
+                <ul>
+            <li>Web programming (HTML & CSS & JS)</li>
+            <li>Many-body theory, particularly <i>GW</i> and BSE</li>
+            <li>DFT implementation within LAPW framework</li>
+            <li>DFT calculations (<a href="https://wiki.fysik.dtu.dk/gpaw/" target="_blank">GPAW</a>)</li>
+                </ul>
+            </div>
+        </li>
+        <li class="list-group-item">
+            <div class="about-info-icon"><span class="fa fa-heart"></span></div>
+            <div class="about-info-content">
+                <strong> Hobbies / 业余爱好 </strong>
+            <ul>
+                <li>Video games</li>
+                <li>Basketball & baseball</li>
+            <li>ACG</li>
+                <li>Classics reading (Chinese, English and Japanese)</li>
+            </ul>
+            </div>
+        </li>
+<!--        <li class="list-group-item">
+            <div class="about-info-icon"><span class="fa fa-share-alt"></span></div>
+            <div class="about-info-content">
+                <strong>Social Info / 社交信息：</strong><br><br>
+                <a href="https://github.com/PytLab" title="My GitHub" style="text-decoration: none">
+                    <button type="button" class="btn btn-default"><span class="fa fa-github"></span> PytLab</button>
+                </a>
+                <a href="http://weibo.com/shaowugui" title="My Weibo" style="text-decoration: none">
+                    <button type="button" class="btn btn-danger"><span class="fa fa-weibo"></span> @PytLab</button>
+                </a>
+                <a href="https://www.zhihu.com/people/shao-zheng-jiang" title="My Zhihu" style="text-decoration: none">
+                    <button type="button" class="btn btn-primary"><span class="fa fa-link"></span> 知乎 - 邵正将</button>
+                </a>
+                <a href="https://twitter.com/jiangjiang_shaw" title="My Twitter" style="text-decoration: none">
+                    <button type="button" class="btn btn-info"><span class="fa fa-twitter"></span> @jiangjiang_shaw</button>
+                </a>
+                <a href="http://stackoverflow.com/users/4014840/pytlab" title="My Stackoverflow" style="text-decoration: none">
+                    <button type="button" class="btn btn-warning"><span class="fa fa-stack-overflow"></span> PytLab</button>
+                </a>
+                <a href="https://cn.linkedin.com/in/shao-zhengjiang-08126672" title="My Linkedin" style="text-decoration: none">
+                    <button type="button" class="btn btn-primary"><span class="fa fa-linkedin"></span> ShaoZhengjiang</button>
+                </a>
+                <br><br>
+            </div>
+            </li> -->
+    </ul>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <span class="fa fa-clock-o"></span>
+        <strong>My Timeline / 我的时间线</strong>
+    </div>
+    <div class="line-warp">
+        <div class="timeline-header">
+            <span class="badge"><span class="fa fa-clock-o"></span>My Timeline</span>
+        </div>
+        <div class="line-item">
+            <div class="line-icon-warp ">
+               <span class="fa-stack fa-lg" >
+                  <i class="fa fa-circle fa-stack-2x" style="color: #EEC900"></i>
+                  <i class="fa fa-lightbulb-o fa-stack-1x" style="color: #ffffff"></i>
+               </span>
+                <span class="badge"> &nbsp;&nbsp;Just Now&nbsp;&nbsp; </span>
+            </div>
+            <div class="line-content-box">
+                Stay hungry, stay foolish...<br>
+                学习中...
+            </div>
+        </div>
+
+        <div class="breakline">------------------&nbsp;&nbsp;<span class="badge">&nbsp;&nbsp;2 0 1 8&nbsp;&nbsp;</span>&nbsp;&nbsp;------------------</div>
+
+        <div class="line-item">
+            <div class="line-icon-warp ">
+               <span class="fa-stack fa-lg" >
+                  <i class="fa fa-circle fa-stack-2x" style="color: #458B00"></i>
+                  <i class="fa fa-file fa-stack-1x" style="color: #ffffff"></i>
+               </span>
+                <span class="badge"> Mar 15, 2018 </span>
+            </div>
+            <div class="line-content-box">
+                Publish the scientific paper as first author for the first time. <strong>Title</strong>: <a href='http://pubs.rsc.org/en/Content/ArticleLanding/2018/TA/C8TA00759D'>Relative Stability of FeS<sub>2</sub> Polymorphs with Random Phase Approximation Approach.</a><br>
+                第一次以唯一第一作者身份发表科学论文. 题名《随机相位近似方法下的二硫化亚铁晶相相对稳定性》<br>
+            </div>
+        </div>
+
+        <div class="breakline">------------------&nbsp;&nbsp;<span class="badge">&nbsp;&nbsp;2 0 1 7&nbsp;&nbsp;</span>&nbsp;&nbsp;------------------</div>
+
+        <div class="line-item">
+            <div class="line-icon-warp ">
+               <span class="fa-stack fa-lg" >
+                  <i class="fa fa-circle fa-stack-2x" style="color: #31699d"></i>
+                  <i class="fa fa-caret-right fa-stack-1x" style="color: #ffffff"></i>
+               </span>
+                <span class="badge"> Sep 23, 2017 </span>
+            </div>
+            <div class="line-content-box">
+            Pass the Qualification exam and become PhD candidate<br>
+            通过博士生资格考试
+            </div>
+        </div>
+        <div class="breakline">------------------&nbsp;&nbsp;<span class="badge">&nbsp;&nbsp;2 0 1 5&nbsp;&nbsp;</span>&nbsp;&nbsp;------------------</div>
+        <div class="line-item">
+            <div class="line-icon-warp">
+                <span class="fa-stack"  >
+                    <i class="fa fa-circle fa-stack-2x" style="color: #EEC900"></i>
+                    <i class="fa fa-university fa-stack-1x  fa-1x " style="color: #ffffff"></i>
+                </span>
+                <span class="badge"> Sep 8, 2015 </span>
+            </div>
+            <div class="line-content-box">
+            Start graduate life in <a href='http://old.chem.pku.edu.cn/page/ITCC/'>Institue of Theoretical and Computational Chemistry</a> at <a href='http://old.chem.pku.edu.cn/index.php?styleid=2'>College of Chemistry and Molecular Engineering</a>of <a href='http://english.pku.edu.cn/'>Peking University</a><br>
+            在<a href='https://www.pku.edu.cn'>北京大学</a><a href='http://www.chem.pku.edu.cn/'>化学与分子工程学院</a><a href='http://old.chem.pku.edu.cn/page/ITCC/'>理论与计算化学研究所</a>开始研究生学习
+            </div>
+        </div>
+
+        <div class="line-item">
+            <div class="line-icon-warp">
+                <span class="fa-stack"  >
+                    <i class="fa fa-circle fa-stack-2x" style="color: #31699d"></i>
+                    <i class="fa fa-graduation-cap fa-stack-1x  fa-1x " style="color: #ffffff"></i>
+                </span>
+                <span class="badge"> Jul 15, 2015 </span>
+            </div>
+            <div class="line-content-box">
+            B. S. Chemistry, <a href='http://old.chem.pku.edu.cn/index.php?styleid=2'>College of Chemistry and Molecular Engineering</a>, <a href='http://english.pku.edu.cn/'>Peking University</a><br>
+            从<a href='https://www.pku.edu.cn'>北京大学</a><a href='http://www.chem.pku.edu.cn/'>化学与分子工程学院</a>毕业, 获得化学专业理学学士学位
+            </div>
+        </div>
+
+
+        <div class="breakline">------------------&nbsp;&nbsp;<span class="badge">&nbsp;&nbsp;2 0 1 1&nbsp;&nbsp;</span>&nbsp;&nbsp;------------------</div>
+
+        <div class="line-item">
+            <div class="line-icon-warp">
+                <span class="fa-stack"  >
+                    <i class="fa fa-circle fa-stack-2x" style="color: #EEC900"></i>
+                    <i class="fa fa-university fa-stack-1x  fa-1x " style="color: #ffffff"></i>
+                </span>
+                <span class="badge"> Sep 1, 2011 </span>
+            </div>
+            <div class="line-content-box">
+            Enrolled in <a href='http://old.chem.pku.edu.cn/index.php?styleid=2'>College of Chemistry and Molecular Engineering</a> of <a href='http://english.pku.edu.cn/'>Peking University</a><br>
+            进入<a href='https://www.pku.edu.cn'>北京大学</a><a href='http://www.chem.pku.edu.cn/'>化学与分子工程学院</a>学习
+            </div>
+        </div>
+
+        <div class="breakline">------------------&nbsp;&nbsp;<span class="badge">&nbsp;&nbsp;2 0 0 8&nbsp;&nbsp;</span>&nbsp;&nbsp;------------------</div>
+
+        <div class="line-item">
+            <div class="line-icon-warp">
+                <span class="fa-stack"  >
+                    <i class="fa fa-circle fa-stack-2x" style="color: #EEC900"></i>
+                    <i class="fa fa-pencil fa-stack-1x fa-1x" style="color: #ffffff"></i>
+                </span>
+                <span class="badge"> Aug 20, 2008 </span>
+            </div>
+            <div class="line-content-box">
+            Study in High School Affiliated to Nanjing Normal University as a boarding student <br>
+            进入<a href="http://202.102.17.68/Press/Default.aspx" target="_blank">南京师范大学附属中学</a>读寄宿高中
+            </div>
+        </div>
+        <div class="breakline">------------------&nbsp;&nbsp;<span class="badge">&nbsp;&nbsp;E a r l i e r&nbsp;&nbsp;</span>&nbsp;&nbsp;------------------</div>
+
+        <div class="line-item">
+            <div class="line-icon-warp  ">
+               <span class="fa-stack" >
+                    <i class="fa fa-circle fa-stack-2x" style="color: #cc0033"></i>
+                    <i class="fa fa-child fa-stack-1x" style="color: #ffffff"></i>
+                </span>
+                <span class="badge"> Sep 29, 1992 </span>
+            </div>
+            <div class="line-content-box">
+            Born in <a href="https://www.google.com.ph/search?hl=en&tbm=isch&source=hp&biw=1644&bih=899&ei=EFpIW7DsNKOavQSwz4_QAw&q=%E7%9B%9B%E6%B3%BD&oq=%E7%9B%9B%E6%B3%BD&gs_l=img.3..0l10.21.2322.0.2523.16.9.1.0.0.0.458.1356.2-1j2j1.4.0....0...1ac.1j4.64.img..13.3.573...0i10k1.0.OTPh47Wf25o" target="_blank" title="Google Image Search with Chinese">Shengze</a>, Jiangsu, China<br>
+            出生于江苏盛泽, 一个江南丝绸小镇
+            </div>
+        </div>
+    </div>
+</div>
