@@ -2,6 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://minyez.github.io/2018/05/15/f2py-1/</loc>
+    
+    <lastmod>2019-05-02T04:20:27.912Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://minyez.github.io/2019/04/20/wien2k-fftw3-multi-def/</loc>
+    
+    <lastmod>2019-05-02T02:30:16.072Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://minyez.github.io/2019/04/20/wien2k-libxc-mgga-error/</loc>
+    
+    <lastmod>2019-05-02T02:30:00.118Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://minyez.github.io/2019/03/23/valgrind-1/</loc>
+    
+    <lastmod>2019-05-02T02:28:37.633Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://minyez.github.io/2019/05/01/embed-videos/</loc>
     
     <lastmod>2019-05-01T08:56:55.608Z</lastmod>
@@ -9,30 +37,9 @@
   </url>
   
   <url>
-    <loc>http://minyez.github.io/2019/04/20/wien2k-libxc-mgga-error/</loc>
-    
-    <lastmod>2019-05-01T08:06:21.797Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://minyez.github.io/2019/04/20/wien2k-fftw3-multi-def/</loc>
-    
-    <lastmod>2019-05-01T08:06:04.347Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://minyez.github.io/2018/07/20/gpaw-1/</loc>
     
     <lastmod>2019-05-01T08:05:25.242Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://minyez.github.io/2019/03/23/valgrind-1/</loc>
-    
-    <lastmod>2019-05-01T08:01:04.948Z</lastmod>
     
   </url>
   
@@ -89,13 +96,6 @@
     <loc>http://minyez.github.io/2018/01/02/compile_VASP_on_macOS/</loc>
     
     <lastmod>2018-07-20T14:41:37.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://minyez.github.io/2018/05/15/f2py-1/</loc>
-    
-    <lastmod>2018-07-20T14:41:22.000Z</lastmod>
     
   </url>
   
