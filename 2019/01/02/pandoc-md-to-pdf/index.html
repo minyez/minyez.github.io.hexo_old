@@ -160,7 +160,7 @@
               
               <li><a href="/tags/Hexo/" style="font-size: 15px; font-family: 微软雅黑">Hexo<span></span></a></li>
               
-              <li><a href="/tags/Scientific-Computation/" style="font-size: 15px; font-family: 微软雅黑">Scientific Computation<span></span></a></li>
+              <li><a href="/tags/Pandoc/" style="font-size: 15px; font-family: 微软雅黑">Pandoc<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -447,7 +447,8 @@ Try running pandoc with --pdf-engine=xelatex.
 <p>参考文献和引用格式可以通过<code>biblio-style</code>变量设定, 比如<code>-M biblio-style=nature</code>选择nature引用风格. 查看<a href="https://www.ctan.org/tex-archive/macros/latex/exptl/biblatex-contrib" target="_blank" rel="noopener">CTAN的biblatex-contrib</a>查看有哪些可用的风格, 或者在Tex Live Utility搜索biblatex, 查看每个相关包的说明, 又或者查看这个overleaf链接<a href="https://www.overleaf.com/learn/latex/Biblatex_citation_styles" target="_blank" rel="noopener">Biblatex citation styles</a>. </p>
 <h3 id="插入图表"><a href="#插入图表" class="headerlink" title="插入图表"></a>插入图表</h3><p>除了直接用makrdown语法插入图片外, Pandoc支持属性和名称引用, 包含在花括号<code>{}</code>内 </p>
 <figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">![<span class="string">This is my website logo.</span>](<span class="link">icon.jpg</span>)&#123;width=50% #fig:favicon&#125;</span><br></pre></td></tr></table></figure>
-<p>在正文可以用在制作表格时, pandoc支持单元格含多行文字的表格, 也能非常方便的调整列的对齐方式, 比如以下三列分别是左中右对齐的.</p>
+<p>可在正文中插入<code>+@fig:favicon</code>以引用. 为了得到正确的交叉引用链接, 需要安装<a href="https://github.com/tomduck/pandoc-fignos" target="_blank" rel="noopener">pandoc-fignos</a>作为过滤器.</p>
+<p>在制作表格时, pandoc支持单元格含多行文字的表格, 也能非常方便的调整列的对齐方式, 比如以下三列分别是左中右对齐的.</p>
 <figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">|left | center | right|</span><br><span class="line">|:----|:------:|-----:|</span><br><span class="line">|l    |c       |r     |</span><br><span class="line"></span><br><span class="line">Table: demo left-center-right table &#123;#tbl:demo-tbl&#125;</span><br></pre></td></tr></table></figure>
 <table>
 <thead>
@@ -465,15 +466,16 @@ Try running pandoc with --pdf-engine=xelatex.
 </tr>
 </tbody>
 </table>
-<h2 id="实例-转换demo-md到demo-pdf"><a href="#实例-转换demo-md到demo-pdf" class="headerlink" title="实例: 转换demo.md到demo.pdf"></a>实例: 转换<code>demo.md</code>到<code>demo.pdf</code></h2><p>最后放一个用<code>markdown+pandoc+xelatex+bibtex</code>的实际例子, 所需要文件都在<a href="demo.tar.gz">压缩包</a>里, 用<code>make</code>编译需要有pandoc和TeXLive等LaTeX发行版. </p>
+<p>在正文中插入<code>+@tbl:demo-tbl</code>以引用. 类似的, 转化时用<a href="https://github.com/tomduck/pandoc-tablenos" target="_blank" rel="noopener">pandoc-tablenos</a>过滤后才能得到正确的交叉引用链接.</p>
+<h2 id="实例-转换demo-md到demo-pdf"><a href="#实例-转换demo-md到demo-pdf" class="headerlink" title="实例: 转换demo.md到demo.pdf"></a>实例: 转换<code>demo.md</code>到<code>demo.pdf</code></h2><p>最后放一个用<code>markdown+pandoc+xelatex+bibtex</code>的实际例子, 所需文件都在<a href="demo.tar.gz">压缩包</a>里, 欢迎下载. <code>make</code>编译需要有pandoc和TeXLive等LaTeX发行版. </p>
 <ul>
-<li>demo.md：Markdown源文件</li>
-<li>Makefile: 产生需要的<code>template.tex</code>和<code>HW.md</code>, 执行LaTeX工具链</li>
-<li>demo.bib: 用到的参考文献</li>
-<li>icon.jpg: 要插的图片, 就是我的网站图标啦. </li>
+<li><code>demo.md</code>：Markdown源文件</li>
+<li><code>Makefile</code>: 产生需要的<code>template.tex</code>和<code>HW.md</code>, 执行LaTeX工具链</li>
+<li><code>demo.bib</code>: 用到的参考文献</li>
+<li><code>icon.jpg</code>: 要插的图片, 就是我的网站图标啦. </li>
 </ul>
-<p>作为参考, 在<a href="https://gist.github.com/maxogden/97190db73ac19fc6c1d9beee1a6e4fc8" target="_blank" rel="noopener">这个gist</a>里作者也详细介绍了如何将markdown转化成paper. 但在转化pizza图片出现的奇怪的地方是, markdown下用的<code>![It&#39;s a pizza]</code>作为图片注释, 而在转化到PDF后图片注释变成了<code>Figure 1</code>. 我这里倒是没有这个问题. </p>
-<p>用HTML的转化比较直接, 所需要的就是找个喜欢的CSS, 就不展示了 :) </p>
+<p>作为参考, 在<a href="https://gist.github.com/maxogden/97190db73ac19fc6c1d9beee1a6e4fc8" target="_blank" rel="noopener">这个gist</a>里作者也详细介绍了如何将markdown转化成paper. 但对于其中的pizza图片, markdown下用的<code>![It&#39;s a pizza]</code>作为图片注释, 转化到PDF后图片注释却变成了<code>Figure 1</code>. 我这里倒是没有这个问题. </p>
+<p>另外, 由于用HTML的转化比较直接, 所需要的就是找个喜欢的CSS, 就不展示了 :P </p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文整理了笔者在第一次尝试用pandoc转化markdown文件为PDF的过程中学到的技巧, 并提供了一个简单的pandoc+latex转换PDF的样例输入.</p>
 	  
 	</div>

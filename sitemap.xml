@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://minyez.github.io/2019/01/02/pandoc-md-to-pdf/</loc>
+    
+    <lastmod>2019-05-02T11:34:23.421Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://minyez.github.io/2019/01/05/panflute_practice/</loc>
+    
+    <lastmod>2019-05-02T11:19:30.669Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://minyez.github.io/about/index.html</loc>
     
     <lastmod>2019-05-02T06:40:37.228Z</lastmod>
@@ -65,23 +79,9 @@
   </url>
   
   <url>
-    <loc>http://minyez.github.io/2019/01/05/panflute_practice/</loc>
-    
-    <lastmod>2019-05-01T05:37:33.418Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://minyez.github.io/2017/12/22/VPS_and_SSR/</loc>
     
     <lastmod>2019-05-01T04:34:10.188Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://minyez.github.io/2019/01/02/pandoc-md-to-pdf/</loc>
-    
-    <lastmod>2019-05-01T02:51:49.347Z</lastmod>
     
   </url>
   
@@ -100,14 +100,14 @@
   </url>
   
   <url>
-    <loc>http://minyez.github.io/categories/index.html</loc>
+    <loc>http://minyez.github.io/tags/index.html</loc>
     
     <lastmod>2018-07-15T09:39:29.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://minyez.github.io/tags/index.html</loc>
+    <loc>http://minyez.github.io/categories/index.html</loc>
     
     <lastmod>2018-07-15T09:39:29.000Z</lastmod>
     
