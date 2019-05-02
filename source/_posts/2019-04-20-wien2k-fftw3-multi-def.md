@@ -1,7 +1,6 @@
 ---
 title: 解决编译WIEN2k时FFTW3 multiple definition错误
 comment: true
-toc: true
 date: 2019-04-20 13:50:59
 tags:
 - WIEN2k
@@ -29,11 +28,11 @@ mkl/lib/intel64/libmkl_intel_lp64.a(fftw_destroy_panl.o):fftw_destroy_plan.c(.te
 make[1]: *** [Makefile:99: lapw0_mpi] Error 1
 ```
 
-最终编译信息里提示``tetra`, `joint`, `telnes3`报错, 错误为`Internal compiler error`.
+最终编译信息里提示`tetra`, `joint`, `telnes3`报错, 错误为`Internal compiler error`.
 
 
 
-## 解决方案
+## 解决过程
 
 因为是FFTW3和MKL的冲突, 所以考虑放弃自己编译的FFTW3, 用Intel自带的FFTW3 wrapper. 在编译好静态库`libfftw3xf_intel.a`后, 把`include`改为`mkl/interfaces/fftw`, 把`-lfftw3`改为该静态库的绝对路径, 删掉`lfftw3_mpi`
 

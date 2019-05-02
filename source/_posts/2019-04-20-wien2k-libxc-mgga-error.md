@@ -1,7 +1,6 @@
 ---
 title: 解决编译WIEN2k时找不到meta-GGA例程的问题
 comment: true
-toc: true
 date: 2019-04-20 14:05:10
 tags:
 - WIEN2k
