@@ -32,15 +32,14 @@ categories: Software
 <iframe src="//player.bilibili.com/player.html?aid=16091118&cid=26251892&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
 ```
 
-
-
 ## 统一尺寸控制
 
 在Freemind主题下`source/css/style.css`中, 加入以下选择器
 
 ```css
 .auto-resizable-iframe {
-  max-width: 540px;
+  /*max-width: 540px;*/
+  max-width: 100%;
   margin: 0px auto;
 }
 .auto-resizable-iframe > div {
@@ -57,7 +56,17 @@ categories: Software
 }
 ```
 
-然后将前面`iframe`放入两层`div`元素里, 最外层元素的类设为`auto-resizable-iframe`, 删除`iframe`中的宽度长度控制. 效果如下(Youtube视频)
+然后将前面`iframe`放入两层`div`元素里, 最外层元素的类设为`auto-resizable-iframe`, 删除`iframe`中的宽度长度控制, 即
+
+```html
+<div class="auto-resizable-iframe">
+  <div>
+    <iframe src="https://www.youtube.com/embed/arj7oStGLkU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  </div>
+</div>
+```
+
+效果如下(Youtube视频)
 
 <div class="auto-resizable-iframe">
   <div>
@@ -65,7 +74,7 @@ categories: Software
   </div>
 </div>
 
-两层div使得视频尺寸是响应式的. 比起直接黏贴iframe稍微麻烦一些, 但是好看的多.
+两层div使得画面尺寸是响应式的. 比起直接黏贴iframe稍微麻烦一些, 但是好看的多.
 
 
 

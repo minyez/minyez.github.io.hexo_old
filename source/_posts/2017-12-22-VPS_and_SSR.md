@@ -25,7 +25,7 @@ toc: true
 ### Shadowsocks (SS)
 
 由[clowwindy](https://github.com/clowwindy)首先开发的一个开源的加密代理项目，主要用于绕过GFW对国内网络请求的检测。其原理如图所示([来源](https://ieeexplore.ieee.org/document/8048116/))。在服务器端设置好密码、端口、协议、加密方式等等，客户端以相同的设置连接服务端。成功连接后，客户端与服务端之间建立sock5连接。在一次网络通信时，首先由本地客户端发送请求，与SS客户端通信。然后，SS客户端将请求加密，数据包以普通TCP包的外观发送到SS服务端。随后，SS服务端将数据包解密，将请求传递给墙外的网络服务器，最后再将网站响应数据返回给SS客户端。
-![Figure 1. Shadowsocks原理](ss-comm-principle.gif)
+![Shadowsocks原理](ss-comm-principle.gif)
 由于历史原因，我们还需要决定用什么版本的SS。笔者在这里使用的是[ShadowsocksR](https://github.com/shadowsocksrr/shadowsocksr.git)，它相比原版SS具有更多功能。尽管经历了[疑似违反GPL的事件](https://t.du9l.com/2015/08/qi-wen-gong-shang/)，但目前SSR源码已经公开且开发人员主要由新贡献者构成，它也是当前SS的主要项目分支([中文维基20180702](https://zh.wikipedia.org/wiki/Shadowsocks#ShadowsocksR))。
 
 ### Proxy Auto-Config (PAC)
@@ -62,9 +62,9 @@ function FindProxyForURL(url, host){
 ### 购买服务器
 
 境外服务器选择[Vultr](www.vultr.com)公司。访问主页(如下图)，注册账号后登录到个人页面管理。
-![Figure 2. Vultr首页](vultr-homepage.png)
+![Vultr首页](vultr-homepage.png)
 个人页面如下所示，点击右上角加号部署新服务器
-![Figure 3. Vultr个人页面](vultr-mypage.png)
+![Vultr个人页面](vultr-mypage.png)
 在新服务器的配置中，需要选择以下项目
 
 #### Server Location

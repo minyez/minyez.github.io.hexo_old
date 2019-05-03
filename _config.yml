@@ -81,6 +81,10 @@ Plugins:
 ## git clone https://github.com/iissnan/hexo-theme-next themes/next (e.g. next) for new theme
 theme: freemind
 
+image_caption:
+  enable: true
+  class_name:
+
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
