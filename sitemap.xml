@@ -2,9 +2,30 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://minyez.github.io/2018/02/15/Hexo-1/</loc>
+    
+    <lastmod>2019-05-03T07:00:11.496Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://minyez.github.io/2017/12/22/VPS_and_SSR/</loc>
+    
+    <lastmod>2019-05-03T06:57:56.031Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://minyez.github.io/2019/05/03/embed-jupyter-in-hexo/</loc>
+    
+    <lastmod>2019-05-03T06:29:32.485Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://minyez.github.io/2019/05/01/embed-videos/</loc>
     
-    <lastmod>2019-05-03T05:13:26.898Z</lastmod>
+    <lastmod>2019-05-03T05:15:22.694Z</lastmod>
     
   </url>
   
@@ -86,28 +107,14 @@
   </url>
   
   <url>
-    <loc>http://minyez.github.io/2017/12/22/VPS_and_SSR/</loc>
-    
-    <lastmod>2019-05-01T04:34:10.188Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://minyez.github.io/2018/02/15/Hexo-1/</loc>
-    
-    <lastmod>2018-10-03T08:34:22.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://minyez.github.io/tags/index.html</loc>
+    <loc>http://minyez.github.io/categories/index.html</loc>
     
     <lastmod>2018-07-15T09:39:29.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://minyez.github.io/categories/index.html</loc>
+    <loc>http://minyez.github.io/tags/index.html</loc>
     
     <lastmod>2018-07-15T09:39:29.000Z</lastmod>
     

@@ -89,6 +89,8 @@
               <li><a href="/archives" style="font-size: 20px; font-family: 'Calibri Light',Arial">All Archives</a><span></span></li>
               <li class="divider"></li>
               
+              <li><a href="/2019/05/03/embed-jupyter-in-hexo/" style="font-size: 15px; font-family: 微软雅黑">在Hexo博文中嵌入Jupyter notebook<span></span></a></li>
+              
               <li><a href="/2019/05/01/embed-videos/" style="font-size: 15px; font-family: 微软雅黑">在Hexo博文中嵌入视频<span></span></a></li>
               
               <li><a href="/2019/04/20/wien2k-libxc-mgga-error/" style="font-size: 15px; font-family: 微软雅黑">解决编译WIEN2k时找不到meta-GGA例程的问题<span></span></a></li>
@@ -100,8 +102,6 @@
               <li><a href="/2019/03/20/vasp-set_indpw_full-error/" style="font-size: 15px; font-family: 微软雅黑">解决运行VASP时set_indpw_full错误<span></span></a></li>
               
               <li><a href="/2019/01/05/panflute_practice/" style="font-size: 15px; font-family: 微软雅黑">使用panflute编写pandoc过滤器<span></span></a></li>
-              
-              <li><a href="/2019/01/02/pandoc-md-to-pdf/" style="font-size: 15px; font-family: 微软雅黑">利用Pandoc将Markdown转化为PDF<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -125,6 +125,8 @@
               <li><a href="/categories/Software/" style="font-size: 15px; font-family: 微软雅黑">Software<span></span></a></li>
               
               <li><a href="/categories/Programming/" style="font-size: 15px; font-family: 微软雅黑">Programming<span></span></a></li>
+              
+              <li><a href="/categories/Softwares/" style="font-size: 15px; font-family: 微软雅黑">Softwares<span></span></a></li>
               
               <li><a href="/categories/Life/" style="font-size: 15px; font-family: 微软雅黑">Life<span></span></a></li>
               
@@ -154,9 +156,9 @@
               
               <li><a href="/tags/Bugfix/" style="font-size: 15px; font-family: 微软雅黑">Bugfix<span></span></a></li>
               
-              <li><a href="/tags/VASP/" style="font-size: 15px; font-family: 微软雅黑">VASP<span></span></a></li>
-              
               <li><a href="/tags/Hexo/" style="font-size: 15px; font-family: 微软雅黑">Hexo<span></span></a></li>
+              
+              <li><a href="/tags/VASP/" style="font-size: 15px; font-family: 微软雅黑">VASP<span></span></a></li>
               
               <li><a href="/tags/WIEN2k/" style="font-size: 15px; font-family: 微软雅黑">WIEN2k<span></span></a></li>
               
@@ -213,7 +215,7 @@
 <div class="alert alert-info"><i class="fa fa-info  float-left"></i>  <p>最近在BBS上看到别人推荐<a href="https://github.com/v2ray/v2ray-core" target="_blank" rel="noopener">V2Ray项目</a>。</p>
 </div>
 <h2 id="名词解释"><a href="#名词解释" class="headerlink" title="名词解释"></a>名词解释</h2><h3 id="Virtual-Private-Server-VPS"><a href="#Virtual-Private-Server-VPS" class="headerlink" title="Virtual Private Server (VPS)"></a>Virtual Private Server (VPS)</h3><p>虚拟专有服务器, 是&quot;将一台服务器分区成多个虚拟专享服务器的服务&quot;(<a href="https://zh.wikipedia.org/wiki/%E8%99%9A%E6%8B%9F%E4%B8%93%E7%94%A8%E6%9C%8D%E5%8A%A1%E5%99%A8" target="_blank" rel="noopener">中文维基</a>)，通常是由专门的VPS供应商提供。它的核心是基于虚拟机技术，将单个物理服务器的硬盘、网络、CPU计算、内存等资源进行隔离，模拟出多个独立服务器的使用体验。不同VPS在软件上相互独立，都可以独立地安装操作系统、启动与重启，用户在其上拥有超级用户权限，可进行自由配置和软件安装。缺点是，由于多个VPS用户在同一个物理服务器上，硬件资源会相互影响，特别是当供应商超卖导致超负荷时。专有服务器(Dedicated server)不存在这种情形，但也因为单个用户独占物理服务器，价格要比VPS高很多。</p>
-<h3 id="Shadowsocks-SS"><a href="#Shadowsocks-SS" class="headerlink" title="Shadowsocks (SS)"></a>Shadowsocks (SS)</h3><p>由<a href="https://github.com/clowwindy" target="_blank" rel="noopener">clowwindy</a>首先开发的一个开源的加密代理项目，主要用于绕过GFW对国内网络请求的检测。其原理如图所示(<a href="https://ieeexplore.ieee.org/document/8048116/" target="_blank" rel="noopener">来源</a>)。在服务器端设置好密码、端口、协议、加密方式等等，客户端以相同的设置连接服务端。成功连接后，客户端与服务端之间建立sock5连接。在一次网络通信时，首先由本地客户端发送请求，与SS客户端通信。然后，SS客户端将请求加密，数据包以普通TCP包的外观发送到SS服务端。随后，SS服务端将数据包解密，将请求传递给墙外的网络服务器，最后再将网站响应数据返回给SS客户端。<br><img src="ss-comm-principle.gif" alt="Figure 1. Shadowsocks原理"><br>由于历史原因，我们还需要决定用什么版本的SS。笔者在这里使用的是<a href="https://github.com/shadowsocksrr/shadowsocksr.git" target="_blank" rel="noopener">ShadowsocksR</a>，它相比原版SS具有更多功能。尽管经历了<a href="https://t.du9l.com/2015/08/qi-wen-gong-shang/" target="_blank" rel="noopener">疑似违反GPL的事件</a>，但目前SSR源码已经公开且开发人员主要由新贡献者构成，它也是当前SS的主要项目分支(<a href="https://zh.wikipedia.org/wiki/Shadowsocks#ShadowsocksR" target="_blank" rel="noopener">中文维基20180702</a>)。</p>
+<h3 id="Shadowsocks-SS"><a href="#Shadowsocks-SS" class="headerlink" title="Shadowsocks (SS)"></a>Shadowsocks (SS)</h3><p>由<a href="https://github.com/clowwindy" target="_blank" rel="noopener">clowwindy</a>首先开发的一个开源的加密代理项目，主要用于绕过GFW对国内网络请求的检测。其原理如图所示(<a href="https://ieeexplore.ieee.org/document/8048116/" target="_blank" rel="noopener">来源</a>)。在服务器端设置好密码、端口、协议、加密方式等等，客户端以相同的设置连接服务端。成功连接后，客户端与服务端之间建立sock5连接。在一次网络通信时，首先由本地客户端发送请求，与SS客户端通信。然后，SS客户端将请求加密，数据包以普通TCP包的外观发送到SS服务端。随后，SS服务端将数据包解密，将请求传递给墙外的网络服务器，最后再将网站响应数据返回给SS客户端。<br><figure class="null"><img src="ss-comm-principle.gif" alt="Shadowsocks原理"><figcaption>Shadowsocks原理</figcaption></figure><br>由于历史原因，我们还需要决定用什么版本的SS。笔者在这里使用的是<a href="https://github.com/shadowsocksrr/shadowsocksr.git" target="_blank" rel="noopener">ShadowsocksR</a>，它相比原版SS具有更多功能。尽管经历了<a href="https://t.du9l.com/2015/08/qi-wen-gong-shang/" target="_blank" rel="noopener">疑似违反GPL的事件</a>，但目前SSR源码已经公开且开发人员主要由新贡献者构成，它也是当前SS的主要项目分支(<a href="https://zh.wikipedia.org/wiki/Shadowsocks#ShadowsocksR" target="_blank" rel="noopener">中文维基20180702</a>)。</p>
 <h3 id="Proxy-Auto-Config-PAC"><a href="#Proxy-Auto-Config-PAC" class="headerlink" title="Proxy Auto-Config (PAC)"></a>Proxy Auto-Config (PAC)</h3><p>代理自动配置。PAC定义了&quot;如何自动选择适当的代理服务器来访问一个网址(<a href="https://zh.wikipedia.org/wiki/%E4%BB%A3%E7%90%86%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE" target="_blank" rel="noopener">中文维基</a>)&quot;。使用PAC需要一个PAC文件，其中必须包含名为<code>FindProxyForURL</code>的javascript函数。一个简单的例子是(来自中文维基)</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">FindProxyForURL</span>(<span class="params">url, host</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"PROXY proxy.example.com:8080; DIRECT"</span></span><br><span class="line">    <span class="comment">//通过服务器proxy.example.com的8080端口来获取页面</span></span><br><span class="line">    <span class="comment">//如果服务器没有响应，则通过www直接访问</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="Dynamics-Domain-Name-System-DDNS"><a href="#Dynamics-Domain-Name-System-DDNS" class="headerlink" title="Dynamics Domain Name System (DDNS)"></a>Dynamics Domain Name System (DDNS)</h3><h2 id="Step-by-step-基于Vultr-VPS的SSR"><a href="#Step-by-step-基于Vultr-VPS的SSR" class="headerlink" title="Step by step: 基于Vultr VPS的SSR"></a>Step by step: 基于Vultr VPS的SSR</h2><p>基于SS原理我们可以知道，为了使用SSR，我们需要部署SSR客户端和服务端，而服务端需要部署在境外服务器上。那么需要做什么事情就很清楚了</p>
@@ -226,7 +228,7 @@
 </li>
 </ul>
 <p>接下来我们一条条看。</p>
-<h3 id="购买服务器"><a href="#购买服务器" class="headerlink" title="购买服务器"></a>购买服务器</h3><p>境外服务器选择<a href="www.vultr.com">Vultr</a>公司。访问主页(如下图)，注册账号后登录到个人页面管理。<br><img src="vultr-homepage.png" alt="Figure 2. Vultr首页"><br>个人页面如下所示，点击右上角加号部署新服务器<br><img src="vultr-mypage.png" alt="Figure 3. Vultr个人页面"><br>在新服务器的配置中，需要选择以下项目</p>
+<h3 id="购买服务器"><a href="#购买服务器" class="headerlink" title="购买服务器"></a>购买服务器</h3><p>境外服务器选择<a href="www.vultr.com">Vultr</a>公司。访问主页(如下图)，注册账号后登录到个人页面管理。<br><figure class="null"><img src="vultr-homepage.png" alt="Vultr首页"><figcaption>Vultr首页</figcaption></figure><br>个人页面如下所示，点击右上角加号部署新服务器<br><figure class="null"><img src="vultr-mypage.png" alt="Vultr个人页面"><figcaption>Vultr个人页面</figcaption></figure><br>在新服务器的配置中，需要选择以下项目</p>
 <h4 id="Server-Location"><a href="#Server-Location" class="headerlink" title="Server Location"></a>Server Location</h4><p>服务器位置。根据自己的网络情况选择最佳的服务器，一般判断标准是PING延迟，以及是否有较便宜的规模可供选择<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ping hnd-jp-ping.vultr.com    <span class="comment"># Tokyo</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ping sgp-ping.vult.com        <span class="comment"># Singapore</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ping sjo-ca-us-ping.vultr.com <span class="comment"># Silicon Valley, CA</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ping lax-ca-us-ping.vultr.com <span class="comment"># Los Angeles, CA</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ping fra-de-ping.vultr.com    <span class="comment"># Frankfurt</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ping nj-us-ping.vultr.com     <span class="comment"># NY, New Jersey</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ping il-us-ping.vultr.com     <span class="comment"># Chicago, Illinois</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ping fl-us-ping.vultr.com     <span class="comment"># Miami, Florida</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ping syd-au-ping.vultr.com    <span class="comment"># Sydney, Australia</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ping lon-gb-ping.vultr.com    <span class="comment"># London, UK</span></span></span><br></pre></td></tr></table></figure></p>
 <h4 id="Server-Type"><a href="#Server-Type" class="headerlink" title="Server Type"></a>Server Type</h4><p>操作系统。推荐选择比较稳定的Linux发行版，如CentOS, Ubuntu LTS等。推荐CentOS。</p>
 <h4 id="Server-Size"><a href="#Server-Size" class="headerlink" title="Server Size"></a>Server Size</h4><p>服务器资费方案。一般来说，最低\$2.5的500G带宽足够个人或者三五同学公用的需求。但近日(20180714)发现这个方案已经不再分配公网IPv4，所以改用\$5的方案。这个价格比某些廉价VPN要贵不少，所以推荐多人分摊公用，这样既不浪费带宽，也能省些钱。</p>
@@ -245,7 +247,7 @@
 <li>混淆(obf)。</li>
 </ul>
 <p>记下以上设置，回车安装。上述设置也可以在<code>shadowsocks-all.log</code>中查询。接下来就可以退出服务器，回到本地设置客户端。</p>
-<h3 id="部署客户端"><a href="#部署客户端" class="headerlink" title="部署客户端"></a>部署客户端</h3><h4 id="macOS"><a href="#macOS" class="headerlink" title="macOS"></a>macOS</h4><p>推荐使用<a href="https://github.com/shadowsocks/ShadowsocksX-NG" target="_blank" rel="noopener">ShadowsocksX-NG</a>作为客户端。在GitHub上下载最新版本(Release标签内)，解压缩、安装。启用后单击右上角标记，按照上一步中的服务端部署方式，编辑服务器设置。<br><img src="ssr-client.png" alt="ShadowsocksX-NG服务器设置"><br>编辑完后点击&quot;打开Shadowsocks&quot;，即可使用。</p>
+<h3 id="部署客户端"><a href="#部署客户端" class="headerlink" title="部署客户端"></a>部署客户端</h3><h4 id="macOS"><a href="#macOS" class="headerlink" title="macOS"></a>macOS</h4><p>推荐使用<a href="https://github.com/shadowsocks/ShadowsocksX-NG" target="_blank" rel="noopener">ShadowsocksX-NG</a>作为客户端。在GitHub上下载最新版本(Release标签内)，解压缩、安装。启用后单击右上角标记，按照上一步中的服务端部署方式，编辑服务器设置。<br><figure class="null"><img src="ssr-client.png" alt="ShadowsocksX-NG服务器设置"><figcaption>ShadowsocksX-NG服务器设置</figcaption></figure><br>编辑完后点击&quot;打开Shadowsocks&quot;，即可使用。</p>
 <h4 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h4><p>推荐使用<a href="https://github.com/shadowsocks/shadowsocks-windows" target="_blank" rel="noopener">Shadowsocks-windows</a>。下载解压后运行，双击任务栏中SS图标，弹出服务器配置窗口。具体配置方法与macOS类似。</p>
 <h4 id="PAC分流"><a href="#PAC分流" class="headerlink" title="PAC分流"></a>PAC分流</h4><p>以上客户端均允许对访问请求进行分流，即仅对必须绕过GFW才能访问的地址使用sock5协议，这对应于PAC模式。一般通过<a href="https://github.com/gfwlist/gfwlist" target="_blank" rel="noopener">GFW List</a>设置PAC地址列表。用户也可以进行自定义: 对于ShadowsocksX-NG，可以在&quot;代理设置-编辑PAC用户自定义规则&quot;中设置。对于Shadowsocks-windows，&quot;PAC-编辑本地PAC文件&quot;，手动编辑<code>pac.txt</code>中的<code>domains</code>变量。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>回顾从VPN、hosts到SS的过程，其实是自己能力和心态逐渐变化的过程。一开始什么也不懂，依靠别人的VPN过活; 后来看到了免费的hosts，自己也愿意稍微折腾一下，但渐渐也受不了每个hosts文件的短暂寿命和找hosts的痛苦，最后走上了折腾钱折腾时间但是一定程度上&quot;一劳永逸&quot;的SS(感谢开源项目开发者们和脚本作者)。也许之后还会继续折腾到V2Ray吧。谨把这Vultr VPS+SSR搭建过程献给与GFW战斗的勇者们。</p>

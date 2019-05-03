@@ -89,6 +89,8 @@
               <li><a href="/archives" style="font-size: 20px; font-family: 'Calibri Light',Arial">All Archives</a><span></span></li>
               <li class="divider"></li>
               
+              <li><a href="/2019/05/03/embed-jupyter-in-hexo/" style="font-size: 15px; font-family: 微软雅黑">在Hexo博文中嵌入Jupyter notebook<span></span></a></li>
+              
               <li><a href="/2019/05/01/embed-videos/" style="font-size: 15px; font-family: 微软雅黑">在Hexo博文中嵌入视频<span></span></a></li>
               
               <li><a href="/2019/04/20/wien2k-libxc-mgga-error/" style="font-size: 15px; font-family: 微软雅黑">解决编译WIEN2k时找不到meta-GGA例程的问题<span></span></a></li>
@@ -100,8 +102,6 @@
               <li><a href="/2019/03/20/vasp-set_indpw_full-error/" style="font-size: 15px; font-family: 微软雅黑">解决运行VASP时set_indpw_full错误<span></span></a></li>
               
               <li><a href="/2019/01/05/panflute_practice/" style="font-size: 15px; font-family: 微软雅黑">使用panflute编写pandoc过滤器<span></span></a></li>
-              
-              <li><a href="/2019/01/02/pandoc-md-to-pdf/" style="font-size: 15px; font-family: 微软雅黑">利用Pandoc将Markdown转化为PDF<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -125,6 +125,8 @@
               <li><a href="/categories/Software/" style="font-size: 15px; font-family: 微软雅黑">Software<span></span></a></li>
               
               <li><a href="/categories/Programming/" style="font-size: 15px; font-family: 微软雅黑">Programming<span></span></a></li>
+              
+              <li><a href="/categories/Softwares/" style="font-size: 15px; font-family: 微软雅黑">Softwares<span></span></a></li>
               
               <li><a href="/categories/Life/" style="font-size: 15px; font-family: 微软雅黑">Life<span></span></a></li>
               
@@ -154,9 +156,9 @@
               
               <li><a href="/tags/Bugfix/" style="font-size: 15px; font-family: 微软雅黑">Bugfix<span></span></a></li>
               
-              <li><a href="/tags/VASP/" style="font-size: 15px; font-family: 微软雅黑">VASP<span></span></a></li>
-              
               <li><a href="/tags/Hexo/" style="font-size: 15px; font-family: 微软雅黑">Hexo<span></span></a></li>
+              
+              <li><a href="/tags/VASP/" style="font-size: 15px; font-family: 微软雅黑">VASP<span></span></a></li>
               
               <li><a href="/tags/WIEN2k/" style="font-size: 15px; font-family: 微软雅黑">WIEN2k<span></span></a></li>
               
@@ -234,7 +236,7 @@ Try running pandoc with --pdf-engine=xelatex.
 <p><code>gfm.css</code>对自己来说不是特别好看, 尤其没有GitHub那样的浅蓝色代码背景以及对行间代码的渲染, 所以对css稍微做了一些修改. <code>pre code</code>部分参考了这个<a href="https://github.com/sindresorhus/github-markdown-css" target="_blank" rel="noopener">CSS</a>, 但它其他样式做得不好看, 也是后来才发现它的, 所以没从它出发_(xз」∠)_</p>
 <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 在一级标题前面加上朝右的蓝色三角 */</span></span><br><span class="line"><span class="selector-tag">h1</span><span class="selector-pseudo">:before</span> &#123;</span><br><span class="line">  <span class="attribute">content</span>: <span class="string">"\25B6\2005"</span>;</span><br><span class="line">  <span class="attribute">color</span>: <span class="number">#0645ad</span>;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">60%</span>;</span><br><span class="line">  <span class="attribute">vertical-align</span>: middle;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-tag">pre</span> &#123;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">16px</span>;</span><br><span class="line">  <span class="attribute">overflow</span>: auto;</span><br><span class="line">  <span class="attribute">line-height</span>: <span class="number">1.45</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: <span class="number">#f6f8fa</span>;</span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">3px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-tag">code</span> &#123;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">0.2em</span> <span class="number">0.4em</span>;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: <span class="built_in">rgba</span>(27,31,35,0.05);</span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">3px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-tag">pre</span>&gt;<span class="selector-tag">code</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: inline;</span><br><span class="line">  <span class="attribute">max-width</span>: auto;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">overflow</span>: visible;</span><br><span class="line">  <span class="attribute">line-height</span>: inherit;</span><br><span class="line">  <span class="attribute">word-wrap</span>: normal;</span><br><span class="line">  <span class="attribute">background-color</span>: transparent;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>2019-04-30补充: 后来又陆续做了其他改进, 转化了北大超算的使用教程, 最终效果大概是下面这样</p>
-<p><img src="pandoc-html-pdf.png" alt="pandoc-html-pdf"></p>
+<p><figure class="null"><img src="pandoc-html-pdf.png" alt="pandoc-html-pdf"><figcaption>pandoc-html-pdf</figcaption></figure></p>
 <h2 id="借助模板的基于LaTeX的转化"><a href="#借助模板的基于LaTeX的转化" class="headerlink" title="借助模板的基于LaTeX的转化"></a>借助模板的基于LaTeX的转化</h2><p>如果markdown只是写一些代码片断和非常简单的数学公式, 那么上面的HTML转换完全足够了. 但在markdown里写复杂的LaTeX公式仍然非常要命, 有如下两个原因</p>
 <ul>
 <li>在编辑多次出现的复杂记号上有困难. 最简单的例如算符矩阵元尖括号环境, Bloch函数(<code>\varphi_{n\mathbf{k}}(\mathbf{r})</code>), 还有其他上下标特别多的记号. 这种情况下显然没有在tex里直接调<code>physics</code>包和<code>\newcommand</code>自定义来得方便好用, 而重复写很长的LaTeX源码显然使得Markdown失去了它原有的便携性. </li>
