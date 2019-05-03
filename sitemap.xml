@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://minyez.github.io/2019/05/01/embed-videos/</loc>
+    
+    <lastmod>2019-05-03T05:13:26.898Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://minyez.github.io/about/index.html</loc>
     
     <lastmod>2019-05-02T12:15:36.090Z</lastmod>
@@ -58,13 +65,6 @@
   </url>
   
   <url>
-    <loc>http://minyez.github.io/2019/05/01/embed-videos/</loc>
-    
-    <lastmod>2019-05-01T08:56:55.608Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://minyez.github.io/2018/07/20/gpaw-1/</loc>
     
     <lastmod>2019-05-01T08:05:25.242Z</lastmod>
@@ -100,14 +100,14 @@
   </url>
   
   <url>
-    <loc>http://minyez.github.io/categories/index.html</loc>
+    <loc>http://minyez.github.io/tags/index.html</loc>
     
     <lastmod>2018-07-15T09:39:29.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://minyez.github.io/tags/index.html</loc>
+    <loc>http://minyez.github.io/categories/index.html</loc>
     
     <lastmod>2018-07-15T09:39:29.000Z</lastmod>
     

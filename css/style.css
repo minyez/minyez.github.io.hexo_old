@@ -99,7 +99,8 @@ p {
 }
 
 .auto-resizable-iframe {
-  max-width: 560px;
+  /*max-width: 560px;*/
+  max-width: 100%;
   margin: 0px auto;
 }
 .auto-resizable-iframe > div {
