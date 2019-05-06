@@ -6,7 +6,7 @@ date: 2019-05-03 13:23:51
 tags:
 - Hexo
 - Jupyter
-categories: Softwares
+categories: Software
 ---
 
 ## 摘要
@@ -20,8 +20,8 @@ categories: Softwares
 首先安装`hexo-jupyter-notebook`和`co`两个npm包, 后者为前者的依赖
 
 ```shell
-$ npm install hexo-jupyter-notebook --save
-$ npm install co
+npm install hexo-jupyter-notebook --save
+npm install co
 ```
 
 像{% post_link embed-videos %}一文中的视频画面一样, 为了将嵌入帧尺寸做成响应式的, 修改`node_modules/hexo-jupyter-notebook/main.py`中的`template`变量, 加入`auto-resizable-iframe`容器
@@ -38,11 +38,11 @@ $("#ipynb").load( function() {
 console.log($("#ipynb").contents().find("body").find("#notebook"));
 document.getElementById('ipynb').height=$("#ipynb").contents().find("#notebook").height()+100;
 })
-</script> 
+</script>
     """ % restr.replace("\"", "'")
 ```
 
-有这一部分后, 我就没有像参考链接里那样用jQuery来控制尺寸. 
+有这一部分后, 我就没有像参考链接里那样用jQuery来控制尺寸.
 
 再准备好要嵌入的ipynb文件, 准备工作就做好了. 我这里用的是之前练习matplotlib时写的`meshgrid_plot.ipynb`
 
@@ -51,10 +51,12 @@ document.getElementById('ipynb').height=$("#ipynb").contents().find("#notebook")
 做好上述准备后, 进行下面三步操作
 
 1. 在`_config.yml`中打开`post_asset_folder`
+
     ```yaml
     post_asset_folder: true
     ```
-2. 在`source/assets`中新建`codes`文件夹, 将准备好的ipynb放入其中. 
+
+2. 在`source/assets`中新建`codes`文件夹, 将准备好的ipynb放入其中.
 3. Markdown文本中, 在要嵌入ipynb的位置加入
 
     ```markdown
@@ -63,7 +65,7 @@ document.getElementById('ipynb').height=$("#ipynb").contents().find("#notebook")
 
 嵌入效果如图所示.
 
-![](meshgrid_demo.png)
+![ipynb嵌入效果](meshgrid_demo.png)
 
 ## 结论
 
