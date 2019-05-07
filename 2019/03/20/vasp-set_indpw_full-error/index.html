@@ -89,6 +89,10 @@
               <li><a href="/archives" style="font-size: 20px; font-family: 'Calibri Light',Arial">All Archives</a><span></span></li>
               <li class="divider"></li>
               
+              <li><a href="/2019/05/08/restart-hexo-blog/" style="font-size: 15px; font-family: 微软雅黑">关于重启这个博客的思考<span></span></a></li>
+              
+              <li><a href="/2019/05/07/wien2k-lapwso-1/" style="font-size: 15px; font-family: 微软雅黑">在WIEN2k中进行LAPWSO计算(一)<span></span></a></li>
+              
               <li><a href="/2019/05/06/re-summary/" style="font-size: 15px; font-family: 微软雅黑">常用Python re函数与语句总结<span></span></a></li>
               
               <li><a href="/2019/05/03/embed-jupyter-in-hexo/" style="font-size: 15px; font-family: 微软雅黑">在Hexo博文中嵌入Jupyter notebook<span></span></a></li>
@@ -98,10 +102,6 @@
               <li><a href="/2019/04/20/wien2k-libxc-mgga-error/" style="font-size: 15px; font-family: 微软雅黑">解决编译WIEN2k时找不到meta-GGA例程的问题<span></span></a></li>
               
               <li><a href="/2019/04/20/wien2k-fftw3-multi-def/" style="font-size: 15px; font-family: 微软雅黑">解决编译WIEN2k时FFTW3 multiple d...<span></span></a></li>
-              
-              <li><a href="/2019/03/23/valgrind-1/" style="font-size: 15px; font-family: 微软雅黑">Valgrind Memcheck初探<span></span></a></li>
-              
-              <li><a href="/2019/03/20/vasp-set_indpw_full-error/" style="font-size: 15px; font-family: 微软雅黑">解决运行VASP时set_indpw_full错误<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -154,11 +154,11 @@
               
               <li><a href="/tags/Bugfix/" style="font-size: 15px; font-family: 微软雅黑">Bugfix<span></span></a></li>
               
+              <li><a href="/tags/WIEN2k/" style="font-size: 15px; font-family: 微软雅黑">WIEN2k<span></span></a></li>
+              
               <li><a href="/tags/Hexo/" style="font-size: 15px; font-family: 微软雅黑">Hexo<span></span></a></li>
               
               <li><a href="/tags/VASP/" style="font-size: 15px; font-family: 微软雅黑">VASP<span></span></a></li>
-              
-              <li><a href="/tags/WIEN2k/" style="font-size: 15px; font-family: 微软雅黑">WIEN2k<span></span></a></li>
               
               <li><a href="/tags/Python/" style="font-size: 15px; font-family: 微软雅黑">Python<span></span></a></li>
               
@@ -208,11 +208,14 @@
 	<div class="mypage">		
 	  		
 
-	  <h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>通过恰当设置KPAR和NPAR, 解决VASP杂化泛函计算中出现的“set_indpw_full”错误.</p>
-<a id="more"></a>
-<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>用ACFDT-RPA计算Ne的EOS曲线, 在进行+8%体积的非自洽HF计算一步时, 标准输出中打印错误</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">internal error in SET_INDPW_FULL: insufficient memory</span><br></pre></td></tr></table></figure>
-<h2 id="解决过程"><a href="#解决过程" class="headerlink" title="解决过程"></a>解决过程</h2><p>谷歌该错误,  在<a href="https://cms.mpi.univie.ac.at/vasp-forum/viewtopic.php?t=17510" target="_blank" rel="noopener">第一条vasp forum链接</a>的最后, 楼主给出了解决方法:</p>
+	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2>摘要</h2>
+<p>通过恰当设置KPAR和NPAR, 解决VASP杂化泛函计算中出现的“set_indpw_full”错误.</p>
+<p>&lt;!--more--&gt;</p>
+<h2>问题描述</h2>
+<p>用ACFDT-RPA计算Ne的EOS曲线, 在进行+8%体积的非自洽HF计算一步时, 标准输出中打印错误</p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">internal error in SET_INDPW_FULL: insufficient memory</span><br></pre></td></tr></table></figure></p>
+<h2>解决过程</h2>
+<p>谷歌该错误,  在<a href="https://cms.mpi.univie.ac.at/vasp-forum/viewtopic.php?t=17510" target="_blank" rel="noopener">第一条vasp forum链接</a>的最后, 楼主给出了解决方法:</p>
 <ol>
 <li>恰当设置KPAR和NPAR, 使得$\rm KPAR\times NPAR$等于总的核数.</li>
 <li>关闭对称性, ISYM=0.</li>
@@ -302,7 +305,7 @@ s.setAttribute('data-timestamp', +new Date());
     <ul id="categorys" class="tag_box list-unstyled collapse in">
           
   <li>
-    <li><a href="/categories/Software/">Software<span class="badge">10</span></a></li>
+    <li><a href="/categories/Software/">Software<span class="badge">11</span></a></li>
   </li>
 
     </ul>
@@ -326,7 +329,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#摘要"><span class="toc-article-text">摘要</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#问题描述"><span class="toc-article-text">问题描述</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#解决过程"><span class="toc-article-text">解决过程</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">摘要</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">问题描述</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">解决过程</span></a></li></ol>
 		</div>
 	
 	</div>
@@ -411,23 +414,6 @@ var disqus_shortname = 'shigaro';
   gtag('config', 'UA-111612868-1');
 </script>
 
-
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        },
-        TeX: {equationNumbers: { autoNumber: "AMS" }}
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
 </body>
    </html>

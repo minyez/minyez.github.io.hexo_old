@@ -89,6 +89,10 @@
               <li><a href="/archives" style="font-size: 20px; font-family: 'Calibri Light',Arial">All Archives</a><span></span></li>
               <li class="divider"></li>
               
+              <li><a href="/2019/05/08/restart-hexo-blog/" style="font-size: 15px; font-family: 微软雅黑">关于重启这个博客的思考<span></span></a></li>
+              
+              <li><a href="/2019/05/07/wien2k-lapwso-1/" style="font-size: 15px; font-family: 微软雅黑">在WIEN2k中进行LAPWSO计算(一)<span></span></a></li>
+              
               <li><a href="/2019/05/06/re-summary/" style="font-size: 15px; font-family: 微软雅黑">常用Python re函数与语句总结<span></span></a></li>
               
               <li><a href="/2019/05/03/embed-jupyter-in-hexo/" style="font-size: 15px; font-family: 微软雅黑">在Hexo博文中嵌入Jupyter notebook<span></span></a></li>
@@ -98,10 +102,6 @@
               <li><a href="/2019/04/20/wien2k-libxc-mgga-error/" style="font-size: 15px; font-family: 微软雅黑">解决编译WIEN2k时找不到meta-GGA例程的问题<span></span></a></li>
               
               <li><a href="/2019/04/20/wien2k-fftw3-multi-def/" style="font-size: 15px; font-family: 微软雅黑">解决编译WIEN2k时FFTW3 multiple d...<span></span></a></li>
-              
-              <li><a href="/2019/03/23/valgrind-1/" style="font-size: 15px; font-family: 微软雅黑">Valgrind Memcheck初探<span></span></a></li>
-              
-              <li><a href="/2019/03/20/vasp-set_indpw_full-error/" style="font-size: 15px; font-family: 微软雅黑">解决运行VASP时set_indpw_full错误<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -154,11 +154,11 @@
               
               <li><a href="/tags/Bugfix/" style="font-size: 15px; font-family: 微软雅黑">Bugfix<span></span></a></li>
               
+              <li><a href="/tags/WIEN2k/" style="font-size: 15px; font-family: 微软雅黑">WIEN2k<span></span></a></li>
+              
               <li><a href="/tags/Hexo/" style="font-size: 15px; font-family: 微软雅黑">Hexo<span></span></a></li>
               
               <li><a href="/tags/VASP/" style="font-size: 15px; font-family: 微软雅黑">VASP<span></span></a></li>
-              
-              <li><a href="/tags/WIEN2k/" style="font-size: 15px; font-family: 微软雅黑">WIEN2k<span></span></a></li>
               
               <li><a href="/tags/Python/" style="font-size: 15px; font-family: 微软雅黑">Python<span></span></a></li>
               
@@ -210,6 +210,151 @@
 	
 	<!-- display as entry -->	
 		<h3 class="title">
+			<div class="date"> 2019-04-20 </div>
+			<div class="article-title"><a href="/2019/04/20/wien2k-fftw3-multi-def/" >解决编译WIEN2k时FFTW3 multiple definition错误</a></div>						
+		</h3>
+	
+
+
+			<div class="entry">
+  <div class="row">
+	
+	
+		<link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2>摘要</h2>
+<p>通过使用Intel FFTW3 wrapper, 解决了自编FFTW下编译WIEN2k v14.2时出现的多次定义&quot;fftw_destroy_plan&quot;错误</p>
+<p>&lt;!--more--&gt;</p>
+<h2>问题描述</h2>
+<p>尝试用Intel 2018.0和对应编译的FFTW3库编译WIEN2k v14.2. 用<code>siteconfig_lapw</code>, 在编译<code>SRC_lapw0</code>中的并行程序<code>lapw0_mpi</code>时, 报错</p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">libfftw3.a (apiplan.o): In function `fftw_destroy_plan’:</span><br><span class="line">apiplan.c:(.text+0x430): multiple definition of `fftw_destroy_plan’</span><br><span class="line">mkl/lib/intel64/libmkl_intel_lp64.a(fftw_destroy_panl.o):fftw_destroy_plan.c(.text+0x0): first defined here</span><br><span class="line">make[1]: *** [Makefile:99: lapw0_mpi] Error 1</span><br></pre></td></tr></table></figure></p>
+<p>最终编译信息里提示<code>tetra</code>, <code>joint</code>, <code>telnes3</code>报错, 错误为<code>Internal compiler error</code>.</p>
+<h2>解决过程</h2>
+<p>因为是FFTW3和MKL的冲突, 所以考虑放弃自己编译的FFTW3, 用Intel自带的FFTW3 wrapper. 在编译好静态库<code>libfftw3xf_intel.a</code>后, 把<code>include</code>改为<code>mkl/interfaces/fftw</code>, 把<code>-lfftw3</code>改为该静态库的绝对路径, 删掉<code>lfftw3_mpi</code></p>
+<p>作上述修改后用<code>siteconfig_lapw</code>重新编译<code>lapw0</code>, 出现<code>fft_modules</code>报错, 提示未定义MPI FFTW3变量的引用. 参考Intel的官方文档, 发现对MPI FFTW3有关变量的包装器定义在<code>fftw3x_cdtf</code>中, 需要编译这个lib. 链接时用它取代原来<code>lfftw3_mpi</code>的位置</p>
+<p>改完后再重新编译, 这一次报错<code>libfftw3x_cdft</code>链接错误: <code>Undefined reference to DftiSetValueDM</code>. 参考该 <a href="https://software.intel.com/en-us/forums/intel-math-kernel-library/topic/284696" target="_blank" rel="noopener">Intel forum链接</a> , 在静态链接时把<code>libmkl_cdft_core.a</code>放入链接的group中. 编译通过! 这时把RP_LIBS中的<code>libfftw3xf.a</code>去掉, 也可以正常编译.</p>
+
+	
+	</div>
+  <a type="button" href="/2019/04/20/wien2k-fftw3-multi-def/#more" class="btn btn-default more">Read More</a>
+</div>
+
+		
+			
+	
+	<!-- display as entry -->	
+		<h3 class="title">
+			<div class="date"> 2019-03-23 </div>
+			<div class="article-title"><a href="/2019/03/23/valgrind-1/" >Valgrind Memcheck初探</a></div>						
+		</h3>
+	
+
+
+			<div class="entry">
+  <div class="row">
+	
+	
+		<link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2>摘要</h2>
+<p>为了对GAP3程序进行调试和优化, 准备使用Valgrind对其内存调用进行检查. 本文是对Valgrind功能的初步探索, 对一个简单程序的Valgrind输出进行了分析.</p>
+<p>&lt;!--more--&gt;</p>
+<h2>八卦</h2>
+<p>很早就听说过Valgrind这个软件, 对它的名字和Logo很好奇, 粗略搜了一下名字, 在<a href="http://valgrind.org/docs/manual/faq.html#faq.whence" target="_blank" rel="noopener">官方FAQ</a>里发现这样一段话</p>
+<blockquote>
+<p>Q: Where does the name “Valgrind” come from?</p>
+<p>A: From Nordic mythology. Originally (before release) the project was named <a href="https://en.wikipedia.org/wiki/Heimdallr" target="_blank" rel="noopener">Heimdall</a>, after the watchman of the Nordic gods. He could “see a hundred miles by day or night, hear the grass growing, see the wool growing on a sheep’s back”, etc. This would have been a great name, but it was already taken by a security package “Heimdal”.</p>
+<p>Keeping with the Nordic theme, Valgrind was chosen. Valgrind is the name of the main entrance to <a href="https://en.wikipedia.org/wiki/Valhalla" target="_blank" rel="noopener">Valhalla</a> (the Hall of the Chosen Slain in Asgard). Over this entrance there resides a wolf and over it there is the head of a boar and on it perches a huge eagle, whose eyes can see to the far regions of the nine worlds. Only those judged worthy by the guardians are allowed to pass through Valgrind. All others are refused entrance.</p>
+<p>It’s not short for “value grinder”, although that’s not a bad guess.</p>
+</blockquote>
+<p>大意就是, Valgrind取自北欧神话中Valhalla&lt;sup id=&quot;fnref:1&quot;&gt;&lt;a href=&quot;#fn:1&quot; rel=&quot;footnote&quot;&gt;&lt;span class=&quot;hint--top hint--error hint--medium hint--rounded hint--bounce&quot; aria-label=&quot;Valhalla在老伊达(<a href="https://en.wikipedia.org/wiki/Poetic_Edda" target="_blank" rel="noopener">The Poetic Edda</a>)里有记录, 想起来之前读文史大纲的时候遇到过, 见<a href="https://book.douban.com/subject/1203864/" target="_blank" rel="noopener">郑振铎全集</a>第十卷P343.&quot;&gt;[1]&lt;/span&gt;&lt;/a&gt;&lt;/sup&gt;入口的名字, 这个地方挂着熊头, 栖息着一匹狼和一只巨鹰, 视野达九界终焉. 只有被这些守卫者认为具有价值者才可通过Valgrind. 真是读书人呀 :P</p>
+<h2>安装</h2>
+<p>Valgrind的安装比较容易, 可以下载源码, 用<code>./configure; make; make install</code>的方式. 在Fedora上可以从源安装,</p>
+<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dnf install valgrind</span><br></pre></td></tr></table></figure></p>
+<p>撰写本文时Valgrind最新版本为3.15.0, macOS支持到10.13, 但不支持10.14 Mojave.</p>
+<h2>程序编译选项</h2>
+<p>为了让Valgrind能够工作, 在编译程序时, 应该采用<code>-g -O1</code>选项进行编译, 原因是</p>
+<ul>
+<li>使用<code>-g</code>产生所有debug需要的symbol.</li>
+<li>优化选项推荐用O1. 可以用O0, 但那会非常慢, 因为在用Valgrind跑程序本身就要慢上<strong>20-30</strong>倍并用上数倍的内存.</li>
+<li>不推荐用O2及以上, 那样会产生很多uninitialised value错误, 但这些error其实是由于优化产生, 并不实际存在于code当中.</li>
+</ul>
+<p>编译完程序以后, 在需要运行程序(比如<code>hello.out</code>)的地方执行</p>
+<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">valgrind --leak-check=yes ./hello.out</span><br></pre></td></tr></table></figure></p>
+<p>将默认使用Memcheck工具, 检查内存leakage问题. 将<code>yes</code>改成<code>full</code>可以输出具体细节.</p>
+<p><div class="alert alert-warning"><i class="fa fa-bell  float-left"></i>  <p>如果需要检查内存泄漏以外的问题, 尽量使用<code>-O0</code>. 这个可以在后面的例子里看到.</p>
+</div></p>
+<h2>实例: 越界赋值与内存泄漏</h2>
+<h3>Fortran源码</h3>
+<p>下面是一个Fortran程序例子<code>abf.f90</code>, 参考自Jason Blevins的<a href="https://jblevins.org/log/valgrind" target="_blank" rel="noopener">代码</a></p>
+<p><figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">program</span></span> abc</span><br><span class="line">    <span class="keyword">integer</span> :: i</span><br><span class="line">    <span class="keyword">integer</span>, <span class="keyword">allocatable</span> :: <span class="keyword">data</span>(:)</span><br><span class="line"></span><br><span class="line">    <span class="built_in">allocate</span>(<span class="keyword">data</span>(<span class="number">5</span>))</span><br><span class="line">    <span class="built_in">print</span>*, rank(<span class="keyword">data</span>), <span class="built_in">size</span>(<span class="keyword">data</span>), loc(<span class="keyword">data</span>)</span><br><span class="line">    <span class="keyword">do</span> i = <span class="number">1</span>, <span class="number">5</span></span><br><span class="line">        <span class="keyword">data</span>(i-<span class="number">1</span>) = i</span><br><span class="line">    <span class="keyword">end</span> <span class="keyword">do</span></span><br><span class="line">    <span class="built_in">print</span>*, <span class="keyword">data</span>(<span class="number">1</span>)</span><br><span class="line">    <span class="built_in">print</span>*, rank(<span class="keyword">data</span>), <span class="built_in">size</span>(<span class="keyword">data</span>), loc(<span class="keyword">data</span>)</span><br><span class="line"><span class="keyword">end</span> <span class="function"><span class="keyword">program</span></span> abc</span><br></pre></td></tr></table></figure></p>
+<p>做一点说明</p>
+<ul>
+<li>这个程序存在两个问题, 一是对<code>data(0)</code>赋值, 但Fortran分配数组时下标从1开始. 这是一个<a href="http://www.qnx.com/developers/docs/qnxcar2/index.jsp?topic=%2Fcom.qnx.doc.neutrino.prog%2Ftopic%2Fhat_OverrunErrors.html" target="_blank" rel="noopener">heap block overrun</a>问题. 二是没有对<code>data</code>数组进行<code>deallocate</code>内存释放</li>
+<li><code>rank</code>, <code>size</code>和<code>loc</code>内建函数分别返回<code>data</code>的维度, 数组中确定类型的数的个数, 即所有维度上长度连乘, 以及array descriptor的位置.</li>
+</ul>
+<h3>编译和运行</h3>
+<p>编译<code>abc.f90</code></p>
+<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gfortran abc.f90 -o abc -g -O0</span><br></pre></td></tr></table></figure></p>
+<p>为了不让程序直接报错, 没有加上debug需要的<code>-fbounds-check</code>.  运行Valgrind</p>
+<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">valgrind ./abc --leak-check=full</span><br></pre></td></tr></table></figure></p>
+<h3>输出解读</h3>
+<p>运行Valgrind给出的输出是</p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">==28740== Memcheck, a memory error detector</span><br><span class="line">==28740== Copyright (C) 2002-2017, and GNU GPL&apos;d, by Julian Seward et al.</span><br><span class="line">==28740== Using Valgrind-3.14.0 and LibVEX; rerun with -h for copyright info</span><br><span class="line">==28740== Command: ./abc --leak-check=full</span><br><span class="line">==28740==</span><br><span class="line">           1           5             97983168</span><br><span class="line">==28740== Invalid write of size 4</span><br><span class="line">==28740==    at 0x40098C: MAIN__ (abc.f90:8)</span><br><span class="line">==28740==    by 0x400A8F: main (abc.f90:12)</span><br><span class="line">==28740==  Address 0x5d71abc is 4 bytes before a block of size 20 alloc&apos;d</span><br><span class="line">==28740==    at 0x4C2CDCB: malloc (vg_replace_malloc.c:299)</span><br><span class="line">==28740==    by 0x400865: MAIN__ (abc.f90:5)</span><br><span class="line">==28740==    by 0x400A8F: main (abc.f90:12)</span><br><span class="line">==28740==</span><br><span class="line">           1           5             97983168</span><br><span class="line">==28740==</span><br><span class="line">==28740== HEAP SUMMARY:</span><br><span class="line">==28740==     in use at exit: 20 bytes in 1 blocks</span><br><span class="line">==28740==   total heap usage: 22 allocs, 21 frees, 13,516 bytes allocated</span><br><span class="line">==28740==</span><br><span class="line">==28740== LEAK SUMMARY:</span><br><span class="line">==28740==    definitely lost: 20 bytes in 1 blocks</span><br><span class="line">==28740==    indirectly lost: 0 bytes in 0 blocks</span><br><span class="line">==28740==      possibly lost: 0 bytes in 0 blocks</span><br><span class="line">==28740==    still reachable: 0 bytes in 0 blocks</span><br><span class="line">==28740==         suppressed: 0 bytes in 0 blocks</span><br><span class="line">==28740== Rerun with --leak-check=full to see details of leaked memory</span><br><span class="line">==28740==</span><br><span class="line">==28740== For counts of detected and suppressed errors, rerun with: -v</span><br><span class="line">==28740== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)</span><br></pre></td></tr></table></figure></p>
+<p>对这些输出做一些说明</p>
+<ul>
+<li>运行<code>./abc</code>不会报错, 两个<code>print</code>均正常打印结果, 输出<code>data(1)</code>值为2. <code>loc</code>在赋值前后不变.</li>
+<li>28740是运行任务的PID</li>
+<li>Invalid write部分指出越界赋值的问题. <code>at 0x40098C: MAIN__ (abc.f90:8)</code>表示该write在<code>abc.f90</code>的第8行. 如果采用<code>-O1</code>优化, 这个错误会被隐藏起来.</li>
+<li>HEAP SUMMARY给出占用内存的信息. 可以看到, 由于没有free掉整数类型(4 bytes)的data(5), 在退出时还有20 bytes被占用(in use at exit)</li>
+</ul>
+<h2>关于memory lost的类型</h2>
+<p>LEAK SUMMARY给出内存泄漏的总结. 不同的lost对应的含义(总结于Valgrind <a href="http://valgrind.org/docs/manual/faq.html#faq.deflost" target="_blank" rel="noopener">FAQ</a>)</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">类型</th>
+<th style="text-align:left">解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">definitely lost</td>
+<td style="text-align:left">程序有内存泄漏. 这些泄漏<strong>必须</strong>修正.</td>
+</tr>
+<tr>
+<td style="text-align:left">indirectly lost</td>
+<td style="text-align:left">程序的一个基于指针的结构里存在内存泄漏</td>
+</tr>
+<tr>
+<td style="text-align:left">possibly lost</td>
+<td style="text-align:left">程序存在内存泄漏, 除非做一些操作使得指针重新指向已分配的内存块.</td>
+</tr>
+<tr>
+<td style="text-align:left">still reachable</td>
+<td style="text-align:left">It didn’t free some memory it could have.</td>
+</tr>
+<tr>
+<td style="text-align:left">suppressed</td>
+<td style="text-align:left">存在内存泄漏, 但这些泄漏信息因为Valgrind设置的关系, 被抑制输出了</td>
+</tr>
+</tbody>
+</table>
+<p>做一点说明</p>
+<ul>
+<li>对于“indirectly lost”的解释是, 例如一个二叉树根节点definitely lost, 那么它的子节点就是indirectly lost. Indirectly lost通常在修复definitely lost后消失.</li>
+<li>“still reachable”的含义还不是很清楚, 只是把FAQ原文抄录了, 因为自己还没有遇到, FAQ也说它是一个“常见和合理的错误”, 因此不做展开.</li>
+</ul>
+<h2>总结</h2>
+<p>本文基于一个简单的Fortran程序, 从编译源代码开始, 展示了用Valgrind对程序内存调用进行检查的过程. 对Valgrind输出信息进行了初步解读.
+&lt;div id=&quot;footnotes&quot;&gt;&lt;hr&gt;&lt;div id=&quot;footnotelist&quot;&gt;&lt;ol style=&quot;list-style: none; padding-left: 0; margin-left: 40px&quot;&gt;&lt;li id=&quot;fn:1&quot;&gt;&lt;span style=&quot;display: inline-block; vertical-align: top; padding-right: 10px; margin-left: -40px&quot;&gt;1.&lt;/span&gt;&lt;span style=&quot;display: inline-block; vertical-align: top; margin-left: 10px;&quot;&gt;Valhalla在老伊达(&lt;a href=&quot;https://en.wikipedia.org/wiki/Poetic_Edda&quot;&gt;The Poetic Edda&lt;/a&gt;)里有记录, 想起来之前读文史大纲的时候遇到过, 见&lt;a href=&quot;https://book.douban.com/subject/1203864/&quot;&gt;郑振铎全集&lt;/a&gt;第十卷P343.&lt;a href=&quot;#fnref:1&quot; rev=&quot;footnote&quot;&gt; ↩&lt;/a&gt;&lt;/span&gt;&lt;/li&gt;&lt;/ol&gt;&lt;/div&gt;&lt;/div&gt;</p>
+
+	
+	</div>
+  <a type="button" href="/2019/03/23/valgrind-1/#more" class="btn btn-default more">Read More</a>
+</div>
+
+		
+			
+	
+	<!-- display as entry -->	
+		<h3 class="title">
 			<div class="date"> 2019-03-20 </div>
 			<div class="article-title"><a href="/2019/03/20/vasp-set_indpw_full-error/" >解决运行VASP时set_indpw_full错误</a></div>						
 		</h3>
@@ -220,7 +365,20 @@
   <div class="row">
 	
 	
-		<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>通过恰当设置KPAR和NPAR, 解决VASP杂化泛函计算中出现的“set_indpw_full”错误.</p>
+		<link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2>摘要</h2>
+<p>通过恰当设置KPAR和NPAR, 解决VASP杂化泛函计算中出现的“set_indpw_full”错误.</p>
+<p>&lt;!--more--&gt;</p>
+<h2>问题描述</h2>
+<p>用ACFDT-RPA计算Ne的EOS曲线, 在进行+8%体积的非自洽HF计算一步时, 标准输出中打印错误</p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">internal error in SET_INDPW_FULL: insufficient memory</span><br></pre></td></tr></table></figure></p>
+<h2>解决过程</h2>
+<p>谷歌该错误,  在<a href="https://cms.mpi.univie.ac.at/vasp-forum/viewtopic.php?t=17510" target="_blank" rel="noopener">第一条vasp forum链接</a>的最后, 楼主给出了解决方法:</p>
+<ol>
+<li>恰当设置KPAR和NPAR, 使得$\rm KPAR\times NPAR$等于总的核数.</li>
+<li>关闭对称性, ISYM=0.</li>
+</ol>
+<p>我试着加上了KPAR=4, 因为总核数为16, NPAR=4, 不再报该错误, 计算顺利完成. 考虑到链接里的错误来自HSE计算, 因此这有可能是进行大体系的VASP杂化泛函计算时容易出现的错误.</p>
+
 	
 	</div>
   <a type="button" href="/2019/03/20/vasp-set_indpw_full-error/#more" class="btn btn-default more">Read More</a>
@@ -241,7 +399,61 @@
   <div class="row">
 	
 	
-		<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文简单介绍了笔者学习通过panflute编写pandoc过滤器的过程, 实现了一个将<code>#anytag(date, mood)</code>转化为可用Bootstrap CSS渲染的HTML源码的过滤器.</p>
+		<link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2>前言</h2>
+<p>本文简单介绍了笔者学习通过panflute编写pandoc过滤器的过程, 实现了一个将<code>#anytag(date, mood)</code>转化为可用Bootstrap CSS渲染的HTML源码的过滤器.</p>
+<p>&lt;!-- more --&gt;</p>
+<p>在<a href="/2019/01/02/pandoc-md-to-pdf/" title="利用Pandoc将Markdown转化为PDF">利用Pandoc将Markdown转化为PDF</a>一文里我尝试用HTML和LaTeX转化Markdown文本到PDF, 包括用CSS和LaTeX模板自定义PDF输出. 但有时我们需要在转化时对Markdown文本本身进行on-the-fly的修改. 这是仅仅修改样式无法完成的, 需要借助<a href="https://pandoc.org/filters.html" target="_blank" rel="noopener">pandoc过滤器</a>直接修改抽象语义树(abstract syntax tree, AST).</p>
+<p>过滤器原则上需要用Haskell写. 对于不会写Haskell的开发人员, jgm老师提供了它的Python包装<a href="https://github.com/jgm/pandocfilters" target="_blank" rel="noopener">pandocfilters</a>. 它的一个替代品是<a href="http://scorreia.com/software/panflute/" target="_blank" rel="noopener">panflute</a>, 特点是提供了额外的帮助函数, 便于debug等等. 下面过滤器代码都是基于panflute的.</p>
+<h2>学习简单例子</h2>
+<h3>强调转删除线</h3>
+<p>官网上一个将<code>*x*</code>强调文字换成<code>~~x~~</code>删除线文字</p>
+<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="comment"># filename: emph_so.py</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">Replace Emph elements with Strikeout elements</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="keyword">from</span> panflute <span class="keyword">import</span> Emph, Strikeout, run_filter</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">action</span><span class="params">(elem, doc)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> isinstance(elem, Emph):</span><br><span class="line">        <span class="keyword">return</span> Strikeout(*elem.content)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">(doc=None)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> run_filter(action, doc=doc)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure></p>
+<p>运行</p>
+<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pandoc sometext.md --filter emph_so.py -t gfm -o filtered.md</span><br></pre></td></tr></table></figure></p>
+<p>下面的文字可作为测试</p>
+<p><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">这里有一句<span class="emphasis">*本来被强调的文字*</span>. 处理后会和这一段~~被删除的文字~~一样.</span><br></pre></td></tr></table></figure></p>
+<h3>删除注释</h3>
+<p>用的是Panflute GitHub repo里的例子<a href="https://github.com/sergiocorreia/panflute/blob/master/examples/panflute/comments.py" target="_blank" rel="noopener">comments.py</a>. 注意原链接17行(这里19行)应该是<code>el.format</code>, 而不是<code>doc.format</code>.</p>
+<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="comment"># filename: comments.py</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">Pandoc filter that causes everything between</span></span><br><span class="line"><span class="string">'&lt;!-- BEGIN COMMENT --&gt;' and '&lt;!-- END COMMENT --&gt;'</span></span><br><span class="line"><span class="string">to be ignored.  The comment lines must appear on</span></span><br><span class="line"><span class="string">lines by themselves, with blank lines surrounding</span></span><br><span class="line"><span class="string">them.</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> panflute <span class="keyword">as</span> pf</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">prepare</span><span class="params">(doc)</span>:</span></span><br><span class="line">    doc.ignore = <span class="keyword">False</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">comment</span><span class="params">(el, doc)</span>:</span></span><br><span class="line">    is_relevant = (type(el) == pf.RawBlock) <span class="keyword">and</span> (el.format == <span class="string">'html'</span>)</span><br><span class="line">    <span class="keyword">if</span> is_relevant <span class="keyword">and</span> re.search(<span class="string">"&lt;!-- BEGIN COMMENT --&gt;"</span>, el.text):</span><br><span class="line">        doc.ignore = <span class="keyword">True</span></span><br><span class="line">    <span class="keyword">if</span> doc.ignore:</span><br><span class="line">        <span class="keyword">if</span> is_relevant <span class="keyword">and</span> re.search(<span class="string">"&lt;!-- END COMMENT --&gt;"</span>, el.text):</span><br><span class="line">            doc.ignore = <span class="keyword">False</span></span><br><span class="line">        <span class="keyword">return</span> []</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    pf.toJSONFilter(comment, prepare=prepare)</span><br></pre></td></tr></table></figure></p>
+<p>以下文字可供测试：</p>
+<p><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"><span class="comment">&lt;!-- BEGIN COMMENT --&gt;</span></span></span><br><span class="line"></span><br><span class="line">在这里的文字在经过comments.py过滤后会消失. </span><br><span class="line"></span><br><span class="line"><span class="xml"><span class="comment">&lt;!-- END COMMENT --&gt;</span></span></span><br></pre></td></tr></table></figure></p>
+<h3>将所有标题上升一层</h3>
+<p>自己的原始Markdown笔记都是以h1开始, 这样在LaTeX转化时可以正常转为section. 但Hexo博文正文标题是h2开始的, 因此将原始Markdown笔记转化为Hexo博文中需要修改标题层级结构</p>
+<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/local/bin/python3</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="comment"># filename: header-up.py</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">Set headers to 1 level higher. </span></span><br><span class="line"><span class="string">Remove h6, and add '.' at the end if there was no '.'</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> panflute <span class="keyword">import</span> Header, Para, run_filter, Block, Str</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">action</span><span class="params">(el, doc)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> isinstance(el, Header):</span><br><span class="line">        <span class="keyword">if</span> el.level &lt; <span class="number">6</span>:</span><br><span class="line">            el.level += <span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            _contents = el.content</span><br><span class="line">            _lastcont = _contents[<span class="number">-1</span>]</span><br><span class="line">            <span class="keyword">if</span> isinstance(_lastcont, Str):</span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">not</span> _lastcont.text.endswith(<span class="string">'.'</span>):</span><br><span class="line">                    _lastcont.text += <span class="string">'.'</span></span><br><span class="line">            <span class="keyword">return</span> Para(*el.content)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">(doc=None)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> run_filter(action, doc=doc) </span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure></p>
+<p>这段代码还处理了h6的特殊情况. 下面的文字可以作为测试</p>
+<p><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># was a level-1 header</span></span><br><span class="line"></span><br><span class="line"><span class="section">## was a level-2 header</span></span><br><span class="line"></span><br><span class="line"><span class="section">### was a level-3 header</span></span><br><span class="line"></span><br><span class="line"><span class="section">#### was a level-4 header</span></span><br><span class="line"></span><br><span class="line"><span class="section">##### was a level-5 header</span></span><br><span class="line"></span><br><span class="line"><span class="section">###### was a level-6 header</span></span><br></pre></td></tr></table></figure></p>
+<h2>进阶尝试: 转换<code>&lt;badge /&gt;</code></h2>
+<p>基于上面<a href="#%E5%88%A0%E9%99%A4%E6%B3%A8%E9%87%8A">删除注释</a>的例子, 写了一个这样的一个例子, 目的是将<code>&lt;badge id=id text=text /&gt;</code>形式的HTML文本转换为<code>&lt;span class=&quot;badge badge-id&quot;&gt;text&lt;/span&gt;</code>, 后者可以被Bootstrap CSS渲染. 代码如下</p>
+<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="comment"># filename: badge_span.py</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">Pandoc filter that turns the inline &lt;xxx id=id text=text /&gt;</span></span><br><span class="line"><span class="string">to &lt;span class="xxx xxx-id"&gt;text&lt;/span&gt;</span></span><br><span class="line"><span class="string">xxx equals to 'badge, label' currently</span></span><br><span class="line"><span class="string">text should have no space</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> panflute <span class="keyword">as</span> pf</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">extract_id_text</span><span class="params">(raw_inline)</span>:</span></span><br><span class="line">    <span class="string">'''return (id, string) tuple</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    _ide = <span class="string">''</span></span><br><span class="line">    _str = <span class="string">''</span></span><br><span class="line">    iden = re.findall(<span class="string">'(id=[\"\']?\w+[\"\']?[ ]*[/&gt;]?)'</span>, raw_inline)</span><br><span class="line">    text = re.findall(<span class="string">'(text=[\"\']?\w+[\"\']?[ ]*[/&gt;]?)'</span>, raw_inline)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> len(iden) != <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">if</span> iden[<span class="number">0</span>] != <span class="string">''</span>:</span><br><span class="line">            _ide = iden[<span class="number">0</span>][<span class="number">3</span>:<span class="number">-1</span>].strip()</span><br><span class="line">    <span class="keyword">if</span> len(text) != <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">if</span> text[<span class="number">0</span>] != <span class="string">''</span>:</span><br><span class="line">            _str = text[<span class="number">0</span>][<span class="number">5</span>:<span class="number">-1</span>].strip()</span><br><span class="line"></span><br><span class="line">    _ret = [_ide, _str]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i, token <span class="keyword">in</span> enumerate(_ret):</span><br><span class="line">        <span class="keyword">if</span> token != <span class="string">''</span>:</span><br><span class="line">            <span class="keyword">if</span> token.startswith((<span class="string">"\'"</span>, <span class="string">"\""</span>)):</span><br><span class="line">                _ret[i] = _ret[i][<span class="number">1</span>:]</span><br><span class="line">            <span class="keyword">if</span> token.endswith((<span class="string">"\'"</span>, <span class="string">"\""</span>)):</span><br><span class="line">                _ret[i] = _ret[i][:<span class="number">-1</span>]</span><br><span class="line">    <span class="keyword">return</span> tuple(_ret)</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">rawinline_label_badge</span><span class="params">(el, doc)</span>:</span></span><br><span class="line">    is_rawinline = isinstance(el, pf.RawInline) <span class="keyword">and</span> (el.format == <span class="string">'html'</span>)</span><br><span class="line">    <span class="keyword">if</span> is_rawinline:</span><br><span class="line">        <span class="keyword">if</span> re.match(<span class="string">"&lt;label"</span>, el.text) <span class="keyword">or</span> re.match(<span class="string">"&lt;badge"</span>, el.text):</span><br><span class="line">            __cls = re.findall(<span class="string">'(&lt;\w+)'</span>, el.text)</span><br><span class="line">            __cls[<span class="number">0</span>] = __cls[<span class="number">0</span>][<span class="number">1</span>:]</span><br><span class="line">            identi, text = extract_id_text(el.text)</span><br><span class="line">            <span class="keyword">if</span> identi != <span class="string">''</span>:</span><br><span class="line">                __cls.append(__cls[<span class="number">0</span>] + <span class="string">'-'</span> + identi)</span><br><span class="line">            <span class="keyword">return</span> pf.Span(pf.Str(text), classes=__cls)</span><br><span class="line">    <span class="keyword">return</span> el</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    pf.toJSONFilter(rawinline_label_badge)</span><br></pre></td></tr></table></figure></p>
+<p>由于转化基于<code>RawInline</code>对象, 所以单独为一行的badge或者label是无法正常转化的. 例如</p>
+<p><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">右侧两个是可以的 <span class="xml"><span class="tag">&lt;<span class="name">badge</span> <span class="attr">id</span>=<span class="string">"warn"</span> <span class="attr">text</span>=<span class="string">"badge-warn"</span>&gt;</span></span> <span class="xml"><span class="tag">&lt;<span class="name">badge</span> <span class="attr">id</span>=<span class="string">"info"</span> <span class="attr">text</span>=<span class="string">"badge-info"</span>&gt;</span></span></span><br></pre></td></tr></table></figure></p>
+<p>下面有一个单独成行的<code>badge-danger</code>是在这个脚本下是渲染不出来的.</p>
+<p><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">badge</span> <span class="attr">id</span>=<span class="string">"danger"</span> <span class="attr">text</span>=<span class="string">"单独成行的badge-danger"</span>&gt;</span></span></span><br></pre></td></tr></table></figure></p>
+<h2>过滤器调试</h2>
+<p>直接用<code>--filter</code>选项套用过滤器比较难调试. 可以用以下方法来调试, 其中pandoc输出格式必须作为过滤器的第一个变量声明.</p>
+<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pandoc -t json | ./filter.py latex | pandoc -f json -t latex</span><br></pre></td></tr></table></figure></p>
+<p>等价于</p>
+<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pandoc --filter./filter.py -f json -t latex</span><br></pre></td></tr></table></figure></p>
+<p>也可以使用<code>convert_text</code>来检查自己对一段文字的AST的理解</p>
+<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> panflute <span class="keyword">import</span> *</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>tag1 = <span class="string">'Some #Tag(abc, cde)'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>convert_text(tag1)</span><br><span class="line">[Para(Str(Some) Space Str(<span class="comment">#Tag(abc,) Space Str(cde)))]</span></span><br></pre></td></tr></table></figure></p>
+<h2>实际例子: 转化行内带<code>#</code>的标签</h2>
+<p>这个例子的目的是转化<code>#anytag(date, mood)</code>到HTML源码</p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;span class=&quot;badge badge-tag&quot;&gt;#anytag(date, mood)&lt;/span&gt;</span><br></pre></td></tr></table></figure></p>
+<p>之所以想做这个转化是因为在笔记软件里会用<code>#tag</code>做笔记分类, 想在转化时把这个tag转化成bootstrap的徽章, 这样在借助HTML转化时就能用BS渲染标签.</p>
+<p>在上面过滤器调试的<code>tag1</code>例子里, 我们看到如果<code>date</code>和<code>mod</code>之间如果有空格时, 上面的tag会转化成两个<code>[Str Space Str]</code>. 这个时候就要用到前面<code>comments.py</code>中的<code>doc.ignore</code>来判断一个标签是否完成, 以及处理中间出现的空间.</p>
+<p>最后的代码如下</p>
+<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/local/bin/python3</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="comment"># filename: tag_span.py</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">Pandoc filter that turns </span></span><br><span class="line"><span class="string">   "#XXX(...)" to '&lt;span class="badge badge-warn"&gt;#XXX(...)&lt;/span&gt;'</span></span><br><span class="line"><span class="string">and</span></span><br><span class="line"><span class="string">   "@XXX(...)" to &lt;span class="badge badge-info"&gt;@XXX(...)&lt;/span&gt;</span></span><br><span class="line"><span class="string">letters, numbers, comas, underscore, hyphon and space are allowed in the parenthese</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> panflute <span class="keyword">as</span> pf</span><br><span class="line"></span><br><span class="line">str_to_replace = <span class="string">''</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">prepare</span><span class="params">(doc)</span>:</span></span><br><span class="line">    <span class="string">'''ignore represents whether in the tag/people environment</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    doc.ignore = <span class="keyword">False</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">convert_tag_people</span><span class="params">(el, doc)</span>:</span></span><br><span class="line"></span><br><span class="line">    dict_tag_people = &#123;<span class="string">"#"</span>: <span class="string">"warn"</span>, <span class="string">"@"</span>: <span class="string">"info"</span>&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">global</span> str_to_replace</span><br><span class="line">    is_str = isinstance(el, pf.Str)</span><br><span class="line">    <span class="keyword">if</span> is_str:</span><br><span class="line">        _text = el.text</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> doc.ignore:</span><br><span class="line">            <span class="comment"># outside the tag/people, check if meet a tag/people</span></span><br><span class="line">            <span class="keyword">if</span> re.fullmatch(<span class="string">"[#@][\w-]+\([\w,-]*\)"</span>, _text):</span><br><span class="line">                <span class="comment"># direct return the span if the string has both left parenthese and right parenthese</span></span><br><span class="line">                str_to_replace = <span class="string">''</span></span><br><span class="line">                <span class="keyword">return</span> pf.Span(pf.Str(_text), \</span><br><span class="line">                        classes=[<span class="string">"badge"</span>, <span class="string">"badge"</span>+<span class="string">'-'</span>+dict_tag_people[_text[<span class="number">0</span>]]])</span><br><span class="line">            <span class="keyword">if</span> re.fullmatch(<span class="string">"[#@][\w-]+"</span>, _text):</span><br><span class="line">                <span class="comment"># direct return span if the string has noparenthese</span></span><br><span class="line">                str_to_replace = <span class="string">''</span></span><br><span class="line">                <span class="keyword">return</span> pf.Span(pf.Str(_text), \</span><br><span class="line">                        classes=[<span class="string">"badge"</span>, <span class="string">"badge"</span>+<span class="string">'-'</span>+dict_tag_people[_text[<span class="number">0</span>]]])</span><br><span class="line">            <span class="keyword">if</span> re.fullmatch(<span class="string">"[#@][\w-]+\([\w,-]*"</span>, _text):</span><br><span class="line">                <span class="comment"># string with left parenthese in it, but with no right parenthese</span></span><br><span class="line">                <span class="comment"># initialize the str_to_replace</span></span><br><span class="line">                str_to_replace = _text</span><br><span class="line">                doc.ignore = <span class="keyword">True</span></span><br><span class="line">                <span class="keyword">return</span> []</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="comment"># inside the tag/people, check if the tag/people string ends.</span></span><br><span class="line">            <span class="comment"># Found right parenthese at the end, return the whole string</span></span><br><span class="line">            <span class="keyword">if</span> re.fullmatch(<span class="string">"[^#@][\w,-]+\)"</span>, _text):</span><br><span class="line">                doc.ignore = <span class="keyword">False</span></span><br><span class="line">                str_to_replace += _text</span><br><span class="line">                new_Str = pf.Str(str_to_replace)</span><br><span class="line">                <span class="keyword">return</span> pf.Span(new_Str, \</span><br><span class="line">                        classes=[<span class="string">"badge"</span>, <span class="string">"badge"</span>+<span class="string">'-'</span>+dict_tag_people[str_to_replace[<span class="number">0</span>]]])</span><br><span class="line"></span><br><span class="line">            <span class="comment"># no right parenthese found, purge it to str_to_replace, return empty element</span></span><br><span class="line">            str_to_replace += _text</span><br><span class="line">            <span class="keyword">return</span> []</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="comment"># Not a normal string. If within the tag/people and is a space, add space to str_to_replace</span></span><br><span class="line">        <span class="comment"># otherwise, just give it back to AST</span></span><br><span class="line">        <span class="keyword">if</span> doc.ignore:</span><br><span class="line">            <span class="keyword">if</span> isinstance(el, pf.Space):</span><br><span class="line">                str_to_replace += <span class="string">' '</span></span><br><span class="line">            <span class="keyword">return</span> []</span><br><span class="line">    <span class="keyword">return</span> el</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    pf.toJSONFilter(convert_tag_people, prepare=prepare)</span><br></pre></td></tr></table></figure></p>
+<p>这个脚本里还对<code>@</code>开头做进行了同样处理, 在Agenda里它用来代表人名. 尝试转化下面的文字:</p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Tags: #todo , #todo() , #todo(today) , #todo(today, tomorrow)</span><br><span class="line">People: @todo , @todo() , @todo(today) , @todo(today, tomorrow)</span><br></pre></td></tr></table></figure></p>
+<p>转化结果</p>
+<p><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Tags: <span class="xml"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"badge badge-warn"</span>&gt;</span></span>\#todo<span class="xml"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span> ,</span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"badge badge-warn"</span>&gt;</span></span>\#todo()<span class="xml"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span> ,</span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"badge badge-warn"</span>&gt;</span></span>\#todo(today)<span class="xml"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span> ,</span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"badge badge-warn"</span>&gt;</span></span>\#todo(today, tomorrow)<span class="xml"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span></span><br><span class="line"></span><br><span class="line">People: <span class="xml"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"badge badge-info"</span>&gt;</span></span>@todo<span class="xml"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span> ,</span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"badge badge-info"</span>&gt;</span></span>@todo<span class="xml"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span>() ,</span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"badge badge-info"</span>&gt;</span></span>@todo<span class="xml"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span>(today) ,</span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"badge badge-info"</span>&gt;</span></span>@todo<span class="xml"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span>(today, tomorrow)</span><br></pre></td></tr></table></figure></p>
+<p>可以看到以<code>#</code>为前缀的都正确转化了, 而以<code>@</code>前缀的, 含括号的字符串都没有正确转化.</p>
+<p>由于在<code>re.fullmatch</code>中<code>#</code>和<code>@</code>是同样处理的, 出现这种情形只有可能是在<code>pf.Span</code>转化字符串时对<code>#</code>和<code>@</code>做了区别对待. 为了验证, 我们看一下<code>convert_text</code>的结果</p>
+<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>md2 = <span class="string">"@todo(today, tomorrow)"</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>convert_text(md2)</span><br><span class="line">[Para(Cite(Str(@todo)) Str((today,) Space Str(tomorrow)))]</span><br></pre></td></tr></table></figure></p>
+<p>可见<code>Str</code>对象<code>@todo</code>是<code>Cite</code>对象的子对象, 跟括号所含字符串对应的<code>Str</code>完全分开了, 而我上面的代码没有考虑这个问题.</p>
+<h2>总结</h2>
+<p>本文基于panflute编写了几个pandoc过滤器, 用途包括将原始Markdown标题结构转化为适用于Hexo博文的, 将<code>#tag</code>形式的标签转化为可用Bootstrap CSS渲染的HTML源码.</p>
+
 	
 	</div>
   <a type="button" href="/2019/01/05/panflute_practice/#more" class="btn btn-default more">Read More</a>
@@ -262,7 +474,298 @@
   <div class="row">
 	
 	
-		<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文介绍了使用pandoc工具将markdown文件转化为PDF文件的方法, 讨论了HTML和LaTeX两种转换中介. 由于LaTeX对学术写作有着更好的支持, 笔者将重点放在了后者上. 文中总结了一些模板变量的用法和注意事项, 最后以转换demo.md为例, 用Makefile展示了markdown+pandoc+xelatex+bibtex的一整条工具链.</p>
+		<link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2>前言</h2>
+<p>本文介绍了使用pandoc工具将markdown文件转化为PDF文件的方法, 讨论了HTML和LaTeX两种转换中介. 由于LaTeX对学术写作有着更好的支持, 笔者将重点放在了后者上. 文中总结了一些模板变量的用法和注意事项, 最后以转换demo.md为例, 用Makefile展示了markdown+pandoc+xelatex+bibtex的一整条工具链.</p>
+<p>&lt;!-- more --&gt;</p>
+<p>需求之一来自于最近开始将读文献和看日语原版漫画时遇到的单词和用例记录在一个markdown笔记里. 在电脑上阅读这些markdown笔记完全没有问题, 但是在移动端中阅读就比较困难, 每次在Typora里手动导出也很麻烦, 于是就想着能不能把markdown转化成pdf的过程自动化. 自然就想到了在文件格式转换中非常有名的<a href="https://pandoc.org/" target="_blank" rel="noopener">pandoc</a>.</p>
+<h2>初步尝试</h2>
+<p>从Homebrew安装pandoc</p>
+<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install pandoc</span><br></pre></td></tr></table></figure></p>
+<p>然后用pandoc转换一个包含中文释义的笔记demo.md(见<a href="demo.tar.gz">压缩包</a>)</p>
+<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pandoc demo.md -o demo.pdf</span><br></pre></td></tr></table></figure></p>
+<p>返回错误</p>
+<pre><code>Error producing PDF.
+! Package inputenc Error: Unicode character 因 (U+56E0)
+(inputenc)                not set up for use with LaTeX.
+...
+Try running pandoc with --pdf-engine=xelatex.
+</code></pre>
+<p>照错误信息换用<code>xelatex</code>则出现了一大堆中文字符的<code>Missing character</code>警告</p>
+<pre><code>[WARNING] Missing character: There is no 因 in font [lmroman10-regular]:mapping=tex-text;!
+[WARNING] ...
+</code></pre>
+<p>生成的PDF里这些中文字符都消失了, 只有孤零零的英文. 看来事情没这么简单.</p>
+<h2>基于HTML向PDF转化</h2>
+<p>一开始转化单词笔记的时候就是想转成GitHub Favored Markdown风格的PDF, 于是第一反应是找了一个类似GFM的<a href="https://gist.github.com/killercup/5917178" target="_blank" rel="noopener">CSS</a>, 下载为<code>gfm.css</code>, 和md存放在一个文件夹下, 运行</p>
+<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># wrong command</span></span><br><span class="line">pandoc note.md -o note.pdf --css gfm.css</span><br></pre></td></tr></table></figure></p>
+<p>进行转化, 但这样仍然会报最开始的错误. 其原因是pandoc默认使用LaTeX作为PDF生成引擎, 在这种情况css显然是没有效果的.</p>
+<p>HTML转到PDF的转换引擎的一种选择是开源工具<a href="https://wkhtmltopdf.org/" target="_blank" rel="noopener">wkhtmltopdf</a>, 用Homebrew安装后, 执行</p>
+<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pandoc note.md -o note.pdf --css gfm.css --pdf-engine wkhtmltopdf -t html5</span><br></pre></td></tr></table></figure></p>
+<p>就能正常转换了！上面去掉<code>-t html5</code>也可以正常运行. 除了<a href="https://wkhtmltopdf.org/" target="_blank" rel="noopener">wkhtmltopdf</a>外也可以用<a href="http://www.princexml.com/" target="_blank" rel="noopener">prince</a>, 但它太贵了…</p>
+<p><code>gfm.css</code>对自己来说不是特别好看, 尤其没有GitHub那样的浅蓝色代码背景以及对行间代码的渲染, 所以对css稍微做了一些修改. <code>pre code</code>部分参考了这个<a href="https://github.com/sindresorhus/github-markdown-css" target="_blank" rel="noopener">CSS</a>, 但它其他样式做得不好看, 也是后来才发现它的, 所以没从它出发_(xз」∠)_</p>
+<p><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 在一级标题前面加上朝右的蓝色三角 */</span></span><br><span class="line"><span class="selector-tag">h1</span><span class="selector-pseudo">:before</span> &#123;</span><br><span class="line">  <span class="attribute">content</span>: <span class="string">"\25B6\2005"</span>;</span><br><span class="line">  <span class="attribute">color</span>: <span class="number">#0645ad</span>;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">60%</span>;</span><br><span class="line">  <span class="attribute">vertical-align</span>: middle;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-tag">pre</span> &#123;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">16px</span>;</span><br><span class="line">  <span class="attribute">overflow</span>: auto;</span><br><span class="line">  <span class="attribute">line-height</span>: <span class="number">1.45</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: <span class="number">#f6f8fa</span>;</span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">3px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-tag">code</span> &#123;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">0.2em</span> <span class="number">0.4em</span>;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: <span class="built_in">rgba</span>(27,31,35,0.05);</span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">3px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-tag">pre</span>&gt;<span class="selector-tag">code</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: inline;</span><br><span class="line">  <span class="attribute">max-width</span>: auto;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">overflow</span>: visible;</span><br><span class="line">  <span class="attribute">line-height</span>: inherit;</span><br><span class="line">  <span class="attribute">word-wrap</span>: normal;</span><br><span class="line">  <span class="attribute">background-color</span>: transparent;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>2019-04-30补充: 后来又陆续做了其他改进, 转化了北大超算的使用教程, 最终效果大概是下面这样</p>
+<p><figure class="null"><img src="pandoc-html-pdf.png" alt="pandoc-html-pdf"><figcaption>pandoc-html-pdf</figcaption></figure></p>
+<h2>借助模板的基于LaTeX的转化</h2>
+<p>如果markdown只是写一些代码片断和非常简单的数学公式, 那么上面的HTML转换完全足够了. 但在markdown里写复杂的LaTeX公式仍然非常要命, 有如下两个原因</p>
+<ul>
+<li>在编辑多次出现的复杂记号上有困难. 最简单的例如算符矩阵元尖括号环境, Bloch函数(<code>\varphi_{n\mathbf{k}}(\mathbf{r})</code>), 还有其他上下标特别多的记号. 这种情况下显然没有在tex里直接调<code>physics</code>包和<code>\newcommand</code>自定义来得方便好用, 而重复写很长的LaTeX源码显然使得Markdown失去了它原有的便携性.</li>
+<li>用HTML作为中介产生包含数学公式的PDF需要使用诸如MathJax、MathML或者KaTeX来渲染, 而这些工具的渲染效果在应对复杂公式方面远远不及原生LaTeX.</li>
+</ul>
+<p>所以对于公式密集的笔记还是得用LaTeX作为PDF引擎.</p>
+<h3>使用模板</h3>
+<p>在通过LaTeX进行PDF格式转化时, 为了使得转化的tex能够正常编译, 需要用<code>--template</code>选项套用模板. 不借助模板转化得到的tex是无法正常编译的, 例如</p>
+<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pandoc.note.md -o note_no_template.tex <span class="comment"># unable to compile</span></span><br><span class="line">pandoc note.md -o note.tex --template default <span class="comment"># compile ok</span></span><br></pre></td></tr></table></figure></p>
+<p>其中<code>default</code>表示使用默认templates文件夹下后缀对应输出格式、文件名为<code>default</code>的文件作为模板. 默认模板文件的位置(macOS)在<code>share/x86_64-osx-ghc-8.4.4/pandoc-2.4/data/templates/</code>. 在那里可以看到一个<code>default.latex</code>, 就是第二行命令所用的模板. 除LaTeX外, 有其他输出格式的默认模板.</p>
+<p>通过修改模板, 加入想要的LaTeX指令, 可以将markdown转成包含合适的<code>tex</code>文件, 进而得到目标的PDF输出. 要利用编辑好的自定义模板<code>abc.latex</code>有两种办法</p>
+<ol>
+<li>把它放在和<code>note.md</code>同一文件夹下, 将<code>default</code>改为<code>./abc.latex</code>.</li>
+<li>把<code>abc.latex</code>移动到默认templates文件夹下, 将<code>default</code>改为<code>abc</code>.</li>
+</ol>
+<h3>编辑模板</h3>
+<p>接下来的问题就是怎么写出自己想要的模板. 默认的模板很复杂(至少对我来说), 而且它同不少LaTeX的高级指令有关, 直接看模板会晕. 所以还是从pandoc的<a href="https://pandoc.org/MANUAL.html#templates" target="_blank" rel="noopener">templates手册</a>开始.</p>
+<p>LaTeX模板主要包含序言部分和<code>document</code>环境. 比如我想在序言里包含<code>amsmath</code>包, 那就在模板中序言部分加一句</p>
+<p><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">\<span class="name">usepackage</span><span class="string">&#123;amsmath&#125;</span></span></span><br></pre></td></tr></table></figure></p>
+<p>那它就会出现在被转换的<code>tex</code>文件里.</p>
+<h3>文件元数据控制</h3>
+<p>为了应对多种情境(handout, slides, book, thesis), 默认模板里通常包含许多pandoc变量. 由这些变量值和一些条件语法, 可以在产生对应于情境的添加文本, 这样就可以用一个模板通吃了. (然而通吃又好用的模板很难维护. )</p>
+<p>这些变量值都可以在一个遵循YAML语法的元数据块(metadata block)中定义. YAML块可以以<code>---</code>开头、<code>...</code>或<code>---</code>结尾的形式写在被转化的文档里(对于md来说这和Hexo一样), 也可以写在一个单独的<code>.yaml</code>文件里, 转化时一并作为输入.</p>
+<p>Pandoc所利用的文件元数据可以在YAML元数据块中定义如下(从manual改编)</p>
+<p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">title:</span> <span class="string">A</span> <span class="string">Fake</span> <span class="string">Thesis</span></span><br><span class="line"><span class="attr">author:</span></span><br><span class="line"><span class="attr">- name:</span> <span class="string">Aristotle</span></span><br><span class="line"><span class="attr">  affiliation:</span> <span class="string">The</span> <span class="string">Academy</span></span><br><span class="line"><span class="attr">- name:</span> <span class="string">minyez</span></span><br><span class="line"><span class="attr">  affiliation:</span> <span class="string">PKU</span></span><br><span class="line"><span class="attr">date:</span> <span class="number">2019</span><span class="bullet">-01</span><span class="bullet">-02</span></span><br><span class="line"><span class="attr">subtitle:</span> <span class="string">a</span> <span class="string">Pandoc</span> <span class="string">Template</span> <span class="string">Example</span></span><br><span class="line"><span class="attr">abstract:</span> <span class="string">|</span></span><br><span class="line"><span class="string">  Just a non-existing thesis for pandoc test.</span></span><br><span class="line"><span class="string">  The abstract can have multiple lines.</span></span><br><span class="line"><span class="string">  </span></span><br><span class="line"><span class="string">  Also can have multiple paragraphs.</span></span><br><span class="line"><span class="string"></span><span class="attr">keywords:</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">pandoc</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">markdown</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></table></figure></p>
+<p>做一点解释</p>
+<ul>
+<li>若用如上<code>author</code>写法, 在模板中使用时需要用<code>author.name</code>和<code>author.affiliation</code>来获取对应的姓名和单位, 并对<code>author</code>遍历. 否则这么写是不会在tex中正确产生author的.</li>
+<li><code>abstract</code>可以有多行和多段.</li>
+</ul>
+<p>这些元数据会被包含在生成的PDF元数据中. 下面几节总结一些其他常用的Pandoc变量.</p>
+<h3>TOC和文档首尾</h3>
+<p>可以用<code>toc</code>变量产生目录页</p>
+<p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">toc:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">toc-title:</span> <span class="string">"Custom TOC title"</span></span><br><span class="line"><span class="attr">include-before:</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">"In default template, "</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">"we are in the document part, "</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">"right after abstract and before TOC"</span></span><br><span class="line"><span class="attr">include-after:</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">"we are next to the end of the document."</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">"Yep."</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></table></figure></p>
+<p>一些解释</p>
+<ul>
+<li>
+<p><code>toc</code>只需要是一个非空值, 就可以显示目录.</p>
+</li>
+<li>
+<p><code>include-before</code>和<code>include-after</code>的内容会出现document环境内.</p>
+</li>
+<li>
+<p>有<code>header-includes</code>, 可用来在元数据块中定义序言命令. 需要使用LaTeX的源代码环境标记起来, 否则会被当作markdown代码进行转换. 实际使用的时候肯定是把需要的宏包和自定义命令都写在template里面, 比较少用<code>header-includes</code>来定义, 这里就不展开了.</p>
+</li>
+</ul>
+<h3>语言</h3>
+<p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">lang:</span> <span class="string">en</span></span><br><span class="line"><span class="attr">dir:</span> <span class="string">ltr</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></table></figure></p>
+<p><code>lang</code>标识文档的主要语言, 语言代码符合<a href="https://tools.ietf.org/html/bcp47" target="_blank" rel="noopener">BCP 47</a>(BCP: Best Current Practices). 虽说要符合, 但是这个网站并没有直接给出所有可用的语言标签. 暂时只用英语en.</p>
+<p><code>dir</code>控制文字从左向右(ltr)还是从右向左(rtl). 只有<code>xelatex</code>作为PDF引擎使才能完全支持<code>dir</code>. 测试发现rtl在<code>--pdf-engine=pdflatex</code>下不会报错, 但也没有效果.</p>
+<h3>可用的LaTeX变量</h3>
+<p>这一节总结一些针对LaTeX转换的pandoc变量, 按照用途不同做了简单分类.</p>
+<h4>排版布局</h4>
+<table>
+<thead>
+<tr>
+<th>变量名</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>papersize</code></td>
+<td>纸张大小, <code>letter</code>,<code>a4</code></td>
+</tr>
+<tr>
+<td><code>fontsize</code></td>
+<td>字体大小</td>
+</tr>
+<tr>
+<td><code>documentclass</code></td>
+<td>文档类型, <code>article</code>, <code>report</code>, <code>book</code>, <code>memoir</code></td>
+</tr>
+<tr>
+<td><code>beameroption</code></td>
+<td>beamer选项</td>
+</tr>
+<tr>
+<td><code>geometry</code></td>
+<td>设置geometry包的选项, 可设多个值</td>
+</tr>
+<tr>
+<td><code>linestretch</code></td>
+<td>使用<code>setspace</code>包调节行间距</td>
+</tr>
+<tr>
+<td><code>subparagraph</code></td>
+<td>禁用LaTeX模板中将段落重定义为节的行为</td>
+</tr>
+<tr>
+<td><code>lof</code>,<code>lot</code></td>
+<td>包含图和表的列表</td>
+</tr>
+<tr>
+<td><code>thanks</code></td>
+<td>在标题后添加致谢内容</td>
+</tr>
+</tbody>
+</table>
+<p>使用<code>ctexart</code>文档类型可以解决字体问题, 因为这个宏包中包含了字体设置</p>
+<p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">documentclass:</span> <span class="string">ctexart</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></table></figure></p>
+<p>也可以通过改变下面的字体变量手动调节.</p>
+<h4>字体</h4>
+<table>
+<thead>
+<tr>
+<th>变量名</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fontfamily</code></td>
+<td>设置<code>pdflatex</code>使用的字体包, 默认为Latin Modern (lm).</td>
+</tr>
+<tr>
+<td><code>fontfamilyoption</code></td>
+<td>对应<code>fontfamily</code>的选项</td>
+</tr>
+<tr>
+<td><code>mainfont</code>等</td>
+<td><code>xelatex</code>使用的字体. 利用<code>fontspec</code>包, 可使用系统字体.</td>
+</tr>
+<tr>
+<td><code>mainfontoption</code>等</td>
+<td>对应于<code>mainfont</code>等的字体选项</td>
+</tr>
+<tr>
+<td><code>fontenc</code></td>
+<td>字体编码. 默认<code>T1</code>应该够用.</td>
+</tr>
+</tbody>
+</table>
+<p><code>mainfont</code>等中包含字体变量<code>mainfont</code>, <code>romanfont</code>, <code>sansfont</code>, <code>monofont</code>,<code>mathfont</code>和<code>CJKmainfont</code>. <code>CJKmainfont</code>的使用需要有<code>xecjk</code>包. 每一个都对应一个<code>fontoption</code>字体选项变量. 系统中可用的中文字体可通过<code>fc-list:lang=zh-cn</code>查看. 日语字体用<code>:lang=ja</code>.</p>
+<p>做以下改动</p>
+<p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">CJKmainfont:</span> <span class="string">Songti</span> <span class="string">SC</span></span><br><span class="line"><span class="attr">mainfont:</span> <span class="string">Times</span> <span class="string">New</span> <span class="string">Roman</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></table></figure></p>
+<p>将<code>CJKmainfont</code>设为<code>Songti SC</code>后上面的字体缺失Warning就没有了. 如果直接把<code>mainfont</code>改成<code>Songti SC</code>也可以解决问题, 但如此一来英文字体也会应用宋体, 看上去就会比较奇怪(用Word应该很有体验). <a href="https://github.com/jgm/pandoc/wiki/Pandoc-With-Chinese-(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)" target="_blank" rel="noopener">Pandoc Wiki</a>上说用应该把<code>mainfont</code>设为中文字体, 我觉得并不必要.</p>
+<h4>颜色</h4>
+<table>
+<thead>
+<tr>
+<th>变量名</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>colorlinks</code></td>
+<td>链接颜色开关</td>
+</tr>
+<tr>
+<td><code>linkcolor</code></td>
+<td>内链颜色</td>
+</tr>
+<tr>
+<td><code>filecolor</code></td>
+<td>外链颜色</td>
+</tr>
+<tr>
+<td><code>citecolor</code></td>
+<td>引用颜色</td>
+</tr>
+<tr>
+<td><code>urlcolor</code></td>
+<td>URL链接颜色</td>
+</tr>
+<tr>
+<td><code>toccolor</code></td>
+<td>TOC链接颜色</td>
+</tr>
+</tbody>
+</table>
+<p>颜色选项由<code>xcolor</code>提供, 链接颜色由<code>hyperref</code>包及<code>\hypersetup{}</code>命令设置. <code>xcolor</code>手册Section 4中给出了基本颜色和通过<code>dvipsnames</code>,<code>svgnames</code>,<code>x11names</code>选项可用的颜色名字. 比如</p>
+<p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">colorlinks:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">linkcolor:</span> <span class="string">red</span></span><br><span class="line"><span class="attr">filecolor:</span> <span class="string">Cyan</span></span><br><span class="line"><span class="attr">urlcolor:</span> <span class="string">Navy</span></span><br><span class="line"><span class="attr">toccolor:</span> <span class="string">Ivory3</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></table></figure></p>
+<p>Navy和Ivory3分别是svgnames和x11names里的颜色名字. 使用svgnames和x11names里的颜色时, 由于默认模板里关于xcolor的语句是</p>
+<p><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">\<span class="name">usepackage</span><span class="string">[dvipsnames,svgnames*,x11names*]</span><span class="string">&#123;xcolor&#125;</span></span></span><br></pre></td></tr></table></figure></p>
+<p>此时要使用这两种颜色必须用<code>\definecolors{}</code>事先激活. 比如在模板里xcolor包后添加</p>
+<p><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">\<span class="name">definecolors</span><span class="string">&#123;Navy&#125;</span></span></span><br><span class="line"><span class="tag">\<span class="name">definecolors</span><span class="string">&#123;Ivory3&#125;</span></span></span><br></pre></td></tr></table></figure></p>
+<p>否则会报错</p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">! Package xcolor Error: Undefined color `Navy&apos;.</span><br></pre></td></tr></table></figure></p>
+<p>用相对路径、<code>file://</code>加相对路径或直接绝对路径的本地文件和URL链接都是Navy色. 用<code>run:</code>可以产生Cyan色的文件链接(file link), 但是这样的链接对markdown没有意义.</p>
+<h4>参考文献</h4>
+<p>因为暂时还不会考虑加入参考文献(目前至多考虑脚注), 而且想要用markdown+模板达到和用期刊模板一样的参考文献效果似乎不是那么简单, 所以暂不做深入讨论, 可以参考最后的例子和其他网络资源.</p>
+<table>
+<thead>
+<tr>
+<th>变量名</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bibliograph</code></td>
+<td>包含参考文献的bib文件</td>
+</tr>
+<tr>
+<td><code>biblio-style</code></td>
+<td>参考文献风格</td>
+</tr>
+<tr>
+<td><code>biblio-title</code></td>
+<td>参考文献标题</td>
+</tr>
+<tr>
+<td><code>biblatexoptions</code></td>
+<td>biblatex选项</td>
+</tr>
+<tr>
+<td><code>natbiboptions</code></td>
+<td>natbib选项</td>
+</tr>
+<tr>
+<td><code>csl</code></td>
+<td>引用和参考文献风格文件</td>
+</tr>
+</tbody>
+</table>
+<p>使用<code>--filter pandoc-citeproc</code>工具来处理文献时, 会从bib文件中根据markdown提取所需要的参考文献, 再通过CSL文件进行剪裁后加入. 引用的语法为<code>[@bibkey]</code>. 如果脚注上出现引用, 选择. 另外还有一个比较重要的问题是, 直接用<code>pandoc-citeproc</code>无法建立到文献的链接.</p>
+<p>另一种做法是使用<code>--biblatex</code>, 但pandoc manual上注明它不是面向直接转化为PDF的, 而是在产生tex文件后手动编译tex. 为了确认这一点, 我尝试直接输出到PDF, 发现尽管<code>[@bibkey]</code>引用可以正常转化成<code>\cite{bibkey}</code>, 但实际在文档里只显示出加粗的<code>[bibkey]</code>,且<code>\printbibliography</code>指令也打印不出参考文献, 跟<a href="https://tex.stackexchange.com/questions/135484/still-biblatex-will-not-print-bibliography" target="_blank" rel="noopener">这个链接描述的现象</a>一模一样. 这是由于交叉引用需要执行一整套工具链, 而pandoc只运行一步latex.</p>
+<p><code>biblatex</code>默认使用<code>biber</code>为后端, 若使用<code>bibtex</code>来处理参考文献, 需要在元数据块中添加</p>
+<p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">biblatexoptions:</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">backend=bibtex</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></table></figure></p>
+<p>这个选项只会在<code>--biblatex</code>开启时有用. 另外<a href="https://pandoc.org/MANUAL.html#citations" target="_blank" rel="noopener">手册指出</a>, 在<code>--bibliography</code>选项中使用<code>.bibtex</code>扩展名的文件时会强制使用<code>bibtex</code>(force bibtex), 但不应该误解: 这里我仍然用的是biblatex, 只是用bibtex而不是biber作为其后端.</p>
+<p>参考文献和引用格式可以通过<code>biblio-style</code>变量设定, 比如<code>-M biblio-style=nature</code>选择nature引用风格. 查看<a href="https://www.ctan.org/tex-archive/macros/latex/exptl/biblatex-contrib" target="_blank" rel="noopener">CTAN的biblatex-contrib</a>查看有哪些可用的风格, 或者在Tex Live Utility搜索biblatex, 查看每个相关包的说明, 又或者查看这个overleaf链接<a href="https://www.overleaf.com/learn/latex/Biblatex_citation_styles" target="_blank" rel="noopener">Biblatex citation styles</a>.</p>
+<h3>插入图表</h3>
+<p>除了直接用makrdown语法插入图片外, Pandoc支持属性和名称引用, 包含在花括号<code>{}</code>内</p>
+<p><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">![<span class="string">This is my website logo.</span>](<span class="link">icon.jpg</span>)&#123;width=50% #fig:favicon&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可在正文中插入<code>+@fig:favicon</code>以引用. 为了得到正确的交叉引用链接, 需要安装<a href="https://github.com/tomduck/pandoc-fignos" target="_blank" rel="noopener">pandoc-fignos</a>作为过滤器.</p>
+<p>在制作表格时, pandoc支持单元格含多行文字的表格, 也能非常方便的调整列的对齐方式, 比如以下三列分别是左中右对齐的.</p>
+<p><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">|left | center | right|</span><br><span class="line">|:----|:------:|-----:|</span><br><span class="line">|l    |c       |r     |</span><br><span class="line"></span><br><span class="line">Table: demo left-center-right table &#123;#tbl:demo-tbl&#125;</span><br></pre></td></tr></table></figure></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">left</th>
+<th style="text-align:center">center</th>
+<th style="text-align:right">right</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">l</td>
+<td style="text-align:center">c</td>
+<td style="text-align:right">r</td>
+</tr>
+</tbody>
+</table>
+<p>在正文中插入<code>+@tbl:demo-tbl</code>以引用. 类似的, 转化时用<a href="https://github.com/tomduck/pandoc-tablenos" target="_blank" rel="noopener">pandoc-tablenos</a>过滤后才能得到正确的交叉引用链接.</p>
+<h2>实例: 转换<code>demo.md</code>到<code>demo.pdf</code></h2>
+<p>最后放一个用<code>markdown+pandoc+xelatex+bibtex</code>的实际例子, 所需文件都在<a href="demo.tar.gz">压缩包</a>里, 欢迎下载. <code>make</code>编译需要有pandoc和TeXLive等LaTeX发行版.</p>
+<ul>
+<li><code>demo.md</code>：Markdown源文件</li>
+<li><code>Makefile</code>: 产生需要的<code>template.tex</code>和<code>HW.md</code>, 执行LaTeX工具链</li>
+<li><code>demo.bib</code>: 用到的参考文献</li>
+<li><code>icon.jpg</code>: 要插的图片, 就是我的网站图标啦.</li>
+</ul>
+<p>作为参考, 在<a href="https://gist.github.com/maxogden/97190db73ac19fc6c1d9beee1a6e4fc8" target="_blank" rel="noopener">这个gist</a>里作者也详细介绍了如何将markdown转化成paper. 但对于其中的pizza图片, markdown下用的<code>![It's a pizza]</code>作为图片注释, 转化到PDF后图片注释却变成了<code>Figure 1</code>. 我这里倒是没有这个问题.</p>
+<p>另外, 由于用HTML的转化比较直接, 所需要的就是找个喜欢的CSS, 就不展示了 :P</p>
+<h2>总结</h2>
+<p>本文整理了笔者在第一次尝试用pandoc转化markdown文件为PDF的过程中学到的技巧, 并提供了一个简单的pandoc+latex转换PDF的样例输入.</p>
+
 	
 	</div>
   <a type="button" href="/2019/01/02/pandoc-md-to-pdf/#more" class="btn btn-default more">Read More</a>
@@ -283,52 +786,67 @@
   <div class="row">
 	
 	
-		<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本系列将介绍如何使用第一性原理电子结构计算Python包<a href="https://wiki.fysik.dtu.dk/gpaw/index.html" target="_blank" rel="noopener">GPAW</a>，进行材料的电子结构模拟，包括最基本的DFT基态计算以及更高级的准粒子*GW*和BSE的光谱性质计算。本文作为该系列的第一篇文章，对GPAW在本地和集群上的安装、样例测试进行介绍，总结了这一过程中遇到的问题和解决方案。<br>
+		<link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2>前言</h2>
+<p>本系列将介绍如何使用第一性原理电子结构计算Python包<a href="https://wiki.fysik.dtu.dk/gpaw/index.html" target="_blank" rel="noopener">GPAW</a>，进行材料的电子结构模拟，包括最基本的DFT基态计算以及更高级的准粒子<em>GW</em>和BSE的光谱性质计算。本文作为该系列的第一篇文章，对GPAW在本地和集群上的安装、样例测试进行介绍，总结了这一过程中遇到的问题和解决方案。
+&lt;!--more--&gt;</p>
+<h2>背景</h2>
+<p>相比较VASP、WIEN2k、QE等主流材料几何和电子结构计算程序，GPAW具有的最大特点就是它是一个Python模块，而不是一个独立的程序。你可以像读其他Python模块代码一样读它，查看它属性和docstring，函数依赖参数明确。GPAW中体系构筑依赖于<a href="https://wiki.fysik.dtu.dk/ase" target="_blank" rel="noopener">ASE</a>，一个集成度很高的原子模拟函数模块，作为各种DFT calculator的接口和数据处理及可视化模块被广泛使用。事实上GPAW和ASE都是DTU Thygesen课题组开发维护，因此可以把GPAW看成是ASE自己的first-principles calculator。GPAW中一些performance-critical组件由NumPy或自编的C扩展实现，因此GPAW的计算效率也是有保证的。</p>
+<p>我对GPAW的了解始于对低维体系准粒子能带结构的研究，在这方面Thygesen课题组做了很多重要的工作，这些自然是在GPAW中进行的代码实现，包括参数收敛测试和analytical correction to long wavelength limit，尤其后者是我们希望在LAPW框架下实现的。在读懂代码之前，总应该先熟悉它的使用吧。于是想到了做这个系列。这一回从编译安装开始。</p>
+<p>GPAW安装基于Python模块ASE、NumPy，线性代数库BLAS/LAPACK以及交换关联泛函库LIBXC。快速傅里叶变换可以通过链接FFTW3加速，并行计算可(大规模并行时必须)链接ScaLAPACK。本文将利用以上所有的库，其中线性代数库和ScaLAPACK用Intel MKL代替。</p>
+<p>以下过程所用的<code>python</code>均为在<a href="https://hpc.pku.edu.cn" target="_blank" rel="noopener">北京大学高性能计算平台</a>上anaconda/2-4.4.0.1模块[<code>anaconda (version 1.6.3)</code>]内的<code>python 2.7.15</code>，C扩展的编译器为Intel 2017 update 1的<code>mpiicc</code>，FFTW3(3.3.4)和LIBXC(4.2.3)均由该版本Intel编译器编译。</p>
+<h2>正文</h2>
+<p>作为Python模块，GPAW在<a href="https://pypi.org/" target="_blank" rel="noopener">Python Package Index</a>有项目记录，因此可以使用</p>
+<p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install gpaw --user</span><br></pre></td></tr></table></figure></p>
+<p>将其安装到本地用户目录。但这种安装方式不容易控制和自定义外部库的链接，因此我们采用从源码手动安装的方式。主要分以下几步进行。</p>
+<h3>依赖的安装</h3>
+<h4>NumPy</h4>
+<p>载入<code>anaconda</code>环境中已经预装了NumPy环境</p>
+<h4>ASE</h4>
+<p>使用<code>pip</code>安装</p>
+<p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install ase --user</span><br></pre></td></tr></table></figure></p>
+<h4>FFTW3</h4>
+<p>留待补充，可先参考官方文档。</p>
+<h4>LIBXC</h4>
+<p>留待补充，可先参考官方文档。</p>
+<h3>下载源码</h3>
+<p>登录GPAW的<a href="https://gitlab.com/gpaw/gpaw/tags" target="_blank" rel="noopener">GitLab-tags</a>，或者在<a href="https://wiki.fysik.dtu.dk/gpaw/install.html#getting-the-source-code" target="_blank" rel="noopener">这里</a>获取最新版本GPAW的tarball, 解压缩得到文件夹<code>gpaw-x.x.x</code>，其中<code>x.x.x</code>为版本号。该文件夹的结构如下</p>
+<p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── c/                 # C扩展源码</span><br><span class="line">├── CHANGELOG.rst</span><br><span class="line">├── config.py</span><br><span class="line">├── configuration.log</span><br><span class="line">├── CONTRIBUTING.rst</span><br><span class="line">├── COPYING</span><br><span class="line">├── customize.py       # 自定义文件</span><br><span class="line">├── gpaw/              # Python源码</span><br><span class="line">├── LICENSE</span><br><span class="line">├── MANIFEST.in</span><br><span class="line">├── PKG-INFO</span><br><span class="line">├── README.rst</span><br><span class="line">├── setup.py</span><br><span class="line">└── tools/             # 可执行程序，包括并行解释器gpaw-python</span><br></pre></td></tr></table></figure></p>
+<p>我们暂时将其放在家目录下，即<code>~/gpaw-x.x.x</code>，之后我们将称其为GPAW家目录。</p>
+<h3>修改<code>customize.py</code></h3>
+<p>经过各种标准的和愚蠢的试错，一个可行的自定义文件写法为</p>
+<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">compiler = <span class="string">'mpiicc -fPIC'</span></span><br><span class="line">mpicompiler = <span class="string">'mpiicc -fPIC'</span>  <span class="comment"># use None if you don't want to build a gpaw-python</span></span><br><span class="line">mpilinker = mpicompiler</span><br><span class="line"></span><br><span class="line"><span class="comment"># the following variables should be defined according to your own environment</span></span><br><span class="line">FFTW3_HOME = <span class="string">'/path/to/FFTW3'</span></span><br><span class="line">MKLROOT    = <span class="string">'/path/to/mkl'</span></span><br><span class="line">LIBXC_HOME = <span class="string">'/path/to/libxc'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># the order is adapted from Intel MKL link advisor</span></span><br><span class="line">libraries = [</span><br><span class="line">              <span class="string">'mkl_scalapack_lp64'</span>,</span><br><span class="line">              <span class="string">'mkl_intel_lp64'</span> ,<span class="string">'mkl_sequential'</span> ,<span class="string">'mkl_core'</span>,</span><br><span class="line">              <span class="string">'mkl_blacs_intelmpi_lp64'</span>,</span><br><span class="line">              <span class="string">'pthread'</span>,<span class="string">'m'</span>,<span class="string">'dl'</span>,</span><br><span class="line">            ]</span><br><span class="line">mpi_libraries = []</span><br><span class="line"></span><br><span class="line">library_dirs = [ MKLROOT+<span class="string">'/lib/intel64/'</span> , FFTW3_HOME+<span class="string">'/lib/'</span>]</span><br><span class="line"><span class="comment"># include numpy header to use array object</span></span><br><span class="line">include_dirs += [np.get_include(), MKLROOT+<span class="string">'/include/'</span>, FFTW3_HOME+<span class="string">'/include/'</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># switch on ScaLAPACK</span></span><br><span class="line">scalapack = <span class="keyword">True</span></span><br><span class="line"><span class="keyword">if</span> scalapack:</span><br><span class="line">    define_macros += [(<span class="string">'GPAW_NO_UNDERSCORE_CBLACS'</span>, <span class="string">'1'</span>)]</span><br><span class="line">    define_macros += [(<span class="string">'GPAW_NO_UNDERSCORE_CSCALAPACK'</span>, <span class="string">'1'</span>)]</span><br><span class="line"></span><br><span class="line"><span class="comment"># - dynamic linking LIBXC (requires rpath or setting LD_LIBRARY_PATH at runtime):</span></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">True</span>:</span><br><span class="line">    include_dirs += [LIBXC_HOME+<span class="string">'/include'</span>]</span><br><span class="line">    library_dirs += [LIBXC_HOME+<span class="string">'/lib'</span>]</span><br><span class="line">    <span class="comment"># You can use rpath to avoid changing LD_LIBRARY_PATH:</span></span><br><span class="line">    extra_link_args += [<span class="string">'-Wl,-rpath=%s/lib'</span> % LIBXC_HOME]</span><br><span class="line">    <span class="keyword">if</span> <span class="string">'xc'</span> <span class="keyword">not</span> <span class="keyword">in</span> libraries:</span><br><span class="line">        libraries.append(<span class="string">'xc'</span>)</span><br></pre></td></tr></table></figure></p>
+<p><span class="label label-danger">问题</span> 之前在这里遇到过一个问题是，当设置<code>compiler=icc</code>时，尽管可以编译通过，但在运行测试时会报错</p>
+<p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">libmkl_blacs_intelmpi_lp64.so: undefined symbol 'MPI_Finalize'</span><br></pre></td></tr></table></figure></p>
+<p><span class="label label-success">解决</span>事实上<code>MPI_Finalize</code>本就不是在BLACS里定义的符号，而是MPI库中<code>libmpi.so.12</code>中定义的。这个错误的原因在于<code>libraries</code>是由<code>compiler</code>和<code>mpicompiler</code>公用的链接选项，尽管<code>mpiicc</code>会自动链接<code>libmpi.so</code>，但<code>icc</code>不会，所以会缺少MPI符号定义。将<code>compiler=icc</code>改成<code>compiler=mpiicc</code>即可解决问题。另一种办法是在<code>libraries</code>中增加成员<code>mpi</code>，同时在<code>library_dirs</code>和<code>library_include</code>中分别增加MPI库的lib和include，但这就比较繁琐了。</p>
+<p><span class="label label-info">其他尝试</span> 在出现上面错误的时候，我也尝试了不链接ScaLAPACK和BLACS的办法(<code>scalapack=False</code>)，可以正常通过所有串行和并行测试，但在做Diamond (两原子) <em>GW</em>的全节点32核并行计算时报错</p>
+<p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AttributeError: BLACS is unavailable. GPAW must be compiled with BLACS/ScaLAPACK, and must run in MPI-enabled interpreter (gpaw-python)</span><br></pre></td></tr></table></figure></p>
+<p>所以看来在做大规模并行时，GPAW要求BLACS/ScaLAPACK是必须的，从计算的经济性角度上来看也是可以理解的，帮用户省些钱。我也尝试了用GCC(4.8.5)编译依赖和GPAW，但在链接ScaLAPACK时遇到了问题，要求我用<code>-fPIC</code>选项重新编译所有静态库，但其实我在编译时一直带着该选项。在此注明。</p>
+<h3>开始编译</h3>
+<p>在GPAW根目录下，输入</p>
+<p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python setup.py install --user</span><br></pre></td></tr></table></figure></p>
+<p>开始编译。C扩展的编译过程会创建<code>build</code>文件夹，编译结束后会将<code>gpaw</code>文件夹和编译产生的C扩展库<code>_gpaw.so</code>复制到<code>~/.local/lib/python2.7/site-packages/</code>下，复制<code>gpaw</code>等可执行程序到<code>~/.local/bin</code>下。</p>
+<h3>安装PAW集测试</h3>
+<p>测试前需要将<code>~/.local/bin</code>添加到<code>PATH</code>下。此时还仍然无法进行计算，因为GPAW依赖于赝势和PAW数据集，而下载的源代码中并不包含这一部分。此时需要执行(例如在GPAW根目录下)</p>
+<p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gpaw install-data pawdir</span><br></pre></td></tr></table></figure></p>
+<p>让GPAW下载PAW数据集(需要联网，PKUHPC上请使用<code>connect</code>命令，见<a href="https://its.pku.edu.cn/download_ipgwclient.jsp" target="_blank" rel="noopener">pku-its-download</a>)。下载完成后，GPAW会将<code>pawdir</code>绝对路径添加到<code>~/.gpaw/rc.py</code>中，以作为赝势PAW搜索路径。</p>
+<p>结束以上步骤后即可进行测试，四核独立串行测试</p>
+<p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gpaw test -j 4</span><br></pre></td></tr></table></figure></p>
+<p>四核并行测试</p>
+<p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gpaw -P 4 test</span><br></pre></td></tr></table></figure></p>
+<p>或</p>
+<p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mpiexec -np 4 gpaw-python -m gpaw test</span><br></pre></td></tr></table></figure></p>
+<p><div class="alert alert-warning"><i class="fa fa-bell  float-left"></i>  <p>用上面的<code>customize.py</code>做并行测试时会在<code>parallel/augment_grid.py</code>报<code>MPI_Barrier</code>错误从而无法全部通过, 但可以使用32核跑官网Tutorial<a href="https://wiki.fysik.dtu.dk/gpaw/tutorials/gw_tutorial/gw_tutorial.html" target="_blank" rel="noopener">准粒子计算</a>的例子<a href="https://wiki.fysik.dtu.dk/gpaw/tutorials/gw_tutorial/gw_tutorial.html#convergence-with-respect-to-cutoff-energy-and-number-of-k-points" target="_blank" rel="noopener">C_ecut_k_conv_GW.py</a></p>
+</div></p>
+<h3>实际计算</h3>
+<p>测试通过(Hopefully)！可以做具体计算啦。如果写好了名为<code>runscript.py</code>的GPAW并行计算脚本，那么在添加可执行权限后，可以按照如下指令在本地或登录节点执行计算</p>
+<p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mpiexec -np 4 gpaw-python runscript.py</span><br></pre></td></tr></table></figure></p>
+<p>而<code>runscript.py</code>具体要怎么写，就是后面教程要做的事情了。</p>
+<h2>总结</h2>
+<p>经过了一段比较挣扎和丢人的编译历程，总算将GPAW编译成功并能用PKUHPC上一整个节点的核心并行计算官方算例。</p>
+
 	
 	</div>
   <a type="button" href="/2018/07/20/gpaw-1/#more" class="btn btn-default more">Read More</a>
-</div>
-
-		
-			
-	
-	<!-- display as entry -->	
-		<h3 class="title">
-			<div class="date"> 2018-05-15 </div>
-			<div class="article-title"><a href="/2018/05/15/f2py-1/" >F2PY——在Python中调用Fortran函数或子程序</a></div>						
-		</h3>
-	
-
-
-			<div class="entry">
-  <div class="row">
-	
-	
-		<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文介绍了如何在Python脚本中，通过引入Fortran动态库调用Fortran子程序，加速Python中的数值计算。以矩阵乘法为例，比较了调用Python中NumPy和SciPy包的方法和使用Fortran子程序两种方式在计算效率上的差别。<br>
-	
-	</div>
-  <a type="button" href="/2018/05/15/f2py-1/#more" class="btn btn-default more">Read More</a>
-</div>
-
-		
-			
-	
-	<!-- display as entry -->	
-		<h3 class="title">
-			<div class="date"> 2018-02-15 </div>
-			<div class="article-title"><a href="/2018/02/15/Hexo-1/" >Hexo配置(一)——安装, Markdown写作及主题</a></div>						
-		</h3>
-	
-
-
-			<div class="entry">
-  <div class="row">
-	
-	
-		<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文介绍了使用Hexo配置本博客和用Markdown进行博文写作的基本方法和技巧，为撰写排版更好更清晰的技术文本作准备。
-	
-	</div>
-  <a type="button" href="/2018/02/15/Hexo-1/#more" class="btn btn-default more">Read More</a>
 </div>
 
 		
@@ -381,6 +899,14 @@
   <ul class="entry list-unstyled">
     
       <li>
+        <a href="/2019/05/08/restart-hexo-blog/" ><i class="fa fa-file-o"></i>关于重启这个博客的思考</a>
+      </li>
+    
+      <li>
+        <a href="/2019/05/07/wien2k-lapwso-1/" ><i class="fa fa-file-o"></i>在WIEN2k中进行LAPWSO计算(一)</a>
+      </li>
+    
+      <li>
         <a href="/2019/05/06/re-summary/" ><i class="fa fa-file-o"></i>常用Python re函数与语句总结</a>
       </li>
     
@@ -390,14 +916,6 @@
     
       <li>
         <a href="/2019/05/01/embed-videos/" ><i class="fa fa-file-o"></i>在Hexo博文中嵌入视频</a>
-      </li>
-    
-      <li>
-        <a href="/2019/04/20/wien2k-libxc-mgga-error/" ><i class="fa fa-file-o"></i>解决编译WIEN2k时找不到meta-GGA例程的问题</a>
-      </li>
-    
-      <li>
-        <a href="/2019/04/20/wien2k-fftw3-multi-def/" ><i class="fa fa-file-o"></i>解决编译WIEN2k时FFTW3 multiple d...</a>
       </li>
     
   </ul>
@@ -410,11 +928,11 @@
 		<h4>Categories</h4>
 		<ul class="tag_box inline list-unstyled">
 		
-			<li><a href="/categories/Life/">Life<span class="badge">1</span></a></li>
+			<li><a href="/categories/Life/">Life<span class="badge">2</span></a></li>
 		
 			<li><a href="/categories/Programming/">Programming<span class="badge">4</span></a></li>
 		
-			<li><a href="/categories/Software/">Software<span class="badge">10</span></a></li>
+			<li><a href="/categories/Software/">Software<span class="badge">11</span></a></li>
 		
 		</ul>
 	</div>
@@ -426,48 +944,48 @@
 		<h4>Tag Cloud</h4>
 		<ul class="tag_box inline list-unstyled">		
 		
-			<li><a href="/tags/Valgrind/">Valgrind<span class="badge">1</span></a></li>
+			<li><a href="/tags/Pandoc/">Pandoc<span class="badge">2</span></a></li>
 		
 			<li><a href="/tags/Compilation/">Compilation<span class="badge">4</span></a></li>
 		
-			<li><a href="/tags/Freemind/">Freemind<span class="badge">1</span></a></li>
+			<li><a href="/tags/DFT/">DFT<span class="badge">1</span></a></li>
 		
-			<li><a href="/tags/Scientific-Computation/">Scientific Computation<span class="badge">2</span></a></li>
+			<li><a href="/tags/Bugfix/">Bugfix<span class="badge">3</span></a></li>
 		
 			<li><a href="/tags/LIBXC/">LIBXC<span class="badge">1</span></a></li>
 		
-			<li><a href="/tags/Pandoc/">Pandoc<span class="badge">2</span></a></li>
-		
-			<li><a href="/tags/Make/">Make<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/Markdown/">Markdown<span class="badge">2</span></a></li>
+			<li><a href="/tags/WIEN2k/">WIEN2k<span class="badge">3</span></a></li>
 		
 			<li><a href="/tags/Hexo/">Hexo<span class="badge">3</span></a></li>
 		
-			<li><a href="/tags/GPAW/">GPAW<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/Python/">Python<span class="badge">2</span></a></li>
-		
-			<li><a href="/tags/LaTeX/">LaTeX<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/VPS/">VPS<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/Bootstrap/">Bootstrap<span class="badge">1</span></a></li>
+			<li><a href="/tags/F2PY/">F2PY<span class="badge">1</span></a></li>
 		
 			<li><a href="/tags/FFTW/">FFTW<span class="badge">1</span></a></li>
 		
-			<li><a href="/tags/MKL/">MKL<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/VASP/">VASP<span class="badge">2</span></a></li>
-		
-			<li><a href="/tags/AST/">AST<span class="badge">1</span></a></li>
+			<li><a href="/tags/Jupyter/">Jupyter<span class="badge">1</span></a></li>
 		
 			<li><a href="/tags/Network/">Network<span class="badge">1</span></a></li>
 		
+			<li><a href="/tags/LaTeX/">LaTeX<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/Shadowsocks/">Shadowsocks<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/VASP/">VASP<span class="badge">2</span></a></li>
+		
+			<li><a href="/tags/Valgrind/">Valgrind<span class="badge">1</span></a></li>
+		
 			<li><a href="/tags/Panflute/">Panflute<span class="badge">1</span></a></li>
 		
+			<li><a href="/tags/macOS/">macOS<span class="badge">1</span></a></li>
 		
-		   <li><a href="/tags">...<span class="badge">32</span></a></li>
+			<li><a href="/tags/VPS/">VPS<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/Blogging/">Blogging<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/AST/">AST<span class="badge">1</span></a></li>
+		
+		
+		   <li><a href="/tags">...<span class="badge">35</span></a></li>
 		 
 		</ul>
 	</div>
@@ -557,23 +1075,6 @@
   gtag('config', 'UA-111612868-1');
 </script>
 
-
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        },
-        TeX: {equationNumbers: { autoNumber: "AMS" }}
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
 </body>
    </html>
