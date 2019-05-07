@@ -76,6 +76,7 @@ Plugins:
   - hexo-generator-feed
   - hexo-generator-sitemap
   - hexo-renderer-mathjax
+  - hexo-reference
 #  - hexo-generator-douban
 ## Themes: https://hexo.io/themes/
 ## git clone https://github.com/iissnan/hexo-theme-next themes/next (e.g. next) for new theme
@@ -96,8 +97,37 @@ marked:
   gfm: true
   pedantic: false
   sanitize: false
-  smartypants: false
+  smartypants: true
   autolink: true
+  smartLists: true
+
+flowchart:
+  options:
+    line-length: 25
+    line-width: 3
+
+# Markdown-it config
+## Docs: https://github.com/celsomiranda/hexo-renderer-markdown-it/wiki
+#markdown:
+#  render:
+#    html: true
+#    xhtmlOut: false
+#    breaks: true
+#    linkify: true
+#    typographer: true
+#    #quotes: '“”‘’'
+#  plugins:
+#    - markdown-it-abbr
+#    - markdown-it-footnote
+#    - markdown-it-ins
+#    - markdown-it-sub
+#    - markdown-it-sup
+#  anchors:
+#    level: 2
+#    colellisionSuffix: 'v'
+#    pelermalink: true
+#    pelermalinkClass: header-anchor
+#    pelermalinkSymbol: ¶
   
 search:
   path: search.xml

@@ -62,7 +62,7 @@ toc: true
 
 ## compile函数
 
-利用`re.compile`产生regular expression对象. regular expression对象拥有与`re`函数同名的方法, 之后所有有关该模式的匹配都通过该对象进行.
+利用`re.compile`产生模式对应的regular expression对象. regular expression对象拥有与`re`函数同名的方法, 之后所有有关该模式的匹配都通过该对象进行.
 
 例如匹配邮件中用户名
 

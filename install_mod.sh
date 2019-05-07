@@ -9,6 +9,7 @@ npm install hexo-generator-sitemap --save
 npm install hexo-generator-feed --save
 npm install hexo-generator-search --save
 npm install hexo-tag-bootstrap --save
+npm install hexo-reference --save
 # Use MathJax
 npm install hexo-renderer-mathjax --save
 
