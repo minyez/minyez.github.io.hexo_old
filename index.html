@@ -220,14 +220,7 @@
   <div class="row">
 	
 	
-		<link rel="stylesheet" type="text/css" href="/css/hint.min.css"><p>碎碎念而已.
-&lt;!--more--&gt;</p>
-<p>在经历了草稿里的一些乌龙后, Hexo又能正常工作了. 我也在过了很久一段时间后回到这里, 重新打理这片虚拟的土地, 重新开始上传技术文字. 目前大部分是存在熊掌记和Agenda里后整理出来的bugfix和初步学习笔记.</p>
-<p>我还在考虑把其他地方的文字都移到这里来, 因为我感到这是一片属于我的独一无二的土地. 我于此耕耘, 把它定义成我想要的样貌. 在这里, 我的声音能够回响; 它不必响彻, 在我脑海里就足够了. 如果它能够进到一位陌生人的耳中, 他恰又能够给我一些呼应, 那就真是难得的美好.</p>
-<p>更重要的是, 我渐渐想要去发出我自己的声音了. 无论在现实里还是在虚拟世界里, 自己其实一直都是个害怕发声的人: 我感到时刻被周围人的目光所裹挟, 担心无论说什么都会使人失望; 讨好他人, 很少说出自己的真实想法; 在公共场所/宿舍, 我用绝对安静, 去鄙视那些喧哗的人. 我好像保持着一个很好的形象, 但我失去了表达自己的机会; 事实上这个形象也未必就很好.</p>
-<p>渐渐地, 我发现自己无法准确表达一些应当很容易传达的东西. 我意识到一直不去表达是不行的. 但我不希望太大张旗鼓, 尽管有时无可避免地想获得一点点真心的关注. 于是我想到这里, 这是我一手创造的空间, 这里有来来往往的冷漠又友好的陌生人, 有点像在一座完全陌生的小镇里, 拿着自己心爱的乐器独自演奏.</p>
-<p>我会继续写下去.</p>
-
+		<p>碎碎念而已.<br>
 	
 	</div>
   <a type="button" href="/2019/05/08/restart-hexo-blog/#more" class="btn btn-default more">Read More</a>
@@ -248,96 +241,7 @@
   <div class="row">
 	
 	
-		<link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2>摘要</h2>
-<p>介绍了WIEN2k中自旋非极化下通过LAPWSO考虑自旋轨道耦合(SOC)效应的第一性原理计算的流程. 以Si和Au为例子, 简单分析了SOC对能带结构的影响.</p>
-<p>&lt;!--more--&gt;</p>
-<h2>WIEN2k中实现的SOC</h2>
-<p>WIEN2k中价层轨道的SOC贡献是通过LAPWSO程序考虑的. 它基于一种所谓的二阶变分&lt;sup id=&quot;fnref:1&quot;&gt;&lt;a href=&quot;#fn:1&quot; rel=&quot;footnote&quot;&gt;&lt;span class=&quot;hint--top hint--error hint--medium hint--rounded hint--bounce&quot; aria-label=&quot;<a href="http://www.encyclopediaofmath.org/index.php?title=Second_variation&amp;oldid=31231" target="_blank" rel="noopener">Second variation</a>. Encyclopedia of Mathematics.&quot;&gt;[1]&lt;/span&gt;&lt;/a&gt;&lt;/sup&gt;的方法, 通过读取LAPW1计算的本征态的波函数与能量, 计算微扰$\hat{H}_{\rm SO}$的矩阵元并对角化, 得到包含SOC的波函数与能量. LAPWSO可以包含在SCF循环里, 也可以非自洽地运行. 自洽SOC计算的流程如下流程图所示</p>
-<p>&lt;div id=&quot;flowchart-0&quot; class=&quot;flow-chart&quot;&gt;&lt;/div&gt;</p>
-<h2>实际例子</h2>
-<h3>diamond Si</h3>
-<p>以diamond Si (10.405822 au)为例, RMT取1.8. 初始化命令</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">init_lapw -b -numk 64</span><br></pre></td></tr></table></figure></p>
-<p>体系共8个价电子. 先看不加SOC的结果. 执行</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run_lapw -ec 0.0000001</span><br></pre></td></tr></table></figure></p>
-<p>仔细检查energy文件. 在第1个和第7个k点, 由能带4和5分别为价带和导带, 得到带隙为0.780 eV, 涉及k矢跃迁为000($\Gamma$)-100(X).</p>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"> 0.000000000000E+00 0.000000000000E+00 0.000000000000E+00         1   291    15  1.0</span><br><span class="line">           1 -0.476709975533258</span><br><span class="line">           2  0.382390732021062</span><br><span class="line">           3  0.382390732021068</span><br><span class="line">           4  0.382390732021068</span><br><span class="line">           5  0.567940696174970</span><br><span class="line">           6  0.567940696174970</span><br><span class="line">           7  0.567940696174976</span><br><span class="line">           8  0.594331247119800</span><br><span class="line">...</span><br><span class="line"> 1.000000000000E+00 0.000000000000E+00 0.000000000000E+00         7   294    20  3.0</span><br><span class="line">           1 -0.183034494762965</span><br><span class="line">           2 -0.183034494762950</span><br><span class="line">           3  0.180029340741516</span><br><span class="line">           4  0.180029340741516</span><br><span class="line">           5  0.439692381439167</span><br><span class="line">           6  0.439692381439175</span><br><span class="line">           7   1.09817099212224</span><br><span class="line">           8   1.09817099212225</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
-<p>关于能带的组成, 考虑$\Gamma$点上能带组分, 由TB分析可知, 上面8个能级从低到高依次是Si的$\sigma_{3s}$, ${\sigma/\pi}<em>{3p}$, ${\sigma/\pi}</em>{3p}^\ast$和$\sigma_{3s}^\ast$. 在一条k点路径上的组分变化可以从下面这张VASP计算的投影能带图看出&lt;sup id=&quot;fnref:2&quot;&gt;&lt;a href=&quot;#fn:2&quot; rel=&quot;footnote&quot;&gt;&lt;span class=&quot;hint--top hint--error hint--medium hint--rounded hint--bounce&quot; aria-label=&quot;因为用<a href="https://github.com/minyez/mykit" target="_blank" rel="noopener">mykit</a>制作的图, 目前只支持到VASP :(&quot;&gt;[2]&lt;/span&gt;&lt;/a&gt;&lt;/sup&gt;.</p>
-<p><figure class="null"><img src="Si_X-L-G-X.png" alt="Si投影能带图. 红色为s成分, 蓝色为p成分"><figcaption>Si投影能带图. 红色为s成分, 蓝色为p成分</figcaption></figure></p>
-<p>上面这些都是对于无SOC的计算结果的分析. 下面利用LAPWSO微扰地考虑SOC. 首先用<code>save_lapw</code>保存上面的计算结果, 然后运行<code>initso</code>命令以初始化<code>lapwso</code>所需的主要输入文件<code>Si.inso</code></p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">save_lapw -d scf-no-soc</span><br><span class="line">initso</span><br></pre></td></tr></table></figure></p>
-<p><code>initso</code>是交互式命令, 会询问下面几个设置</p>
-<ol>
-<li>指定Direction of moment</li>
-<li>指定某些原子不考虑SOC</li>
-<li>修改考虑SOC的能带的最高能量(EMAX)</li>
-<li>是否在<code>case.in1</code>中添加RLO</li>
-<li>选择自旋极化方式. 因为在自旋极化情况下考虑SOC时, 体系的对称性有可能小于无SOC的情形. 如果选择<code>y</code>, <code>symmetso</code>程序将被执行, 确定考虑SOC后体系的对称性并修改<code>struct</code>文件.</li>
-</ol>
-<p>暂时不深究几个问题的含义, 一路回车通关. 结束后执行</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run_lapw -ec 0.0000001 -so</span><br></pre></td></tr></table></figure></p>
-<p>开始运行包含LAPWSO在内的SCF循环.</p>
-<p>包含SOC的哈密顿量对角化后得到的本征值保存在<code>case.energyso</code>中. 与非极化计算的<code>case.energy</code>文件不同的是, SOC下不再有简单的自旋简并, 因此原则上各k点的能带数量是无SOC时的两倍. 还是看第1和第7个k点的能量</p>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"> 0.000000000000E+00 0.000000000000E+00 0.000000000000E+00         1   291    30  1.0</span><br><span class="line">...</span><br><span class="line">           1 -0.476709708261459</span><br><span class="line">           2 -0.476709708261458</span><br><span class="line">           3  0.380103284844223</span><br><span class="line">           4  0.380103284844224</span><br><span class="line">           5  0.383531827460128</span><br><span class="line">           6  0.383531827460128</span><br><span class="line">           7  0.383531827479756</span><br><span class="line">           8  0.383531827479756</span><br><span class="line">           9  0.566261029915788</span><br><span class="line">          10  0.566261029915788</span><br><span class="line">          11  0.568777497161570</span><br><span class="line">          12  0.568777497161571</span><br><span class="line">          13  0.568777497196808</span><br><span class="line">          14  0.568777497196810</span><br><span class="line">          15  0.594331439770928</span><br><span class="line">          16  0.594331439770930</span><br><span class="line">...</span><br><span class="line"> 0.100000000000E+01 0.000000000000E+00 0.000000000000E+00         7   294    28  3.0</span><br><span class="line">           1 -0.183035347355239</span><br><span class="line">           2 -0.183035347355239</span><br><span class="line">           3 -0.183035347355239</span><br><span class="line">           4 -0.183035347355237</span><br><span class="line">           5  0.180025326616621</span><br><span class="line">           6  0.180025326616621</span><br><span class="line">           7  0.180025326616631</span><br><span class="line">           8  0.180025326616633</span><br><span class="line">           9  0.439692350006189</span><br><span class="line">          10  0.439692350006189</span><br><span class="line">          11  0.439692350006200</span><br><span class="line">          12  0.439692350006200</span><br><span class="line">          13   1.09815900469418</span><br><span class="line">          14   1.09815900469418</span><br><span class="line">          15   1.09815900469536</span><br><span class="line">          16   1.09815900469536</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
-<p>此时的价带和导带变成了8和9, 带隙为0.764 eV. 此外, $\Gamma$点上原来三重简并的3p成键与反键轨道均裂分为两组简并轨道, 能量较高的为四重简并, 较低的为二重简并. 考虑SOC后的带隙相比未考虑的情形只减小了0.016 eV, 反映出在Si等轻元素中相对论效应较弱的事实.</p>
-<h3>FCC Au</h3>
-<p>以FCC Au (7.67 au)为例, 参考Novak老师的关于spin-orbit coupling笔记中的计算&lt;sup id=&quot;fnref:3&quot;&gt;&lt;a href=&quot;#fn:3&quot; rel=&quot;footnote&quot;&gt;&lt;span class=&quot;hint--top hint--error hint--medium hint--rounded hint--bounce&quot; aria-label=&quot;Prof. P. Novak, <a href="http://susi.theochem.tuwien.ac.at/reg_user/textbooks/novak_lecture_on_spinorbit.pdf" target="_blank" rel="noopener">Notes about spin-orbit</a>, p12. 内容基于WIEN97.
-&quot;&gt;[3]&lt;/span&gt;&lt;/a&gt;&lt;/sup&gt;. RMT值取2.6, GMAX取16. 初始化命令</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">init_lapw -b -numk 5000 -rkmax 9</span><br><span class="line">sed -i <span class="string">'s/ 12.00/ 16.00/g'</span> Au.in2 <span class="comment"># change GMAX</span></span><br></pre></td></tr></table></figure></p>
-<p>共17个价电子. 按和Si中相同的步骤, 分别进行无SOC和在LAPWSO下考虑SOC的计算. 直接对比$\Gamma$点上的能量. 先看无SOC的结果</p>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">0.000000000000E+00 0.000000000000E+00 0.000000000000E+00         1    77    13  1.0</span><br><span class="line">          1  -3.48417834812053</span><br><span class="line">          2  -3.48417834812053</span><br><span class="line">          3  -3.48417834812053</span><br><span class="line">          4 -4.633683657763327E-002</span><br><span class="line">          5  0.341371911764138</span><br><span class="line">          6  0.341371911764145</span><br><span class="line">          7  0.341371911764145</span><br><span class="line">          8  0.456634603361144</span><br><span class="line">          9  0.456634603361151</span><br><span class="line">         10   1.75774908584153</span><br><span class="line">         11   2.06272605171851</span><br><span class="line">         12   2.06272605171851</span><br><span class="line">         13   2.06272605171851</span><br></pre></td></tr></table></figure></p>
-<p>VASP的投影能带如下图所示. 从成分上看, 占据态分别是$5p$(1-3), $6s$(4), $t_{2g}$(5-7), $e_g$(8-9).</p>
-<p><figure class="null"><img src="Au_X-L-G-X.png" alt="Au投影能带图. 红蓝黄绿色分别为spdf成分."><figcaption>Au投影能带图. 红蓝黄绿色分别为spdf成分.</figcaption></figure></p>
-<p>再看考虑SOC后的结果<code>energyso</code>. 由于轨道增加一倍, 下面的18个轨道都是占据态&lt;sup id=&quot;fnref:4&quot;&gt;&lt;a href=&quot;#fn:4&quot; rel=&quot;footnote&quot;&gt;&lt;span class=&quot;hint--top hint--error hint--medium hint--rounded hint--bounce&quot; aria-label=&quot;可以通过增大<code>inso</code>中的<code>EMAX</code>来获取更多的SOC态的本征值&quot;&gt;[4]&lt;/span&gt;&lt;/a&gt;&lt;/sup&gt;. 很明显的, 原来的$t_{2g}$和$e_g$进一步裂分成了三组轨道, 能量从低到高的简并度分别为4, 2和4, 它们在群表示上的记号分别为$\Gamma_8, \Gamma_7$和$\Gamma'_8$.</p>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">0.000000000000E+00 0.000000000000E+00 0.000000000000E+00         1    77    18  1.0</span><br><span class="line">          1  -4.20742280553107</span><br><span class="line">          2  -4.20742280553106</span><br><span class="line">          3  -3.14951843978248</span><br><span class="line">          4  -3.14951843978248</span><br><span class="line">          5  -3.14951842668932</span><br><span class="line">          6  -3.14951842668932</span><br><span class="line">          7 -4.585036452752571E-002</span><br><span class="line">          8 -4.585036452752490E-002</span><br><span class="line">          9  0.294994273106371</span><br><span class="line">         10  0.294994273106371</span><br><span class="line">         11  0.294994274995205</span><br><span class="line">         12  0.294994274995205</span><br><span class="line">         13  0.381494069224123</span><br><span class="line">         14  0.381494069224123</span><br><span class="line">         15  0.473340026931149</span><br><span class="line">         16  0.473340026931150</span><br><span class="line">         17  0.473340027624113</span><br><span class="line">         18  0.473340027624115</span><br></pre></td></tr></table></figure></p>
-<p>考虑和不考虑SOC的$E_F$分别为0.705和0.699 Ry. 同Novak老师的能带位置结果(下表括号内数字)进行比较, 发现结果惊人一致(Novak老师的结果可还是用WIEN97算的啊).</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">$E-E_F$ (mRy)</th>
-<th style="text-align:center">No SOC</th>
-<th style="text-align:center">SOC by LAPWSO</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">$\Gamma_8$</td>
-<td style="text-align:center">-358  (-357)</td>
-<td style="text-align:center">-410 (-410)</td>
-</tr>
-<tr>
-<td style="text-align:center">$\Gamma_7$</td>
-<td style="text-align:center">-358  (-357)</td>
-<td style="text-align:center">-324 (-323)</td>
-</tr>
-<tr>
-<td style="text-align:center">$\Gamma'_8$</td>
-<td style="text-align:center">-242  (-241)</td>
-<td style="text-align:center">-232 (-230)</td>
-</tr>
-</tbody>
-</table>
-<h2>TODO</h2>
-<ul>
-<li>[ ] 二阶变分的原理.</li>
-<li>[ ] 对<code>initso</code>设置内容的阐明, direction of moment和RLO.</li>
-<li>[ ] 自旋极化计算.
-&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js&quot;&gt;&lt;/script&gt;<textarea id="flowchart-0-code" style="display: none">st=>start: Start SCF
-lapw0up=>operation: LAPW0 -up
-lapw0dn=>operation: LAPW0 -dn
-lapw1=>operation: LAPW1
-lapwso=>operation: LAPWSO
-lapw2=>operation: LAPW2(c)
-core=>operation: CORE
-mixer=>operation: MIXER
-cond=>condition: SCF Converged?
-e=>end
-
-st->lapw0up->lapw0dn->lapw1->lapwso->lapw2(right)->core(right)->mixer(right)->cond
-cond(yes, bottom)->e
-cond(no, top)->lapw0up</textarea><textarea id="flowchart-0-options" style="display: none">{"scale":1,"line-width":3,"line-length":25,"text-margin":10,"font-size":12}</textarea><script>  var code = document.getElementById("flowchart-0-code").value;  var options = JSON.parse(decodeURIComponent(document.getElementById("flowchart-0-options").value));  var diagram = flowchart.parse(code);  diagram.drawSVG("flowchart-0", options);</script>&lt;div id=&quot;footnotes&quot;&gt;&lt;hr&gt;&lt;div id=&quot;footnotelist&quot;&gt;&lt;ol style=&quot;list-style: none; padding-left: 0; margin-left: 40px&quot;&gt;&lt;li id=&quot;fn:1&quot;&gt;&lt;span style=&quot;display: inline-block; vertical-align: top; padding-right: 10px; margin-left: -40px&quot;&gt;1.&lt;/span&gt;&lt;span style=&quot;display: inline-block; vertical-align: top; margin-left: 10px;&quot;&gt;&lt;a href=&quot;http://www.encyclopediaofmath.org/index.php?title=Second_variation&amp;oldid=31231&quot;&gt;Second variation&lt;/a&gt;. Encyclopedia of Mathematics.&lt;a href=&quot;#fnref:1&quot; rev=&quot;footnote&quot;&gt; ↩&lt;/a&gt;&lt;/span&gt;&lt;/li&gt;&lt;li id=&quot;fn:2&quot;&gt;&lt;span style=&quot;display: inline-block; vertical-align: top; padding-right: 10px; margin-left: -40px&quot;&gt;2.&lt;/span&gt;&lt;span style=&quot;display: inline-block; vertical-align: top; margin-left: 10px;&quot;&gt;因为用&lt;a href=&quot;https://github.com/minyez/mykit&quot;&gt;mykit&lt;/a&gt;制作的图, 目前只支持到VASP :(&lt;a href=&quot;#fnref:2&quot; rev=&quot;footnote&quot;&gt; ↩&lt;/a&gt;&lt;/span&gt;&lt;/li&gt;&lt;li id=&quot;fn:3&quot;&gt;&lt;span style=&quot;display: inline-block; vertical-align: top; padding-right: 10px; margin-left: -40px&quot;&gt;3.&lt;/span&gt;&lt;span style=&quot;display: inline-block; vertical-align: top; margin-left: 10px;&quot;&gt;Prof. P. Novak, &lt;a href=&quot;http://susi.theochem.tuwien.ac.at/reg_user/textbooks/novak_lecture_on_spinorbit.pdf&quot;&gt;Notes about spin-orbit&lt;/a&gt;, p12. 内容基于WIEN97.&lt;a href=&quot;#fnref:3&quot; rev=&quot;footnote&quot;&gt; ↩&lt;/a&gt;&lt;/span&gt;&lt;/li&gt;&lt;li id=&quot;fn:4&quot;&gt;&lt;span style=&quot;display: inline-block; vertical-align: top; padding-right: 10px; margin-left: -40px&quot;&gt;4.&lt;/span&gt;&lt;span style=&quot;display: inline-block; vertical-align: top; margin-left: 10px;&quot;&gt;可以通过增大&lt;code&gt;inso&lt;/code&gt;中的&lt;code&gt;EMAX&lt;/code&gt;来获取更多的SOC态的本征值&lt;a href=&quot;#fnref:4&quot; rev=&quot;footnote&quot;&gt; ↩&lt;/a&gt;&lt;/span&gt;&lt;/li&gt;&lt;/ol&gt;&lt;/div&gt;&lt;/div&gt;</li>
-</ul>
-
+		<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>介绍了WIEN2k中自旋非极化下通过LAPWSO考虑自旋轨道耦合(SOC)效应的第一性原理计算的流程. 以Si和Au为例子, 简单分析了SOC对能带结构的影响.</p>
 	
 	</div>
   <a type="button" href="/2019/05/07/wien2k-lapwso-1/#more" class="btn btn-default more">Read More</a>
@@ -358,83 +262,7 @@ cond(no, top)->lapw0up</textarea><textarea id="flowchart-0-options" style="displ
   <div class="row">
 	
 	
-		<link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2>摘要</h2>
-<p>整理了调用Python <code>re</code>包时的常用操作和命令. &lt;!--more--&gt;</p>
-<p>这里主要按照使用情景, 对操作和命令进行分类, 这样也顺带梳理不同情境下可能用到的正则表达式. 目前更新到模式组方法的比较.</p>
-<h2>基本函数</h2>
-<p>下表列出了常用的re函数, 其中变量类型仅为自己常用的情况, 具体见<a href="https://docs.python.org/3/library/re.html" target="_blank" rel="noopener">re文档</a>(Python 3).</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">函数</th>
-<th style="text-align:left">参数</th>
-<th style="text-align:left">功能</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left"><code>re.compile</code></td>
-<td style="text-align:left"><code>pat</code>(s)</td>
-<td style="text-align:left">返回一个与正则表达式<code>pat</code>对应的regular expression对象.</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>re.match</code></td>
-<td style="text-align:left"><code>pat</code>(s), <code>string</code>(s)</td>
-<td style="text-align:left">对<code>string</code>从头匹配<code>pat</code>, 返回Match对象</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>re.fullmatch</code></td>
-<td style="text-align:left">同<code>re.match</code></td>
-<td style="text-align:left">对整个<code>string</code>匹配<code>pat</code>, 返回Match对象</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>re.search</code></td>
-<td style="text-align:left">同<code>re.match</code></td>
-<td style="text-align:left">在<code>string</code>中搜索匹配模式<code>pat</code>的子字符串, 返回Match对象</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>re.sub</code></td>
-<td style="text-align:left"><code>pat</code>(s), <code>repl</code>(s), <code>s</code>(s)</td>
-<td style="text-align:left">将<code>s</code>中匹配<code>pat</code>的字符串<strong>全部</strong>替换为<code>repl</code></td>
-</tr>
-</tbody>
-</table>
-<p>一些注意点</p>
-<ul>
-<li>我们可能习惯在命令行下使用通配符<code>*</code>, 但是在正则表达式下<code>*</code>的作用是匹配任意次.</li>
-<li><code>re.match(&quot;^&quot;+pat+&quot;$&quot;, s)</code>匹配整条字符串, 因此与<code>re.fullmatch(pat, s)</code>等价</li>
-</ul>
-<h2>一次匹配字符串</h2>
-<p>用<code>re.match</code>和<code>re.fullmatch</code>进行匹配</p>
-<h3>匹配名为<code>V_x.y</code>的文件夹</h3>
-<p>其中<code>x</code>为数字0或1 <code>y</code>为长度大于等于1的数字</p>
-<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>dname = <span class="string">"V_0.98"</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>re.fullmatch(<span class="string">r"V_[01]\.[0-9]+"</span>, dname)</span><br><span class="line">&lt;re.Match object; span=(<span class="number">0</span>, <span class="number">6</span>), match=<span class="string">'V_0.98'</span>&gt;</span><br></pre></td></tr></table></figure></p>
-<h3>匹配一条K点路径</h3>
-<p>匹配一条类似<code>GM-X-L-M</code>格式的K点路径, 要求每一个特殊K点由1到2个大写字母组成.</p>
-<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>re.match(<span class="string">r'^([A-Z]&#123;1,2&#125;-)+[A-Z]&#123;1,2&#125;$'</span>, <span class="string">'GM-X-L-GM-L'</span>)</span><br><span class="line">&lt;re.Match object; span=(<span class="number">0</span>, <span class="number">11</span>), match=<span class="string">'GM-X-L-GM-L'</span>&gt;</span><br></pre></td></tr></table></figure></p>
-<p>简单解读:</p>
-<ul>
-<li><code>[A-Z]{1,2}</code>对大写字母匹配1次或2次</li>
-<li><code>()+</code>: 对括号内(组)模式匹配1次或多次</li>
-</ul>
-<h2>compile函数</h2>
-<p>利用<code>re.compile</code>产生模式对应的regular expression对象. regular expression对象拥有与<code>re</code>函数同名的方法, 之后所有有关该模式的匹配都通过该对象进行.</p>
-<p>例如匹配邮件中用户名</p>
-<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>PAT_USERNAME = re.compile(<span class="string">r'\w+'</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>PAT_USERNAME.match(<span class="string">'bob@163.com'</span>)</span><br><span class="line">&lt;re.Match object; span=(<span class="number">0</span>, <span class="number">3</span>), match=<span class="string">'bob'</span>&gt;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>PAT_USERNAME.match(<span class="string">'chris@163.com'</span>)</span><br><span class="line">&lt;re.Match object; span=(<span class="number">0</span>, <span class="number">5</span>), match=<span class="string">'chris'</span>&gt;</span><br></pre></td></tr></table></figure></p>
-<p>这个例子可能还不怎么明显, 但当模式非常复杂时, regular expression对象代替字符串模式要方便很多, 也更易读.</p>
-<h2>利用group和groups获得匹配内容</h2>
-<p>使用regex时, 我们有时需要获得具体的匹配内容, 这可以通过在模式中加入<code>()</code>以定义组(group)这一方式实现.</p>
-<p>在上面匹配<code>V_x.y</code>的例子中, 如果我们要获得后面的具体数字</p>
-<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># obtain and print the ratio of volume from the name of directory</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dname = <span class="string">"V_0.98"</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>matched = re.fullmatch(<span class="string">r"V_([01]\.[0-9]+)"</span>, dname)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>matched.group()</span><br><span class="line"><span class="string">'V_0.98'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>matched.group(<span class="number">1</span>)</span><br><span class="line"><span class="string">'0.98'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>matched.group(<span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line">(<span class="string">'V_0.98'</span>, <span class="string">'0.98'</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>matched.group(<span class="number">2</span>)</span><br><span class="line">IndexError: no such group</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>matched.groups()</span><br><span class="line">(<span class="string">'0.98'</span>,)</span><br></pre></td></tr></table></figure></p>
-<p>这里比较了Match对象的两种方法<code>group</code>和<code>groups</code>. 总结一下</p>
-<ul>
-<li>如果没有参数或参数为<code>0</code>, <code>group</code>返回的是整条匹配的子字符串.</li>
-<li>如果参数不为<code>0</code>, 则返回第n个组(括号)中匹配的字符串.</li>
-<li>参数个数等于1时, 返回一个字符串; 大于1时返回一个字符串元组.</li>
-<li>如果参数大于被匹配模式中包含的组数, 抛出<code>IndexError</code>.</li>
-<li><code>groups</code>返回所有组的匹配结果, 总是一个字符串元组.</li>
-</ul>
-
+		<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>整理了调用Python <code>re</code>包时的常用操作和命令.
 	
 	</div>
   <a type="button" href="/2019/05/06/re-summary/#more" class="btn btn-default more">Read More</a>
@@ -455,43 +283,7 @@ cond(no, top)->lapw0up</textarea><textarea id="flowchart-0-options" style="displ
   <div class="row">
 	
 	
-		<link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2>摘要</h2>
-<p>尝试在Hexo博文中嵌入Jupyter notebook (<code>.ipynb</code>)以展示Python代码 (快速入门到光速入土).</p>
-<p>&lt;!--more--&gt;</p>
-<h2>前提准备</h2>
-<p>首先安装<code>hexo-jupyter-notebook</code>和<code>co</code>两个npm包, 后者为前者的依赖</p>
-<p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-jupyter-notebook --save</span><br><span class="line">npm install co</span><br></pre></td></tr></table></figure></p>
-<p>像<a href="/2019/05/01/embed-videos/" title="在Hexo博文中嵌入视频">在Hexo博文中嵌入视频</a>一文中的视频画面一样, 为了将嵌入帧尺寸做成响应式的, 修改<code>node_modules/hexo-jupyter-notebook/main.py</code>中的<code>template</code>变量, 加入<code>auto-resizable-iframe</code>容器</p>
-<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">    template = <span class="string">"""</span></span><br><span class="line"><span class="string">&lt;div class="auto-resizable-iframe"&gt;&lt;div&gt;</span></span><br><span class="line"><span class="string">&lt;iframe id='ipynb' marginheight="0" frameborder="0" srcdoc="%s"  style="scrolling:no;"&gt;</span></span><br><span class="line"><span class="string">&lt;/iframe&gt;&lt;/div&gt;&lt;/div&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">&lt;script&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">$("#ipynb").load( function() &#123;</span></span><br><span class="line"><span class="string">console.log($("#ipynb").contents().find("body").find("#notebook"));</span></span><br><span class="line"><span class="string">document.getElementById('ipynb').height=$("#ipynb").contents().find("#notebook").height()+100;</span></span><br><span class="line"><span class="string">&#125;)</span></span><br><span class="line"><span class="string">&lt;/script&gt;</span></span><br><span class="line"><span class="string">    """</span> % restr.replace(<span class="string">"\""</span>, <span class="string">"'"</span>)</span><br></pre></td></tr></table></figure></p>
-<p>有这一部分后, 我就没有像参考链接里那样用jQuery来控制尺寸.</p>
-<p>再准备好要嵌入的ipynb文件, 准备工作就做好了. 我这里用的是之前练习matplotlib时写的<code>meshgrid_plot.ipynb</code></p>
-<h2>嵌入ipynb</h2>
-<p>做好上述准备后, 进行下面三步操作</p>
-<ol>
-<li>
-<p>在<code>_config.yml</code>中打开<code>post_asset_folder</code></p>
-<p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">post_asset_folder:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure></p>
-</li>
-<li>
-<p>在<code>source/assets</code>中新建<code>codes</code>文件夹, 将准备好的ipynb放入其中.</p>
-</li>
-<li>
-<p>Markdown文本中, 在要嵌入ipynb的位置加入</p>
-<p><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% asset<span class="emphasis">_jupyter /usr/local/bin/python3 ../../assets/codes/meshgrid_</span>plot.ipynb %&#125;</span><br></pre></td></tr></table></figure></p>
-</li>
-</ol>
-<p>嵌入效果如图所示.</p>
-<p><figure class="null"><img src="meshgrid_demo.png" alt="ipynb嵌入效果"><figcaption>ipynb嵌入效果</figcaption></figure></p>
-<h2>结论</h2>
-<p>成功利用<code>hexo-jupyter-notebook</code>包, 在Hexo博文中嵌入了Jupyter notebook. 然而自己对这个效果不是很满意, 主要是两个原因</p>
-<ol>
-<li>嵌入的ipynb代码有滚动条. 修改<code>iframe</code>的大小(试到3000px)或修改JS里<code>+100</code>为更大数值, 也不能解决.</li>
-<li>更关键的, <code>hexo s</code>渲染时间显著增加, 从600 ms左右增加到1.34 s. 且持续一段时间后系统明显卡顿, 调试变得更麻烦了.</li>
-</ol>
-<p>遂最终放弃了嵌入ipynb的想法  _(xз」∠)_</p>
-<h2>参考</h2>
-<p><a href="https://www.google.com/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;ved=2ahUKEwj5-v20yf7hAhUFRqwKHYyID48QFjAAegQIBRAB&amp;url=https%3A%2F%2Fmedium.com%2F%40juanx002%2Fblogging-jupyter-notebooks-ipynb-with-hexo-on-github-7948b72636dc&amp;usg=AOvVaw1xUf2rSePZCUw7anF7uVRu" target="_blank" rel="noopener">Blogging Jupyter Notebooks (.ipynb) with Hexo on GitHub - Medium</a></p>
-
+		<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>尝试在Hexo博文中嵌入Jupyter notebook (<code>.ipynb</code>)以展示Python代码 (快速入门到光速入土).</p>
 	
 	</div>
   <a type="button" href="/2019/05/03/embed-jupyter-in-hexo/#more" class="btn btn-default more">Read More</a>
@@ -512,33 +304,7 @@ cond(no, top)->lapw0up</textarea><textarea id="flowchart-0-options" style="displ
   <div class="row">
 	
 	
-		<link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2>摘要</h2>
-<p>总结了如何用HTML源码在博文中嵌入youtube和bilibili视频, 并通过定义样式表, 统一且响应式的控制视频画面尺寸.</p>
-<p>&lt;!--more--&gt;</p>
-<h2>Youtube视频</h2>
-<p>在浏览器中进入想分享的视频, 点击分享, 选择第一个“嵌入”按钮, 就可以得到嵌入博文中所需要的代码, 例如</p>
-<p><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">width</span>=<span class="string">"560"</span> <span class="attr">height</span>=<span class="string">"315"</span> <span class="attr">src</span>=<span class="string">"https://www.youtube.com/embed/arj7oStGLkU"</span> <span class="attr">frameborder</span>=<span class="string">"0"</span> <span class="attr">allow</span>=<span class="string">"accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"</span> <span class="attr">allowfullscreen</span>&gt;</span><span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<h2>bilibili视频</h2>
-<p>类似油管视频, 将鼠标移到B站视频下方分享按钮, 就会出来一段嵌入代码</p>
-<p><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">src</span>=<span class="string">"//player.bilibili.com/player.html?aid=16091118&amp;cid=26251892&amp;page=1"</span> <span class="attr">scrolling</span>=<span class="string">"no"</span> <span class="attr">border</span>=<span class="string">"0"</span> <span class="attr">frameborder</span>=<span class="string">"no"</span> <span class="attr">framespacing</span>=<span class="string">"0"</span> <span class="attr">allowfullscreen</span>=<span class="string">"true"</span>&gt;</span> <span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<h2>统一尺寸控制</h2>
-<p>在Freemind主题下<code>source/css/style.css</code>中, 加入以下选择器</p>
-<p><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.auto-resizable-iframe</span> &#123;</span><br><span class="line">  <span class="comment">/*max-width: 540px;*/</span></span><br><span class="line">  <span class="attribute">max-width</span>: <span class="number">100%</span>;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0px</span> auto;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.auto-resizable-iframe</span> &gt; <span class="selector-tag">div</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: relative;</span><br><span class="line">  <span class="attribute">padding-bottom</span>: <span class="number">75%</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">0px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.auto-resizable-iframe</span> <span class="selector-tag">iframe</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: absolute;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">0px</span>;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">0px</span>;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>然后将前面<code>iframe</code>放入两层<code>div</code>元素里, 最外层元素的类设为<code>auto-resizable-iframe</code>, 删除<code>iframe</code>中的宽度长度控制, 即</p>
-<p><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"auto-resizable-iframe"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">iframe</span> <span class="attr">src</span>=<span class="string">"https://www.youtube.com/embed/arj7oStGLkU"</span> <span class="attr">frameborder</span>=<span class="string">"0"</span> <span class="attr">allow</span>=<span class="string">"accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"</span> <span class="attr">allowfullscreen</span>&gt;</span><span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>效果如下(Youtube视频)</p>
-<p>&lt;div class=&quot;auto-resizable-iframe&quot;&gt;
-&lt;div&gt;
-&lt;iframe src=&quot;https://www.youtube.com/embed/arj7oStGLkU&quot; frameborder=&quot;0&quot; allow=&quot;accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture&quot; allowfullscreen&gt;&lt;/iframe&gt;
-&lt;/div&gt;
-&lt;/div&gt;</p>
-<p>两层div使得画面尺寸是响应式的. 比起直接黏贴iframe稍微麻烦一些, 但是好看的多.</p>
-<h2>存在问题</h2>
-<p>本来想在这篇博文里也把上面的B站视频嵌入的, 但是插入B站视频的iframe后本地server查看, 发现两个视频都是TED. 问题原因不是很清楚. 所以暂时一篇博文只能插入一个视频了 :(</p>
-<h2>参考</h2>
-<p><a href="http://www.tangycode.com/How-To-Embed-Youtube-Videos-Within-Hexo-Blogs/" target="_blank" rel="noopener">How To Embed Youtube Videos Within Hexo Blogs</a></p>
-<p><a href="https://anywaywillgo.github.io/post/writing/hexo/embed-bilibili-video-in-hexo/" target="_blank" rel="noopener">在Hexo博客中插入bilibili视频的方式</a></p>
-
+		<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>总结了如何用HTML源码在博文中嵌入youtube和bilibili视频, 并通过定义样式表, 统一且响应式的控制视频画面尺寸.</p>
 	
 	</div>
   <a type="button" href="/2019/05/01/embed-videos/#more" class="btn btn-default more">Read More</a>
@@ -559,15 +325,7 @@ cond(no, top)->lapw0up</textarea><textarea id="flowchart-0-options" style="displ
   <div class="row">
 	
 	
-		<link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2>摘要</h2>
-<p>通过修改libxc.F, 解决编译WIEN2k v16.1时出现的未定义&quot;xc_f03_mgga_x_tb09_set_params_&quot;的错误</p>
-<p>&lt;!--more--&gt;</p>
-<h2>问题描述</h2>
-<p>在<a href="/2019/04/20/wien2k-fftw3-multi-def/" title="解决编译WIEN2k时FFTW3 multiple definition错误">解决编译WIEN2k时FFTW3 multiple definition错误</a>一文修正FFTW错误基础上, 利用Intel, Intel FFTW和LIBXC编译WIEN2k v16.1的<code>lapw0</code>时, 串行版本报错</p>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ld: libxc.o: in function `libxc_&apos;:</span><br><span class="line">libxc.F:(.text+0xcf7): undefined reference to `xc_f03_mgga_x_tb09_set_params_&apos;</span><br><span class="line">ld: libxc.F:(.text+0xd6b): undefined reference to `xc_f03_mgga_x_tb09_set_params_&apos;</span><br><span class="line">make[2]: *** [Makefile:83: lapw0] Error 1</span><br><span class="line">make[2]: Leaving directory &apos;/opt/software/wien2k/16.1/SRC_lapw0&apos;</span><br><span class="line">make[1]: *** [Makefile:72: seq] Error 2</span><br><span class="line">make[1]: Leaving directory &apos;/opt/software/wien2k/16.1/SRC_lapw0&apos;</span><br><span class="line">make: *** [Makefile:64: all] Error 2</span><br></pre></td></tr></table></figure></p>
-<h2>解决方案</h2>
-<p>这个错误在<a href="https://www.mail-archive.com/wien@zeus.theochem.tuwien.ac.at/msg16924.html" target="_blank" rel="noopener">这封mail-list</a>里提到, 原因是由于LIBXC版本升级导致的一些参数改变. 用这个<a href="libxc.F">libxc.F</a>替代<code>SRC_lapw0</code>中同名文件, 即可正确编译.</p>
-
+		<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>通过修改libxc.F, 解决编译WIEN2k v16.1时出现的未定义”xc_f03_mgga_x_tb09_set_params_”的错误</p>
 	
 	</div>
   <a type="button" href="/2019/04/20/wien2k-libxc-mgga-error/#more" class="btn btn-default more">Read More</a>
@@ -668,45 +426,45 @@ cond(no, top)->lapw0up</textarea><textarea id="flowchart-0-options" style="displ
 		<h4>Tag Cloud</h4>
 		<ul class="tag_box inline list-unstyled">		
 		
-			<li><a href="/tags/MKL/">MKL<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/Markdown/">Markdown<span class="badge">2</span></a></li>
-		
-			<li><a href="/tags/Python/">Python<span class="badge">2</span></a></li>
-		
-			<li><a href="/tags/Panflute/">Panflute<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/LIBXC/">LIBXC<span class="badge">1</span></a></li>
+			<li><a href="/tags/FFTW/">FFTW<span class="badge">1</span></a></li>
 		
 			<li><a href="/tags/Shadowsocks/">Shadowsocks<span class="badge">1</span></a></li>
 		
+			<li><a href="/tags/Pandoc/">Pandoc<span class="badge">2</span></a></li>
+		
+			<li><a href="/tags/regex/">regex<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/Python/">Python<span class="badge">2</span></a></li>
+		
+			<li><a href="/tags/MKL/">MKL<span class="badge">1</span></a></li>
+		
 			<li><a href="/tags/Youtube/">Youtube<span class="badge">1</span></a></li>
 		
-			<li><a href="/tags/Compilation/">Compilation<span class="badge">4</span></a></li>
-		
-			<li><a href="/tags/bilibili/">bilibili<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/DFT/">DFT<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/AST/">AST<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/Hexo/">Hexo<span class="badge">3</span></a></li>
+			<li><a href="/tags/Markdown/">Markdown<span class="badge">2</span></a></li>
 		
 			<li><a href="/tags/Network/">Network<span class="badge">1</span></a></li>
 		
-			<li><a href="/tags/Intel/">Intel<span class="badge">4</span></a></li>
+			<li><a href="/tags/Panflute/">Panflute<span class="badge">1</span></a></li>
 		
 			<li><a href="/tags/LaTeX/">LaTeX<span class="badge">1</span></a></li>
 		
-			<li><a href="/tags/Make/">Make<span class="badge">1</span></a></li>
+			<li><a href="/tags/Bugfix/">Bugfix<span class="badge">3</span></a></li>
 		
-			<li><a href="/tags/WIEN2k/">WIEN2k<span class="badge">3</span></a></li>
+			<li><a href="/tags/Intel/">Intel<span class="badge">4</span></a></li>
 		
-			<li><a href="/tags/F2PY/">F2PY<span class="badge">1</span></a></li>
+			<li><a href="/tags/macOS/">macOS<span class="badge">1</span></a></li>
 		
-			<li><a href="/tags/Tutorial/">Tutorial<span class="badge">1</span></a></li>
+			<li><a href="/tags/LIBXC/">LIBXC<span class="badge">1</span></a></li>
 		
-			<li><a href="/tags/regex/">regex<span class="badge">1</span></a></li>
+			<li><a href="/tags/bilibili/">bilibili<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/Blogging/">Blogging<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/Fortran/">Fortran<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/Bootstrap/">Bootstrap<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/Freemind/">Freemind<span class="badge">1</span></a></li>
 		
 		
 		   <li><a href="/tags">...<span class="badge">35</span></a></li>
@@ -799,6 +557,23 @@ cond(no, top)->lapw0up</textarea><textarea id="flowchart-0-options" style="displ
   gtag('config', 'UA-111612868-1');
 </script>
 
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        },
+        TeX: {equationNumbers: { autoNumber: "AMS" }}
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
 </body>
    </html>

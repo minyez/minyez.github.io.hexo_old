@@ -208,11 +208,9 @@
 	<div class="mypage">		
 	  		
 
-	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2>摘要</h2>
-<p>整理了调用Python <code>re</code>包时的常用操作和命令. &lt;!--more--&gt;</p>
+	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>整理了调用Python <code>re</code>包时的常用操作和命令. <a id="more"></a></p>
 <p>这里主要按照使用情景, 对操作和命令进行分类, 这样也顺带梳理不同情境下可能用到的正则表达式. 目前更新到模式组方法的比较.</p>
-<h2>基本函数</h2>
-<p>下表列出了常用的re函数, 其中变量类型仅为自己常用的情况, 具体见<a href="https://docs.python.org/3/library/re.html" target="_blank" rel="noopener">re文档</a>(Python 3).</p>
+<h2 id="基本函数"><a href="#基本函数" class="headerlink" title="基本函数"></a>基本函数</h2><p>下表列出了常用的re函数, 其中变量类型仅为自己常用的情况, 具体见<a href="https://docs.python.org/3/library/re.html" target="_blank" rel="noopener">re文档</a>(Python 3).</p>
 <table>
 <thead>
 <tr>
@@ -254,28 +252,23 @@
 <li>我们可能习惯在命令行下使用通配符<code>*</code>, 但是在正则表达式下<code>*</code>的作用是匹配任意次.</li>
 <li><code>re.match(&quot;^&quot;+pat+&quot;$&quot;, s)</code>匹配整条字符串, 因此与<code>re.fullmatch(pat, s)</code>等价</li>
 </ul>
-<h2>一次匹配字符串</h2>
-<p>用<code>re.match</code>和<code>re.fullmatch</code>进行匹配</p>
-<h3>匹配名为<code>V_x.y</code>的文件夹</h3>
-<p>其中<code>x</code>为数字0或1 <code>y</code>为长度大于等于1的数字</p>
-<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>dname = <span class="string">"V_0.98"</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>re.fullmatch(<span class="string">r"V_[01]\.[0-9]+"</span>, dname)</span><br><span class="line">&lt;re.Match object; span=(<span class="number">0</span>, <span class="number">6</span>), match=<span class="string">'V_0.98'</span>&gt;</span><br></pre></td></tr></table></figure></p>
-<h3>匹配一条K点路径</h3>
-<p>匹配一条类似<code>GM-X-L-M</code>格式的K点路径, 要求每一个特殊K点由1到2个大写字母组成.</p>
-<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>re.match(<span class="string">r'^([A-Z]&#123;1,2&#125;-)+[A-Z]&#123;1,2&#125;$'</span>, <span class="string">'GM-X-L-GM-L'</span>)</span><br><span class="line">&lt;re.Match object; span=(<span class="number">0</span>, <span class="number">11</span>), match=<span class="string">'GM-X-L-GM-L'</span>&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="一次匹配字符串"><a href="#一次匹配字符串" class="headerlink" title="一次匹配字符串"></a>一次匹配字符串</h2><p>用<code>re.match</code>和<code>re.fullmatch</code>进行匹配</p>
+<h3 id="匹配名为V-x-y的文件夹"><a href="#匹配名为V-x-y的文件夹" class="headerlink" title="匹配名为V_x.y的文件夹"></a>匹配名为<code>V_x.y</code>的文件夹</h3><p>其中<code>x</code>为数字0或1 <code>y</code>为长度大于等于1的数字</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>dname = <span class="string">"V_0.98"</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>re.fullmatch(<span class="string">r"V_[01]\.[0-9]+"</span>, dname)</span><br><span class="line">&lt;re.Match object; span=(<span class="number">0</span>, <span class="number">6</span>), match=<span class="string">'V_0.98'</span>&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="匹配一条K点路径"><a href="#匹配一条K点路径" class="headerlink" title="匹配一条K点路径"></a>匹配一条K点路径</h3><p>匹配一条类似<code>GM-X-L-M</code>格式的K点路径, 要求每一个特殊K点由1到2个大写字母组成.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>re.match(<span class="string">r'^([A-Z]&#123;1,2&#125;-)+[A-Z]&#123;1,2&#125;$'</span>, <span class="string">'GM-X-L-GM-L'</span>)</span><br><span class="line">&lt;re.Match object; span=(<span class="number">0</span>, <span class="number">11</span>), match=<span class="string">'GM-X-L-GM-L'</span>&gt;</span><br></pre></td></tr></table></figure>
 <p>简单解读:</p>
 <ul>
 <li><code>[A-Z]{1,2}</code>对大写字母匹配1次或2次</li>
 <li><code>()+</code>: 对括号内(组)模式匹配1次或多次</li>
 </ul>
-<h2>compile函数</h2>
-<p>利用<code>re.compile</code>产生模式对应的regular expression对象. regular expression对象拥有与<code>re</code>函数同名的方法, 之后所有有关该模式的匹配都通过该对象进行.</p>
+<h2 id="compile函数"><a href="#compile函数" class="headerlink" title="compile函数"></a>compile函数</h2><p>利用<code>re.compile</code>产生模式对应的regular expression对象. regular expression对象拥有与<code>re</code>函数同名的方法, 之后所有有关该模式的匹配都通过该对象进行.</p>
 <p>例如匹配邮件中用户名</p>
-<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>PAT_USERNAME = re.compile(<span class="string">r'\w+'</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>PAT_USERNAME.match(<span class="string">'bob@163.com'</span>)</span><br><span class="line">&lt;re.Match object; span=(<span class="number">0</span>, <span class="number">3</span>), match=<span class="string">'bob'</span>&gt;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>PAT_USERNAME.match(<span class="string">'chris@163.com'</span>)</span><br><span class="line">&lt;re.Match object; span=(<span class="number">0</span>, <span class="number">5</span>), match=<span class="string">'chris'</span>&gt;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>PAT_USERNAME = re.compile(<span class="string">r'\w+'</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>PAT_USERNAME.match(<span class="string">'bob@163.com'</span>)</span><br><span class="line">&lt;re.Match object; span=(<span class="number">0</span>, <span class="number">3</span>), match=<span class="string">'bob'</span>&gt;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>PAT_USERNAME.match(<span class="string">'chris@163.com'</span>)</span><br><span class="line">&lt;re.Match object; span=(<span class="number">0</span>, <span class="number">5</span>), match=<span class="string">'chris'</span>&gt;</span><br></pre></td></tr></table></figure>
 <p>这个例子可能还不怎么明显, 但当模式非常复杂时, regular expression对象代替字符串模式要方便很多, 也更易读.</p>
-<h2>利用group和groups获得匹配内容</h2>
-<p>使用regex时, 我们有时需要获得具体的匹配内容, 这可以通过在模式中加入<code>()</code>以定义组(group)这一方式实现.</p>
+<h2 id="利用group和groups获得匹配内容"><a href="#利用group和groups获得匹配内容" class="headerlink" title="利用group和groups获得匹配内容"></a>利用group和groups获得匹配内容</h2><p>使用regex时, 我们有时需要获得具体的匹配内容, 这可以通过在模式中加入<code>()</code>以定义组(group)这一方式实现.</p>
 <p>在上面匹配<code>V_x.y</code>的例子中, 如果我们要获得后面的具体数字</p>
-<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># obtain and print the ratio of volume from the name of directory</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dname = <span class="string">"V_0.98"</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>matched = re.fullmatch(<span class="string">r"V_([01]\.[0-9]+)"</span>, dname)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>matched.group()</span><br><span class="line"><span class="string">'V_0.98'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>matched.group(<span class="number">1</span>)</span><br><span class="line"><span class="string">'0.98'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>matched.group(<span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line">(<span class="string">'V_0.98'</span>, <span class="string">'0.98'</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>matched.group(<span class="number">2</span>)</span><br><span class="line">IndexError: no such group</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>matched.groups()</span><br><span class="line">(<span class="string">'0.98'</span>,)</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># obtain and print the ratio of volume from the name of directory</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dname = <span class="string">"V_0.98"</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>matched = re.fullmatch(<span class="string">r"V_([01]\.[0-9]+)"</span>, dname)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>matched.group()</span><br><span class="line"><span class="string">'V_0.98'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>matched.group(<span class="number">1</span>)</span><br><span class="line"><span class="string">'0.98'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>matched.group(<span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line">(<span class="string">'V_0.98'</span>, <span class="string">'0.98'</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>matched.group(<span class="number">2</span>)</span><br><span class="line">IndexError: no such group</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>matched.groups()</span><br><span class="line">(<span class="string">'0.98'</span>,)</span><br></pre></td></tr></table></figure>
 <p>这里比较了Match对象的两种方法<code>group</code>和<code>groups</code>. 总结一下</p>
 <ul>
 <li>如果没有参数或参数为<code>0</code>, <code>group</code>返回的是整条匹配的子字符串.</li>
@@ -392,7 +385,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">摘要</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">基本函数</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">一次匹配字符串</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">匹配名为V_x.y的文件夹</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">匹配一条K点路径</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">compile函数</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">利用group和groups获得匹配内容</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#摘要"><span class="toc-article-text">摘要</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#基本函数"><span class="toc-article-text">基本函数</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#一次匹配字符串"><span class="toc-article-text">一次匹配字符串</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#匹配名为V-x-y的文件夹"><span class="toc-article-text">匹配名为V_x.y的文件夹</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#匹配一条K点路径"><span class="toc-article-text">匹配一条K点路径</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#compile函数"><span class="toc-article-text">compile函数</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#利用group和groups获得匹配内容"><span class="toc-article-text">利用group和groups获得匹配内容</span></a></li></ol>
 		</div>
 	
 	</div>
@@ -477,6 +470,23 @@ var disqus_shortname = 'shigaro';
   gtag('config', 'UA-111612868-1');
 </script>
 
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        },
+        TeX: {equationNumbers: { autoNumber: "AMS" }}
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
 </body>
    </html>
