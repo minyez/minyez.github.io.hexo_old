@@ -2,6 +2,48 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://minyez.github.io/2019/05/01/embed-videos/</loc>
+    
+    <lastmod>2019-05-08T02:41:11.688Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://minyez.github.io/2019/04/20/wien2k-fftw3-multi-def/</loc>
+    
+    <lastmod>2019-05-08T02:40:22.409Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://minyez.github.io/2019/04/20/wien2k-libxc-mgga-error/</loc>
+    
+    <lastmod>2019-05-08T02:34:27.677Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://minyez.github.io/2018/07/20/gpaw-1/</loc>
+    
+    <lastmod>2019-05-08T02:34:04.622Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://minyez.github.io/2019/01/02/pandoc-md-to-pdf/</loc>
+    
+    <lastmod>2019-05-08T02:33:49.802Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://minyez.github.io/2018/02/15/Hexo-1/</loc>
+    
+    <lastmod>2019-05-08T02:14:43.422Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://minyez.github.io/2019/05/07/wien2k-lapwso-1/</loc>
     
     <lastmod>2019-05-07T18:21:36.725Z</lastmod>
@@ -16,13 +58,6 @@
   </url>
   
   <url>
-    <loc>http://minyez.github.io/2018/02/15/Hexo-1/</loc>
-    
-    <lastmod>2019-05-07T17:20:44.680Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://minyez.github.io/2019/03/23/valgrind-1/</loc>
     
     <lastmod>2019-05-07T01:55:34.158Z</lastmod>
@@ -33,13 +68,6 @@
     <loc>http://minyez.github.io/2018/05/15/f2py-1/</loc>
     
     <lastmod>2019-05-07T01:35:10.208Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://minyez.github.io/2018/07/20/gpaw-1/</loc>
-    
-    <lastmod>2019-05-06T13:56:00.590Z</lastmod>
     
   </url>
   
@@ -65,13 +93,6 @@
   </url>
   
   <url>
-    <loc>http://minyez.github.io/2019/01/02/pandoc-md-to-pdf/</loc>
-    
-    <lastmod>2019-05-06T07:36:30.645Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://minyez.github.io/2019/05/03/embed-jupyter-in-hexo/</loc>
     
     <lastmod>2019-05-06T07:16:29.444Z</lastmod>
@@ -82,13 +103,6 @@
     <loc>http://minyez.github.io/2017/12/22/VPS_and_SSR/</loc>
     
     <lastmod>2019-05-03T06:57:56.031Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://minyez.github.io/2019/05/01/embed-videos/</loc>
-    
-    <lastmod>2019-05-03T05:15:22.694Z</lastmod>
     
   </url>
   
@@ -107,20 +121,6 @@
   </url>
   
   <url>
-    <loc>http://minyez.github.io/2019/04/20/wien2k-fftw3-multi-def/</loc>
-    
-    <lastmod>2019-05-02T02:30:16.072Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://minyez.github.io/2019/04/20/wien2k-libxc-mgga-error/</loc>
-    
-    <lastmod>2019-05-02T02:30:00.118Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://minyez.github.io/2017/10/12/make-1/</loc>
     
     <lastmod>2019-05-01T05:41:46.777Z</lastmod>
@@ -128,14 +128,14 @@
   </url>
   
   <url>
-    <loc>http://minyez.github.io/tags/index.html</loc>
+    <loc>http://minyez.github.io/categories/index.html</loc>
     
     <lastmod>2018-07-15T09:39:29.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://minyez.github.io/categories/index.html</loc>
+    <loc>http://minyez.github.io/tags/index.html</loc>
     
     <lastmod>2018-07-15T09:39:29.000Z</lastmod>
     
