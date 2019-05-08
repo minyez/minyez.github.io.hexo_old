@@ -22,8 +22,6 @@ categories: Software
 <iframe width="560" height="315" src="https://www.youtube.com/embed/arj7oStGLkU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 ```
 
-
-
 ## bilibili视频
 
 类似油管视频, 将鼠标移到B站视频下方分享按钮, 就会出来一段嵌入代码
@@ -76,17 +74,12 @@ categories: Software
 
 两层div使得画面尺寸是响应式的. 比起直接黏贴iframe稍微麻烦一些, 但是好看的多.
 
-
-
 ## 存在问题
 
 本来想在这篇博文里也把上面的B站视频嵌入的, 但是插入B站视频的iframe后本地server查看, 发现两个视频都是TED. 问题原因不是很清楚. 所以暂时一篇博文只能插入一个视频了 :(
-
-
 
 ## 参考
 
 [How To Embed Youtube Videos Within Hexo Blogs](http://www.tangycode.com/How-To-Embed-Youtube-Videos-Within-Hexo-Blogs/)
 
 [在Hexo博客中插入bilibili视频的方式](https://anywaywillgo.github.io/post/writing/hexo/embed-bilibili-video-in-hexo/)
-

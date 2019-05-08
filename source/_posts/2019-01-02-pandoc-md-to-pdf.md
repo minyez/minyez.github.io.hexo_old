@@ -1,7 +1,10 @@
 ---
 title: 利用Pandoc将Markdown转化为PDF
 date: 2019-01-02 15:28:44
-tags: [Pandoc, Markdown, LaTeX]
+tags: 
+- Pandoc
+- Markdown
+- LaTeX
 categories: Software
 comment: true
 toc: true

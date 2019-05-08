@@ -32,8 +32,6 @@ make[1]: Leaving directory '/opt/software/wien2k/16.1/SRC_lapw0'
 make: *** [Makefile:64: all] Error 2
 ```
 
-
-
 ## 解决方案
 
-这个错误在[这封mail-list](https://www.mail-archive.com/wien@zeus.theochem.tuwien.ac.at/msg16924.html)里提到, 原因是由于LIBXC版本升级导致的一些参数改变. 用这个[libxc.F](libxc.F)替代`SRC_lapw0`中同名文件, 即可正确编译. 
+这个错误在[这封mail-list](https://www.mail-archive.com/wien@zeus.theochem.tuwien.ac.at/msg16924.html)里提到, 原因是由于LIBXC版本升级导致的一些参数改变. 用这个[libxc.F](libxc.F)替代`SRC_lapw0`中同名文件, 即可正确编译.

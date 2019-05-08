@@ -11,5 +11,6 @@ if [[ $# == 0 ]]; then
 # depoly with one argument d
 elif [[ $# == 1 ]] && [[ $1 == 'd' ]]; then
     generate
+    hexo g
     hexo d
 fi
