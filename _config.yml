@@ -45,6 +45,12 @@ highlight:
   line_number: true
   auto_detect: false
   tab_replace:
+# use prism instead of default highlight
+#prism_plugin:
+#  mode: 'preprocess'    # realtime/preprocess
+#  theme: 'duotone-dark'
+#  line_number: true    # default false
+#  no_assets: false
 
 # Category & Tag
 default_category: uncategorized

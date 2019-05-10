@@ -19,26 +19,9 @@ toc: true
 
 ## WIEN2k中实现的SOC
 
-WIEN2k中价层轨道的SOC贡献是通过LAPWSO程序考虑的. 它基于一种所谓的二阶变分[^1]的方法, 通过读取LAPW1计算的本征态的波函数与能量, 计算微扰$\hat{H}_{\rm SO}$的矩阵元并对角化, 得到包含SOC的波函数与能量. LAPWSO可以包含在SCF循环里, 也可以非自洽地运行. 自洽SOC计算的流程如下流程图所示
+WIEN2k中价层轨道的SOC贡献是通过LAPWSO程序考虑的. 它基于一种所谓的二次变分[^1]的方法, 通过读取LAPW1计算的本征态的波函数与能量, 计算微扰$\hat{H}_{\rm SO}$的矩阵元并对角化, 得到包含SOC的波函数与能量. LAPWSO可以包含在SCF循环里, 也可以非自洽地运行.
 
 [^1]: [Second variation](http://www.encyclopediaofmath.org/index.php?title=Second_variation&oldid=31231). Encyclopedia of Mathematics.
-
-```flow
-st=>start: Start SCF
-lapw0up=>operation: LAPW0 -up
-lapw0dn=>operation: LAPW0 -dn
-lapw1=>operation: LAPW1
-lapwso=>operation: LAPWSO
-lapw2=>operation: LAPW2(c)
-core=>operation: CORE
-mixer=>operation: MIXER
-cond=>condition: SCF Converged?
-e=>end
-
-st->lapw0up->lapw0dn->lapw1->lapwso->lapw2(right)->core(right)->mixer(right)->cond
-cond(yes, bottom)->e
-cond(no, top)->lapw0up
-```
 
 ## 实际例子
 
@@ -225,6 +208,6 @@ VASP的投影能带如下图所示. 从成分上看, 占据态分别是$5p$(1-3)
 
 ## TODO
 
-- [ ] 二阶变分的原理.
+- [ ] 二次变分的原理.
 - [ ] 对`initso`设置内容的阐明, direction of moment和RLO.
 - [ ] 自旋极化计算.

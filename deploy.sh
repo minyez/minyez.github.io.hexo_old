@@ -2,6 +2,7 @@
 generate() {
     hexo clean;
     hexo g;
+    hexo g;
 }
 
 # static as default

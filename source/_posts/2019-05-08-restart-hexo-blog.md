@@ -4,7 +4,6 @@ date: 2019-05-08 01:50:24
 tags:
 - Blogging
 categories: Life
-comment: true
 ---
 
 碎碎念而已.

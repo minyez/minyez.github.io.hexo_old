@@ -12,6 +12,11 @@ npm install hexo-tag-bootstrap --save
 npm install hexo-reference --save
 # Use MathJax
 npm install hexo-renderer-mathjax --save
+# prism highlight
+npm insatll hexo-prism-plugin --save
+# rtl support
+npm install hexo-tag-rtl --save
+
 
 # clone theme
 cd themes/
