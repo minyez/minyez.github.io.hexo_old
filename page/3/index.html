@@ -226,144 +226,7 @@
   <div class="row">
 	
 	
-		<link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2>前言</h2>
-<p>本文介绍了如何在Python脚本中，通过引入Fortran动态库调用Fortran子程序，加速Python中的数值计算。以矩阵乘法为例，比较了调用Python中NumPy和SciPy包的方法和使用Fortran子程序两种方式在计算效率上的差别。
-&lt;!--more--&gt;</p>
-<p>Python作为一种动态的解释型编译器，尽管具有新手友好、直观易读、适用范围广的特点，但比起静态的编译型语言Fortran/C，在数值计算方面的表现要差许多，这是由于Python没有被预先编译到机器语言层面。目前流行的Python数值计算包<a href="http://www.numpy.org/" target="_blank" rel="noopener">NumPy</a>和<a href="https://www.scipy.org/scipylib/index.html" target="_blank" rel="noopener">SciPy</a>提供了大量数值计算相关的函数和方法，在很大程度上弥补了Python这一缺点，但仍然无法满足数值计算的全部需求，特别是难以链接一些尚未Python模块化的数学库和工具库。</p>
-<p>作为老牌数值计算语言，Fortran拥有许多高效的数学库，我们很容易在Fortran程序中使用他们，但要把他们用到Python中则并不是那么容易。一种解决方案是使用<a href="https://docs.scipy.org/doc/numpy/f2py/" target="_blank" rel="noopener">F2PY</a>产生Python接口，它是NumPy项目的一部分。基于F2PY，在Python中调用Fortran函数的基本流程是</p>
-<ol>
-<li>编写使用了数学库的Fortran代码</li>
-<li>在恰当的编译选项下使用<code>f2py</code>编译Fortran代码，产生可供引入的动态库</li>
-<li>在Python中通过<code>import</code>引入动态库</li>
-</ol>
-<p>这样就能像调用Python包一样使用Fortran代码中定义的子程序和函数了。下面先简单介绍如何使用<code>f2py</code>，再以矩阵乘法作为例子做说明。</p>
-<h2>使用F2PY产生供Python引入的动态库</h2>
-<h3>聪明的方法: 创建署名文件</h3>
-<p><code>f2py</code>安装就不多说了, 直接上用法.</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f2py mysubr.F90 -m mysubr -h mysubr.pyf</span><br></pre></td></tr></table></figure></p>
-<p>其中产生的<code>.pyf</code>就是所谓的署名文件(signature file)。其中定义了Python模块<code>mysubr</code>，它包含一个接口，<code>mysubr.F90</code>中所有函数和子程序都被声明在该接口中。每个声明中包含函数所需参量的类型和维度具体信息。具体可参照<a href="https://docs.scipy.org/doc/numpy/f2py/getting-started.html#the-smart-way" target="_blank" rel="noopener">官方文档</a>。产生<code>.pyf</code>文件后，可用下面的命令</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f2py -c mysub.pyf mysubr.F90</span><br></pre></td></tr></table></figure></p>
-<p>产生动态库。编译时链接外部函数库(MKL或者FFTW)和一般的编译器相同</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># link mysubr against libabc.a in /lib/dir/</span></span><br><span class="line">f2py -c mysub.pyf mysubr.F90 -L/lib/dir/ -labc</span><br></pre></td></tr></table></figure></p>
-<p>所有<code>f2py</code>命令可以用<code>python -m numpy.f2py</code>等价替换, 这样做的好处是f2py版本总是与python版本兼容.</p>
-<h2>举例: 矩阵乘法</h2>
-<h3>矩阵生成</h3>
-<p>在进行矩阵乘法前，首先利用<code>random</code>模块产生<code>ndarray</code>类型的矩阵，这里取100维的方阵进行测试。具体代码如下所示:</p>
-<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> random <span class="keyword">import</span> seed, random</span><br><span class="line"></span><br><span class="line"><span class="comment"># set the dimensions</span></span><br><span class="line">m = <span class="number">100</span></span><br><span class="line">k = <span class="number">100</span></span><br><span class="line">n = <span class="number">100</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># create mat1(m,k) and mat2(k,n) matrices</span></span><br><span class="line">seed()</span><br><span class="line">mat1 = np.array([[random() <span class="keyword">for</span> col <span class="keyword">in</span> range(k)] <span class="keyword">for</span> row <span class="keyword">in</span> range(m)], \</span><br><span class="line">                order=<span class="string">'F'</span>, dtype=<span class="string">'float64'</span>)</span><br><span class="line">seed()</span><br><span class="line">mat2 = np.array([[random() <span class="keyword">for</span> col <span class="keyword">in</span> range(n)] <span class="keyword">for</span> row <span class="keyword">in</span> range(k)], \</span><br><span class="line">                order=<span class="string">'F'</span>, dtype=<span class="string">'float64'</span>)</span><br></pre></td></tr></table></figure></p>
-<p><code>order='F'</code>使用Fortran的数据存储方式。为保证计算效率，必须<strong>手动设置该值</strong>。</p>
-<p><div class="alert alert-danger"><i class="fa fa-bug  float-left"></i>  <p>order默认为C。如果不覆盖默认值，Fortran代码的运算效率将下降很多。</p>
-</div></p>
-<h3>执行矩阵乘法</h3>
-<p>我们比较四种不同的矩阵乘法实现</p>
-<ol>
-<li>
-<p>NumPy的<code>matmul</code>函数</p>
-<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mat3 = np.matmul(mat1, mat2)</span><br></pre></td></tr></table></figure></p>
-</li>
-<li>
-<p>SciPy的<code>linalg.blas.dgemm</code>函数</p>
-<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> scipy <span class="keyword">import</span> linalg</span><br><span class="line">mat3 = linalg.blas.dgemm(<span class="number">1.0</span>, mat1, mat2)</span><br></pre></td></tr></table></figure></p>
-</li>
-<li>
-<p>Fortran的<code>matmul</code>函数</p>
-<p><figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">! file: f_matmul.F90</span></span><br><span class="line"><span class="function"><span class="keyword">subroutine</span></span> f_matmul(m, n, k, mat1, mat2, mat3)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">integer</span>, <span class="keyword">intent</span>(<span class="keyword">in</span>)  :: m, n, k</span><br><span class="line">    <span class="keyword">real</span>(<span class="number">8</span>), <span class="keyword">intent</span>(<span class="keyword">in</span>)  :: mat1(m,k), mat2(k,n)</span><br><span class="line">    <span class="keyword">real</span>(<span class="number">8</span>), <span class="keyword">intent</span>(<span class="keyword">out</span>) :: mat3(m,n)</span><br><span class="line"></span><br><span class="line">    mat3 = <span class="built_in">matmul</span>(mat1, mat2)</span><br><span class="line"></span><br><span class="line"><span class="keyword">end</span> <span class="function"><span class="keyword">subroutine</span></span> f_matmul</span><br></pre></td></tr></table></figure></p>
-<p><code>m,n,k</code>用于确定矩阵<code>mat1,mat2,mat3</code>的维度，这在纯Fortran中是必须声明的参数，但<code>f2py</code>会将其转化为可选参数，矩阵规模由从Python输入的<code>mat1,mat2</code>确定。在对应Python文件中加入</p>
-<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> f_matmul <span class="keyword">import</span> f_matmul</span><br></pre></td></tr></table></figure></p>
-<p>即可调用.</p>
-</li>
-<li>
-<p>Intel MKL的<code>dgemm</code>子程序</p>
-<p>将上面Fortran代码中的<code>matmul</code>行替换为</p>
-<p><figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">! file: f_dgemm.F90</span></span><br><span class="line"><span class="function"><span class="keyword">subroutine</span></span> f_dgemm(m, n, k, mat1, mat2, mat3)</span><br><span class="line"><span class="comment">!...</span></span><br><span class="line">    <span class="keyword">call</span> dgemm(<span class="string">'N'</span>, <span class="string">'N'</span>, m, n, k, <span class="number">1.0D0</span>, mat1, m, mat2, k, <span class="number">0.0D0</span>, mat3, m)</span><br><span class="line"></span><br><span class="line"><span class="keyword">end</span> <span class="function"><span class="keyword">subroutine</span></span> f_dgemm</span><br></pre></td></tr></table></figure></p>
-<p>此时编译需要链接MKL库，编译命令为
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f2py -c f_dgemm.pyf --fcompiler=intelem --compiler=intelem -L<span class="variable">$MKLROOT</span>/lib/intel64/ -lmkl_rt f_dgemm.F90</span><br></pre></td></tr></table></figure></p>
-<p>在对应Python文件中加入
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> f_dgemm <span class="keyword">import</span> f_dgemm</span><br></pre></td></tr></table></figure></p>
-</li>
-</ol>
-<p>所有源码和编译用Makefile打包在这个<a href="f2py-1.tar.gz">压缩包</a>里了, 方便取用.</p>
-<h3>测试结果</h3>
-<p>测试结果如下</p>
-<table>
-<thead>
-<tr>
-<th>Dimension</th>
-<th>3000 (o=C)</th>
-<th>5000 (o=C)</th>
-<th>3000</th>
-<th>5000</th>
-<th>10000</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>np.matmul</code></td>
-<td>1.1611</td>
-<td>5.2340</td>
-<td>1.1611</td>
-<td>5.2404</td>
-<td>41.8116</td>
-</tr>
-<tr>
-<td>SciPy <code>dgemm</code></td>
-<td>1.3578</td>
-<td>5.8640</td>
-<td>1.1568</td>
-<td>5.2255</td>
-<td>41.4386</td>
-</tr>
-<tr>
-<td>Fortran <code>matmul</code></td>
-<td>1.4907</td>
-<td>6.5730</td>
-<td>1.3204</td>
-<td>5.9488</td>
-<td>48.3035</td>
-</tr>
-<tr>
-<td>Intel MKL <code>dgemm</code></td>
-<td>1.2586</td>
-<td>5.4831</td>
-<td>1.0553</td>
-<td>4.8380</td>
-<td>38.9050</td>
-</tr>
-</tbody>
-</table>
-<p>其中<code>o=C</code>表示使用C存储方式, 不注明则是用Fortran。通过比较可以得到下面的一些结论</p>
-<ul>
-<li>在Fortran order下，计算效率顺序为Fortran <code>matmul</code>&lt;<code>np.matmul</code>&lt;<code>scipy.linalg.blas.dgemm</code>&lt; Intel MKL <code>dgemm</code>。</li>
-<li><code>np.array</code>在内存中的存储方式(<code>order='C'|'F'</code>)显著影响Fortran <code>matmul</code>, <code>scipy.linalg.blas.dgemm</code>和Intel MKL <code>dgemm</code>的计算效率，<code>order='F'</code>要比<code>'C'</code>快约10%。</li>
-<li>不合理的存储方式(<code>'C'</code>)导致MKL效率低于<code>np.matmul</code>。</li>
-<li>存储方式对<code>np.matmul</code>没有显著影响。</li>
-</ul>
-<h2>总结</h2>
-<p>本文介绍了使用F2PY工具将Fortran代码编译为可供Python调用的动态库，并以矩阵乘法为例进行演示。同时，比较了流行的Python数值计算模块NumPy和SciPy中的实现与Fortran语言下<code>matmul</code>和MKL<code>dgemm</code>实现的计算效率。测试结果发现，在高维情况下，Intel MKL具有最高的效率。产生<code>ndarray</code>时的存储方式(<code>order=F</code>)对Fortran库中函数计算效率有显著影响。</p>
-<h2>备注</h2>
-<p>使用MKL的DGEMM时，用<code>f2py</code>链接MKL库编译后执行<code>test_mm.py</code>，报错</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Intel MKL FATAL ERROR: Cannot load libmkl_avx2.so or libmkl_def.so</span><br></pre></td></tr></table></figure></p>
-<p>解决方法是在编译前preload几个核心的Intel库</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> LD_PRELOAD=<span class="string">"<span class="variable">$MKLROOT</span>/lib/intel64/libmkl_def.so:<span class="variable">$MKLROOT</span>/lib/intel64/libmkl_sequential.so:<span class="variable">$MKLROOT</span>/lib/intel64/libmkl_core.so"</span></span><br></pre></td></tr></table></figure></p>
-<p>必须按顺序全部预载入，否则<code>ld</code>会报错。</p>
-<h2>更新</h2>
-<h3>2019-05-02</h3>
-<ol>
-<li>
-<p>时隔一年各类包都有更新, 原来的代码运行各种问题, 包括在<code>import f_matmul</code>时出现</p>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ImportError: dynamic module does not define module export function (PyInit_f_matmul)</span><br></pre></td></tr></table></figure></p>
-<p>这一条<a href="https://github.com/pytorch/ELF/issues/98" target="_blank" rel="noopener">pytorch issue</a>陈述了类似的问题, 我的理解是由于f2py和python<a href="https://github.com/numpy/numpy/issues/7769" target="_blank" rel="noopener">版本不兼容</a>所致. 用<code>python -m numpy.f2py</code>替代<code>f2py</code>即解决了这一问题.</p>
-</li>
-<li>
-<p><code>order='Fortran'</code>替换为<code>order='F'</code>.</p>
-</li>
-<li>
-<p>为方便测试, 将所有源码和Makefile<a href="f2py-1.tar.gz">打包</a>.</p>
-</li>
-</ol>
-<p>修改后, Fedora 27下运行正常, 但macOS 10.14.4下会报错误</p>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ImportError: dlopen(f_matmul.cpython-37m-darwin.so, 2): __dyld section not supported in f_matmul.cpython-37m-darwin.so</span><br></pre></td></tr></table></figure></p>
-<p>根据<a href="https://software.intel.com/zh-cn/forums/intel-fortran-compiler-for-linux-and-mac-os-x/topic/799102" target="_blank" rel="noopener">这条18年10月的Intel Forum帖</a>, 这个问题似乎跟Xcode版本有关. 因为要赶ddl所以暂时没有考虑macOS, 如果有人知道如何解决的话麻烦指点我一下 :)</p>
-
+		<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文介绍了如何在Python脚本中，通过引入Fortran动态库调用Fortran子程序，加速Python中的数值计算。以矩阵乘法为例，比较了调用Python中NumPy和SciPy包的方法和使用Fortran子程序两种方式在计算效率上的差别。<br>
 	
 	</div>
   <a type="button" href="/2018/05/15/f2py-1/#more" class="btn btn-default more">Read More</a>
@@ -384,259 +247,7 @@
   <div class="row">
 	
 	
-		<link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2>摘要</h2>
-<p>本文介绍了使用Hexo配置本博客和用Markdown进行博文写作的基本方法和技巧，为撰写排版更好更清晰的技术文本作准备。 &lt;!--more--&gt;</p>
-<h2>前言</h2>
-<p>之前代码从来都是习惯在组里LinuxPC或者学校HPC上写的，但时常会因为不在随手可及的地方觉得不安。年前从学长手中购入MBP作为自己今后的代码生产主力，同时跑一点简单的科学代码，也想着把Linux和原笔记本上的一些代码项目移到Mac上。这自然就包括了这个Hexo博客。
-尽管技术写作和笔记并没有停滞，但是一直处于比较粗浅的笔记状态，就没有敢上传到这里(还是希望比较成型后再传)。更主要的一个原因是觉得这个博客的界面配置还始终是未完成状态，自己不甚满意，平时也没有时间好好研究JavaScript和Nodejs代码，最后就没有上传笔记的动力了，导致这个个人域名完全处于浪费钱的状态。于是想趁着春节假期把博客框架好好整一整。
-这篇文章内所有命令均在macOS High Sierra (10.13)或Mojave (10.14)下执行。默认Homebrew基本配置完成，包括本文所涉及的Git和Nodejs开发环境等，执行命令前需要拥有GitHub账户并完成Git全局配置。</p>
-<h2>基本配置</h2>
-<h3>GitHub Pages</h3>
-<p>个人博客服务端使用<a href="https://pages.github.com" target="_blank" rel="noopener">Git Pages</a>，它是GitHub专为个人、组织用户和代码项目提供的页面服务，通过Git将本地HTML和CSS文件结构部署(deploy)到Page仓库master分支来实现。创建个人页面的方法是</p>
-<ol>
-<li>类似于一般代码仓库，在GitHub主页上创建名为<code>username@github.io</code>的仓库。以自己为例的话就是<code>minyez@github.io</code>的仓库。个人主页必须以此种方式命名。</li>
-<li>进入新建的仓库，点击Setting标签，在<code>Options</code>下翻到<code>GitHub Pages</code>标签，可以看到这一部分处于激活模式。可与你的其他一般仓库(没有制作<code>doc</code>分支用于文档网站)进行对比。一般代码仓库也可以通过<code>Setting-&gt;Options-&gt;GitHub Pages</code>配置项目文档页面，需要选择<code>doc</code>分支承载HTML文件结构。</li>
-<li>回到Code标签，新建<code>hexo</code>分支，并将其设为默认分支。之后<code>master</code>分支用来存储静态网页，<code>hexo</code>分支存储博文和主题的源文件。</li>
-</ol>
-<h3>安装Hexo和Git部署模块</h3>
-<p>Hexo是一个模块集成的HTML和CSS文件结构生成程序，用户可以把精力集中在博文内容上，而让Hexo管理界面风格和样式。通过node包管理器<code>npm</code>安装<code>hexo</code></p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm hexo install</span><br></pre></td></tr></table></figure></p>
-<p>安装完成后，在某路径下，创建本地Hexo文件夹并初始化。以<code>my-hexo-dir</code>为例</p>
-<p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir my-hexo-dir</span><br><span class="line">cd my-hexo-dir</span><br><span class="line">hexo init</span><br></pre></td></tr></table></figure></p>
-<p>初始化后，文件夹内结构为</p>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── _config.yml</span><br><span class="line">├── node_modules</span><br><span class="line">├── package-lock.json</span><br><span class="line">├── package.json</span><br><span class="line">├── scaffolds</span><br><span class="line">├── source</span><br><span class="line">└── themes</span><br></pre></td></tr></table></figure></p>
-<p><code>node_modules</code>内包含在搭建网站时可能需要的模块，比如数学渲染模块<code>hexo-renderer-mathjax</code>和Git部署模块<code>hexo-deployer-git</code>，后者是我们通过Git部署GitHub Pages所必须的。安装模块通过<code>npm</code>完成，如</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure></p>
-<p>加入<code>save</code>选项会更新<code>package.json</code>内的包依赖。 <code>--save</code>和<code>--save-dev</code>选项的比较可见这篇<a href="http://pwcong.me/2017/01/05/npm%E5%BC%95%E5%85%A5%E6%A8%A1%E5%9D%97%E6%97%B6--save-%E4%B8%8E--save-dev-%E7%9A%84%E5%8C%BA%E5%88%AB/" target="_blank" rel="noopener">文章</a>。</p>
-<p>修改<code>_config.yml</code>中网络链接和与部署方法相关的代码块以启用<code>git</code>部署</p>
-<p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># URL</span></span><br><span class="line"><span class="attr">url:</span> <span class="attr">http://minyez.github.io</span></span><br><span class="line"><span class="comment"># deploy method. By Git</span></span><br><span class="line"><span class="attr">deploy:</span></span><br><span class="line"><span class="attr">    type:</span> <span class="string">git</span></span><br><span class="line"><span class="attr">    repo:</span> <span class="attr">https://github.com/minyez/minyez.github.io.git</span></span><br><span class="line"><span class="attr">    branch:</span> <span class="string">master</span></span><br></pre></td></tr></table></figure></p>
-<p>这样一来，通过Hexo发布自己个人GitHub Pages博客的必要准备已经完成了。在<code>my-hexo-dir</code>下键入以下命令生成静态博客</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo g         <span class="comment"># 使用Hexo生成HTML</span></span><br><span class="line">hexo s -p 4000 <span class="comment"># 生成本地网址，端口为4000</span></span><br></pre></td></tr></table></figure></p>
-<p>在浏览器访问<code>https://localhost:4000</code> 即可看到生成的Hexo博客。通过</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo d</span><br></pre></td></tr></table></figure></p>
-<p>可以将静态页面推送到GitHub Pages中, 此时就能在username.github.io上看到博客了.</p>
-<h3>主题选择</h3>
-<p>本博客使用的是从<a href="https://github.com/PytLab/hexo-theme-freemind" target="_blank" rel="noopener">PytLab</a>处Fork来的<a href="https://github.com/minyez/hexo-theme-freemind" target="_blank" rel="noopener">Freemind</a>主题。首先将仓库下载到本地<code>themes</code>文件夹内</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> themes</span><br><span class="line">git <span class="built_in">clone</span> https://github.com/minyez/hexo-theme-freemind freemind</span><br></pre></td></tr></table></figure></p>
-<p>下载完成后，修改根目录下<code>_config.yml</code>文件中的<code>theme</code>标签以启用Freemind</p>
-<p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">theme:</span> <span class="string">freemind</span></span><br></pre></td></tr></table></figure></p>
-<p>若对其他主题感兴趣，可自行google并通过类似的方法架设。此时重新生成并访问，可以发现博客已经从Landscape变为Freemind主题。</p>
-<h3>开始写作: 从模板新建</h3>
-<p>在基本设置完成以后，我们就可以开始写作博客了。通过Hexo内建指令<code>new</code>创建新的博文</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new post pname</span><br></pre></td></tr></table></figure></p>
-<p>这会在<code>source/_posts</code>下创建Markdown文件<code>pname.md</code>和文件夹<code>pname</code>，后者用于存放md内引用的图片或代码文件。新建文件名的默认格式可通过修改<code>_config.yml</code>中的<code>new_post_name</code>来调整，例如</p>
-<p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">new_post_name:</span> <span class="string">:year-:month-:day-:title.md</span> <span class="comment"># yyyy-mm-dd-pname</span></span><br></pre></td></tr></table></figure></p>
-<p>此时按上面指令新建<code>pname</code>将得到<code>2018-02-21-pname.md</code>和文件夹<code>2018-02-21-pname</code>。如果文章本身未成型，想先写一个草稿，用</p>
-<p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new draft dname</span><br></pre></td></tr></table></figure></p>
-<p>会在<code>source/_draft</code>下创建<code>dname.md</code>文件和<code>dname</code>文件夹。草稿写作完成后可用命令</p>
-<p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo publish dname</span><br></pre></td></tr></table></figure></p>
-<p>发布，此时Hexo会将<code>dname.md</code>和<code>dname</code>按照<code>new_post_name</code>的格式重命名后，移动到<code>source/_post</code>文件夹下，不需要自己手动改名。</p>
-<h2>Hexo写作</h2>
-<p>Hexo博客正文写作基于Markdown语法，网络上已经有非常多的教程和帮助文档，例如我现在在<a href="https://kapeli.com/dash" target="_blank" rel="noopener">Dash</a>中使用的<a href="http://daringfireball.net/projects/markdown/syntax#" target="_blank" rel="noopener">cheat sheet</a>。对于Hexo比较特别的是，为了识别博文的基本信息，我们需要一个front matter。另外，除了基本Markdown语法以外，我们还可以使用开源作者编写的Hexo渲染器及主题允许的各种特性，来丰富我们的写作手段。</p>
-<h3>Front matter</h3>
-<p>~~对任一篇Hexo博文，文件夹非必须，但一定会有对应的<code>.md</code>文件。~~Hexo要求博文的<code>.md</code>文件开头需要有一个YAML格式的front matter。根据该front matter，Hexo可识别博文的标题、创建日期、标签、分类等各种特征以及需要用到的渲染器。Front matter的基本格式为</p>
-<p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">title:</span> <span class="string">pname</span>              <span class="comment"># 标题</span></span><br><span class="line"><span class="attr">date:</span> <span class="number">2018</span><span class="bullet">-02</span><span class="bullet">-21</span> <span class="number">16</span><span class="string">:58:25</span> <span class="comment"># 创建时间</span></span><br><span class="line"><span class="attr">tags:</span>                     <span class="comment"># 标签. 不止一个时写成[tag1, tag2]格式</span></span><br><span class="line"><span class="attr">categories:</span>               <span class="comment"># 分类</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></table></figure></p>
-<p>利用<code>hexo new post</code>产生的博文，front matter会套用<code>scaffold</code>中的<code>post.md</code>，相当于post的初始化模板</p>
-<p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">title:</span> <span class="string">&#123;&#123;</span> <span class="string">title</span> <span class="string">&#125;&#125;</span></span><br><span class="line"><span class="attr">date:</span> <span class="string">&#123;&#123;</span> <span class="string">date</span> <span class="string">&#125;&#125;</span></span><br><span class="line"><span class="attr">tags:</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></table></figure></p>
-<p>可根据自己需要修改模板，如增加目录<code>toc</code>、归类<code>categories</code>以及首页图片<code>feature</code>。当存在与md文件名一致的文件夹时，md中图片和代码引用会在该文件夹中搜索，只需要把欲引用的图片代码放入文件夹，将引用路径设为文件名即可。</p>
-<h3>基于MathJax的数学公式插入</h3>
-<p>由于专业原因，可以预想到很多时候需要插入大量的公式，实现方法是使用浏览器公式引擎<a href="https://www.mathjax.org/" target="_blank" rel="noopener">MathJax</a>。推荐使用<a href="https://github.com/phoenixcw/hexo-renderer-mathjax" target="_blank" rel="noopener">hexo-renderer-mathjax</a>，安装很方便，对<code>_config.yml</code>的改动量也很小。通过npm安装</p>
-<p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-renderer-mathjax --save</span><br></pre></td></tr></table></figure></p>
-<p>安装完就可以正常使用。如果出现无法渲染的情况，在<code>_config.yml</code>中加入:</p>
-<p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Plugins:</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">hexo-renderer-mathjax</span></span><br></pre></td></tr></table></figure></p>
-<p>输入行内公式可使用<code>$math$</code>，例如</p>
-<p><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="formula">$P=iGG, G=<span class="tag">\<span class="name">frac</span><span class="string">&#123;1&#125;</span><span class="string">&#123;\omega - \hat&#123;H&#125;</span></span>_&#123;<span class="tag">\<span class="name">text</span><span class="string">&#123;KS&#125;</span></span>&#125;&#125;$</span></span><br></pre></td></tr></table></figure></p>
-<p>效果：$P=iGG, G=\frac{1}{\omega - \hat{H}_{\text{KS}}}$</p>
-<p>输入公式块可使用<code>$$mathblock$$</code>，例如</p>
-<p><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="formula">$$ <span class="tag">\<span class="name">nabla</span></span>^2 <span class="tag">\<span class="name">phi</span> = </span>-<span class="tag">\<span class="name">rho</span></span> $$</span></span><br></pre></td></tr></table></figure></p>
-<p>效果：</p>
-<p>$$\nabla^2 \phi = -\rho$$</p>
-<p>此外还可以使用<code>\begin{equation}\end{equation}</code>来产生带编号的公式，但需要对hexo-renderer-mathjax包的内容进行修改。将<code>node_modules/hexo-renderer-mathjax/mathjax.html</code>中间<code>MathJax.Hub.Config</code>函数改为</p>
-<p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">MathJax.Hub.Config(&#123;</span><br><span class="line">    tex2jax: &#123;</span><br><span class="line">        inlineMath: [ [<span class="string">"$"</span>,<span class="string">"$"</span>], [<span class="string">"\\("</span>,<span class="string">"\\)"</span>] ],</span><br><span class="line">        skipTags: [<span class="string">'script'</span>, <span class="string">'noscript'</span>, <span class="string">'style'</span>, <span class="string">'textarea'</span>, <span class="string">'pre'</span>, <span class="string">'code'</span>],</span><br><span class="line">        processEscapes: <span class="literal">true</span></span><br><span class="line">    &#125;,</span><br><span class="line">    TeX: &#123;<span class="attr">equationNumbers</span>: &#123; <span class="attr">autoNumber</span>: <span class="string">"AMS"</span> &#125;&#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<p>即增加<code>TeX</code>一行(不要忘了前面的逗号<code>,</code>)。</p>
-<p><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="formula">$$<span class="tag">\<span class="name">begin</span><span class="string">&#123;equation&#125;</span></span></span></span><br><span class="line"><span class="formula"><span class="tag">\<span class="name">begin</span><span class="string">&#123;aligned&#125;</span></span></span></span><br><span class="line"><span class="formula">a=b+&amp;c <span class="tag">\<span class="name">\</span></span></span></span><br><span class="line"><span class="formula">&amp;+e+f</span></span><br><span class="line"><span class="formula"><span class="tag">\<span class="name">end</span><span class="string">&#123;aligned&#125;</span></span></span></span><br><span class="line"><span class="formula"><span class="tag">\<span class="name">end</span><span class="string">&#123;equation&#125;</span></span><span class="tag">\<span class="name">label</span><span class="string">&#123;eq1&#125;</span></span>$$</span></span><br></pre></td></tr></table></figure></p>
-<p>效果：
-$$\begin{equation}
-\begin{aligned}
-a=b+&amp;c \
-&amp;+e+f
-\end{aligned}
-\end{equation}\label{eq1}$$</p>
-<p>还可以用<code>$\eqref{eq1}$</code>来引用公式$\eqref{eq1}$。上面equation例子还需要注意的是，默认的Markdown渲染器会将两个斜线<code>\\</code>渲染为<code>\</code>，从而导致无法转行。这里根据网络上的办法，修改<code>node_modules/marked/lib/marked.js</code>，将</p>
-<p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">escape</span>: <span class="regexp">/^\\([\\`*&#123;&#125;\[\]()#+\-.!_&gt;])/</span>,</span><br></pre></td></tr></table></figure></p>
-<p>改为</p>
-<p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">escape</span>: <span class="regexp">/^\\([`*\[\]()# +\-.!_&gt;])/</span>,</span><br></pre></td></tr></table></figure></p>
-<p>移除marked对花括号和反斜线的渲染。如果出现下划线渲染问题，再将<code>em:</code>一行从</p>
-<p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">em: <span class="regexp">/^_([^\s_](?:[^_]|__)+?[^\s_])_\b|^\*((?:\*\*|[^*])+?)\*(?!\*)/</span></span><br></pre></td></tr></table></figure></p>
-<p>改为</p>
-<p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">em: <span class="regexp">/^\*((?:\*\*|[\s\S])+?)\*(?!\*)/</span>,</span><br></pre></td></tr></table></figure></p>
-<p>以移除对下划线<code>_</code>的渲染. 看一下结果</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">Markdown</th>
-<th style="text-align:left">类型</th>
-<th style="text-align:left">渲染结果</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left"><code>$a_b$</code></td>
-<td style="text-align:left">公式</td>
-<td style="text-align:left">$a_b$</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>$a^*$</code></td>
-<td style="text-align:left">公式</td>
-<td style="text-align:left">$a^*$</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>$a^* b^*$</code></td>
-<td style="text-align:left">公式</td>
-<td style="text-align:left">$a^* b^*$</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>$a^\ast b^\ast$</code></td>
-<td style="text-align:left">公式</td>
-<td style="text-align:left">$a^\ast b^\ast$</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>*em*</code></td>
-<td style="text-align:left">强调文本</td>
-<td style="text-align:left"><em>em</em></td>
-</tr>
-<tr>
-<td style="text-align:left"><code>_em_</code></td>
-<td style="text-align:left">强调文本</td>
-<td style="text-align:left"><em>em</em></td>
-</tr>
-</tbody>
-</table>
-<p>可以看到, 当公式里同时出现两个星号时, 公式将无法正常渲染. 一种解决方案是用<code>\ast</code>代替<code>*</code>.</p>
-<p>由于Mathjax的CDN<a href="https://www.mathjax.org/cdn-shutting-down/#alternative-cdn-providers" target="_blank" rel="noopener">在17年中退役</a>, 修改<code>mathjax.html</code>中CDN脚本一行</p>
-<p><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">async</span> <span class="attr">src</span>=<span class="string">"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<h3>链接自己博客内的文章</h3>
-<p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% post_link md-filename-wo-extension %&#125;</span><br></pre></td></tr></table></figure></p>
-<p>如</p>
-<p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% post_link compile_VASP_on_macOS %&#125;</span><br></pre></td></tr></table></figure></p>
-<p><a href="/2018/01/02/compile_VASP_on_macOS/" title="在macOS上编译VASP">在macOS上编译VASP</a></p>
-<p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% post_link f2py<span class="number">-1</span> %&#125;</span><br></pre></td></tr></table></figure></p>
-<p><a href="/2018/05/15/f2py-1/" title="F2PY——在Python中调用Fortran函数或子程序">F2PY——在Python中调用Fortran函数或子程序</a></p>
-<h3>图片说明</h3>
-<p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save hexo-image-caption</span><br></pre></td></tr></table></figure></p>
-<p>在<code>_config.yml</code>中加入</p>
-<p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">image_caption:</span></span><br><span class="line"><span class="attr">  enable:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">  class_name:</span></span><br></pre></td></tr></table></figure></p>
-<p>并按照这一条<a href="https://github.com/wayou/hexo-image-caption/pull/4/files" target="_blank" rel="noopener">PR</a>修改<code>node_modules/hexo-image-caption/index.js</code>.</p>
-<h3>流程图</h3>
-<p>安装<a href="https://github.com/bubkoo/hexo-filter-flowchart" target="_blank" rel="noopener">hexo-filter-flowchart</a></p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save hexo-filter-flowchart</span><br></pre></td></tr></table></figure></p>
-<p>直接使用即可. 具体语法参考<a href="https://flowchart.js.org/" target="_blank" rel="noopener">flowchart.js官网</a></p>
-<p>&lt;div id=&quot;flowchart-0&quot; class=&quot;flow-chart&quot;&gt;&lt;/div&gt;</p>
-<p>对于比较长的流程, 需要在<code>_config.yml</code>中</p>
-<h2>Freemind特性</h2>
-<h3>首页摘要</h3>
-<p>在要作为摘要的文字后面加上<code>&lt;!--more--&gt;</code>，首页将只显示<code>&lt;!--more--&gt;</code>前面的内容，同时出现&quot;Read More&quot;的按钮。摘要内容仍然会在正文中显示。</p>
-<h3>标签插件</h3>
-<p>使用标签插件(Tag plugins)可以使得文章的可读性更好。在这里我参考了wxpan提供的<a href="https://github.com/PytLab/hexo-theme-freemind/blob/source/_posts/tag-plugins-cn.md" target="_blank" rel="noopener">样例</a>。~~总结一些tag plugins用法，包括一般Hexo和Bootstrap的tag plugins。~~在使用插件前，需要先安装<a href="https://github.com/wzpan/hexo-tag-bootstrap" target="_blank" rel="noopener">Bootstrap</a></p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-tag-bootstrap --save</span><br></pre></td></tr></table></figure></p>
-<h4>标签(label)</h4>
-<p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;% label <span class="keyword">default</span> %&#125;</span><br><span class="line">&#123;% label warn warning %&#125;</span><br><span class="line">&#123;% label succ success %&#125;</span><br><span class="line">&#123;% label danger danger %&#125;</span><br><span class="line">&#123;% label prim primary %&#125;</span><br><span class="line">&#123;% label info info %&#125;</span><br></pre></td></tr></table></figure></p>
-<p>效果是插入一个醒目的颜色小标签
-<span class="label label-default">default</span> <span class="label label-warning">warn</span> <span class="label label-success">succ</span> <span class="label label-danger">danger</span> <span class="label label-primary">prim</span> <span class="label label-info">info</span></p>
-<h4>警报(alert)</h4>
-<p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;% alert warning %&#125; 这是一个警告类型的警报 &#123;% endalert %&#125;</span><br><span class="line">&#123;% alert danger %&#125; 这是一个危险类型的警报 &#123;% endalert %&#125;</span><br><span class="line">&#123;% alert success %&#125; 这是一个成功类型的警报 &#123;% endalert %&#125;</span><br><span class="line">&#123;% alert info %&#125; 这是一个信息类型的警报 &#123;% endalert %&#125;</span><br></pre></td></tr></table></figure></p>
-<p>效果是插入一个带特定背景色的文字块，左上方含有标识文本性质的符号。</p>
-<p><div class="alert alert-warning"><i class="fa fa-bell  float-left"></i>  <p>这是一个警告类型的警报</p>
-</div>
-<div class="alert alert-danger"><i class="fa fa-bug  float-left"></i>  <p>这是一个危险类型的警报</p>
-</div>
-<div class="alert alert-success"><i class="fa fa-lightbulb-o  float-left"></i>  <p>这是一个成功类型的警报</p>
-</div>
-<div class="alert alert-info"><i class="fa fa-info  float-left"></i>  <p>这是一个信息类型的警报</p>
-</div></p>
-<h4>徽章(badge)</h4>
-<p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% badge 徽章测试 %&#125;</span><br></pre></td></tr></table></figure></p>
-<p>效果是<span class="badge badge-secondary">徽章测试</span></p>
-<h2>Freemind调教</h2>
-<p><div class="alert alert-warning"><i class="fa fa-bell  float-left"></i>  <p>若非特别指出，所有的关于Freemind的调教都是在<code>themes/freemind</code>文件夹内，不要与Hexo根目录混淆。</p>
-</div></p>
-<h3>网站图标</h3>
-<p><s>Hexo会在根目录下<code>source/assets/images/favicon/</code>内寻找图片作为网站图标。另一种方法是在<code>_config.yml</code>内通过编辑<code>favicon</code>标签显示指定</s></p>
-<p>网站图标设定功能在<code>layout/_partial/head.ejs</code>中定义</p>
-<p><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">%</span> <span class="attr">if</span> (<span class="attr">theme.favicon</span>)&#123; %&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">"&lt;%- config.root %&gt;assets/images/favicon/icon.png"</span> <span class="attr">rel</span>=<span class="string">"icon"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">%</span> &#125; %&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>在<code>_config.yml</code>中设置</p>
-<p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">favicon:</span> <span class="literal">True</span></span><br></pre></td></tr></table></figure></p>
-<p>然后将命名为<code>icon.png</code>的网站图标图片放入Hexo根目录下的<code>source/assets/images/favicon</code>下即可。也可以修改<code>href</code>属性，换成自己想要的路径。</p>
-<h3>Wiki型浮窗式的脚注</h3>
-<p>用<code>npm</code>安装<a href="https://github.com/kchen0x/hexo-reference" target="_blank" rel="noopener">hexo-reference</a></p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-refernce --save</span><br></pre></td></tr></table></figure></p>
-<p>在Hexo根目录<code>_config.yml</code>中启用插件</p>
-<p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Plugins:</span></span><br><span class="line">  <span class="string">hexo-reference</span></span><br></pre></td></tr></table></figure></p>
-<p>为了跟网页主体风格相一致, 稍微修改了一下其中的源码(<code>hint.min.css</code>)以调整浮窗文字的背景颜色, 置于主题CSS文件夹下</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed <span class="string">'s/b34e4d/1863a1/g'</span> node_modules/hexo-reference/src/hint.min.css &gt; themes/freemind/<span class="built_in">source</span>/css/hint.min.css</span><br></pre></td></tr></table></figure></p>
-<p>同时修改<code>index.js</code>, 将<code>href</code>的CDN地址改为本地地址</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> node_modules/hexo-reference/</span><br><span class="line">mv index.js index.js_bak <span class="comment"># back up original file</span></span><br><span class="line">sed <span class="string">'s/https:\/\/cdn.jsdelivr.net\/hint.css\/2.4.1\//\/css\//g'</span> index.js_bak &gt; index.js</span><br></pre></td></tr></table></figure></p>
-<p>测试一下效果.&lt;sup id=&quot;fnref:1&quot;&gt;&lt;a href=&quot;#fn:1&quot; rel=&quot;footnote&quot;&gt;&lt;span class=&quot;hint--top hint--error hint--medium hint--rounded hint--bounce&quot; aria-label=&quot;这是一个脚注测试&quot;&gt;[1]&lt;/span&gt;&lt;/a&gt;&lt;/sup&gt;</p>
-<h3>边栏链接及链接图标</h3>
-<p>在<code>_config.yml</code>内编辑<code>links</code>标签，每一条短线对应一个链接条目</p>
-<p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">links:</span></span><br><span class="line"><span class="attr">  - title:</span> <span class="string">"Github-minyez"</span></span><br><span class="line"><span class="attr">    url:</span> <span class="attr">https://github.com/minyez</span></span><br><span class="line"><span class="attr">    icon:</span> <span class="string">"fa fa-github"</span></span><br></pre></td></tr></table></figure></p>
-<p>其中<code>icon</code>对应链接旁显示的图标。本示例使用了<a href="https://fontawesome.com" target="_blank" rel="noopener">Font Awesome</a>提供的图标，该项目提供的全部图标可以在<a href="https://fontawesome.com/icons?d=gallery" target="_blank" rel="noopener">这里</a>找到。</p>
-<h3>谷歌统计GA</h3>
-<p>使用谷歌账号登录<a href="https://analytics.google.com/analytics/web/#/" target="_blank" rel="noopener">谷歌统计</a>, 在管理标签中找到用户管理。在媒体资源设置中找到自己的跟踪ID，并设置默认跟踪网址, 然后在跟踪信息-跟踪代码中，将全局网站代码粘贴到<code>layout/_partial/after_foot.ejs</code>底部, 并把明文的GA ID改成<code>&lt;%= theme.google_analytics.siteid %&gt;</code>.</p>
-<p><figure class="null"><img src="follow-code-GA.png" alt="跟踪代码块截图"><figcaption>跟踪代码块截图</figcaption></figure></p>
-<p>在GA主页上, 可以通过&quot;管理-过滤器-添加过滤条件&quot;来排除来自特定IP的流量. GA通过浏览器工作, 而<a href="https://www.en.advertisercommunity.com/t5/Google-Analytics-Filters/Employee-Mobile-Phone-MAC-Address-exclusions/td-p/853289#.XNEMq8OoASk.google" target="_blank" rel="noopener">浏览器不会读取MAC地址</a>, 因此无法通过检测MAC地址的方式排除特定设备的流量.</p>
-<h3>不蒜子站点和页面统计</h3>
-<p>将<a href="http://busuanzi.ibruce.info/" target="_blank" rel="noopener">不蒜子</a>整合到Freemind中, 以支持站点访客数统计和页面访问量统计. (GA也可以完成, 但没精力读API了...) 在<code>_config.yml</code>中加入</p>
-<p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">busuanzi:</span></span><br><span class="line"><span class="comment"># number of page views from busuanzi</span></span><br><span class="line"><span class="attr">  pageview:</span> <span class="literal">true</span></span><br><span class="line"><span class="comment"># number of total visitors from busuanzi</span></span><br><span class="line"><span class="attr">  visitor:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure></p>
-<p>以提供一致的开关. 在<code>layout/_partial/post/analytics.ejs</code>中引入js</p>
-<p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;% <span class="keyword">if</span> (theme.busuanzi.pageview || theme.busuanzi.visitor)&#123; %&gt;</span><br><span class="line">&lt;script <span class="keyword">async</span> src=<span class="string">"//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"</span>&gt;</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br><span class="line"><span class="regexp">&lt;% &#125; %&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p>然后在<code>layout/_partial/footer.ejs</code>中加入总访客数标记</p>
-<p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;% <span class="keyword">if</span> (theme.busuanzi.visitor) &#123; %&gt;</span><br><span class="line">   | <span class="xml"><span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">"busuanzi_container_site_uv"</span>&gt;</span><span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">"busuanzi_value_site_uv"</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span> visitors<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span></span><br><span class="line">&lt;% &#125; %&gt;</span><br></pre></td></tr></table></figure></p>
-<p>在<code>layout/_partial/post/meta.ejs</code>中加入页面总访问数</p>
-<p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- page view by busuanzi --&gt;</span><br><span class="line">&lt;% <span class="keyword">if</span> (theme.busuanzi.pageview) &#123; %&gt;</span><br><span class="line">&lt;div <span class="class"><span class="keyword">class</span></span>=<span class="string">"meta-widget"</span>&gt;</span><br><span class="line">&lt;span id=<span class="string">"busuanzi_container_page_pv"</span>&gt;</span><br><span class="line">&lt;i <span class="class"><span class="keyword">class</span></span>=<span class="string">"fa fa-eye"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span></span><br><span class="line">&lt;span id=<span class="string">"busuanzi_value_page_pv"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span> views</span><br><span class="line">&lt;<span class="regexp">/span&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>div&gt;</span><br><span class="line">&lt;% &#125; %&gt;</span><br></pre></td></tr></table></figure></p>
-<p>页面每被点击一次, 总访问数就加一.</p>
-<h3>修改页尾标记</h3>
-<p>在<code>layout/_partial/footer.ejs</code>中修改.</p>
-<h3>配色修改</h3>
-<p>由于个人偏好蓝色和深绿色，需要简单修改一下博文大小标题和行间代码的配色。在<code>source/css/highlight.css</code>中修改行间代码的CSS样式</p>
-<p><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">code</span> &#123;</span><br><span class="line">    <span class="attribute">background</span>: <span class="number">#eee</span>;</span><br><span class="line">    <span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#d6d6d6</span>;</span><br><span class="line">    <span class="attribute">padding</span>: <span class="number">0</span> <span class="number">5px</span>;</span><br><span class="line">    <span class="attribute">margin</span>: <span class="number">0</span> <span class="number">2px</span>;</span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">90%</span>;</span><br><span class="line">    <span class="comment">/*text-shadow: 0 1px #fff; */</span> <span class="comment">/*删去白色阴影*/</span></span><br><span class="line">    <span class="attribute">word-break</span>: break-all;</span><br><span class="line">    <span class="attribute">word-wrap</span>: break-word;</span><br><span class="line">    <span class="attribute">white-space</span>: normal;</span><br><span class="line">    <span class="attribute">color</span>: <span class="number">#458B00</span>; <span class="comment">/* 翠绿 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>在<code>source/css/style.css</code>中修改文章中大小标题的样式</p>
-<p><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">h2</span>&#123;</span><br><span class="line">    <span class="attribute">margin</span>: <span class="number">0.83em</span> <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">color</span>: <span class="number">#104E8B</span>; <span class="comment">/* 二级标题藏青 */</span></span><br><span class="line">  <span class="comment">/*  color: green; */</span></span><br><span class="line">    <span class="attribute">padding-top</span>: <span class="number">40px</span>;</span><br><span class="line">    <span class="attribute">margin-top</span>: -<span class="number">25px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">h3</span> &#123;</span><br><span class="line">  <span class="comment">/*  color: #9C4C17; */</span></span><br><span class="line">    <span class="attribute">color</span>: <span class="number">#1E90FF</span>; <span class="comment">/* 三级标题湖蓝 */</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">h4</span> &#123;</span><br><span class="line">  <span class="comment">/*  color: #B94A48; */</span></span><br><span class="line">    <span class="attribute">color</span>: <span class="number">#CC0033</span>; <span class="comment">/* 四级标题红色以防标题层级过低看不到 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3>文字两端对齐</h3>
-<p>在<code>source/css/style.css</code>中加入</p>
-<p><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">p</span> &#123;</span><br><span class="line">    <span class="attribute">text-align</span>: justify</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3>DISQUS评论</h3>
-<p>注册<a href="https://disqus.com/" target="_blank" rel="noopener">DISQUS</a>账号，选择&quot;I want to install disqus on my site&quot;，使用universal code安装，将这部分代码拷贝到<code>layout/_partial/post/comment.ejs</code>中。接下来配置Disqus，主要是<code>Website Name</code>和<code>Website URL</code>，前者我设置为我的shigaro。然后在Hexo根目录<code>_config.yml</code>下加入</p>
-<p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># comment</span></span><br><span class="line"><span class="attr">disqus_shortname:</span> <span class="string">shigaro</span></span><br></pre></td></tr></table></figure></p>
-<h3>三线表</h3>
-<p>在<code>source/css/style.css</code>中加入</p>
-<p><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 居中三线表 */</span></span><br><span class="line"><span class="selector-pseudo">:not(figure)</span>&gt;<span class="selector-tag">table</span> &#123;</span><br><span class="line">  <span class="attribute">border-top</span>: <span class="number">2px</span> solid <span class="number">#4088b8</span>;</span><br><span class="line">  <span class="attribute">border-bottom</span>: <span class="number">2px</span> solid <span class="number">#4088b8</span>;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">1.5em</span> auto <span class="number">1.5em</span> auto;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-tag">th</span> &#123;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">12px</span> <span class="number">10px</span> <span class="number">12px</span> <span class="number">10px</span>;</span><br><span class="line">  <span class="attribute">border-bottom</span>: <span class="number">2px</span> solid <span class="number">#4088b8</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 非代码块table元素, 悬停表格主体行时灰色高量 */</span></span><br><span class="line"><span class="selector-pseudo">:not(figure)</span>&gt;<span class="selector-tag">table</span>&gt;<span class="selector-tag">tbody</span>&gt;<span class="selector-tag">tr</span><span class="selector-pseudo">:hover</span> &#123;</span><br><span class="line">  <span class="attribute">background-color</span>: <span class="number">#D9D9D9</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3>增加代码块复制功能</h3>
-<h2>总结</h2>
-<p>笔者基于Hexo框架和Freemind主题搭建了个人博客，根据自己的需求进行了自定义，并利用MathJax渲染器和Bootstrap特性进行了Markdown写作。</p>
-<h2>参考链接</h2>
-<p><a href="https://jdhao.github.io/2018/01/25/hexo-mathjax-equation-number/" target="_blank" rel="noopener">LaTeX Equation Numbering Done Right in Hexo</a>
-另一个渲染器hexo-math及一个讨论其用法的<a href="https://github.com/hexojs/hexo-math/issues/26" target="_blank" rel="noopener">Issue</a>
-如何在自己的主题下实现MathJax支持：<a href="https://www.cnblogs.com/wangxin37/p/8185688.html" target="_blank" rel="noopener">在Hexo中渲染MathJax数学公式</a>
-代码块复制：<a href="https://www.ofind.cn/blog/HEXO/HEXO%E4%BC%98%E5%8C%96%E4%B9%8B%EF%BC%88%E4%BA%8C%EF%BC%89-%E6%B7%BB%E5%8A%A0%E5%A4%8D%E5%88%B6%E5%8A%9F%E8%83%BD.html" target="_blank" rel="noopener">HEXO优化之（二）----添加复制功能</a></p>
-<h2>更新</h2>
-<h3>2019-05-07</h3>
-<ol>
-<li>增加基于<code>hexo-reference</code>的wiki浮窗式的脚注.</li>
-<li>MathJax: 比较各种情况下<code>*</code>和<code>_</code>的渲染结果. 更改CDN.</li>
-</ol>
-<h3>2019-05-10</h3>
-<ol>
-<li>增加不蒜子统计&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js&quot;&gt;&lt;/script&gt;<textarea id="flowchart-0-code" style="display: none">st=>start: Start
-op=>operation: Your Operation
-cond=>condition: Yes or No?
-e=>end
-
-st->op->cond
-cond(yes)->e
-cond(no)->op</textarea><textarea id="flowchart-0-options" style="display: none">{"scale":1,"line-width":3,"line-length":25,"text-margin":10,"font-size":12}</textarea><script>  var code = document.getElementById("flowchart-0-code").value;  var options = JSON.parse(decodeURIComponent(document.getElementById("flowchart-0-options").value));  var diagram = flowchart.parse(code);  diagram.drawSVG("flowchart-0", options);</script>&lt;div id=&quot;footnotes&quot;&gt;&lt;hr&gt;&lt;div id=&quot;footnotelist&quot;&gt;&lt;ol style=&quot;list-style: none; padding-left: 0; margin-left: 40px&quot;&gt;&lt;li id=&quot;fn:1&quot;&gt;&lt;span style=&quot;display: inline-block; vertical-align: top; padding-right: 10px; margin-left: -40px&quot;&gt;1.&lt;/span&gt;&lt;span style=&quot;display: inline-block; vertical-align: top; margin-left: 10px;&quot;&gt;这是一个脚注测试&lt;a href=&quot;#fnref:1&quot; rev=&quot;footnote&quot;&gt; ↩&lt;/a&gt;&lt;/span&gt;&lt;/li&gt;&lt;/ol&gt;&lt;/div&gt;&lt;/div&gt;</li>
-</ol>
-
+		<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>本文介绍了使用Hexo配置本博客和用Markdown进行博文写作的基本方法和技巧，为撰写排版更好更清晰的技术文本作准备。
 	
 	</div>
   <a type="button" href="/2018/02/15/Hexo-1/#more" class="btn btn-default more">Read More</a>
@@ -657,57 +268,7 @@ cond(no)->op</textarea><textarea id="flowchart-0-options" style="display: none">
   <div class="row">
 	
 	
-		<link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2>前言</h2>
-<p>本文介绍了笔者在macOS High Sierra上编译VASP.5.4.4时遇到的问题及解决问题的过程。 &lt;!--more--&gt;</p>
-<h2>问题背景</h2>
-<p>购买mac后，我希望能在macOS运行常用的科学计算程序，方便我做小规模测试，<a href="https://www.vasp.at/" target="_blank" rel="noopener">VASP</a>毋庸置疑是其中之一。系统环境为macOS High Sierra 10.13，编译VASP时编译环境为</p>
-<ul>
-<li>Intel Parallel Composer XE 2018.0.1</li>
-<li>Intel ifort和icc编译的MPICH3</li>
-<li>Intel ifort和icc编译的FFTW3 (MPICH3并行)</li>
-<li>Intel ifort和icc编译的ScaLAPACK和BLACS (MPICH3并行)</li>
-</ul>
-<p>我的目标是编译<strong>VASP.5.4.1</strong>和<strong>VASP.5.4.4</strong>并成功用于Silicon的算例。VASP.5.4.1的编译很容易就通过了并能够正常地跑Silicon的例子。但VASP.5.4.4始终无法编译通过，主要问题在<strong>C++编译parser库时无法链接到一个symbol上</strong>。</p>
-<h2>问题细节</h2>
-<p>VASP编译过程用到的<code>makefile.include</code>文件如下所示。5.4.4版同5.4.1版include文件的主要区别，除了最后的GPU部分外，还有一个用C++编译<code>libparser.a</code>的选项，即<code>CXX_PARS</code>。</p>
-<p><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Precompiler options</span></span><br><span class="line">CPP_OPTIONS= -DHOST=\<span class="string">"LinuxIFC\"\</span></span><br><span class="line"><span class="string">             -DMPI -DMPI_BLOCK=8000 \</span></span><br><span class="line"><span class="string">             -Duse_collective \</span></span><br><span class="line"><span class="string">             -DscaLAPACK \</span></span><br><span class="line"><span class="string">             -DCACHE_SIZE=4000 \</span></span><br><span class="line"><span class="string">             -Davoidalloc \</span></span><br><span class="line"><span class="string">             -Duse_bse_te \</span></span><br><span class="line"><span class="string">             -Dtbdyn \</span></span><br><span class="line"><span class="string">             -Duse_shmem</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">CPP        = fpp -f_com=no -free -w0  <span class="variable">$*</span><span class="variable">$(FUFFIX)</span> <span class="variable">$*</span><span class="variable">$(SUFFIX)</span> <span class="variable">$(CPP_OPTIONS)</span></span></span><br><span class="line"><span class="string">FC         = mpifort</span></span><br><span class="line"><span class="string">FCL        = mpifort #-mkl=sequential -lstdc++</span></span><br><span class="line"><span class="string">FREE       = -free -names lowercase</span></span><br><span class="line"><span class="string">FFLAGS     = -assume byterecl -w</span></span><br><span class="line"><span class="string">OFLAG      = -O2</span></span><br><span class="line"><span class="string">OFLAG_IN   = <span class="variable">$(OFLAG)</span></span></span><br><span class="line"><span class="string">DEBUG      = -O0</span></span><br><span class="line"><span class="string">MKL_PATH   = <span class="variable">$(MKLROOT)</span>/lib/</span></span><br><span class="line"><span class="string">BLAS       =</span></span><br><span class="line"><span class="string">LAPACK     = <span class="variable">$(MKLROOT)</span>/lib/libmkl_intel_lp64.a <span class="variable">$(MKLROOT)</span>/lib/libmkl_sequential.a <span class="variable">$(MKLROOT)</span>/lib/libmkl_core.a -lpthread -lm -ldl</span></span><br><span class="line"><span class="string">BLACS      = </span></span><br><span class="line"><span class="string">SCALAPACK  = /Users/stevezhang/software/mathlib/scalapack/2.0.2/intel/18.0.1/libscalapack.a </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">OBJECTS    = fftmpiw.o fftmpi_map.o fft3dlib.o fftw3d.o \</span></span><br><span class="line"><span class="string">	     <span class="variable">$(HOME)</span>/lib/libfftw3xf_intel.a</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">INCS       = -m64 -I<span class="variable">$(MKLROOT)</span>/include/fftw -I<span class="variable">$(MKLROOT)</span>/include/</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">LLIBS      = <span class="variable">$(SCALAPACK)</span> <span class="variable">$(LAPACK)</span></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">OBJECTS_O1 += fftw3d.o fftmpi.o fftmpiw.o</span></span><br><span class="line"><span class="string">OBJECTS_O2 += fft3dlib.o</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># For what used to be vasp.5.lib</span></span><br><span class="line"><span class="string">CPP_LIB    = <span class="variable">$(CPP)</span></span></span><br><span class="line"><span class="string">FC_LIB     = <span class="variable">$(FC)</span></span></span><br><span class="line"><span class="string">CC_LIB     = icc</span></span><br><span class="line"><span class="string">CFLAGS_LIB = -O</span></span><br><span class="line"><span class="string">FFLAGS_LIB = -O1</span></span><br><span class="line"><span class="string">FREE_LIB   = <span class="variable">$(FREE)</span></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">OBJECTS_LIB= linpack_double.o getshmem.o</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># For the parser library</span></span><br><span class="line"><span class="string">CXX_PARS   = icpc</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">LIBS       += parser</span></span><br><span class="line"><span class="string">LLIBS      += -Lparser -lparser -lstdc++</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># Normally no need to change this</span></span><br><span class="line"><span class="string">SRCDIR     = ../../src</span></span><br><span class="line"><span class="string">BINDIR     = ../../bin</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">### GPU stuff below</span></span><br></pre></td></tr></table></figure></p>
-<p>输入命令</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ make std</span><br></pre></td></tr></table></figure></p>
-<p>在最后链接产生<code>vasp</code>前报错：</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br></pre></td><td class="code"><pre><span class="line">Undefined symbols <span class="keyword">for</span> architecture x86_64:</span><br><span class="line">  <span class="string">"__ZNKSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE7compareEmmPKcm"</span>, referenced from:</span><br><span class="line">      __Z25interpret_function_stringPNSt3__16vectorI9func_infoNS_9allocatorIS1_EEEERKNS_12basic_stringIcNS_11char_traitsIcEENS2_IcEEEE <span class="keyword">in</span> libparser.a(functions.o)</span><br><span class="line">  <span class="string">"__ZNKSt3__120__vector_base_commonILb1EE20__throw_length_errorEv"</span>, referenced from:</span><br><span class="line">      __ZNSt3__16vectorI9site_infoNS_9allocatorIS1_EEE21__push_back_slow_pathIKS1_EEvRT_ <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z8assemblePNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEERK9site_infoRK9func_infoRK10t_modifier <span class="keyword">in</span> libparser.a(basis.o)</span><br><span class="line">      __Z12assemble_allPNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEEPNS0_I9site_infoNS2_IS6_EEEEPNS0_I9func_infoNS2_ISA_EEEERK10t_modifier <span class="keyword">in</span> libparser.a(basis.o)</span><br><span class="line">      __Z16push_back_fromtoPNSt3__16vectorI9site_infoNS_9allocatorIS1_EEEEii <span class="keyword">in</span> libparser.a(sites.o)</span><br><span class="line">      __Z25interpret_function_stringPNSt3__16vectorI9func_infoNS_9allocatorIS1_EEEERKNS_12basic_stringIcNS_11char_traitsIcEENS2_IcEEEE <span class="keyword">in</span> libparser.a(functions.o)</span><br><span class="line">      __ZNSt3__16vectorI9func_infoNS_9allocatorIS1_EEE21__push_back_slow_pathIKS1_EEvRT_ <span class="keyword">in</span> libparser.a(functions.o)</span><br><span class="line">  <span class="string">"__ZNKSt3__16locale9use_facetERNS0_2idE"</span>, referenced from:</span><br><span class="line">      _parse_file_C <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z7yyparsePNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z7yyerrorPNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEEPKc <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __ZNSt3__14endlIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_ <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z21output_basisfunctionsPNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(basis.o)</span><br><span class="line">      __ZNSt3__124__put_character_sequenceIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_PKS4_m <span class="keyword">in</span> libparser.a(basis.o)</span><br><span class="line">      __Z15output_sitelistPNSt3__16vectorI9site_infoNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(sites.o)</span><br><span class="line">      ...</span><br><span class="line">  <span class="string">"__ZNKSt3__18ios_base6getlocEv"</span>, referenced from:</span><br><span class="line">      _parse_file_C <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z7yyparsePNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z7yyerrorPNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEEPKc <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __ZNSt3__14endlIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_ <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z21output_basisfunctionsPNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(basis.o)</span><br><span class="line">      __ZNSt3__124__put_character_sequenceIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_PKS4_m <span class="keyword">in</span> libparser.a(basis.o)</span><br><span class="line">      __Z15output_sitelistPNSt3__16vectorI9site_infoNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(sites.o)</span><br><span class="line">      ...</span><br><span class="line">  <span class="string">"__ZNSt11logic_errorC2EPKc"</span>, referenced from:</span><br><span class="line">      __ZNSt3__16vectorI9site_infoNS_9allocatorIS1_EEE21__push_back_slow_pathIKS1_EEvRT_ <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z8assemblePNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEERK9site_infoRK9func_infoRK10t_modifier <span class="keyword">in</span> libparser.a(basis.o)</span><br><span class="line">      __Z12assemble_allPNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEEPNS0_I9site_infoNS2_IS6_EEEEPNS0_I9func_infoNS2_ISA_EEEERK10t_modifier <span class="keyword">in</span> libparser.a(basis.o)</span><br><span class="line">      __Z16push_back_fromtoPNSt3__16vectorI9site_infoNS_9allocatorIS1_EEEEii <span class="keyword">in</span> libparser.a(sites.o)</span><br><span class="line">      __Z25interpret_function_stringPNSt3__16vectorI9func_infoNS_9allocatorIS1_EEEERKNS_12basic_stringIcNS_11char_traitsIcEENS2_IcEEEE <span class="keyword">in</span> libparser.a(functions.o)</span><br><span class="line">      __ZNSt3__16vectorI9func_infoNS_9allocatorIS1_EEE21__push_back_slow_pathIKS1_EEvRT_ <span class="keyword">in</span> libparser.a(functions.o)</span><br><span class="line">  <span class="string">"__ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6__initEPKcm"</span>, referenced from:</span><br><span class="line">      __Z7yyparsePNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z25interpret_function_stringPNSt3__16vectorI9func_infoNS_9allocatorIS1_EEEERKNS_12basic_stringIcNS_11char_traitsIcEENS2_IcEEEE <span class="keyword">in</span> libparser.a(functions.o)</span><br><span class="line">  <span class="string">"__ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6__initEmc"</span>, referenced from:</span><br><span class="line">      _parse_file_C <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z7yyparsePNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z7yyerrorPNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEEPKc <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __ZNSt3__116__pad_and_outputIcNS_11char_traitsIcEEEENS_19ostreambuf_iteratorIT_T0_EES6_PKS4_S8_S8_RNS_8ios_baseES4_ <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __ZNSt3__116__pad_and_outputIcNS_11char_traitsIcEEEENS_19ostreambuf_iteratorIT_T0_EES6_PKS4_S8_S8_RNS_8ios_baseES4_ <span class="keyword">in</span> libparser.a(basis.o)</span><br><span class="line">      __ZNSt3__124__put_character_sequenceIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_PKS4_m <span class="keyword">in</span> libparser.a(basis.o)</span><br><span class="line">      __Z15output_sitelistPNSt3__16vectorI9site_infoNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(sites.o)</span><br><span class="line">      ...</span><br><span class="line">  <span class="string">"__ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6appendEPKcm"</span>, referenced from:</span><br><span class="line">      __Z25interpret_function_stringPNSt3__16vectorI9func_infoNS_9allocatorIS1_EEEERKNS_12basic_stringIcNS_11char_traitsIcEENS2_IcEEEE <span class="keyword">in</span> libparser.a(functions.o)</span><br><span class="line">  <span class="string">"__ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE9push_backEc"</span>, referenced from:</span><br><span class="line">      __Z25interpret_function_stringPNSt3__16vectorI9func_infoNS_9allocatorIS1_EEEERKNS_12basic_stringIcNS_11char_traitsIcEENS2_IcEEEE <span class="keyword">in</span> libparser.a(functions.o)</span><br><span class="line">  <span class="string">"__ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED1Ev"</span>, referenced from:</span><br><span class="line">      _parse_file_C <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z7yyparsePNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z7yyerrorPNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEEPKc <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __ZNSt3__116__pad_and_outputIcNS_11char_traitsIcEEEENS_19ostreambuf_iteratorIT_T0_EES6_PKS4_S8_S8_RNS_8ios_baseES4_ <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __ZNSt3__116__pad_and_outputIcNS_11char_traitsIcEEEENS_19ostreambuf_iteratorIT_T0_EES6_PKS4_S8_S8_RNS_8ios_baseES4_ <span class="keyword">in</span> libparser.a(basis.o)</span><br><span class="line">      __ZNSt3__124__put_character_sequenceIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_PKS4_m <span class="keyword">in</span> libparser.a(basis.o)</span><br><span class="line">      __Z15output_sitelistPNSt3__16vectorI9site_infoNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(sites.o)</span><br><span class="line">      ...</span><br><span class="line">  <span class="string">"__ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEE3putEc"</span>, referenced from:</span><br><span class="line">      _parse_file_C <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z7yyparsePNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z7yyerrorPNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEEPKc <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __ZNSt3__14endlIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_ <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">  <span class="string">"__ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEE5flushEv"</span>, referenced from:</span><br><span class="line">      _parse_file_C <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z7yyparsePNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z7yyerrorPNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEEPKc <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __ZNSt3__14endlIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_ <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">  <span class="string">"__ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEE6sentryC1ERS3_"</span>, referenced from:</span><br><span class="line">      _parse_file_C <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z7yyparsePNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z7yyerrorPNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEEPKc <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z21output_basisfunctionsPNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(basis.o)</span><br><span class="line">      __ZNSt3__124__put_character_sequenceIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_PKS4_m <span class="keyword">in</span> libparser.a(basis.o)</span><br><span class="line">      __Z15output_sitelistPNSt3__16vectorI9site_infoNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(sites.o)</span><br><span class="line">      __Z15output_funclistPNSt3__16vectorI9func_infoNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(functions.o)</span><br><span class="line">      ...</span><br><span class="line">  <span class="string">"__ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEE6sentryD1Ev"</span>, referenced from:</span><br><span class="line">      _parse_file_C <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z7yyparsePNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z7yyerrorPNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEEPKc <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z21output_basisfunctionsPNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(basis.o)</span><br><span class="line">      __ZNSt3__124__put_character_sequenceIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_PKS4_m <span class="keyword">in</span> libparser.a(basis.o)</span><br><span class="line">      __Z15output_sitelistPNSt3__16vectorI9site_infoNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(sites.o)</span><br><span class="line">      __Z15output_funclistPNSt3__16vectorI9func_infoNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(functions.o)</span><br><span class="line">      ...</span><br><span class="line">  <span class="string">"__ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEElsEd"</span>, referenced from:</span><br><span class="line">      __Z21output_basisfunctionsPNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(basis.o)</span><br><span class="line">  <span class="string">"__ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEElsEf"</span>, referenced from:</span><br><span class="line">      __Z15output_sitelistPNSt3__16vectorI9site_infoNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(sites.o)</span><br><span class="line">  <span class="string">"__ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEElsEi"</span>, referenced from:</span><br><span class="line">      __Z7yyparsePNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z7yyerrorPNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEEPKc <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z21output_basisfunctionsPNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(basis.o)</span><br><span class="line">      __Z15output_sitelistPNSt3__16vectorI9site_infoNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(sites.o)</span><br><span class="line">      __Z15output_funclistPNSt3__16vectorI9func_infoNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(functions.o)</span><br><span class="line">  <span class="string">"__ZNSt3__14coutE"</span>, referenced from:</span><br><span class="line">      _parse_file_C <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z7yyparsePNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z7yyerrorPNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEEPKc <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z21output_basisfunctionsPNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(basis.o)</span><br><span class="line">      __Z15output_sitelistPNSt3__16vectorI9site_infoNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(sites.o)</span><br><span class="line">      __Z15output_funclistPNSt3__16vectorI9func_infoNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(functions.o)</span><br><span class="line">  <span class="string">"__ZNSt3__15ctypeIcE2idE"</span>, referenced from:</span><br><span class="line">      _parse_file_C <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z7yyparsePNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z7yyerrorPNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEEPKc <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __ZNSt3__14endlIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_ <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z21output_basisfunctionsPNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(basis.o)</span><br><span class="line">      __ZNSt3__124__put_character_sequenceIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_PKS4_m <span class="keyword">in</span> libparser.a(basis.o)</span><br><span class="line">      __Z15output_sitelistPNSt3__16vectorI9site_infoNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(sites.o)</span><br><span class="line">      ...</span><br><span class="line">  <span class="string">"__ZNSt3__16localeD1Ev"</span>, referenced from:</span><br><span class="line">      _parse_file_C <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z7yyparsePNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z7yyerrorPNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEEPKc <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __ZNSt3__14endlIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_ <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z21output_basisfunctionsPNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(basis.o)</span><br><span class="line">      __ZNSt3__124__put_character_sequenceIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_PKS4_m <span class="keyword">in</span> libparser.a(basis.o)</span><br><span class="line">      __Z15output_sitelistPNSt3__16vectorI9site_infoNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(sites.o)</span><br><span class="line">      ...</span><br><span class="line">  <span class="string">"__ZNSt3__18ios_base33__set_badbit_and_consider_rethrowEv"</span>, referenced from:</span><br><span class="line">      _parse_file_C <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z7yyparsePNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z7yyerrorPNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEEPKc <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z21output_basisfunctionsPNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(basis.o)</span><br><span class="line">      __ZNSt3__124__put_character_sequenceIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_PKS4_m <span class="keyword">in</span> libparser.a(basis.o)</span><br><span class="line">      __Z15output_sitelistPNSt3__16vectorI9site_infoNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(sites.o)</span><br><span class="line">      __Z15output_funclistPNSt3__16vectorI9func_infoNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(functions.o)</span><br><span class="line">      ...</span><br><span class="line">  <span class="string">"__ZNSt3__18ios_base5clearEj"</span>, referenced from:</span><br><span class="line">      _parse_file_C <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z7yyparsePNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z7yyerrorPNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEEPKc <span class="keyword">in</span> libparser.a(locproj.tab.o)</span><br><span class="line">      __Z21output_basisfunctionsPNSt3__16vectorI7t_basisNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(basis.o)</span><br><span class="line">      __ZNSt3__124__put_character_sequenceIcNS_11char_traitsIcEEEERNS_13basic_ostreamIT_T0_EES7_PKS4_m <span class="keyword">in</span> libparser.a(basis.o)</span><br><span class="line">      __Z15output_sitelistPNSt3__16vectorI9site_infoNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(sites.o)</span><br><span class="line">      __Z15output_funclistPNSt3__16vectorI9func_infoNS_9allocatorIS1_EEEE <span class="keyword">in</span> libparser.a(functions.o)</span><br><span class="line">      ...</span><br><span class="line">ld: symbol(s) not found <span class="keyword">for</span> architecture x86_64</span><br><span class="line">make[2]: *** [vasp] Error 1</span><br><span class="line">cp: vasp: No such file or directory</span><br><span class="line">make[1]: *** [all] Error 1</span><br><span class="line">make: *** [std] Error 2</span><br></pre></td></tr></table></figure></p>
-<p>整理一下，<code>Undefined symbols for architecture x86_64</code>表示在x86_64架构下符号未被定义，包括</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">__ZNKSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE7compareEmmPKcm</span><br><span class="line">__ZNKSt3__120__vector_base_commonILb1EE20__throw_length_errorEv</span><br><span class="line">__ZNKSt3__16locale9use_facetERNS0_2idE</span><br><span class="line">__ZNKSt3__18ios_base6getlocEv</span><br><span class="line">__ZNSt11logic_errorC2EPKc</span><br><span class="line">__ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6__initEPKcm</span><br><span class="line">__ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6__initEmc</span><br><span class="line">__ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE6appendEPKcm</span><br><span class="line">__ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEE9push_backEc</span><br><span class="line">__ZNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEED1Ev</span><br><span class="line">__ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEE3putEc</span><br><span class="line">__ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEE5flushEv</span><br><span class="line">__ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEE6sentryC1ERS3_</span><br><span class="line">__ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEE6sentryD1Ev</span><br><span class="line">__ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEElsEd</span><br><span class="line">__ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEElsEf</span><br><span class="line">__ZNSt3__113basic_ostreamIcNS_11char_traitsIcEEElsEi</span><br><span class="line">__ZNSt3__14coutE</span><br><span class="line">__ZNSt3__15ctypeIcE2idE</span><br><span class="line">__ZNSt3__16localeD1Ev</span><br><span class="line">__ZNSt3__18ios_base33__set_badbit_and_consider_rethrowEv</span><br><span class="line">__ZNSt3__18ios_base5clearEj</span><br></pre></td></tr></table></figure></p>
-<h2>解决过程</h2>
-<p>首先在<code>makefile.include</code>里面的<code>CXX_PARS</code>后面加上Homebrew安装的gcc库和<code>-lstdc++</code>，即</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-L/usr/<span class="built_in">local</span>/Cellar/gcc/7.2.0/lib/gcc/7 -lstdc++</span><br></pre></td></tr></table></figure></p>
-<p>这样子可以正常编译通过。但是跑VASP时会出现错误</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"> running on    1 total cores</span><br><span class="line"> distrk:  each k-point on    1 cores,    1 groups</span><br><span class="line"> distr:  one band on    1 cores,    1 groups</span><br><span class="line"> using from now: INCAR</span><br><span class="line"> vasp.5.4.4.18Apr17-6-g9f103f2a35 (build Jan 09 2018 16:27:40) complex</span><br><span class="line"></span><br><span class="line"> POSCAR found <span class="built_in">type</span> information on POSCAR  Si</span><br><span class="line"> POSCAR found :  1 types and       2 ions</span><br><span class="line"> scaLAPACK will be used</span><br><span class="line">dyld: lazy symbol binding failed: Symbol not found: __ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEC1Ev</span><br><span class="line">  Referenced from: /Users/stevezhang/software/sci/vasp/vasp.5.4.4-intel-2018.0.1/common/build/std/vasp</span><br><span class="line">  Expected <span class="keyword">in</span>: flat namespace</span><br><span class="line"></span><br><span class="line">dyld: Symbol not found: __ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEC1Ev</span><br><span class="line">  Referenced from: /Users/stevezhang/software/sci/vasp/vasp.5.4.4-intel-2018.0.1/common/build/std/vasp</span><br><span class="line">  Expected <span class="keyword">in</span>: flat namespace</span><br><span class="line"></span><br><span class="line">forrtl: error (76): Abort <span class="built_in">trap</span> signal</span><br><span class="line">Image              PC                Routine            Line        Source</span><br><span class="line">vasp               0000000103C7ABFA  for__signal_handl     Unknown  Unknown</span><br><span class="line">libsystem_platfor  00007FFF6C6DEF5A  _sigtramp             Unknown  Unknown</span><br><span class="line">fish: <span class="string">'vasp'</span> terminated by signal SIGABRT (Abort)</span><br></pre></td></tr></table></figure></p>
-<p>主要错误是<code>dyld</code>没有找到symbol。用<code>nm</code>命令检查<code>libstdc++.a</code>和<code>libstdc++.dylib</code>，可以看到<code>__ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEC1Ev</code>都是有定义的，但始终链接不上去。考虑<code>dyld</code>的搜索路径<code>DYLD_LD_LIBRARY</code>。将<code>/usr/local/Cellar/gcc/7.2.0/lib/gcc/7</code>添加到环境变量<code>DYLD_LD_LIBRARY</code>中后重新编译<code>libparser.a</code>，再编译<code>vasp</code>就能成功运行。</p>
-<p>最后<strong>VASP.5.4.4</strong>编译成功时的环境变量和include文件放在这里。</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$DYLD_LIBRARY_PATH</span></span><br><span class="line">/usr/<span class="built_in">local</span>/Cellar/gcc/7.2.0/lib/gcc/7:/usr/<span class="built_in">local</span>/Cellar/gcc/7.2.0/lib/gcc/7/gcc/x86_64-apple-darwin17.0.0/7.2.0/:/Users/stevezhang/software/compiler/mpich/3.2.1/intel/18.0.1/lib:/opt/intel/compilers_and_libraries_2018.1.126/mac/compiler/lib:/opt/intel/compilers_and_libraries_2018.1.126/mac/compiler/lib/intel64:/opt/intel/compilers_and_libraries_2018.1.126/mac/ipp/lib:/opt/intel/compilers_and_libraries_2018.1.126/mac/compiler/lib:/opt/intel/compilers_and_libraries_2018.1.126/mac/mkl/lib:/opt/intel/compilers_and_libraries_2018.1.126/mac/tbb/lib:/opt/intel/compilers_and_libraries_2018.1.126/mac/tbb/lib:/opt/intel/compilers_and_libraries_2018.1.126/mac/daal/lib:/opt/intel/compilers_and_libraries_2018.1.126/mac/daal/../tbb/lib:/usr/<span class="built_in">local</span>/opt/tcl-tk/lib:/usr/<span class="built_in">local</span>/lib:/usr/lib:</span><br><span class="line">$ <span class="built_in">echo</span> <span class="variable">$LIBRARY_PATH</span> </span><br><span class="line">... <span class="comment"># 和DYLD一样</span></span><br><span class="line">$ <span class="built_in">echo</span> <span class="variable">$LD_LIBRARY_PATH</span></span><br><span class="line">/usr/<span class="built_in">local</span>/Cellar/gcc/7.2.0/lib/gcc/7:/usr/<span class="built_in">local</span>/Cellar/gcc/7.2.0/lib/gcc/7/gcc/x86_64-apple-darwin17.0.0/7.2.0/:/Users/stevezhang/software/mathlib/scalapack/2.0.2/intel/18.0.1/:/Users/stevezhang/software/mathlib/fftw/3.3.7/intel/18.0.1/lib:/Users/stevezhang/software/compiler/mpich/3.2.1/intel/18.0.1/lib:/usr/<span class="built_in">local</span>/opt/tcl-tk/lib:/usr/<span class="built_in">local</span>/lib:/usr/lib:</span><br></pre></td></tr></table></figure></p>
-<p>其实可以注意一下<code>LD_LIBRARY_PATH</code>和<code>LIBRARY_PATH</code>之间的差别：因为MKLROOT之类的环境变量是通过</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> compilervars.sh intel64</span><br></pre></td></tr></table></figure></p>
-<p>来添加的，可见<code>compilervars.sh</code>并没有编辑<code>LD_LIBRARY_PATH</code>这一变量。</p>
-<p>最终可用的include文件如下</p>
-<p><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Precompiler options</span></span><br><span class="line">CPP_OPTIONS= -DHOST=\<span class="string">"LinuxIFC\"\</span></span><br><span class="line"><span class="string">             -DMPI -DMPI_BLOCK=8000 \</span></span><br><span class="line"><span class="string">             -Duse_collective \</span></span><br><span class="line"><span class="string">             -DscaLAPACK \</span></span><br><span class="line"><span class="string">             -DCACHE_SIZE=4000 \</span></span><br><span class="line"><span class="string">             -Davoidalloc \</span></span><br><span class="line"><span class="string">             -Duse_bse_te \</span></span><br><span class="line"><span class="string">             -Dtbdyn \</span></span><br><span class="line"><span class="string">             -Duse_shmem</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">CPP        = fpp -f_com=no -free -w0  <span class="variable">$*</span><span class="variable">$(FUFFIX)</span> <span class="variable">$*</span><span class="variable">$(SUFFIX)</span> <span class="variable">$(CPP_OPTIONS)</span></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">FC         = mpifort </span></span><br><span class="line"><span class="string">FCL        = mpifort -mkl=sequential -lstdc++</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">FREE       = -free -names lowercase</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">FFLAGS     = -assume byterecl -w</span></span><br><span class="line"><span class="string">OFLAG      = -O2</span></span><br><span class="line"><span class="string">OFLAG_IN   = <span class="variable">$(OFLAG)</span></span></span><br><span class="line"><span class="string">DEBUG      = -O0</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">MKL_PATH   = <span class="variable">$(MKLROOT)</span>/lib/</span></span><br><span class="line"><span class="string">BLAS       =</span></span><br><span class="line"><span class="string">LAPACK     = <span class="variable">$(MKLROOT)</span>/lib/libmkl_intel_lp64.a <span class="variable">$(MKLROOT)</span>/lib/libmkl_sequential.a <span class="variable">$(MKLROOT)</span>/lib/libmkl_core.a -lpthread -lm -ldl</span></span><br><span class="line"><span class="string">BLACS      = </span></span><br><span class="line"><span class="string">SCALAPACK  = /Users/stevezhang/software/mathlib/scalapack/2.0.2/intel/18.0.1/libscalapack.a </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">OBJECTS    = fftmpiw.o fftmpi_map.o fft3dlib.o fftw3d.o \</span></span><br><span class="line"><span class="string">	     <span class="variable">$(HOME)</span>/lib/libfftw3xf_intel.a</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">INCS       = -m64 -I<span class="variable">$(MKLROOT)</span>/include/fftw -I<span class="variable">$(MKLROOT)</span>/include/</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">LLIBS      = -L/usr/local/lib/gcc/7/ <span class="variable">$(SCALAPACK)</span> <span class="variable">$(LAPACK)</span>  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">OBJECTS_O1 += fftw3d.o fftmpi.o fftmpiw.o</span></span><br><span class="line"><span class="string">OBJECTS_O2 += fft3dlib.o</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># For what used to be vasp.5.lib</span></span><br><span class="line"><span class="string">CPP_LIB    = <span class="variable">$(CPP)</span></span></span><br><span class="line"><span class="string">FC_LIB     = <span class="variable">$(FC)</span></span></span><br><span class="line"><span class="string">CC_LIB     = icc</span></span><br><span class="line"><span class="string">CFLAGS_LIB = -O</span></span><br><span class="line"><span class="string">FFLAGS_LIB = -O1</span></span><br><span class="line"><span class="string">FREE_LIB   = <span class="variable">$(FREE)</span></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">OBJECTS_LIB= linpack_double.o getshmem.o</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># For the parser library</span></span><br><span class="line"><span class="string">#CXX_PARS   = c++ #/usr/local/lib/gcc/7/libstdc++.a</span></span><br><span class="line"><span class="string">#CXX_PARS = clang++ -++ -std=gnu++11</span></span><br><span class="line"><span class="string">CXX_PARS = icpc -lstdc++</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">LIBS       += parser</span></span><br><span class="line"><span class="string">LLIBS      += -Lparser  -lparser -L/usr/local/lib/gcc/7/ -lstdc++ </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># Normally no need to change this</span></span><br><span class="line"><span class="string">SRCDIR     = ../../src</span></span><br><span class="line"><span class="string">BINDIR     = ../../bin</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">#================================================</span></span><br><span class="line"><span class="string"># GPU Stuff</span></span><br><span class="line"><span class="string">#... # skipped for clarity</span></span><br></pre></td></tr></table></figure></p>
-<h2>总结</h2>
-<p>macOS的操作系统是Darwin。</p>
-<blockquote>
-<p>Darwin是由苹果电脑于2000年所释出的一个开放原始码操作系统。Darwin 是MacOSX 操作环境的操作系统成份。苹果电脑于2000年把Darwin 释出给开放原始码社群。现在的Darwin皆可以在苹果电脑的PowerPC 架构和X86 架构下执行，而后者的架构只有有限的驱动程序支援。</p>
-</blockquote>
-<p>在Darwin内存储函数库搜索路径的不是像Fedora和Ubuntu的<code>LD_LIBRARY_PATH</code>，而是<code>LIBRARY_PATH</code>和<code>DYLD_LIBRARY_PATH</code>。前者是<code>ld</code>的搜索路径，后者是动态链接指令<code>dyld</code>的搜索路径。需要使用<code>.la</code>和<code>.dylib</code>动态库时，需要将库路径加入<code>DYLD_LIBRARY_PATH</code>内。</p>
-<h2>附录</h2>
-<p>编译成功后，我在几乎所有的modulefile中增加了<code>prepend-path DYLD_LIBRARY_PATH</code>行，在module load它们时出现警告</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dyld: warning, unknown environment variable: DYLD_LIBRARY_PATH_modshare</span><br></pre></td></tr></table></figure></p>
-<p>这个错误在跑vasp的时候也会产生。出现原因是<code>dyld</code>和Tcl版的<code>module</code>之间不兼容。~~不过因为只是警告，并不影响<code>DYLD_LIBRARY_PATH</code>的定义。不过频繁出现实在太烦人了，因此我从modulefile中将<code>prepend-path DYLD_LIBRARY_PATH</code>删去，改在<code>.bashrc</code>内添加<code>DYLD_LIBRARY_PATH</code>。~~更新到最新版本的Environment module可以解决这个问题.</p>
-<h2>更新</h2>
-<h3>2019-05-02</h3>
-<p>Environment module 4.2.1已经修正了<code>DYLD_LIBRARY_PATH</code>的问题, 美滋滋 XD</p>
-<h2>参考链接</h2>
-<p><a href="https://baike.baidu.com/item/Darwin/2537108?fr=aladdin" target="_blank" rel="noopener">Darwin 百度百科</a></p>
-<p>http://d.hatena.ne.jp/kimuraw/20150919/p1</p>
-<p><a href="https://developer.apple.com/legacy/library/documentation/Darwin/Reference/ManPages/man1/dyld.1.html" target="_blank" rel="noopener">man dyld</a></p>
-
+		<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文介绍了笔者在macOS High Sierra上编译VASP.5.4.4时遇到的问题及解决问题的过程。
 	
 	</div>
   <a type="button" href="/2018/01/02/compile_VASP_on_macOS/#more" class="btn btn-default more">Read More</a>
@@ -728,87 +289,7 @@ cond(no)->op</textarea><textarea id="flowchart-0-options" style="display: none">
   <div class="row">
 	
 	
-		<link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2>前言</h2>
-<p>本文简单介绍了使用Shadowsocks翻越GFW实现对包括Google、Youtube、Twitter在内的国外网站的访问，叙述了基于Vultr公司服务器的SSR服务端部署和macOS/Windows客户端使用方法。 &lt;!--more--&gt;</p>
-<h2>背景</h2>
-<p>谷歌搜索对于学术研究的重要性无须赘述，Youtube上原创的优秀的讲座、课程录像和视频教程对于自学者来说也是非常好的资源。Facebook和Twitter也能帮助我们取得与外国同学的联系。但对于非IPv6用户而言，由于GFW的存在，直接连接这些网站的尝试最后都是徒劳。目前的解决方案包括hosts文件、VPN以及Shadowsocks。hosts文件指定域名解析IP，避免DNS污染，但通常隔一段时间需要更换，且周期不定。VPN通常价格较高，且同时使用的终端数量一般是受限的。Shadowsocks本身只是一个协议，它需要境外服务器支持，但使用VPS作为服务器，可以在较低价格情况下(￥15/月)同时保证10台左右终端的正常流量需求，且只要VPS的IP不被屏蔽，可以一直使用下去，不必更换。VPN越来越贵，hosts不灵的频率越来越高，于是以最近一次hosts失效为契机，我研究了一下SS的架设，自己配置了SS服务器和客户端。</p>
-<p><div class="alert alert-info"><i class="fa fa-info  float-left"></i>  <p>最近在BBS上看到别人推荐<a href="https://github.com/v2ray/v2ray-core" target="_blank" rel="noopener">V2Ray项目</a>。</p>
-</div></p>
-<h2>名词解释</h2>
-<h3>Virtual Private Server (VPS)</h3>
-<p>虚拟专有服务器, 是&quot;将一台服务器分区成多个虚拟专享服务器的服务&quot;(<a href="https://zh.wikipedia.org/wiki/%E8%99%9A%E6%8B%9F%E4%B8%93%E7%94%A8%E6%9C%8D%E5%8A%A1%E5%99%A8" target="_blank" rel="noopener">中文维基</a>)，通常是由专门的VPS供应商提供。它的核心是基于虚拟机技术，将单个物理服务器的硬盘、网络、CPU计算、内存等资源进行隔离，模拟出多个独立服务器的使用体验。不同VPS在软件上相互独立，都可以独立地安装操作系统、启动与重启，用户在其上拥有超级用户权限，可进行自由配置和软件安装。缺点是，由于多个VPS用户在同一个物理服务器上，硬件资源会相互影响，特别是当供应商超卖导致超负荷时。专有服务器(Dedicated server)不存在这种情形，但也因为单个用户独占物理服务器，价格要比VPS高很多。</p>
-<h3>Shadowsocks (SS)</h3>
-<p>由<a href="https://github.com/clowwindy" target="_blank" rel="noopener">clowwindy</a>首先开发的一个开源的加密代理项目，主要用于绕过GFW对国内网络请求的检测。其原理如图所示(<a href="https://ieeexplore.ieee.org/document/8048116/" target="_blank" rel="noopener">来源</a>)。在服务器端设置好密码、端口、协议、加密方式等等，客户端以相同的设置连接服务端。成功连接后，客户端与服务端之间建立sock5连接。在一次网络通信时，首先由本地客户端发送请求，与SS客户端通信。然后，SS客户端将请求加密，数据包以普通TCP包的外观发送到SS服务端。随后，SS服务端将数据包解密，将请求传递给墙外的网络服务器，最后再将网站响应数据返回给SS客户端。
-<figure class="null"><img src="ss-comm-principle.gif" alt="Shadowsocks原理"><figcaption>Shadowsocks原理</figcaption></figure>
-由于历史原因，我们还需要决定用什么版本的SS。笔者在这里使用的是<a href="https://github.com/shadowsocksrr/shadowsocksr.git" target="_blank" rel="noopener">ShadowsocksR</a>，它相比原版SS具有更多功能。尽管经历了<a href="https://t.du9l.com/2015/08/qi-wen-gong-shang/" target="_blank" rel="noopener">疑似违反GPL的事件</a>，但目前SSR源码已经公开且开发人员主要由新贡献者构成，它也是当前SS的主要项目分支(<a href="https://zh.wikipedia.org/wiki/Shadowsocks#ShadowsocksR" target="_blank" rel="noopener">中文维基20180702</a>)。</p>
-<h3>Proxy Auto-Config (PAC)</h3>
-<p>代理自动配置。PAC定义了&quot;如何自动选择适当的代理服务器来访问一个网址(<a href="https://zh.wikipedia.org/wiki/%E4%BB%A3%E7%90%86%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE" target="_blank" rel="noopener">中文维基</a>)&quot;。使用PAC需要一个PAC文件，其中必须包含名为<code>FindProxyForURL</code>的javascript函数。一个简单的例子是(来自中文维基)</p>
-<p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">FindProxyForURL</span>(<span class="params">url, host</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"PROXY proxy.example.com:8080; DIRECT"</span></span><br><span class="line">    <span class="comment">//通过服务器proxy.example.com的8080端口来获取页面</span></span><br><span class="line">    <span class="comment">//如果服务器没有响应，则通过www直接访问</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3>Dynamics Domain Name System (DDNS)</h3>
-<h2>Step by step: 基于Vultr VPS的SSR</h2>
-<p>基于SS原理我们可以知道，为了使用SSR，我们需要部署SSR客户端和服务端，而服务端需要部署在境外服务器上。那么需要做什么事情就很清楚了</p>
-<ul>
-<li>
-<p>购买境外VPS</p>
-</li>
-<li>
-<p>在VPS上部署SS服务端</p>
-</li>
-<li>
-<p>在本地部署SS客户端</p>
-</li>
-</ul>
-<p>接下来我们一条条看。</p>
-<h3>购买服务器</h3>
-<p>境外服务器选择<a href="www.vultr.com">Vultr</a>公司。访问主页(如下图)，注册账号后登录到个人页面管理。
-<figure class="null"><img src="vultr-homepage.png" alt="Vultr首页"><figcaption>Vultr首页</figcaption></figure>
-个人页面如下所示，点击右上角加号部署新服务器
-<figure class="null"><img src="vultr-mypage.png" alt="Vultr个人页面"><figcaption>Vultr个人页面</figcaption></figure>
-在新服务器的配置中，需要选择以下项目</p>
-<h4>Server Location</h4>
-<p>服务器位置。根据自己的网络情况选择最佳的服务器，一般判断标准是PING延迟，以及是否有较便宜的规模可供选择
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ping hnd-jp-ping.vultr.com    <span class="comment"># Tokyo</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ping sgp-ping.vult.com        <span class="comment"># Singapore</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ping sjo-ca-us-ping.vultr.com <span class="comment"># Silicon Valley, CA</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ping lax-ca-us-ping.vultr.com <span class="comment"># Los Angeles, CA</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ping fra-de-ping.vultr.com    <span class="comment"># Frankfurt</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ping nj-us-ping.vultr.com     <span class="comment"># NY, New Jersey</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ping il-us-ping.vultr.com     <span class="comment"># Chicago, Illinois</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ping fl-us-ping.vultr.com     <span class="comment"># Miami, Florida</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ping syd-au-ping.vultr.com    <span class="comment"># Sydney, Australia</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ping lon-gb-ping.vultr.com    <span class="comment"># London, UK</span></span></span><br></pre></td></tr></table></figure></p>
-<h4>Server Type</h4>
-<p>操作系统。推荐选择比较稳定的Linux发行版，如CentOS, Ubuntu LTS等。推荐CentOS。</p>
-<h4>Server Size</h4>
-<p>服务器资费方案。一般来说，最低$2.5的500G带宽足够个人或者三五同学公用的需求。但近日(20180714)发现这个方案已经不再分配公网IPv4，所以改用$5的方案。这个价格比某些廉价VPN要贵不少，所以推荐多人分摊公用，这样既不浪费带宽，也能省些钱。</p>
-<h4>Additional Features</h4>
-<p>额外特性。建议启用IPv6和DDoS保护(部分地区服务器支持)。注意，2018年9月后Vultr DDoS防护价格飙升，不知道是否同</p>
-<h4>完成</h4>
-<p>选择好后点击deploy完成部署，等待自动安装。完成后点击主页上刚刚部署的服务器右侧的三个小点，选择Server Details，记下IP Address和Password。Vultr网站上的准备到这里就完成了。</p>
-<h3>部署服务端</h3>
-<p>在终端上用<code>ssh</code>登录刚刚部署的服务器(CentOS)，用户为root(根用户)。首次登录最好先进行更新，同时改掉初始密码
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ssh root@vultrip  <span class="comment"># with Password</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> yum update        <span class="comment"># for first login</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> passwd            <span class="comment"># change password</span></span></span><br></pre></td></tr></table></figure></p>
-<p>登录后部署服务端。我们使用秋水逸冰的<a href="https://teddysun.com/486.html" target="_blank" rel="noopener">一键安装脚本</a>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> wget --no-check-certificate -O shadowsocks-all.sh https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks-all.sh</span></span><br></pre></td></tr></table></figure></p>
-<p>加上执行权限后运行之
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> chmod +x shadowsocks-all.sh</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ./shadowsocks-all.sh 2&gt;&amp;1 | tee shadowsocks-all.log</span></span><br></pre></td></tr></table></figure></p>
-<p>过程中需要依次对以下内容进行设置</p>
-<ul>
-<li>SS版本。选择SSR (2)。</li>
-<li>密码。</li>
-<li>端口(port)。初始端口随机生成。</li>
-<li>加密方法(encryption)。</li>
-<li>协议(protocol)。</li>
-<li>混淆(obf)。</li>
-</ul>
-<p>记下以上设置，回车安装。上述设置也可以在<code>shadowsocks-all.log</code>中查询。接下来就可以退出服务器，回到本地设置客户端。</p>
-<h3>部署客户端</h3>
-<h4>macOS</h4>
-<p>推荐使用<a href="https://github.com/shadowsocks/ShadowsocksX-NG" target="_blank" rel="noopener">ShadowsocksX-NG</a>作为客户端。在GitHub上下载最新版本(Release标签内)，解压缩、安装。启用后单击右上角标记，按照上一步中的服务端部署方式，编辑服务器设置。
-<figure class="null"><img src="ssr-client.png" alt="ShadowsocksX-NG服务器设置"><figcaption>ShadowsocksX-NG服务器设置</figcaption></figure>
-编辑完后点击&quot;打开Shadowsocks&quot;，即可使用。</p>
-<h4>Windows</h4>
-<p>推荐使用<a href="https://github.com/shadowsocks/shadowsocks-windows" target="_blank" rel="noopener">Shadowsocks-windows</a>。下载解压后运行，双击任务栏中SS图标，弹出服务器配置窗口。具体配置方法与macOS类似。</p>
-<h4>PAC分流</h4>
-<p>以上客户端均允许对访问请求进行分流，即仅对必须绕过GFW才能访问的地址使用sock5协议，这对应于PAC模式。一般通过<a href="https://github.com/gfwlist/gfwlist" target="_blank" rel="noopener">GFW List</a>设置PAC地址列表。用户也可以进行自定义: 对于ShadowsocksX-NG，可以在&quot;代理设置-编辑PAC用户自定义规则&quot;中设置。对于Shadowsocks-windows，&quot;PAC-编辑本地PAC文件&quot;，手动编辑<code>pac.txt</code>中的<code>domains</code>变量。</p>
-<h2>总结</h2>
-<p>回顾从VPN、hosts到SS的过程，其实是自己能力和心态逐渐变化的过程。一开始什么也不懂，依靠别人的VPN过活; 后来看到了免费的hosts，自己也愿意稍微折腾一下，但渐渐也受不了每个hosts文件的短暂寿命和找hosts的痛苦，最后走上了折腾钱折腾时间但是一定程度上&quot;一劳永逸&quot;的SS(感谢开源项目开发者们和脚本作者)。也许之后还会继续折腾到V2Ray吧。谨把这Vultr VPS+SSR搭建过程献给与GFW战斗的勇者们。</p>
-<h2>TODO</h2>
-<ul>
-<li>[ ] 2018-10-15 增加DDNS部分</li>
-</ul>
-
+		<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文简单介绍了使用Shadowsocks翻越GFW实现对包括Google、Youtube、Twitter在内的国外网站的访问，叙述了基于Vultr公司服务器的SSR服务端部署和macOS/Windows客户端使用方法。
 	
 	</div>
   <a type="button" href="/2017/12/22/VPS_and_SSR/#more" class="btn btn-default more">Read More</a>
@@ -829,222 +310,7 @@ cond(no)->op</textarea><textarea id="flowchart-0-options" style="display: none">
   <div class="row">
 	
 	
-		<link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2>前言</h2>
-<p>本文从编译一个简单的质数判断程序入手, 介绍了如何利用GNU/Make方便地编译较复杂的程序项目。&lt;!--more--&gt;</p>
-<h2>背景</h2>
-<h3>目标</h3>
-<p>如果我们希望用C语言实现判断一个从外部输入的正整数<code>a</code>是否是质数的程序(要求<code>a</code>小于一预设值<code>intmax</code>)，那么我们需要在程序中实现以下功能：</p>
-<ul>
-<li>
-<p>读取外部输入<code>a</code>，并判断<code>a</code>是否为整数且小于<code>intmax</code>；</p>
-</li>
-<li>
-<p>求不大于<code>a</code>的平方根的正整数<code>b</code>；</p>
-</li>
-<li>
-<p>判断是否存在小于等于<code>b</code>且不等于1的整数<code>c</code>能整除<code>a</code>。若存在，则<code>a</code>为合数，否则为质数。</p>
-</li>
-</ul>
-<h3>实现</h3>
-<p>上述功能由三个函数实现，分别保存在三个.c文件中，由main.c中<code>main()</code>统一调用。各函数功能见表格，具体代码见最后一节附录。通过编译.c产生.o文件，然后将所有.o链接起来，产生可执行程序<code>prime</code>。注意到这里需要<code>math.h</code>中的函数<code>sqrt</code>，因此需要用<code>-lm</code>链接数学库。</p>
-<table>
-<thead>
-<tr>
-<th>文件名</th>
-<th>函数名</th>
-<th>形参</th>
-<th>功能</th>
-<th>返回值</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>main.c</td>
-<td><code>main</code></td>
-<td></td>
-<td>流程控制</td>
-<td></td>
-</tr>
-<tr>
-<td>read_a.c</td>
-<td><code>read_a</code></td>
-<td></td>
-<td>从外部读取<code>a</code></td>
-<td><code>a</code>; -1</td>
-</tr>
-<tr>
-<td>isqrt.c</td>
-<td><code>isqrt</code></td>
-<td><code>a</code></td>
-<td>求不大于$\sqrt{\texttt{a}}$的整数<code>b</code></td>
-<td></td>
-</tr>
-<tr>
-<td>judge_p.c</td>
-<td><code>judge_p</code></td>
-<td><code>a,b</code></td>
-<td>循环判断<code>a</code>是否质数</td>
-<td></td>
-</tr>
-<tr>
-<td>prime.h</td>
-<td></td>
-<td></td>
-<td>头文件, 声明函数</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2>GNU/Make基本</h2>
-<h3>什么是<code>make</code></h3>
-<p>比较大的工程通常包含很多源文件，需要逐个编译并链接才能得到目标执行程序。手动编译和链接不仅操作麻烦，每次链接时还要重新输入所有目标文件以及需要的函数库，浪费时间精力。<code>make</code>是一种帮助我们自动编译与构建大型工程的工具。通过将**规则（rule）**写入Makefile文件，<code>make</code>就会根据规则中的依赖关系逐层编译目标文件，最后链接得到执行程序。<code>make</code>在Linux上的标准实现是GNU/Make，以下所有<code>make</code>指令均为GNU make。</p>
-<p>事实上，除了编译程序外，<code>make</code>也可以帮助我们完成其他的工作，具体内容由规则决定。</p>
-<h3>规则</h3>
-<p><code>make</code>需要Makefile来告诉它以什么样的顺序去编译和链接程序。Makefile中最核心的概念是规则，一个Makefile里可以包含多个规则。规则一般写成如下形式</p>
-<p><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[目标文件]: [前提文件]</span></span><br><span class="line">    [命令 1]</span><br><span class="line">    ...</span><br><span class="line">    [命令 n]</span><br></pre></td></tr></table></figure></p>
-<p>其中</p>
-<ul>
-<li>
-<p>**目标文件（Target）**可以是一个.o文件，或者可执行程序，也可以仅仅是一个标签（比如clean目标是清除所以已编译的.o文件和可执行程序）。</p>
-</li>
-<li>
-<p>**前提文件（Prerequisites）**是完成该目标所需要的文件或者目标。目标文件和前提文件之间用冒号分开。命令（Command）为该目标下执行的Shell命令，<strong>必须</strong>用Tab对命令缩进。这一系列命令统一称为规则的recipe。如果你不喜欢用Tab缩进，那么需要修改<code>.RECIPEPREFIX</code>换成你想要的符号。比如</p>
-<p><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.RECIPEPREFIX := :</span><br><span class="line"><span class="section">all:</span></span><br><span class="line">:@echo <span class="string">"Recipe prefix symbol set to $(.RECIPEREFIX)"</span></span><br></pre></td></tr></table></figure></p>
-</li>
-</ul>
-<h3><code>make</code>运行机制</h3>
-<p>在命令行输入<code>make</code>后,一般会按次序发生以下事件：</p>
-<ol>
-<li>
-<p><code>make</code>在当前文件夹下搜索Makefile和makefile（GNU make还会包括GNUmakefile）文件并读取。搜寻顺序是GNUmakefile、makefile、Makefile，先找到哪个文件读哪个；</p>
-</li>
-<li>
-<p>找到Makefile后，读取Makefile中<code>include</code>包含的文件；</p>
-</li>
-<li>
-<p>初始化变量值，展开所有需要立即展开的变量；</p>
-</li>
-<li>
-<p>以第一个规则中的目标作为最终目标，根据最终目标以及依赖关系，建立依赖关系列表；</p>
-</li>
-<li>
-<p>执行除最终目标以外的所有目标的规则：规则中前提文件不存在，或者前提文件比目标文件新，则执行规则下的命令重建目标；</p>
-</li>
-<li>
-<p>执行最终目标所在规则。</p>
-</li>
-</ol>
-<h2>Makefile具体写法</h2>
-<p>接下来以构造可执行程序<code>prime</code>为例，讲解Makefile的写法和<code>make</code>的运行。</p>
-<h3>最直接的Makefile</h3>
-<p><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">prime: read_a.o isqrt.o judge_p.o main.o </span></span><br><span class="line">    gcc -o prime read_a.o isqrt.o main.o judge_p.o -lm</span><br><span class="line"></span><br><span class="line"><span class="section">read_a.o: read_a.c</span></span><br><span class="line">    gcc -c read.c</span><br><span class="line"></span><br><span class="line"><span class="section">isqrt.o: isqrt.c</span></span><br><span class="line">    gcc -c isqrt.c</span><br><span class="line"></span><br><span class="line"><span class="section">judge_p.o: judge_p.c</span></span><br><span class="line">    gcc -c judge_p.c</span><br><span class="line"></span><br><span class="line"><span class="section">main.o: main.c</span></span><br><span class="line">    gcc -c main.c</span><br><span class="line"></span><br><span class="line"><span class="section">clean:</span></span><br><span class="line">    rm -f prime read_a.o isqrt.o judge_p.o  main.o</span><br></pre></td></tr></table></figure></p>
-<p>此时在命令行输入</p>
-<p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> make</span></span><br></pre></td></tr></table></figure></p>
-<p>即可编译所有.o文件和<code>prime</code>。基本流程是：</p>
-<ol>
-<li>
-<p>确定最终目标&quot;prime&quot;，确认前提文件.o是否存在；</p>
-</li>
-<li>
-<p>初始时.o文件均未编译，因此<code>make</code>搜寻以read.o为目标的规则。这一规则只依赖于read_a.c，而read_a.c存在，因而执行该规则内的指令<code>gcc -c read_a.c</code>, 编译得到<code>read_a.o</code>；</p>
-</li>
-<li>
-<p>同上，编译<code>isqrt.o, judge_p.o</code>和<code>main.o</code>；</p>
-</li>
-<li>
-<p><code>.o</code>全部编译完成后，回到<code>prime</code>目标执行链接的命令，产生可执行程序<code>prime</code>。</p>
-</li>
-</ol>
-<p>注意，<code>make</code>只会执行第一个规则，如果把prime放到后面，那么<code>make</code>将只会编译<code>read_a.c</code>，此时需要输入</p>
-<p><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ make prime</span><br></pre></td></tr></table></figure></p>
-<p>在<code>make</code>后加上<code>-d</code>选项，可以查看<code>make</code>运行的具体流程</p>
-<p><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ make -d</span><br></pre></td></tr></table></figure></p>
-<h3>改进Makefile</h3>
-<h4>定义显式变量</h4>
-<p>在Makefile中定义变量<code>objects</code></p>
-<p><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">objects = read_a.o isqrt.o judge_p.o main.o</span><br></pre></td></tr></table></figure></p>
-<p>用<code>$()</code>展开<code>objects</code>可以得到所有目标。</p>
-<h4>利用预定义隐式规则</h4>
-<p><code>make</code>对一系列程序的编译预定义了隐式规则，例如C程序编译的隐式规则为</p>
-<p><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$(CC)</span> -c main.c <span class="variable">$(CFLAGS)</span> <span class="variable">$(CPPFLAGS)</span></span><br></pre></td></tr></table></figure></p>
-<p>且自动包含<code>.c</code>文件为前提文件。其中<code>CC,CFLAGS</code>和<code>CPPFLAGS</code>是<code>make</code>针对C程序编译的内建变量，其他的还有<code>CXX,FC,FFLAGS,LDFLAGS</code>等等。因此Makefile可以进一步简化为</p>
-<p><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">objects = read_a.o isqrt.o judge_p.o main.o </span><br><span class="line"></span><br><span class="line"><span class="section">prime: <span class="variable">$(objects)</span> </span></span><br><span class="line">    gcc -o prime <span class="variable">$(objects)</span> -lm</span><br><span class="line"></span><br><span class="line"><span class="meta"><span class="meta-keyword">.PHONY</span>: clean</span></span><br><span class="line"><span class="section">clean:</span></span><br><span class="line">    rm -f prime <span class="variable">$(objects)</span></span><br></pre></td></tr></table></figure></p>
-<p>事实上在<code>main.o</code>中我们省去了<code>prime.h</code>，这是因为它被包含在<code>main.c</code>中，<code>make</code>会将其自动加入前提文件。从而显式规则只剩下以<code>prime</code>和<code>clean</code>为目标的规则。</p>
-<p>这里用<code>.PHONY</code>声明<strong>伪规则（Phony rules）</strong>，里面包含<code>clean</code>，以避免执行<code>make</code>时以<code>clean</code>作为最终目标。在这里并不是必要的，因为第一个目标是<code>prime</code>。但当工程较大、规则较多较杂时，声明伪规则可以避免不必要的问题。</p>
-<h4>修改内置变量</h4>
-<p><code>CC,CFLAGS,CXX,FC,FFLAGS,LDFLAGS</code>等等是<code>make</code>中内置的变量，在隐式规则中使用。我们同样可以修改它们，配合%匹配来自定义程序编译的隐式规则。例如在<code>makefile.include</code>里面定义</p>
-<p><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CC = icc</span><br><span class="line">CFLAGS = -Wall -g</span><br><span class="line">LDFLAGS = -lm</span><br></pre></td></tr></table></figure></p>
-<p>此时.o文件的隐式规则中执行的命令实际就变成了</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">icc -c -o main.o main.c -Wall -g</span><br></pre></td></tr></table></figure></p>
-<p>在目标<code>prime</code>的规则中，用<code>$(LDFLAGS)</code>变量来包含数学库，编译器<code>$CC</code></p>
-<p><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">prime:</span></span><br><span class="line">	<span class="variable">$(CC)</span> -o prime <span class="variable">$(objects)</span> <span class="variable">$(CFLAGS)</span> <span class="variable">$(LDFLAGS)</span></span><br></pre></td></tr></table></figure></p>
-<h4>模式规则</h4>
-<p>我们看到对于.o文件我们可以利用隐式规则来编译，但是当我们需要使用比较复杂的编译选项时，隐式规则就不适用了。此时可以利用%进行模式匹配来定义隐式规则，如<code>prime.h</code>在<code>include</code>文件夹内，需要用<code>-I</code>选项将该文件夹加入头文件搜索路径</p>
-<p><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">INC= -I./<span class="keyword">include</span></span><br><span class="line"><span class="section">%.o: %.c</span></span><br><span class="line">    <span class="variable">$(CC)</span> -c -o <span class="variable">$@</span> <span class="variable">$&lt;</span> <span class="variable">$(CFLAGS)</span> <span class="variable">$(INC)</span></span><br></pre></td></tr></table></figure></p>
-<p>其中<code>%.o: %.c</code>等价于以<code>stem.c</code>为前提产生目标文件<code>stem.o</code>。这样的规则称为模式规则(Pattern
-rule)。我们可以用这种方法自定义执行命令，使之符合我们的需求。</p>
-<h4>自动变量</h4>
-<p>上面的命令中用到的<code>$@</code>和<code>$&lt;</code>是<code>make</code>的一个特殊功能，称为自动变量（automatic variable）。<code>make</code>中常用的自动变量见下表</p>
-<table>
-<thead>
-<tr>
-<th>自动变量</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>$@</code></td>
-<td>目标文件名</td>
-</tr>
-<tr>
-<td><code>$&lt;</code></td>
-<td>第一个前提文件的名字</td>
-</tr>
-<tr>
-<td><code>$^</code></td>
-<td>所有前提文件，以空格分隔</td>
-</tr>
-<tr>
-<td><code>$?</code></td>
-<td>所有比目标文件新的前提文件，以空格分隔</td>
-</tr>
-</tbody>
-</table>
-<h4>通配符</h4>
-<p>包括一般的Shell通配符, 如<code>*,?,[],[!]</code>。例如<code>clean</code>目标中</p>
-<p><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">clean:</span></span><br><span class="line">	rm -f prime *.o</span><br></pre></td></tr></table></figure></p>
-<p>此外更为常用的通配符是wildcard和patsubst函数. 使用wildcard函数扩展通配符以及patsubst函数替换通配符。patsubst需要３个参数，第一个是个需要匹配的式样，第二个表示用什么来替换它，第三个是个需要被处理的由空格分隔的字列。以下<code>objects</code>定义的方法与显式定义等价
-<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sources = <span class="variable">$(<span class="built_in">wildcard</span> *.c)</span></span><br><span class="line">objects = <span class="variable">$(<span class="built_in">patsubst</span> %.c,%.o,<span class="variable">$(sources)</span>)</span></span><br></pre></td></tr></table></figure></p>
-<p>第一个<code>%</code>匹配非空字符串，每次匹配的字符串叫做&quot;柄&quot;（stem），第二个<code>%</code>将被解读为第一参数所匹配的柄。该命令中，<code>patsubst</code>将<code>$(sources)</code>中的<code>.c</code>文件列表替换成对应的<code>.o</code>文件。这里的<code>%</code>不能用<code>*</code>来代替。</p>
-<h3>include外部文件</h3>
-<p>创建<code>makefile.include</code>文件，在里面定义变量：
-<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># makefile.include </span></span><br><span class="line">sources = <span class="variable">$(<span class="built_in">wildcard</span> *.c)</span></span><br><span class="line">objects = <span class="variable">$(<span class="built_in">patsubst</span> %.c,%.o,<span class="variable">$(sources)</span>)</span></span><br><span class="line">CC      = icc</span><br><span class="line">CFLAGS  = -Wall -g</span><br><span class="line">LDFLAGS = -lm</span><br><span class="line">INC     = -I./<span class="keyword">include</span></span><br></pre></td></tr></table></figure></p>
-<p>在Makefile里加入<code>include</code>指令把makefile.include中的变量包含进来。此时Makefile写成
-<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">include</span> makefile.<span class="keyword">include</span> </span><br><span class="line">    </span><br><span class="line"><span class="section">prime: <span class="variable">$(objects)</span> </span></span><br><span class="line">	<span class="variable">$(CC)</span> -o prime <span class="variable">$(objects)</span> <span class="variable">$(CFLAGS)</span> <span class="variable">$(LDFLAGS)</span></span><br><span class="line">    </span><br><span class="line"><span class="section">%.o: %.c</span></span><br><span class="line">	<span class="variable">$(CC)</span> -c -o <span class="variable">$@</span> <span class="variable">$&lt;</span> <span class="variable">$(CFLAGS)</span> <span class="variable">$(INC)</span></span><br><span class="line">    </span><br><span class="line"><span class="meta"><span class="meta-keyword">.PHONY</span>: clean</span></span><br><span class="line"><span class="section">clean:</span></span><br><span class="line">	rm -f prime *.o</span><br></pre></td></tr></table></figure></p>
-<h4>条件语法</h4>
-<p><code>make</code>支持条件控制<code>ifeq..else..endif</code>，例如
-<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">debug=no</span><br><span class="line"><span class="keyword">ifeq</span> (<span class="variable">$(debug)</span>,no)</span><br><span class="line">    CFLAGS += -O3</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    CFLAGS += -O0</span><br><span class="line"><span class="keyword">endif</span></span><br></pre></td></tr></table></figure></p>
-<p>直接用<code>make</code>编译时将默认执行激进的O3优化。可在命令行增加宏debug定义来覆盖Makefile里定义好的值，如
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ make debug=yes</span><br></pre></td></tr></table></figure></p>
-<p>此时不会对程序进行优化。这样方便随时调试和比较优化带来的效率改进。</p>
-<h2>附录</h2>
-<h3>代码附录</h3>
-<h4><code>main.c</code></h4>
-<p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* decide if an integer a is a prime number */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"prime.h"</span></span></span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> a,b;</span><br><span class="line">    a = read_a();</span><br><span class="line">    b = isqrt(a);</span><br><span class="line">    judge_p(a,b);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h4><code>read_a.c</code></h4>
-<p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"prime.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> intmax 100</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">read_a</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> a;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">" Type the number a (4&lt;=a&lt;%d): "</span>,intmax);</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;a);</span><br><span class="line">    <span class="keyword">if</span> (a &lt; <span class="number">4</span> || a &gt; intmax)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d is not in range. Exit\n"</span>,a);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">return</span> a;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h4><code>isqrt.c</code></h4>
-<p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"prime.h"</span>    </span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">isqrt</span><span class="params">(<span class="keyword">int</span> a)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> t;</span><br><span class="line">    t = <span class="built_in">sqrt</span>(a);</span><br><span class="line">    <span class="keyword">return</span> t;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h4><code>judge_p.c</code></h4>
-<p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"prime.h"</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">judge_p</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> a_sqrt)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">for</span> (i=<span class="number">2</span>;i&lt;=a_sqrt;i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (a%i == <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">" %d is not prime.\n"</span>,a);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (i==(a_sqrt+<span class="number">1</span>))</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">" %d is prime.\n"</span>,a);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h4><code>prime.h</code></h4>
-<p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;math.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> __FUNC_H</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> __FUNC_H</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">read_a</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">isqrt</span><span class="params">(<span class="keyword">int</span> a)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">judge_p</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> b)</span></span>;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure></p>
-<h3>TeX文件编译的Makefile举例</h3>
-<p><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 编译about_make.tex</span></span><br><span class="line">FILE = about_make.tex</span><br><span class="line">TEX  = xelatex</span><br><span class="line">    </span><br><span class="line"><span class="section">all:</span></span><br><span class="line">	<span class="variable">$(TEX)</span> <span class="variable">$(FILE)</span>;</span><br><span class="line">	<span class="variable">$(TEX)</span> <span class="variable">$(FILE)</span>; <span class="comment"># 需要连续编译两次以获得交叉引用的编号</span></span><br></pre></td></tr></table></figure></p>
-<h2>参考资料</h2>
-<p>GNU manual of make: <a href="https://www.gnu.org/software/make/manual/make.html" target="_blank" rel="noopener">https://www.gnu.org/software/make/manual/make.html</a></p>
-
+		<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文从编译一个简单的质数判断程序入手, 介绍了如何利用GNU/Make方便地编译较复杂的程序项目。
 	
 	</div>
   <a type="button" href="/2017/10/12/make-1/#more" class="btn btn-default more">Read More</a>
@@ -1115,65 +381,65 @@ rule)。我们可以用这种方法自定义执行命令，使之符合我们的
 		<h4>Tag Cloud</h4>
 		<ul class="tag_box inline list-unstyled">		
 		
-			<li><a href="/tags/Shadowsocks/">Shadowsocks<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/LIBXC/">LIBXC<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/Compilation/">Compilation<span class="badge">4</span></a></li>
-		
-			<li><a href="/tags/Panflute/">Panflute<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/regex/">regex<span class="badge">1</span></a></li>
+			<li><a href="/tags/Fortran/">Fortran<span class="badge">1</span></a></li>
 		
 			<li><a href="/tags/Youtube/">Youtube<span class="badge">1</span></a></li>
 		
-			<li><a href="/tags/Blogging/">Blogging<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/Fortran/">Fortran<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/Pandoc/">Pandoc<span class="badge">2</span></a></li>
-		
-			<li><a href="/tags/Bugfix/">Bugfix<span class="badge">3</span></a></li>
-		
-			<li><a href="/tags/GPAW/">GPAW<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/LaTeX/">LaTeX<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/WIEN2k/">WIEN2k<span class="badge">3</span></a></li>
-		
-			<li><a href="/tags/Tutorial/">Tutorial<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/Python/">Python<span class="badge">2</span></a></li>
-		
-			<li><a href="/tags/AST/">AST<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/VASP/">VASP<span class="badge">2</span></a></li>
-		
-			<li><a href="/tags/FFTW/">FFTW<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/Intel/">Intel<span class="badge">4</span></a></li>
-		
-			<li><a href="/tags/MPI/">MPI<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/Freemind/">Freemind<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/Jupyter/">Jupyter<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/DFT/">DFT<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/macOS/">macOS<span class="badge">1</span></a></li>
+			<li><a href="/tags/MKL/">MKL<span class="badge">1</span></a></li>
 		
 			<li><a href="/tags/Valgrind/">Valgrind<span class="badge">1</span></a></li>
 		
-			<li><a href="/tags/Bootstrap/">Bootstrap<span class="badge">1</span></a></li>
+			<li><a href="/tags/bilibili/">bilibili<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/Shadowsocks/">Shadowsocks<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/Tutorial/">Tutorial<span class="badge">1</span></a></li>
 		
 			<li><a href="/tags/VPS/">VPS<span class="badge">1</span></a></li>
 		
+			<li><a href="/tags/FFTW/">FFTW<span class="badge">1</span></a></li>
+		
 			<li><a href="/tags/Make/">Make<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/GPAW/">GPAW<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/Panflute/">Panflute<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/Jupyter/">Jupyter<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/regex/">regex<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/Pandoc/">Pandoc<span class="badge">2</span></a></li>
+		
+			<li><a href="/tags/Blogging/">Blogging<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/Bugfix/">Bugfix<span class="badge">3</span></a></li>
+		
+			<li><a href="/tags/VASP/">VASP<span class="badge">2</span></a></li>
+		
+			<li><a href="/tags/Compilation/">Compilation<span class="badge">4</span></a></li>
+		
+			<li><a href="/tags/F2PY/">F2PY<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/Python/">Python<span class="badge">2</span></a></li>
+		
+			<li><a href="/tags/macOS/">macOS<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/LIBXC/">LIBXC<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/Freemind/">Freemind<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/MPI/">MPI<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/WIEN2k/">WIEN2k<span class="badge">3</span></a></li>
 		
 			<li><a href="/tags/Markdown/">Markdown<span class="badge">2</span></a></li>
 		
 			<li><a href="/tags/Hexo/">Hexo<span class="badge">3</span></a></li>
+		
+			<li><a href="/tags/Network/">Network<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/SOC/">SOC<span class="badge">1</span></a></li>
 		
 		
 		   <li><a href="/tags">...<span class="badge">35</span></a></li>
