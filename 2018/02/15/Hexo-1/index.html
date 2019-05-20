@@ -144,7 +144,7 @@
               
               <li><a href="/tags/VASP/" style="font-size: 15px; font-family: 微软雅黑">VASP<span></span></a></li>
               
-              <li><a href="/tags/Python/" style="font-size: 15px; font-family: 微软雅黑">Python<span></span></a></li>
+              <li><a href="/tags/Valgrind/" style="font-size: 15px; font-family: 微软雅黑">Valgrind<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -216,7 +216,7 @@
 <p>在浏览器访问<code>https://localhost:4000</code> 即可看到生成的Hexo博客。通过</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo d</span><br></pre></td></tr></table></figure>
 <p>可以将静态页面推送到GitHub Pages中, 此时就能在username.github.io上看到博客了.</p>
-<h3 id="主题选择"><a href="#主题选择" class="headerlink" title="主题选择"></a>主题选择</h3><p>本博客使用的是从<a href="https://github.com/PytLab/hexo-theme-freemind" target="_blank" rel="noopener">PytLab</a>处Fork来的<a href="https://github.com/minyez/hexo-theme-freemind" target="_blank" rel="noopener">Freemind</a>主题。首先将仓库下载到本地<code>themes</code>文件夹内</p>
+<h3 id="主题选择"><a href="#主题选择" class="headerlink" title="主题选择"></a>主题选择</h3><p>本博客使用的是从<a href="https://github.com/PytLab/hexo-theme-freemind">PytLab</a>处Fork来的<a href="https://github.com/minyez/hexo-theme-freemind">Freemind</a>主题。首先将仓库下载到本地<code>themes</code>文件夹内</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> themes</span><br><span class="line">git <span class="built_in">clone</span> https://github.com/minyez/hexo-theme-freemind freemind</span><br></pre></td></tr></table></figure>
 <p>下载完成后，修改根目录下<code>_config.yml</code>文件中的<code>theme</code>标签以启用Freemind</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">theme:</span> <span class="string">freemind</span></span><br></pre></td></tr></table></figure>
@@ -236,7 +236,7 @@
 <p>利用<code>hexo new post</code>产生的博文，front matter会套用<code>scaffold</code>中的<code>post.md</code>，相当于post的初始化模板</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">title:</span> <span class="string">&#123;&#123;</span> <span class="string">title</span> <span class="string">&#125;&#125;</span></span><br><span class="line"><span class="attr">date:</span> <span class="string">&#123;&#123;</span> <span class="string">date</span> <span class="string">&#125;&#125;</span></span><br><span class="line"><span class="attr">tags:</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></table></figure>
 <p>可根据自己需要修改模板，如增加目录<code>toc</code>、归类<code>categories</code>以及首页图片<code>feature</code>。当存在与md文件名一致的文件夹时，md中图片和代码引用会在该文件夹中搜索，只需要把欲引用的图片代码放入文件夹，将引用路径设为文件名即可。</p>
-<h3 id="基于MathJax的数学公式插入"><a href="#基于MathJax的数学公式插入" class="headerlink" title="基于MathJax的数学公式插入"></a>基于MathJax的数学公式插入</h3><p>由于专业原因，可以预想到很多时候需要插入大量的公式，实现方法是使用浏览器公式引擎<a href="https://www.mathjax.org/" target="_blank" rel="noopener">MathJax</a>。推荐使用<a href="https://github.com/phoenixcw/hexo-renderer-mathjax" target="_blank" rel="noopener">hexo-renderer-mathjax</a>，安装很方便，对<code>_config.yml</code>的改动量也很小。通过npm安装</p>
+<h3 id="基于MathJax的数学公式插入"><a href="#基于MathJax的数学公式插入" class="headerlink" title="基于MathJax的数学公式插入"></a>基于MathJax的数学公式插入</h3><p>由于专业原因，可以预想到很多时候需要插入大量的公式，实现方法是使用浏览器公式引擎<a href="https://www.mathjax.org/" target="_blank" rel="noopener">MathJax</a>。推荐使用<a href="https://github.com/phoenixcw/hexo-renderer-mathjax">hexo-renderer-mathjax</a>，安装很方便，对<code>_config.yml</code>的改动量也很小。通过npm安装</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-renderer-mathjax --save</span><br></pre></td></tr></table></figure>
 <p>安装完就可以正常使用。如果出现无法渲染的情况，在<code>_config.yml</code>中加入:</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Plugins:</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">hexo-renderer-mathjax</span></span><br></pre></td></tr></table></figure>
@@ -314,15 +314,15 @@
 <h3 id="图片说明"><a href="#图片说明" class="headerlink" title="图片说明"></a>图片说明</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save hexo-image-caption</span><br></pre></td></tr></table></figure>
 <p>在<code>_config.yml</code>中加入</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">image_caption:</span></span><br><span class="line"><span class="attr">  enable:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">  class_name:</span></span><br></pre></td></tr></table></figure>
-<p>并按照这一条<a href="https://github.com/wayou/hexo-image-caption/pull/4/files" target="_blank" rel="noopener">PR</a>修改<code>node_modules/hexo-image-caption/index.js</code>.</p>
-<h3 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h3><p>安装<a href="https://github.com/bubkoo/hexo-filter-flowchart" target="_blank" rel="noopener">hexo-filter-flowchart</a></p>
+<p>并按照这一条<a href="https://github.com/wayou/hexo-image-caption/pull/4/files">PR</a>修改<code>node_modules/hexo-image-caption/index.js</code>.</p>
+<h3 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h3><p>安装<a href="https://github.com/bubkoo/hexo-filter-flowchart">hexo-filter-flowchart</a></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save hexo-filter-flowchart</span><br></pre></td></tr></table></figure>
 <p>直接使用即可. 具体语法参考<a href="https://flowchart.js.org/" target="_blank" rel="noopener">flowchart.js官网</a></p>
 <div id="flowchart-0" class="flow-chart"></div>
 
 <p>对于比较长的流程, 需要在<code>_config.yml</code>中</p>
 <h2 id="Freemind特性"><a href="#Freemind特性" class="headerlink" title="Freemind特性"></a>Freemind特性</h2><h3 id="首页摘要"><a href="#首页摘要" class="headerlink" title="首页摘要"></a>首页摘要</h3><p>在要作为摘要的文字后面加上<code>&lt;!--more--&gt;</code>，首页将只显示<code>&lt;!--more--&gt;</code>前面的内容，同时出现”Read More”的按钮。摘要内容仍然会在正文中显示。</p>
-<h3 id="标签插件"><a href="#标签插件" class="headerlink" title="标签插件"></a>标签插件</h3><p>使用标签插件(Tag plugins)可以使得文章的可读性更好。在这里我参考了wxpan提供的<a href="https://github.com/PytLab/hexo-theme-freemind/blob/source/_posts/tag-plugins-cn.md" target="_blank" rel="noopener">样例</a>。<del>总结一些tag plugins用法，包括一般Hexo和Bootstrap的tag plugins。</del>在使用插件前，需要先安装<a href="https://github.com/wzpan/hexo-tag-bootstrap" target="_blank" rel="noopener">Bootstrap</a></p>
+<h3 id="标签插件"><a href="#标签插件" class="headerlink" title="标签插件"></a>标签插件</h3><p>使用标签插件(Tag plugins)可以使得文章的可读性更好。在这里我参考了wxpan提供的<a href="https://github.com/PytLab/hexo-theme-freemind/blob/source/_posts/tag-plugins-cn.md">样例</a>。<del>总结一些tag plugins用法，包括一般Hexo和Bootstrap的tag plugins。</del>在使用插件前，需要先安装<a href="https://github.com/wzpan/hexo-tag-bootstrap">Bootstrap</a></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-tag-bootstrap --save</span><br></pre></td></tr></table></figure>
 <h4 id="标签-label"><a href="#标签-label" class="headerlink" title="标签(label)"></a>标签(label)</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;% label <span class="keyword">default</span> %&#125;</span><br><span class="line">&#123;% label warn warning %&#125;</span><br><span class="line">&#123;% label succ success %&#125;</span><br><span class="line">&#123;% label danger danger %&#125;</span><br><span class="line">&#123;% label prim primary %&#125;</span><br><span class="line">&#123;% label info info %&#125;</span><br></pre></td></tr></table></figure>
 <p>效果是插入一个醒目的颜色小标签<br><span class="label label-default">default</span> <span class="label label-warning">warn</span> <span class="label label-success">succ</span> <span class="label label-danger">danger</span> <span class="label label-primary">prim</span> <span class="label label-info">info</span></p>
@@ -346,7 +346,7 @@
 <p>在<code>_config.yml</code>中设置</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">favicon:</span> <span class="literal">True</span></span><br></pre></td></tr></table></figure>
 <p>然后将命名为<code>icon.png</code>的网站图标图片放入Hexo根目录下的<code>source/assets/images/favicon</code>下即可。也可以修改<code>href</code>属性，换成自己想要的路径。</p>
-<h3 id="Wiki型浮窗式的脚注"><a href="#Wiki型浮窗式的脚注" class="headerlink" title="Wiki型浮窗式的脚注"></a>Wiki型浮窗式的脚注</h3><p>用<code>npm</code>安装<a href="https://github.com/kchen0x/hexo-reference" target="_blank" rel="noopener">hexo-reference</a></p>
+<h3 id="Wiki型浮窗式的脚注"><a href="#Wiki型浮窗式的脚注" class="headerlink" title="Wiki型浮窗式的脚注"></a>Wiki型浮窗式的脚注</h3><p>用<code>npm</code>安装<a href="https://github.com/kchen0x/hexo-reference">hexo-reference</a></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-refernce --save</span><br></pre></td></tr></table></figure>
 <p>在Hexo根目录<code>_config.yml</code>中启用插件</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Plugins:</span></span><br><span class="line">  <span class="string">hexo-reference</span></span><br></pre></td></tr></table></figure>
@@ -386,7 +386,7 @@
 <li style="list-style: none"><input type="checkbox"> Bugfix: 点击<code>Software</code>的category徽章后显示的文章不全.</li>
 </ul>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>笔者基于Hexo框架和Freemind主题搭建了个人博客，根据自己的需求进行了自定义，并利用MathJax渲染器和Bootstrap特性进行了Markdown写作。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://jdhao.github.io/2018/01/25/hexo-mathjax-equation-number/" target="_blank" rel="noopener">LaTeX Equation Numbering Done Right in Hexo</a><br>另一个渲染器hexo-math及一个讨论其用法的<a href="https://github.com/hexojs/hexo-math/issues/26" target="_blank" rel="noopener">Issue</a><br>如何在自己的主题下实现MathJax支持：<a href="https://www.cnblogs.com/wangxin37/p/8185688.html" target="_blank" rel="noopener">在Hexo中渲染MathJax数学公式</a><br>代码块复制：<a href="https://www.ofind.cn/blog/HEXO/HEXO%E4%BC%98%E5%8C%96%E4%B9%8B%EF%BC%88%E4%BA%8C%EF%BC%89-%E6%B7%BB%E5%8A%A0%E5%A4%8D%E5%88%B6%E5%8A%9F%E8%83%BD.html" target="_blank" rel="noopener">HEXO优化之（二）—-添加复制功能</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://jdhao.github.io/2018/01/25/hexo-mathjax-equation-number/" target="_blank" rel="noopener">LaTeX Equation Numbering Done Right in Hexo</a><br>另一个渲染器hexo-math及一个讨论其用法的<a href="https://github.com/hexojs/hexo-math/issues/26">Issue</a><br>如何在自己的主题下实现MathJax支持：<a href="https://www.cnblogs.com/wangxin37/p/8185688.html" target="_blank" rel="noopener">在Hexo中渲染MathJax数学公式</a><br>代码块复制：<a href="https://www.ofind.cn/blog/HEXO/HEXO%E4%BC%98%E5%8C%96%E4%B9%8B%EF%BC%88%E4%BA%8C%EF%BC%89-%E6%B7%BB%E5%8A%A0%E5%A4%8D%E5%88%B6%E5%8A%9F%E8%83%BD.html" target="_blank" rel="noopener">HEXO优化之（二）—-添加复制功能</a></p>
 <h2 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h2><h3 id="2019-05-07"><a href="#2019-05-07" class="headerlink" title="2019-05-07"></a>2019-05-07</h3><ol>
 <li>增加基于<code>hexo-reference</code>的wiki浮窗式的脚注.</li>
 <li>MathJax: 比较各种情况下<code>*</code>和<code>_</code>的渲染结果. 更改CDN.</li>
@@ -545,12 +545,12 @@ var disqus_shortname = 'shigaro';
   <div class="container-narrow">
   <footer> <p>
   
-  &copy; 2019 by <a href="http://minyez.github.io"> minyez </a>
+  &copy; 2019 by <a href="https://github.com/minyez"> minyez </a>
   
-     | <a href="http://github.com/minyez/hexo-theme-freemind/">Theme</a> by <a href="http://minyez.github.io/">minyez</a> based on two freemind themes by <a href="https://github.com/wzpan/hexo-theme-freemind/">wzpan</a> and <a href="https://github.com/PytLab/hexo-theme-freemind/">PytLab</a> 
+     | <a href="http://github.com/minyez/hexo-theme-freemind/">Theme</a> based on two Freemind themes by <a href="https://github.com/wzpan/hexo-theme-freemind/">wzpan</a> and <a href="https://github.com/PytLab/hexo-theme-freemind/">PytLab</a> 
      | Powered by <a href="https://github.com/hexojs/hexo">Hexo</a>
   
-     | <span id="busuanzi_container_site_uv"><span id="busuanzi_value_site_uv"></span> visitors</span>
+     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
 </p>
  </footer>

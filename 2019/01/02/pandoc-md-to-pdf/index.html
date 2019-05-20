@@ -144,7 +144,7 @@
               
               <li><a href="/tags/VASP/" style="font-size: 15px; font-family: 微软雅黑">VASP<span></span></a></li>
               
-              <li><a href="/tags/Python/" style="font-size: 15px; font-family: 微软雅黑">Python<span></span></a></li>
+              <li><a href="/tags/Valgrind/" style="font-size: 15px; font-family: 微软雅黑">Valgrind<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -215,7 +215,7 @@ Try running pandoc with --pdf-engine=xelatex.
 <p>HTML转到PDF的转换引擎的一种选择是开源工具<a href="https://wkhtmltopdf.org/" target="_blank" rel="noopener">wkhtmltopdf</a>, 用Homebrew安装后, 执行</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pandoc note.md -o note.pdf --css gfm.css --pdf-engine wkhtmltopdf -t html5</span><br></pre></td></tr></table></figure>
 <p>就能正常转换了！上面去掉<code>-t html5</code>也可以正常运行. 除了<a href="https://wkhtmltopdf.org/" target="_blank" rel="noopener">wkhtmltopdf</a>外也可以用<a href="http://www.princexml.com/" target="_blank" rel="noopener">prince</a>, 但它太贵了…</p>
-<p><code>gfm.css</code>对自己来说不是特别好看, 尤其没有GitHub那样的浅蓝色代码背景以及对行间代码的渲染, 所以对css稍微做了一些修改. <code>pre code</code>部分参考了这个<a href="https://github.com/sindresorhus/github-markdown-css" target="_blank" rel="noopener">CSS</a>, 但它其他样式做得不好看, 也是后来才发现它的, 所以没从它出发_(xз」∠)_</p>
+<p><code>gfm.css</code>对自己来说不是特别好看, 尤其没有GitHub那样的浅蓝色代码背景以及对行间代码的渲染, 所以对css稍微做了一些修改. <code>pre code</code>部分参考了这个<a href="https://github.com/sindresorhus/github-markdown-css">CSS</a>, 但它其他样式做得不好看, 也是后来才发现它的, 所以没从它出发_(xз」∠)_</p>
 <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 在一级标题前面加上朝右的蓝色三角 */</span></span><br><span class="line"><span class="selector-tag">h1</span><span class="selector-pseudo">:before</span> &#123;</span><br><span class="line">  <span class="attribute">content</span>: <span class="string">"\25B6\2005"</span>;</span><br><span class="line">  <span class="attribute">color</span>: <span class="number">#0645ad</span>;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">60%</span>;</span><br><span class="line">  <span class="attribute">vertical-align</span>: middle;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-tag">pre</span> &#123;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">16px</span>;</span><br><span class="line">  <span class="attribute">overflow</span>: auto;</span><br><span class="line">  <span class="attribute">line-height</span>: <span class="number">1.45</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: <span class="number">#f6f8fa</span>;</span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">3px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-tag">code</span> &#123;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">0.2em</span> <span class="number">0.4em</span>;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: <span class="built_in">rgba</span>(27,31,35,0.05);</span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">3px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-tag">pre</span>&gt;<span class="selector-tag">code</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: inline;</span><br><span class="line">  <span class="attribute">max-width</span>: auto;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">overflow</span>: visible;</span><br><span class="line">  <span class="attribute">line-height</span>: inherit;</span><br><span class="line">  <span class="attribute">word-wrap</span>: normal;</span><br><span class="line">  <span class="attribute">background-color</span>: transparent;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>2019-04-30补充: 后来又陆续做了其他改进, 转化了北大超算的使用教程, 最终效果大概是下面这样</p>
 <p><figure class="null"><img src="pandoc-html-pdf.png" alt="pandoc-html-pdf"><figcaption>pandoc-html-pdf</figcaption></figure></p>
@@ -344,7 +344,7 @@ Try running pandoc with --pdf-engine=xelatex.
 <p><code>mainfont</code>等中包含字体变量<code>mainfont</code>, <code>romanfont</code>, <code>sansfont</code>, <code>monofont</code>,<code>mathfont</code>和<code>CJKmainfont</code>. <code>CJKmainfont</code>的使用需要有<code>xecjk</code>包. 每一个都对应一个<code>fontoption</code>字体选项变量. 系统中可用的中文字体可通过<code>fc-list:lang=zh-cn</code>查看. 日语字体用<code>:lang=ja</code>.</p>
 <p>做以下改动</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">CJKmainfont:</span> <span class="string">Songti</span> <span class="string">SC</span></span><br><span class="line"><span class="attr">mainfont:</span> <span class="string">Times</span> <span class="string">New</span> <span class="string">Roman</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></table></figure>
-<p>将<code>CJKmainfont</code>设为<code>Songti SC</code>后上面的字体缺失Warning就没有了. 如果直接把<code>mainfont</code>改成<code>Songti SC</code>也可以解决问题, 但如此一来英文字体也会应用宋体, 看上去就会比较奇怪(用Word应该很有体验). <a href="https://github.com/jgm/pandoc/wiki/Pandoc-With-Chinese-\(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87\" target="_blank" rel="noopener">Pandoc Wiki</a>)上说用应该把<code>mainfont</code>设为中文字体, 我觉得并不必要.</p>
+<p>将<code>CJKmainfont</code>设为<code>Songti SC</code>后上面的字体缺失Warning就没有了. 如果直接把<code>mainfont</code>改成<code>Songti SC</code>也可以解决问题, 但如此一来英文字体也会应用宋体, 看上去就会比较奇怪(用Word应该很有体验). <a href="https://github.com/jgm/pandoc/wiki/Pandoc-With-Chinese-\(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87\">Pandoc Wiki</a>)上说用应该把<code>mainfont</code>设为中文字体, 我觉得并不必要.</p>
 <h4 id="颜色"><a href="#颜色" class="headerlink" title="颜色"></a>颜色</h4><table>
 <thead>
 <tr>
@@ -431,7 +431,7 @@ Try running pandoc with --pdf-engine=xelatex.
 <p>参考文献和引用格式可以通过<code>biblio-style</code>变量设定, 比如<code>-M biblio-style=nature</code>选择nature引用风格. 查看<a href="https://www.ctan.org/tex-archive/macros/latex/exptl/biblatex-contrib" target="_blank" rel="noopener">CTAN的biblatex-contrib</a>查看有哪些可用的风格, 或者在Tex Live Utility搜索biblatex, 查看每个相关包的说明, 又或者查看这个overleaf链接<a href="https://www.overleaf.com/learn/latex/Biblatex_citation_styles" target="_blank" rel="noopener">Biblatex citation styles</a>.</p>
 <h3 id="插入图表"><a href="#插入图表" class="headerlink" title="插入图表"></a>插入图表</h3><p>除了直接用makrdown语法插入图片外, Pandoc支持属性和名称引用, 包含在花括号<code>{}</code>内</p>
 <figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">![<span class="string">This is my website logo.</span>](<span class="link">icon.jpg</span>)&#123;width=50% #fig:favicon&#125;</span><br></pre></td></tr></table></figure>
-<p>可在正文中插入<code>+@fig:favicon</code>以引用. 为了得到正确的交叉引用链接, 需要安装<a href="https://github.com/tomduck/pandoc-fignos" target="_blank" rel="noopener">pandoc-fignos</a>作为过滤器.</p>
+<p>可在正文中插入<code>+@fig:favicon</code>以引用. 为了得到正确的交叉引用链接, 需要安装<a href="https://github.com/tomduck/pandoc-fignos">pandoc-fignos</a>作为过滤器.</p>
 <p>在制作表格时, pandoc支持单元格含多行文字的表格, 也能非常方便的调整列的对齐方式, 比如以下三列分别是左中右对齐的.</p>
 <figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">|left | center | right|</span><br><span class="line">|:----|:------:|-----:|</span><br><span class="line">|l    |c       |r     |</span><br><span class="line"></span><br><span class="line">Table: demo left-center-right table &#123;#tbl:demo-tbl&#125;</span><br></pre></td></tr></table></figure>
 <table>
@@ -450,7 +450,7 @@ Try running pandoc with --pdf-engine=xelatex.
 </tr>
 </tbody>
 </table>
-<p>在正文中插入<code>+@tbl:demo-tbl</code>以引用. 类似的, 转化时用<a href="https://github.com/tomduck/pandoc-tablenos" target="_blank" rel="noopener">pandoc-tablenos</a>过滤后才能得到正确的交叉引用链接.</p>
+<p>在正文中插入<code>+@tbl:demo-tbl</code>以引用. 类似的, 转化时用<a href="https://github.com/tomduck/pandoc-tablenos">pandoc-tablenos</a>过滤后才能得到正确的交叉引用链接.</p>
 <h2 id="实例-转换demo-md到demo-pdf"><a href="#实例-转换demo-md到demo-pdf" class="headerlink" title="实例: 转换demo.md到demo.pdf"></a>实例: 转换<code>demo.md</code>到<code>demo.pdf</code></h2><p>最后放一个用<code>markdown+pandoc+xelatex+bibtex</code>的实际例子, 所需文件都在<a href="demo.tar.gz">压缩包</a>里, 欢迎下载. <code>make</code>编译需要有pandoc和TeXLive等LaTeX发行版.</p>
 <ul>
 <li><code>demo.md</code>：Markdown源文件</li>
@@ -604,12 +604,12 @@ var disqus_shortname = 'shigaro';
   <div class="container-narrow">
   <footer> <p>
   
-  &copy; 2019 by <a href="http://minyez.github.io"> minyez </a>
+  &copy; 2019 by <a href="https://github.com/minyez"> minyez </a>
   
-     | <a href="http://github.com/minyez/hexo-theme-freemind/">Theme</a> by <a href="http://minyez.github.io/">minyez</a> based on two freemind themes by <a href="https://github.com/wzpan/hexo-theme-freemind/">wzpan</a> and <a href="https://github.com/PytLab/hexo-theme-freemind/">PytLab</a> 
+     | <a href="http://github.com/minyez/hexo-theme-freemind/">Theme</a> based on two Freemind themes by <a href="https://github.com/wzpan/hexo-theme-freemind/">wzpan</a> and <a href="https://github.com/PytLab/hexo-theme-freemind/">PytLab</a> 
      | Powered by <a href="https://github.com/hexojs/hexo">Hexo</a>
   
-     | <span id="busuanzi_container_site_uv"><span id="busuanzi_value_site_uv"></span> visitors</span>
+     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
 </p>
  </footer>

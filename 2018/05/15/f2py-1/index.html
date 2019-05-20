@@ -144,7 +144,7 @@
               
               <li><a href="/tags/VASP/" style="font-size: 15px; font-family: 微软雅黑">VASP<span></span></a></li>
               
-              <li><a href="/tags/Python/" style="font-size: 15px; font-family: 微软雅黑">Python<span></span></a></li>
+              <li><a href="/tags/Valgrind/" style="font-size: 15px; font-family: 微软雅黑">Valgrind<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -300,7 +300,7 @@
 <h2 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h2><h3 id="2019-05-02"><a href="#2019-05-02" class="headerlink" title="2019-05-02"></a>2019-05-02</h3><ol>
 <li><p>时隔一年各类包都有更新, 原来的代码运行各种问题, 包括在<code>import f_matmul</code>时出现</p>
  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ImportError: dynamic module does not define module export function (PyInit_f_matmul)</span><br></pre></td></tr></table></figure>
-<p> 这一条<a href="https://github.com/pytorch/ELF/issues/98" target="_blank" rel="noopener">pytorch issue</a>陈述了类似的问题, 我的理解是由于f2py和python<a href="https://github.com/numpy/numpy/issues/7769" target="_blank" rel="noopener">版本不兼容</a>所致. 用<code>python -m numpy.f2py</code>替代<code>f2py</code>即解决了这一问题.</p>
+<p> 这一条<a href="https://github.com/pytorch/ELF/issues/98">pytorch issue</a>陈述了类似的问题, 我的理解是由于f2py和python<a href="https://github.com/numpy/numpy/issues/7769">版本不兼容</a>所致. 用<code>python -m numpy.f2py</code>替代<code>f2py</code>即解决了这一问题.</p>
 </li>
 <li><p><code>order=&#39;Fortran&#39;</code>替换为<code>order=&#39;F&#39;</code>.</p>
 </li>
@@ -396,7 +396,7 @@ s.setAttribute('data-timestamp', +new Date());
     <ul id="categorys" class="tag_box list-unstyled collapse in">
           
   <li>
-    <li><a href="/categories/Programming/">Programming<span class="badge">4</span></a></li>
+    <li><a href="/categories/Programming/">Programming<span class="badge">5</span></a></li>
   </li>
 
     </ul>
@@ -409,7 +409,7 @@ s.setAttribute('data-timestamp', +new Date());
 	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
     <ul id="tags" class="tag_box list-unstyled collapse in">	  
 	    
-  <li><a href="/tags/Python/">Python<span class="badge">2</span></a></li> <li><a href="/tags/Fortran/">Fortran<span class="badge">1</span></a></li> <li><a href="/tags/F2PY/">F2PY<span class="badge">1</span></a></li> <li><a href="/tags/MKL/">MKL<span class="badge">1</span></a></li>
+  <li><a href="/tags/Python/">Python<span class="badge">2</span></a></li> <li><a href="/tags/Fortran/">Fortran<span class="badge">2</span></a></li> <li><a href="/tags/F2PY/">F2PY<span class="badge">1</span></a></li> <li><a href="/tags/MKL/">MKL<span class="badge">1</span></a></li>
 
     </ul>
 	</div>
@@ -452,12 +452,12 @@ var disqus_shortname = 'shigaro';
   <div class="container-narrow">
   <footer> <p>
   
-  &copy; 2019 by <a href="http://minyez.github.io"> minyez </a>
+  &copy; 2019 by <a href="https://github.com/minyez"> minyez </a>
   
-     | <a href="http://github.com/minyez/hexo-theme-freemind/">Theme</a> by <a href="http://minyez.github.io/">minyez</a> based on two freemind themes by <a href="https://github.com/wzpan/hexo-theme-freemind/">wzpan</a> and <a href="https://github.com/PytLab/hexo-theme-freemind/">PytLab</a> 
+     | <a href="http://github.com/minyez/hexo-theme-freemind/">Theme</a> based on two Freemind themes by <a href="https://github.com/wzpan/hexo-theme-freemind/">wzpan</a> and <a href="https://github.com/PytLab/hexo-theme-freemind/">PytLab</a> 
      | Powered by <a href="https://github.com/hexojs/hexo">Hexo</a>
   
-     | <span id="busuanzi_container_site_uv"><span id="busuanzi_value_site_uv"></span> visitors</span>
+     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
 </p>
  </footer>
