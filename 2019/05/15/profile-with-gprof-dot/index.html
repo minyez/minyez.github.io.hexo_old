@@ -192,7 +192,7 @@
 	<div class="mypage">		
 	  		
 
-	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>本文简要介绍如何基于<code>gprof</code>或<code>valgrind</code>的性能分析数据, 使用<code>gprof2dot</code>和<code>Graphviz</code>制作Fortran程序的调用图, 以便对Fortran程序进行调试和优化. <a id="more"></a></p>
+	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>本文简要介绍如何基于gprof或Valgrind的性能分析数据, 使用gprof2dot和Graphviz制作Fortran程序的调用图, 以便对Fortran程序进行调试和优化. <a id="more"></a></p>
 <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>程序逻辑或者工作流是程序设计中很重要的部分, 与程序的算法实现及效率紧密相关. 通过分析程序运行中函数的调用顺序和次数等, 可以发现程序中可能存在的设计缺陷和性能瓶颈. 调用图(<a href="https://en.wikipedia.org/wiki/Call_graph" target="_blank" rel="noopener">call graph</a>)是一种展示程序工作流的手段, 包括静态和运行时两种, 前者侧重调用逻辑, 后者侧重实际工作环境中的时间效率.</p>
 <p>之前写代码时一直不是很重视设计这个阶段, 最多用心灵导图稍微画一画需求, 也不是非常严格. 这导致过一段时间回看代码, 会对某些地方为什么要那么写产生疑问, 要想很久才能回忆起来, 很费时间. 这对于个人小型项目问题还好, 对中型或大型项目就会造成很大的困难. 在一顿无望的结果测试后, 最近我重新回到组里GAP3的开发里. 尽管理解工作流程, 但对于GAP3的<em>GW</em>计算如何调用它的各种例程, 仍然没有非常清晰的图象. 于是我希望能用调用图来把程序运行逻辑可视化, 帮助自己理清思路. 网上一顿搜索后, 发现可以用gprof和Valgrind来做性能分析, 用gprof2dot和<code>dot</code>来处理分析数据并作图.</p>
 <p>这篇文章就是自学的一些总结. 以下所有操作都是在Linux (Fedora 27)下完成, 用到的主要工具是</p>
