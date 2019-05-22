@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   
-  <title>均匀与对数格点上的Numerov方法 | Shigaro</title>
+  <title>均匀格点与对数格点上的Numerov方法 | Shigaro</title>
   <meta name="author" content="minyez">
   
   <meta name="description" content="minyez&#39;s blog on life, science and programming">
@@ -11,7 +11,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="均匀与对数格点上的Numerov方法"/>
+  <meta property="og:title" content="均匀格点与对数格点上的Numerov方法"/>
   <meta property="og:site_name" content="Shigaro"/>
 
   
@@ -58,7 +58,8 @@
 
 </head>
 
- <body>  
+ <body 
+>
   <nav id="main-nav" class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container">
       <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -144,9 +145,9 @@
               
               <li><a href="/tags/Hexo/" style="font-size: 15px; font-family: 微软雅黑">Hexo<span></span></a></li>
               
-              <li><a href="/tags/VASP/" style="font-size: 15px; font-family: 微软雅黑">VASP<span></span></a></li>
-              
               <li><a href="/tags/Valgrind/" style="font-size: 15px; font-family: 微软雅黑">Valgrind<span></span></a></li>
+              
+              <li><a href="/tags/VASP/" style="font-size: 15px; font-family: 微软雅黑">VASP<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -177,7 +178,7 @@
 
 	
 		<div class="page-header">		
-			<h1> 均匀与对数格点上的Numerov方法</h1>
+			<h1> 均匀格点与对数格点上的Numerov方法</h1>
 		</div>		
 	
 
@@ -194,15 +195,15 @@
 	<div class="mypage">		
 	  		
 
-	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>本文在两种数值格点(均匀格点和对数格点)上推导了Numerov方法的递推方程.</p>
+	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>本文在两种数值格点(均匀格点和对数格点)上推导了Numerov方法的递推方程, 给出了简单的Python实现.</p>
 <a id="more"></a>
 <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p><a href="https://en.wikipedia.org/wiki/Numerov%27s_method" target="_blank" rel="noopener">Numerov方法</a>是数值求解常微分方程(ODE)的一种方法, 适用于不含一阶项的二阶ODE</p>
-<p>$$\begin{equation}<br>y’’ + f(r)y = s(r).<br>\end{equation}\label{eq:numerov-ode}$$</p>
+<p>$$\begin{equation}<br>y’’ + f(r)y = s(r).<br>\end{equation}\label{eq:numerov-ode}<br>$$</p>
 <p>在物理上有很多方程满足这种形式, 其中与我最为相关的是薛定谔方程(SE), 更确切的是三维有心势下的径向薛定谔方程(rSE). 原子单位下, rSE写成</p>
 <p>$$<br>\left[-\frac{d^2}{d r^2} + \frac{l(l+1)}{r^2} + 2V(r)\right]R_l(r) = E_lR_l(r)<br>$$</p>
 <p>其中$R_l$是定义在一维实空间$r$上的波函数$u_l$与矢径长$r$的积, $R_l(r)=ru_l(r)$, $E_l$是能量, $l$是角量子数. 这个方程满足Numerov方程要求的ODE形式</p>
 <p>$$<br>\begin{cases}<br>f(r) = -\frac{l(l+1)}{r^2} - 2V(r) + E_l \\<br>s(r) = 0<br>\end{cases}<br>$$</p>
-<p>因此可以用该方法数值求解. 本文首先在两种格点方案, 即均匀格点和对数格点上推导Numerov方法的核心方程, 即格点递推公式.</p>
+<p>因此可以用该方法数值求解. 本文首先在两种格点方案, 均匀格点和对数格点上推导Numerov方法的核心方程, 即格点递推公式, 然后给出简单的Python实现.</p>
 <h2 id="推导"><a href="#推导" class="headerlink" title="推导"></a>推导</h2><h3 id="均匀格点"><a href="#均匀格点" class="headerlink" title="均匀格点"></a>均匀格点</h3><p>首先在均匀格点上推导一下Numerov方法. 在$r$点附近对函数$y$作Taylor展开</p>
 <p>$$<br>\begin{equation}\label{eq:deriv-1}<br>y(r\pm h) = y(r) \pm hy’(r) + \frac{h^2}{2}y’’(r) \pm \frac{h^3}{6}y’’’(r) + \frac{h^4}{24}y’’’’(r) + \cdots<br>\end{equation}<br>$$</p>
 <p>将正负两式相加</p>
@@ -218,7 +219,7 @@
 <p>这就是Numerov方法的一般方程. 特别的, 对于齐次方程, $s=0$, 式子可以化简成</p>
 <p>$$<br>\left[1+\frac{h^2}{12}f(r+h)\right]y(r+h) = 2\left[1+\frac{h^2}{12}f(r)\right]y(r) - \left[1+\frac{h^2}{12}f(r-h)\right]y(r-h) - h^2f(r)y(r) + \mathcal{O}(h^6).<br>$$</p>
 <p>取间距为$h$的均匀格点, 此时上式化成三点递推方程,</p>
-<p>$$<br>(1+\frac{h^2}{12}f_{n+1})y_{n+1} = 2(1+\frac{h^2}{12}f_n)y_i - (1+\frac{h^2}{12}f_{n-1})y_{n-1} - h^2f_n y_n<br>$$</p>
+<p>$$<br>(1+\frac{h^2}{12}f_{n+1})y_{n+1} = 2(1+\frac{h^2}{12}f_n)y_n - (1+\frac{h^2}{12}f_{n-1})y_{n-1} - h^2f_n y_n<br>$$</p>
 <p>精确到步长的六次方. 实际应用当中, 我们需要先确定前两个格点上的值, 然后就可以用上式推出第三点及之后所有格点上的函数值.</p>
 <h3 id="对数格点"><a href="#对数格点" class="headerlink" title="对数格点"></a>对数格点</h3><p>除了实空间均匀格点, 我们也可以使用对数均匀格点(logarithmic grid), 其上第n个实空间格点为</p>
 <p>$$<br>r_n = r_0 e^{nh}<br>$$</p>
