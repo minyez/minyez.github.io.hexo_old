@@ -105,3 +105,59 @@ IndexError: no such group
 - 参数个数等于1时, 返回一个字符串; 大于1时返回一个字符串元组.
 - 如果参数大于被匹配模式中包含的组数, 抛出`IndexError`.
 - `groups`返回所有组的匹配结果, 总是一个字符串元组.
+
+## 利用group标记的替换
+
+对于包含多个参数的输入
+
+```text
+param1 | param2 | param3 # this is comment
+```
+
+注释以"#"开头, 是可选的, 参数之间用`|`隔开. 例如, 一条包含两个参数的字符串及其对应的匹配模式
+
+```python
+s = "2.0  |  1.E-15   # pwm, stctol"
+pat = r"^([\w \.-]+)\|([\w \.-]+)(#[\w \(\),\.-]*)?$"
+```
+
+可利用group进行灵活有效的替换. 比如说, 现在只将第一个参数替换为5.0, 则
+
+```python
+>>> re.sub(pat, r"5.0 | \2 \3", s)
+'5.0 |   1.E-15          # pwm, stctol'
+```
+
+其中标记`\2`表示第二个组所匹配的子字符串, 以此类推. 这种方法的好处是只需要知道被匹配参数在文件中的位置(行号, 行内参数的总数以及所要参数的序号)就可以方便地替换, 不需要依赖`split`和其他判断函数.
+
+具体来说, 对于参数个数可变的情形, 利用函数动态地产生匹配模式和替换格式
+
+```python
+def get_pattern(n):
+    '''Generate n parameters pattern'''
+    s = [r"([\w \.-]+)", ] * n
+    return r'^' + r'\|'.join(s) + r'(#[\w \(\),\.-]*)?$'
+
+def get_substr(n, i, value):
+    '''Return the sub string of n-parameter line with i+1-th parameter as value'''
+    sublist = ["\\"+str(i+1) for i in range(n)]
+    sublist[i] = str(value)
+    return ' | '.join(sublist) + ' \\' + str(n+1)
+```
+
+还是用前面的两个参数的行(`s`)作为例子, 替换参数的位置记录在字典`params`里, 要替换的参数值记录在字典`new_value`中
+
+```python
+s = "2.0  |  1.E-15   # pwm, stctol"
+params = {"pwm": (2, 0), "stctol": (2, 1)}
+new_value = {"pwm": 5.0, "stctol": 1.0e-20}
+
+for k, nv in new_value.items():
+    n, i = params.get(k, (None, None))
+    if n is not None:
+        pat = get_pattern(n)
+        sub = get_substr(n, i, nv)
+        s = re.sub(pat, sub, s)
+print(s)
+# result: "5.0  | 1e-20 # pwm, stctol"
+```
