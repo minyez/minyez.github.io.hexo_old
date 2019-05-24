@@ -111,11 +111,9 @@
               
               <li><a href="/categories/Programming/" style="font-size: 15px; font-family: 微软雅黑">Programming<span></span></a></li>
               
-              <li><a href="/categories/Life/" style="font-size: 15px; font-family: 微软雅黑">Life<span></span></a></li>
-              
               <li><a href="/categories/Algorithm/" style="font-size: 15px; font-family: 微软雅黑">Algorithm<span></span></a></li>
               
-              <li><a href="/categories/Programming/Algorithm/" style="font-size: 15px; font-family: 微软雅黑">Algorithm<span></span></a></li>
+              <li><a href="/categories/Life/" style="font-size: 15px; font-family: 微软雅黑">Life<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -222,7 +220,7 @@
 <p>将式$\eqref{eq:UYAB}$两边乘以$h$后, 在格点$n+3$处的表达式为</p>
 <p>$$<br>\begin{equation}<br>\begin{aligned}<br>    \left[\frac{8}{3} - h\right]A_{n+3} - U_{n+3} B_{n+3} &amp;= \frac{8}{3}A_{n+2} + \frac{19}{9}hA’_{n+2} - \frac{5}{9}hA’_{n+1} + \frac{1}{9}hA’_n \\<br>    \left[\frac{8}{3} + h\right]B_{n+3} + Y_{n+3} A_{n+3} &amp;= \frac{8}{3}B_{n+2} + \frac{19}{9}hB’_{n+2} - \frac{5}{9}hB’_{n+1} + \frac{1}{9}hB’_n<br>\end{aligned}<br>\end{equation}\label{eq:n-3-UYAB}<br>$$</p>
 <p>如果把上式看成未知数$A_{n+3}$和$B_{n+3}$的二元一次方程, 其系数矩阵和$\eqref{eq:mat-92-96}$是相同的. 检查<code>DGn</code>和<code>DFn</code>的含义(见下面一节)以及系数<code>Rn</code>, 可以发现式子$\eqref{eq:n-3-UYAB}$右侧与<code>B1</code>和<code>B2</code>也是一致的. 因此我们定义的$A$和$B$与outwin.f中的含义是一致的.</p>
-<h3 id="行98-103"><a href="#行98-103" class="headerlink" title="行98-103"></a>行98-103</h3><p>更新最外的三个点的$F$和$G$的导数值, 以用于计算下一个格点上的<code>B1</code>和<code>B2</code>. 其中<code>Dx1</code>和<code>Dx2</code>分别用<code>Dx2</code>和<code>Dx3</code>替代, 即97, 98, 101和102行, 在格点迭代的语境下很好理解. <code>DG3</code>的更新表达式</p>
+<h3 id="行98-103"><a href="#行98-103" class="headerlink" title="行98-103"></a>行98-103</h3><p>更新最外的三个点的导数值, 以用于计算下一个格点上的<code>B1</code>和<code>B2</code>. 其中<code>Dx1</code>和<code>Dx2</code>分别用<code>Dx2</code>和<code>Dx3</code>替代, 即97, 98, 101和102行, 在格点迭代的语境下很好理解. <code>DG3</code>的更新表达式</p>
 <figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DG3 = U*B(K) - X*A(K)</span><br></pre></td></tr></table></figure>
 <p>由式$\eqref{eq:UYAB}$和<code>X</code>等于$-h$, 可得</p>
 <p>$$<br>DG3 = U_K B_K + h A_K = h(A_K + \frac{U_K}{h}B_K) = hA’_K<br>$$</p>
@@ -326,7 +324,7 @@ s.setAttribute('data-timestamp', +new Date());
     <ul id="categorys" class="tag_box list-unstyled collapse in">
           
   <li>
-    <li><a href="/categories/Programming/">Programming<span class="badge">6</span></a></li> <li><a href="/categories/Programming/Algorithm/">Algorithm<span class="badge">1</span></a></li>
+    <li><a href="/categories/Algorithm/">Algorithm<span class="badge">2</span></a></li>
   </li>
 
     </ul>
