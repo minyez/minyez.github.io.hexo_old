@@ -67,7 +67,7 @@ $$
 y''''(r) = \frac{d^2}{d r^2}\left[f(r)y(r)-s(r)\right],
 $$
 
-定义$p(r):=f(r)y(r)-s(r), p''=y''''$, 可以采用与式$\eqref{eq:deriv-1}\eqref{eq:deriv-2}$类似的办法处理$p$, 得到
+定义$p(r):=f(r)y(r)-s(r), p=y'', p''=y''''$, 可以采用与式$\eqref{eq:deriv-1}\eqref{eq:deriv-2}$类似的办法处理$p$, 得到
 
 $$
 \begin{equation}\label{eq:deriv-3}
@@ -75,7 +75,7 @@ p(r-h)+p(r+h) = 2p(r) + h^2 p''(r) + \frac{h^4}{12}p''''(r) + \mathcal{O}(h^6).
 \end{equation}
 $$
 
-把$p''$表达式$\eqref{eq:deriv-3}$回代到式$\eqref{eq:deriv-2}$中,
+把$p, p''$表达式$\eqref{eq:deriv-3}$回代到式$\eqref{eq:deriv-2}$中,
 
 $$
 y(r-h)+y(r+h) = 2y(r) + h^2p(r) + \frac{h^4}{12}\left[p(r-h)+p(r+h)-2p(r)\right] + \mathcal{O}(h^6).
