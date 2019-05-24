@@ -115,6 +115,8 @@
               
               <li><a href="/categories/Algorithm/" style="font-size: 15px; font-family: 微软雅黑">Algorithm<span></span></a></li>
               
+              <li><a href="/categories/Programming/Algorithm/" style="font-size: 15px; font-family: 微软雅黑">Algorithm<span></span></a></li>
+              
               <li class="divider"></li>
             </ul>
 		      </li>
@@ -135,13 +137,13 @@
               <li><a href="/tags" style="font-size: 20px; font-family: 'Calibri Light',Arial">All Tags</a><span></span></li>
               <li class="divider"></li>
               
+              <li><a href="/tags/WIEN2k/" style="font-size: 15px; font-family: 微软雅黑">WIEN2k<span></span></a></li>
+              
               <li><a href="/tags/Intel/" style="font-size: 15px; font-family: 微软雅黑">Intel<span></span></a></li>
               
               <li><a href="/tags/Compilation/" style="font-size: 15px; font-family: 微软雅黑">Compilation<span></span></a></li>
               
               <li><a href="/tags/Bugfix/" style="font-size: 15px; font-family: 微软雅黑">Bugfix<span></span></a></li>
-              
-              <li><a href="/tags/WIEN2k/" style="font-size: 15px; font-family: 微软雅黑">WIEN2k<span></span></a></li>
               
               <li><a href="/tags/Hexo/" style="font-size: 15px; font-family: 微软雅黑">Hexo<span></span></a></li>
               
@@ -395,7 +397,13 @@
 <p>再把想作为背景的图片background.png放到Hexo根目录<code>source/assets/images/</code>下面就可以了. 目前样式参考了<a href="https://vonsdite.cn/posts/c08e78b.html" target="_blank" rel="noopener">这条链接</a>.</p>
 <h3 id="TODO"><a href="#TODO" class="headerlink" title="TODO"></a>TODO</h3><ul>
 <li style="list-style: none"><input type="checkbox"> 增加代码块复制功能.</li>
-<li style="list-style: none"><input type="checkbox"> Bugfix: 点击<code>Software</code>的category徽章后显示的文章不全.</li>
+<li style="list-style: none"><input type="checkbox"> Bugfix: 点击<code>Software</code>的category徽章后显示的文章不全. 一些信息:<ul>
+<li>从最早的Software博文开始一篇篇重新加入, 出现六篇以上时该catogory就只显示最新的前六篇.</li>
+<li>archives不受影响.</li>
+</ul>
+</li>
+<li style="list-style: none"><input type="checkbox"> 在侧边栏中加入随机的一句(hitogoto).</li>
+<li style="list-style: none"><input type="checkbox"> 文章中侧边栏随正文一同滚动. 对于TOC较长的情形, 鼠标移动到侧边栏上对TOC滚动浏览.</li>
 </ul>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>笔者基于Hexo框架和Freemind主题搭建了个人博客，根据自己的需求进行了自定义，并利用MathJax渲染器和Bootstrap特性进行了Markdown写作。</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://jdhao.github.io/2018/01/25/hexo-mathjax-equation-number/" target="_blank" rel="noopener">LaTeX Equation Numbering Done Right in Hexo</a><br>另一个渲染器hexo-math及一个讨论其用法的<a href="https://github.com/hexojs/hexo-math/issues/26">Issue</a><br>如何在自己的主题下实现MathJax支持：<a href="https://www.cnblogs.com/wangxin37/p/8185688.html" target="_blank" rel="noopener">在Hexo中渲染MathJax数学公式</a><br>代码块复制：<a href="https://www.ofind.cn/blog/HEXO/HEXO%E4%BC%98%E5%8C%96%E4%B9%8B%EF%BC%88%E4%BA%8C%EF%BC%89-%E6%B7%BB%E5%8A%A0%E5%A4%8D%E5%88%B6%E5%8A%9F%E8%83%BD.html" target="_blank" rel="noopener">HEXO优化之（二）—-添加复制功能</a><br><a href="https://vonsdite.cn/posts/c08e78b.html" target="_blank" rel="noopener">Hexo 添加背景图片并自适应</a></p>
@@ -404,7 +412,7 @@
 <li>MathJax: 比较各种情况下<code>*</code>和<code>_</code>的渲染结果. 更改CDN.</li>
 </ol>
 <h3 id="2019-05-10"><a href="#2019-05-10" class="headerlink" title="2019-05-10"></a>2019-05-10</h3><ol>
-<li>增加不蒜子统计</li>
+<li>增加对不蒜子统计的支持.</li>
 <li>去掉了Archives不必要的下拉菜单, 直接进入<code>archives</code>页面.</li>
 </ol>
 <h3 id="2019-05-22"><a href="#2019-05-22" class="headerlink" title="2019-05-22"></a>2019-05-22</h3><ol>
