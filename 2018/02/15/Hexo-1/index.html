@@ -135,19 +135,19 @@
               <li><a href="/tags" style="font-size: 20px; font-family: 'Calibri Light',Arial">All Tags</a><span></span></li>
               <li class="divider"></li>
               
+              <li><a href="/tags/WIEN2k/" style="font-size: 15px; font-family: 微软雅黑">WIEN2k<span></span></a></li>
+              
               <li><a href="/tags/Intel/" style="font-size: 15px; font-family: 微软雅黑">Intel<span></span></a></li>
               
               <li><a href="/tags/Compilation/" style="font-size: 15px; font-family: 微软雅黑">Compilation<span></span></a></li>
-              
-              <li><a href="/tags/WIEN2k/" style="font-size: 15px; font-family: 微软雅黑">WIEN2k<span></span></a></li>
               
               <li><a href="/tags/Bugfix/" style="font-size: 15px; font-family: 微软雅黑">Bugfix<span></span></a></li>
               
               <li><a href="/tags/Hexo/" style="font-size: 15px; font-family: 微软雅黑">Hexo<span></span></a></li>
               
-              <li><a href="/tags/Valgrind/" style="font-size: 15px; font-family: 微软雅黑">Valgrind<span></span></a></li>
+              <li><a href="/tags/VASP/" style="font-size: 15px; font-family: 微软雅黑">VASP<span></span></a></li>
               
-              <li><a href="/tags/Python/" style="font-size: 15px; font-family: 微软雅黑">Python<span></span></a></li>
+              <li><a href="/tags/Valgrind/" style="font-size: 15px; font-family: 微软雅黑">Valgrind<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -374,9 +374,9 @@
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- page view by busuanzi --&gt;</span><br><span class="line">&lt;% <span class="keyword">if</span> (theme.busuanzi.pageview) &#123; %&gt;</span><br><span class="line">&lt;div <span class="class"><span class="keyword">class</span></span>=<span class="string">"meta-widget"</span>&gt;</span><br><span class="line">&lt;span id=<span class="string">"busuanzi_container_page_pv"</span>&gt;</span><br><span class="line">&lt;i <span class="class"><span class="keyword">class</span></span>=<span class="string">"fa fa-eye"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">i</span>&gt;</span></span></span><br><span class="line">&lt;span id=<span class="string">"busuanzi_value_page_pv"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span> views</span><br><span class="line">&lt;<span class="regexp">/span&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>div&gt;</span><br><span class="line">&lt;% &#125; %&gt;</span><br></pre></td></tr></table></figure>
 <p>页面每被点击一次, 总访问数就加一.</p>
 <h3 id="全站字数统计"><a href="#全站字数统计" class="headerlink" title="全站字数统计"></a>全站字数统计</h3><p>使用<a href="https://github.com/willin/hexo-wordcount">hexo-wordcount</a>. 类似不蒜子, 在<code>layout/_partial/footer.ejs</code>加入</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;% <span class="keyword">if</span> (theme.wordcount) &#123; %&gt;</span><br><span class="line">  | <span class="xml"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"post-count"</span>&gt;</span><span class="tag">&lt;<span class="name">%=</span> <span class="attr">totalcount</span>(<span class="attr">site</span>) %&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span> words</span><br><span class="line">&lt;% &#125; %&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;% <span class="keyword">if</span> (theme.wordcount.site) &#123; %&gt;</span><br><span class="line">  | <span class="xml"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"post-count"</span>&gt;</span><span class="tag">&lt;<span class="name">%=</span> <span class="attr">totalcount</span>(<span class="attr">site</span>) %&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span> words</span><br><span class="line">&lt;% &#125; %&gt;</span><br></pre></td></tr></table></figure>
 <p>在YAML中开启</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">wordcount:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">wordcount:</span></span><br><span class="line"><span class="attr">  site:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
 <h3 id="修改页尾标记"><a href="#修改页尾标记" class="headerlink" title="修改页尾标记"></a>修改页尾标记</h3><p>在<code>layout/_partial/footer.ejs</code>中修改.</p>
 <h3 id="配色修改"><a href="#配色修改" class="headerlink" title="配色修改"></a>配色修改</h3><p>由于个人偏好蓝色和深绿色，需要简单修改一下博文大小标题和行间代码的配色。在<code>source/css/highlight.css</code>中修改行间代码的CSS样式</p>
 <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">code</span> &#123;</span><br><span class="line">    <span class="attribute">background</span>: <span class="number">#eee</span>;</span><br><span class="line">    <span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#d6d6d6</span>;</span><br><span class="line">    <span class="attribute">padding</span>: <span class="number">0</span> <span class="number">5px</span>;</span><br><span class="line">    <span class="attribute">margin</span>: <span class="number">0</span> <span class="number">2px</span>;</span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">90%</span>;</span><br><span class="line">    <span class="comment">/*text-shadow: 0 1px #fff; */</span> <span class="comment">/*删去白色阴影*/</span></span><br><span class="line">    <span class="attribute">word-break</span>: break-all;</span><br><span class="line">    <span class="attribute">word-wrap</span>: break-word;</span><br><span class="line">    <span class="attribute">white-space</span>: normal;</span><br><span class="line">    <span class="attribute">color</span>: <span class="number">#458B00</span>; <span class="comment">/* 翠绿 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -508,6 +508,14 @@ s.setAttribute('data-timestamp', +new Date());
 	
 
 	<!-- page view by busuanzi -->
+	
+
+	<!-- post word count -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-tachometer"></i>
+	<span class="post-count">4.6k</span> words
+	</div>
 	
 
 	<!-- categories -->
