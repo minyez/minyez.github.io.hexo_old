@@ -16,6 +16,8 @@ npm install hexo-renderer-mathjax --save
 npm insatll hexo-prism-plugin --save
 # rtl support
 npm install hexo-tag-rtl --save
+# word count
+npm install hexo-wordcount --save
 
 
 # clone theme

@@ -5,9 +5,8 @@ toc: true
 date: 2019-05-24 16:14:53
 tags:
 - WIEN2k
-categories: 
-- Programming
-- Algorithm
+- Numerical method
+categories: Algorithm
 ---
 
 ## 摘要
@@ -43,7 +42,7 @@ M(r) \equiv 1+\left(\frac{\alpha}{2}\right)^{2}(E-V(r)) = 1+\frac{E-V(r)}{c^2}
 \end{equation}\label{eq:m}
 $$
 
-$\alpha$为精细结构常数, 在Rydberg单位下$\alpha=2/c$, $c$为光速. 为在步长$h$的对数格点上进行数值计算, 作标量替换$r=r_0 e^x$, $\mathrm{d}r=r\mathrm{d}x$, 得到关于$x$的方程组
+$\alpha$为精细结构常数, 在Rydberg单位下$\alpha=2/c$, $c$为光速. 为在步长$h$的对数格点上进行数值计算, 作变量替换$r=r_0 e^x$, $\mathrm{d}r=r\mathrm{d}x$, 得到关于$x$的方程组
 
 $$
 \begin{equation}
@@ -54,7 +53,7 @@ $$
 \end{equation}\label{eq:x-GF}
 $$
 
-方便起见, 略去了$G,F,M$的变量$r\equiv r(x)$, 撇号表示关于$x$求导.
+方便起见, 上式中略去了*G,F,M*的变量$r\equiv r(x)$, 撇号表示关于*x*求导.
 
 ## 源码解读
 
@@ -64,7 +63,7 @@ $$
 
 ### 行83-91
 
-从81行开始是对第四个及以后的格点的循环. `X`为$-h$, `DRDI`为$rh$. 其他一些的中间量与式$\eqref{eq:x-GF}$中量的关系是
+从81行开始是对第四个及以后的格点的循环. `X`为*-h*, `DRDI`为*rh*. 其他一些的中间量与式$\eqref{eq:x-GF}$中量的关系是
 
 $$
 \begin{equation}
@@ -100,7 +99,7 @@ $$
 
 ### 行92-96
 
-这部分求解的是这样一个矩阵方程
+由行列式解线性方程的知识可知, 这部分求解的是这样一个矩阵方程
 
 $$\begin{equation}
 \begin{bmatrix}
@@ -123,7 +122,7 @@ $$
 y_{n+3}=y_{n+2}+h\left(\frac{9}{24} f\left(t_{n+3}, y_{n+3}\right)+\frac{19}{24} f\left(t_{n+2}, y_{n+2}\right)-\frac{5}{24} f\left(t_{n+1}, y_{n+1}\right)+\frac{1}{24} f\left(t_{n}, y_{n}\right)\right)
 $$
 
-其中$f(t_n, y_n)=y'_n$为第n格点上y的导数, 而$y'_{n+3}$的系数的倒数$\frac{24}{9}=\frac{8}{3}$. 利用上式可以将$A'_{n+3}$表示为
+其中$f(t_n, y_n)=y'_n$为第n格点上y的导数. 利用上式可以将$A'_{n+3}$表示为
 
 $$
 hA'_{n+3} = \frac{8}{3}A_{n+3} - \frac{8}{3}A_{n+2} - \frac{19}{9}hA'_{n+2} + \frac{5h}{9}A'_{n+1} - \frac{h}{9}A'_n
@@ -144,13 +143,13 @@ $$
 
 ### 行98-103
 
-更新最外的三个点的$F$和$G$的导数值, 以用于计算下一个格点上的`B1`和`B2`. 其中`Dx1`和`Dx2`分别用`Dx2`和`Dx3`替代, 即97, 98, 101和102行, 在格点迭代的语境下很好理解. `DG3`的更新表达式
+更新最外的三个点的导数值, 以用于计算下一个格点上的`B1`和`B2`. 其中`Dx1`和`Dx2`分别用`Dx2`和`Dx3`替代, 即97, 98, 101和102行, 在格点迭代的语境下很好理解. `DG3`的更新表达式
 
 ```fortran
 DG3 = U*B(K) - X*A(K)
 ```
 
-由式$\eqref{eq:UYAB}$和`X`等于$-h$, 可得
+由式$\eqref{eq:UYAB}$和`X`等于*-h*, 可得
 
 $$
 DG3 = U_K B_K + h A_K = h(A_K + \frac{U_K}{h}B_K) = hA'_K
@@ -162,21 +161,15 @@ $$
 DF3 = X*B(K) - Y*A(K)
 ```
 
-意味着
-
-$$
-DF3 = -h B_K - Y_K A_K = h B'_K
-$$
-
-因此`DF3`是$h$乘以B在格点K上的导数.
+意味着$DF3 = -h B_K - Y_K A_K = h B'_K$. 因此`DF3`是$h$乘以B在格点K上的导数.
 
 ### 行107-109
 
-这一个循环对B进行了scaling, $B \to cB/2= F/2=\alpha F$. 上面的报告[^1]指出F与小分量有关, 但具体关系暂未推导.
+这一个循环对*B*进行了scaling, $B \to cB/2= F/2=\alpha F$. 报告[^1]指出*F*与小分量有关, 但具体关系暂未推导.
 
 ### 行111-113
 
-由于$A=G=ru$, 因此VAL就是最后一个格点上的波函数值. 而SLO的数学表示
+由于$A=G=ru$, 因此`VAL`就是最后一个格点上的波函数值. 而`SLO`的数学表示
 
 $$
 (h\frac{\mathrm{d}A}{hr\mathrm{d}x}-u)/r
