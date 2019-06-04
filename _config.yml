@@ -68,8 +68,8 @@ time_format: HH:mm:ss
 #tag_generator:
 #  per_page: 0
 
-#category_generator:
-# per_page: 0
+category_generator:
+ per_page: 0
 
 
 # Pagination

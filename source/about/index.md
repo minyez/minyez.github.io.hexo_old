@@ -20,13 +20,12 @@ My mother tongue is Chinese. I also learned English and Japanese.
 
 ## Publications
 
-1. **Zhang, M.-Y.**; Cui, Z.-H.; Jiang, H. Relative stability of FeS<sub>2</sub> polymorphs with the random phase approximation approach. <i>J. Mater. Chem. A</i> <b>6</b>, 6606-6616 (2018). [DOI: 10.1039/C8TA00759D](https://dx.doi.org/10.1039/C8TA00759D)
+1. **Zhang, M.-Y.**; Cui, Z.-H.; Jiang, H. Relative stability of FeS<sub>2</sub> polymorphs with the random phase approximation approach. *J. Mater. Chem. A* **6**</b>**, 6606-6616 (2018). [DOI: 10.1039/C8TA00759D](https://dx.doi.org/10.1039/C8TA00759D)
 
 ## Hobbies
 
 I love reading literature, especially classics.
 
-I love basketball and play for the team of CCME graduate school. 
+I love basketball and play for the team of CCME graduate school.
 
 [ACG](https://zh.wikipedia.org/wiki/ACG) is the panacea.
-
