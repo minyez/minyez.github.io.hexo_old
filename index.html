@@ -207,132 +207,7 @@
   <div class="row">
 	
 	
-		<link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2>摘要</h2>
-<p>阅读WIEN2k v16.1版本中例程<code>outwin</code>的源码, 以理解其所用到的算法. &lt;!--more--&gt;</p>
-<h2>背景</h2>
-<p>outwin.f在WIEN2k各程序中出现, 它包含例程<code>outwin</code>. 之前大略知道它是用来计算原子球内的径向波函数的, 但对于其算法一直很模糊, 一方面由于它涉及相对论方程, 另一方面它除了输入参数的德语注释外一句注释也没有. 最近在研究局域基组生成的问题, 而这个例程出现频率非常高, 因此准备多啃一下这块代码.</p>
-<p>不同SRC文件下的outwin.f版本也不尽同. SRC_nmr, SRC_lapw7等仍然使用Adams-Moulton四阶算法, SRC_lapw2对于第四个以外的格点允许用五阶算法. SRC_lapw7中的注释更多一些, 但仍然用的是四阶算法. 这里尝试对SRC_lapw7中的outwin.f源码进行解读.</p>
-<h2>原理</h2>
-<p>在Rydberg单位下, 具有量子数$\kappa$的大分量波函数$u(r)=G(r)/r$满足&lt;sup id=&quot;fnref:1&quot;&gt;&lt;a href=&quot;#fn:1&quot; rel=&quot;footnote&quot;&gt;&lt;span class=&quot;hint--top hint--error hint--medium hint--rounded hint--bounce&quot; aria-label=&quot;参考这一篇<a href="https://users.wfu.edu/natalie/papers/pwpaw/notes/atompaw/scalarrelativistic.pdf" target="_blank" rel="noopener">报告</a>&quot;&gt;[1]&lt;/span&gt;&lt;/a&gt;&lt;/sup&gt;</p>
-<p>$$
-\begin{equation}
-\begin{aligned}
-\frac{d}{d r} G(r) &amp;= \frac{G(r)}{r}+M(r) F(r) \
-\frac{d}{d r} F(r) &amp;= -\frac{F(r)}{r}+\left(\frac{\kappa(\kappa+1)}{r^{2}} \frac{1}{M(r)}-(E-V(r))\right) G(r)
-\end{aligned}
-\end{equation}\label{eq:r-GF}
-$$</p>
-<p>其中</p>
-<p>$$
-\begin{equation}
-M(r) \equiv 1+\left(\frac{\alpha}{2}\right)^{2}(E-V(r)) = 1+\frac{E-V(r)}{c^2}
-\end{equation}\label{eq:m}
-$$</p>
-<p>$\alpha$为精细结构常数, 在Rydberg单位下$\alpha=2/c$, $c$为光速. 为在步长$h$的对数格点上进行数值计算, 作变量替换$r=r_0 e^x$, $\mathrm{d}r=r\mathrm{d}x$, 得到关于$x$的方程组</p>
-<p>$$
-\begin{equation}
-\begin{aligned}
-G' &amp;= G + M r F \
-F' &amp;= - F + \left(\frac{\kappa(\kappa+1)}{rM}-r(E-V)\right) G
-\end{aligned}
-\end{equation}\label{eq:x-GF}
-$$</p>
-<p>方便起见, 上式中略去了<em>G,F,M</em>的变量$r\equiv r(x)$, 撇号表示关于<em>x</em>求导.</p>
-<h2>源码解读</h2>
-<h3>参数</h3>
-<h3>行66-81</h3>
-<h3>行83-91</h3>
-<p>从81行开始是对第四个及以后的格点的循环. <code>X</code>为*-h*, <code>DRDI</code>为<em>rh</em>. 其他一些的中间量与式$\eqref{eq:x-GF}$中量的关系是</p>
-<p>$$
-\begin{equation}
-\begin{aligned}
-\mathrm{PHI} &amp;= rh\frac{E-V}{c}\
-\mathrm{U} &amp;= rhc + \mathrm{PHI} = rhc\left[1+\frac{E-V}{c^2}\right] = rhcM \
-\mathrm{Y} &amp;= -\kappa(\kappa+1)h^2/\mathrm{U} + \mathrm{PHI} = - \frac{h}{c}\left[\frac{\kappa(\kappa+1)}{rM} - r(E-V)\right]
-\end{aligned}
-\end{equation}
-$$</p>
-<p>从而可以将式$\eqref{eq:x-GF}$写成</p>
-<p>$$
-\begin{equation}
-\begin{aligned}
-G' &amp;= G + \frac{\mathrm{U}}{hc}F \
-F' &amp;= - F - \frac{c}{h}\mathrm{Y} G
-\end{aligned}
-\end{equation}\label{eq:UYGF}
-$$</p>
-<p>令$A=G, B=F/c$, $A'=G', B'=F'/c$, 得到</p>
-<p>$$
-\begin{equation}
-\begin{aligned}
-A' &amp;= A + \frac{\mathrm{U}}{h}B \
-B' &amp;= - B - \frac{\mathrm{Y}}{h} A
-\end{aligned}
-\end{equation}\label{eq:UYAB}
-$$</p>
-<h3>行92-96</h3>
-<p>由行列式解线性方程的知识可知, 这部分求解的是这样一个矩阵方程</p>
-<p>$$\begin{equation}
-\begin{bmatrix}
-\frac{8}{3} + X &amp; -U \
-Y &amp; \frac{8}{3} - X \
-\end{bmatrix}
-\begin{bmatrix}
-A_c \
-B_c \
-\end{bmatrix}=
-\begin{bmatrix}
-B1 \
-B2 \
-\end{bmatrix}
-\end{equation}\label{eq:mat-92-96}$$</p>
-<p>这里下标c表示在代码(code)中的定义. <code>B1</code>和<code>B2</code>在93和94行计算, 基于<a href="https://en.wikipedia.org/wiki/Linear_multistep_method#Adams%E2%80%93Moulton_methods" target="_blank" rel="noopener">Adams-Moulton算法</a>, 因为8/3来自于四阶算法</p>
-<p>$$
-y_{n+3}=y_{n+2}+h\left(\frac{9}{24} f\left(t_{n+3}, y_{n+3}\right)+\frac{19}{24} f\left(t_{n+2}, y_{n+2}\right)-\frac{5}{24} f\left(t_{n+1}, y_{n+1}\right)+\frac{1}{24} f\left(t_{n}, y_{n}\right)\right)
-$$</p>
-<p>其中$f(t_n, y_n)=y'<em>n$为第n格点上y的导数. 利用上式可以将$A'</em>{n+3}$表示为</p>
-<p>$$
-hA'<em>{n+3} = \frac{8}{3}A</em>{n+3} - \frac{8}{3}A_{n+2} - \frac{19}{9}hA'<em>{n+2} + \frac{5h}{9}A'</em>{n+1} - \frac{h}{9}A'_n
-$$</p>
-<p>将式$\eqref{eq:UYAB}$两边乘以$h$后, 在格点$n+3$处的表达式为</p>
-<p>$$
-\begin{equation}
-\begin{aligned}
-\left[\frac{8}{3} - h\right]A_{n+3} - U_{n+3} B_{n+3} &amp;= \frac{8}{3}A_{n+2} + \frac{19}{9}hA'<em>{n+2} - \frac{5}{9}hA'</em>{n+1} + \frac{1}{9}hA'<em>n \
-\left[\frac{8}{3} + h\right]B</em>{n+3} + Y_{n+3} A_{n+3} &amp;= \frac{8}{3}B_{n+2} + \frac{19}{9}hB'<em>{n+2} - \frac{5}{9}hB'</em>{n+1} + \frac{1}{9}hB'_n
-\end{aligned}
-\end{equation}\label{eq:n-3-UYAB}
-$$</p>
-<p>如果把上式看成未知数$A_{n+3}$和$B_{n+3}$的二元一次方程, 其系数矩阵和$\eqref{eq:mat-92-96}$是相同的. 检查<code>DGn</code>和<code>DFn</code>的含义(见下面一节)以及系数<code>Rn</code>, 可以发现式子$\eqref{eq:n-3-UYAB}$右侧与<code>B1</code>和<code>B2</code>也是一致的. 因此我们定义的$A$和$B$与outwin.f中的含义是一致的.</p>
-<h3>行98-103</h3>
-<p>更新最外的三个点的导数值, 以用于计算下一个格点上的<code>B1</code>和<code>B2</code>. 其中<code>Dx1</code>和<code>Dx2</code>分别用<code>Dx2</code>和<code>Dx3</code>替代, 即97, 98, 101和102行, 在格点迭代的语境下很好理解. <code>DG3</code>的更新表达式</p>
-<p><figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DG3 = U*B(K) - X*A(K)</span><br></pre></td></tr></table></figure></p>
-<p>由式$\eqref{eq:UYAB}$和<code>X</code>等于*-h*, 可得</p>
-<p>$$
-DG3 = U_K B_K + h A_K = h(A_K + \frac{U_K}{h}B_K) = hA'_K
-$$</p>
-<p>因此<code>DG3</code>是$h$乘以A在格点K上的导数. 同理, <code>DF3</code>的更新表达式</p>
-<p><figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DF3 = X*B(K) - Y*A(K)</span><br></pre></td></tr></table></figure></p>
-<p>意味着$DF3 = -h B_K - Y_K A_K = h B'_K$. 因此<code>DF3</code>是$h$乘以B在格点K上的导数.</p>
-<h3>行107-109</h3>
-<p>这一个循环对<em>B</em>进行了scaling, $B \to cB/2= F/2=\alpha F$. 报告&lt;sup id=&quot;fnref:1&quot;&gt;&lt;a href=&quot;#fn:1&quot; rel=&quot;footnote&quot;&gt;&lt;span class=&quot;hint--top hint--error hint--medium hint--rounded hint--bounce&quot; aria-label=&quot;参考这一篇<a href="https://users.wfu.edu/natalie/papers/pwpaw/notes/atompaw/scalarrelativistic.pdf" target="_blank" rel="noopener">报告</a>&quot;&gt;[1]&lt;/span&gt;&lt;/a&gt;&lt;/sup&gt;指出<em>F</em>与小分量有关, 但具体关系暂未推导.</p>
-<h3>行111-113</h3>
-<p>由于$A=G=ru$, 因此<code>VAL</code>就是最后一个格点上的波函数值. 而<code>SLO</code>的数学表示</p>
-<p>$$
-(h\frac{\mathrm{d}A}{hr\mathrm{d}x}-u)/r
-=\frac{\mathrm{d}(ru)}{r \mathrm{d}r} - \frac{u}{r}
-=\frac{r\mathrm{d}u}{r \mathrm{d}r} = \frac{\mathrm{d}u}{\mathrm{d}r}
-$$</p>
-<p>为波函数在边界上的导数.</p>
-<h2>总结</h2>
-<p>outwin.f中的<code>outwin</code>例程利用Adams-Moulton算法求解标量相对论方程$\eqref{eq:r-GF}$, 在对数格点上得到量子数$\kappa$下的大分量波函数, 以函数乘矢径长的形式存储在$A$中.</p>
-<h2>TODO</h2>
-<ul>
-<li>[ ] Adams-Moulton算法推导, 可参考<a href="https://en.wikiversity.org/wiki/Adams-Bashforth_and_Adams-Moulton_methods#Exercises" target="_blank" rel="noopener">wikiversity</a></li>
-</ul>
-<h2>脚注</h2>
-<p>&lt;div id=&quot;footnotes&quot;&gt;&lt;hr&gt;&lt;div id=&quot;footnotelist&quot;&gt;&lt;ol style=&quot;list-style: none; padding-left: 0; margin-left: 40px&quot;&gt;&lt;li id=&quot;fn:1&quot;&gt;&lt;span style=&quot;display: inline-block; vertical-align: top; padding-right: 10px; margin-left: -40px&quot;&gt;1.&lt;/span&gt;&lt;span style=&quot;display: inline-block; vertical-align: top; margin-left: 10px;&quot;&gt;参考这一篇&lt;a href=&quot;https://users.wfu.edu/natalie/papers/pwpaw/notes/atompaw/scalarrelativistic.pdf&quot;&gt;报告&lt;/a&gt;&lt;a href=&quot;#fnref:1&quot; rev=&quot;footnote&quot;&gt; ↩&lt;/a&gt;&lt;/span&gt;&lt;/li&gt;&lt;/ol&gt;&lt;/div&gt;&lt;/div&gt;</p>
-
+		<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>阅读WIEN2k v16.1版本中例程<code>outwin</code>的源码, 以理解其所用到的算法.
 	
 	</div>
   <a type="button" href="/2019/05/24/outwin-read/#more" class="btn btn-default more">Read More</a>
@@ -353,63 +228,7 @@ $$</p>
   <div class="row">
 	
 	
-		<link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2>摘要</h2>
-<p>本文简要介绍如何基于gprof或Valgrind的性能分析数据, 使用gprof2dot和Graphviz制作Fortran程序的调用图, 以便对Fortran程序进行调试和优化. &lt;!--more--&gt;</p>
-<h2>背景</h2>
-<p>程序逻辑或者工作流是程序设计中很重要的部分, 与程序的算法实现及效率紧密相关. 通过分析程序运行中函数的调用顺序和次数等, 可以发现程序中可能存在的设计缺陷和性能瓶颈. 调用图(<a href="https://en.wikipedia.org/wiki/Call_graph" target="_blank" rel="noopener">call graph</a>)是一种展示程序工作流的手段, 包括静态和运行时两种, 前者侧重调用逻辑, 后者侧重实际工作环境中的时间效率.</p>
-<p>之前写代码时一直不是很重视设计这个阶段, 最多用心灵导图稍微画一画需求, 也不是非常严格. 这导致过一段时间回看代码, 会对某些地方为什么要那么写产生疑问, 要想很久才能回忆起来, 很费时间. 这对于个人小型项目问题还好, 对中型或大型项目就会造成很大的困难. 在一顿无望的结果测试后, 最近我重新回到组里GAP3的开发里. 尽管理解工作流程, 但对于GAP3的<em>GW</em>计算如何调用它的各种例程, 仍然没有非常清晰的图象. 于是我希望能用调用图来把程序运行逻辑可视化, 帮助自己理清思路. 网上一顿搜索后, 发现可以用gprof和Valgrind来做性能分析, 用gprof2dot和<code>dot</code>来处理分析数据并作图.</p>
-<p>这篇文章就是自学的一些总结. 以下所有操作都是在Linux (Fedora 27)下完成, 用到的主要工具是</p>
-<ul>
-<li>Fortran编译器与链接器: 这里使用Intel 2018 Update 1的<code>ifort</code></li>
-<li><a href="https://sourceware.org/binutils/docs/gprof/" target="_blank" rel="noopener">gprof</a>: 用于分析编译器产生的性能分析文件</li>
-<li>Valgrind: 在<a href="/2019/03/23/valgrind-1/" title="Valgrind Memcheck初探">Valgrind Memcheck初探</a>一文中提到了使用Valgrind的memcheck工具检测内存使用状况, 实际上它还提供了<code>callgrind</code>工具来进行函数调用的运行时分析.</li>
-<li><a href="https://github.com/jrfonseca/gprof2dot">gprof2dot</a>: 将<code>gprof</code>或<code>callgrind</code>分析获得的信息转化成一个以<a href="https://en.wikipedia.org/wiki/DOT_(graph_description_language)" target="_blank" rel="noopener">DOT语言</a>描述的有向图(directed graph)对象. 可以通过<code>pip</code>安装.</li>
-<li><code>dot</code>: 利用Graphviz将DOT有向图对象渲染成图片, 属于Graphviz发行版的一部分.</li>
-</ul>
-<h2>一个接口调用的例子</h2>
-<p>先从一个简单的例子出发, 把调用图制作的逻辑弄清楚. 下面是一段简单的做整数与浮点数加法的Fortran代码</p>
-<p><figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">! filename: hw.f90</span></span><br><span class="line"><span class="keyword">module</span> tools</span><br><span class="line">    <span class="keyword">interface</span> add</span><br><span class="line">        <span class="keyword">module</span> <span class="keyword">procedure</span> add_int</span><br><span class="line">        <span class="keyword">module</span> <span class="keyword">procedure</span> add_double</span><br><span class="line">    <span class="keyword">end</span> <span class="keyword">interface</span> add</span><br><span class="line"></span><br><span class="line">    <span class="keyword">contains</span></span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">function</span></span> add_int(i, j)</span><br><span class="line">            <span class="keyword">integer</span>, <span class="keyword">intent</span>(<span class="keyword">in</span>) :: i</span><br><span class="line">            <span class="keyword">integer</span>, <span class="keyword">intent</span>(<span class="keyword">in</span>) :: j</span><br><span class="line">            <span class="keyword">integer</span> :: add_int</span><br><span class="line"></span><br><span class="line">            add_int = i +j</span><br><span class="line">        <span class="keyword">end</span> <span class="function"><span class="keyword">function</span></span> add_int</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">function</span></span> add_double(i, j)</span><br><span class="line">            <span class="keyword">real</span>(<span class="number">8</span>), <span class="keyword">intent</span>(<span class="keyword">in</span>) :: i</span><br><span class="line">            <span class="keyword">real</span>(<span class="number">8</span>), <span class="keyword">intent</span>(<span class="keyword">in</span>) :: j</span><br><span class="line">            <span class="keyword">real</span>(<span class="number">8</span>) :: add_double</span><br><span class="line"></span><br><span class="line">            add_double = i +j</span><br><span class="line">        <span class="keyword">end</span> <span class="function"><span class="keyword">function</span></span> add_double</span><br><span class="line"><span class="keyword">end</span> <span class="keyword">module</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">program</span></span> hw</span><br><span class="line"></span><br><span class="line">    <span class="keyword">use</span> tools</span><br><span class="line"></span><br><span class="line">    <span class="keyword">integer</span> :: i</span><br><span class="line">    <span class="keyword">real</span>(<span class="number">8</span>) :: x</span><br><span class="line">    <span class="keyword">character</span>(len=<span class="number">20</span>) :: str = <span class="string">"Hello World!"</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">write</span>(*, <span class="string">"(A20)"</span>) str</span><br><span class="line">    i = add(<span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">    x = add(<span class="number">1.1d0</span>, <span class="number">2.1d0</span>)</span><br><span class="line">    <span class="built_in">write</span>(*, <span class="string">"(I2)"</span>) i</span><br><span class="line">    <span class="built_in">write</span>(*, <span class="string">"(F6.3)"</span>) x</span><br><span class="line"></span><br><span class="line">    <span class="keyword">stop</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">end</span> <span class="function"><span class="keyword">program</span></span> hw</span><br></pre></td></tr></table></figure></p>
-<p>在这里, 主程序中调用的<code>add</code>函数实际上是一个接口, 当接受两个整数时重载为<code>add_int</code>, 接受两个双精度浮点数是重载为<code>add_double</code>. 下面分别用gprof和valgrind为后端, 进行性能分析和调用图的制作.</p>
-<h3>使用gprof</h3>
-<p>首先, 要使用<code>gprof</code>, 需要在程序编译时添加<code>-p</code>或<code>-pg</code>选项</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ifort -p -g -c hw.f90 -o hw.o</span><br><span class="line">ifort -o test.out hw.o -p</span><br></pre></td></tr></table></figure></p>
-<p>这里尽量采用先编译到目标文件, 再链接到可执行文件的方式. 然后运行test.out</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./test.out</span><br></pre></td></tr></table></figure></p>
-<p>产生gmon.out文件. 用<code>gprof</code>读取这一文件并将标准输出重定向</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gprof test.out &gt; gprof_test.txt</span><br></pre></td></tr></table></figure></p>
-<p>gprof_test.txt中包含了运行<code>test.out</code>过程中各函数的调用次数, 程序在每个函数及其子函数中的停留时间等.</p>
-<p>接下来, 使用<code>gprof2dot</code>处理gprof_test.out</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat gprof_test.out | gprof2dot -f prof -o digraph.dot</span><br></pre></td></tr></table></figure></p>
-<p>digraph.out用一个<code>digraph</code>数据类型描述了一个有向图. 用<code>dot</code>处理该文件并产生</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat digraph.dot | dot -Tpng -o hw_gprof.png</span><br></pre></td></tr></table></figure></p>
-<p>得到下图. 可以看到<code>MAIN</code>中各调用了一次<code>add_int</code>和<code>add_double</code>. 每个方块中第一个百分数是在该函数及其子函数的运行时间占程序总时间的比例, 第二个数是仅在该函数内的时间的比例. 这里全都是100%, 是因为计算时间太短了, gprof_test.out里的时间都是0.00.</p>
-<p><figure class="null"><img src="hw_gprof.png" alt="单次加法调用时, gprof产生的hw.f90调用图"><figcaption>单次加法调用时, gprof产生的hw.f90调用图</figcaption></figure></p>
-<p>试着将加法次数增大到九千万次, 就可以看到明显的不同. 双精度耗时比整型的还是要多一些.</p>
-<p><figure class="null"><img src="hw_9kw_gprof.png" alt="加法各九千万次时的gprof调用图"><figcaption>加法各九千万次时的gprof调用图</figcaption></figure></p>
-<h3>使用callgrind</h3>
-<p>若用Valgrind来做生成性能分析, 只需使用<code>valgrind</code>调用欲测试函数, 同时指明callgrind工具, 而不需要对编译做特别的改动</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">valgrind --tool=callgrind ./test.out</span><br></pre></td></tr></table></figure></p>
-<p>运行结束后会产生名为callgrind.out.xxx的文件, 其中xxx是运行程序进程的PID. 使用gprof2dot分析之</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat callgrind.out.xxx | gprof2dot -f callgrind -o digraph.dot</span><br></pre></td></tr></table></figure></p>
-<p>生成png的命令与前面gprof的相同. 当只调用一次加法时调用图如下, 出现很多复杂的库函数调用, 猜测应该跟valgrind本身有关, 反而看不到<code>add_int</code>和<code>add_double</code>. 这时并不表示这两个函数未被调用, 而是因为占用时间太少, 被gprof2dot剪裁掉了.</p>
-<p><figure class="null"><img src="hw_callgrind.png" alt="单次加法调用时, callgrind产生的hw.f90调用图"><figcaption>单次加法调用时, callgrind产生的hw.f90调用图</figcaption></figure></p>
-<p>提高到九千万次调用后的分析结果看上去正常一些. 同样的, 这也不是说那些库函数未被调用, 而是在这种情况下主要耗时都在加法上, 库函数调用耗时少而被gprof2dot去掉了. 这些都是视觉表现上的考虑.</p>
-<p><figure class="null"><img src="hw_9kw_callgrind.png" alt="加法各九千万次时的callgrind调用图"><figcaption>加法各九千万次时的callgrind调用图</figcaption></figure></p>
-<p>比较两种工具所得的调用图, 发现Valgrind能给出包含被调用函数所在库的名称. 在九千万次加法的例子里, 使用Valgrind做性能分析所花的时间比gprof要多得多, 因此还是决定用gprof来做GAP3的分析. 上面用的所有程序和Makefile打包在<a href="fortran-profile.tar.gz">这里</a>了.</p>
-<h2>GAP3的调用图</h2>
-<p>在<code>-O3</code>下编译串行程序, 用<code>gprof</code>做运行时分析, 在真空层为9 Bohr的单层六方BN中测试. 库仑截断的开关打开, 以检查工作流是否跟自己预想的相同. 最后得到调用图如下所示.</p>
-<p><figure class="null"><img src="cg_gap3_O3.png" alt="O3下GAP3中GW功能的调用图"><figcaption>O3下GAP3中GW功能的调用图</figcaption></figure></p>
-<p>可以得到的比较直接的结论是</p>
-<ol>
-<li>花费时间最多的上层例程是: 介电矩阵计算<code>calceps</code>(63.70%), 交换自能即Fock算符<code>calcselfx</code>(26.05%), 关联自能<code>calcselfc</code>(2.63%)</li>
-<li>花费时间最多的底层例程是<code>calcminm</code>(90.28%), 用于计算KS波函数积与MPB的重叠矩阵元$M^i_{nm}({\bf k, q})$. 原则上计算量是$\mathcal{O}(N_{\chi} N N_e N_v N^2_k)$, 其中$N_{\chi}$是MPB数量, $N$是APW+LO基组数, 价态数量$N_v$, 电子总数$N_e$, BZ中k布点数$N_k$</li>
-</ol>
-<p>另外发现的一个问题是, 在开启库仑截断后, 所有的库仑势计算都应该用<code>coul_barc_cutoff</code>例程, 但依然有9次<code>coul_barc</code>调用, 因此库仑势计算比关联自能更多一点. <code>coul_setvm0</code>和<code>calcmwm</code>也需要用带cutoff后缀的. 因此这样的调用图也能帮助解决一些流程控制上的bug.</p>
-<h2>总结</h2>
-<p>在这篇文章中, 笔者分别用gprof和callgrind对一个简单的Fortran程序制作了调用图, 并通过调用图分析了GAP3程序中的性能瓶颈, 发现了库仑截断开启时的流程控制问题.</p>
-<h2>参考</h2>
-<p><a href="https://www.cnblogs.com/zengkefu/p/5642991.html" target="_blank" rel="noopener">valgrind的callgrind工具进行多线程性能分析</a></p>
-
+		<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>本文简要介绍如何基于gprof或Valgrind的性能分析数据, 使用gprof2dot和Graphviz制作Fortran程序的调用图, 以便对Fortran程序进行调试和优化.
 	
 	</div>
   <a type="button" href="/2019/05/15/profile-with-gprof-dot/#more" class="btn btn-default more">Read More</a>
@@ -430,14 +249,7 @@ $$</p>
   <div class="row">
 	
 	
-		<link rel="stylesheet" type="text/css" href="/css/hint.min.css"><p>碎碎念而已.
-&lt;!--more--&gt;</p>
-<p>在经历了草稿里的一些乌龙后, Hexo又能正常工作了. 我也在过了很久一段时间后回到这里, 重新打理这片虚拟的土地, 重新开始上传技术文字. 目前大部分是存在熊掌记和Agenda里后整理出来的bugfix和初步学习笔记.</p>
-<p>我还在考虑把其他地方的文字都移到这里来, 因为我感到这是一片属于我的独一无二的土地. 我于此耕耘, 把它定义成我想要的样貌. 在这里, 我的声音能够回响; 它不必响彻, 在我脑海里就足够了. 如果它能够进到一位陌生人的耳中, 他恰又能够给我一些呼应, 那就真是难得的美好.</p>
-<p>更重要的是, 我渐渐想要去发出我自己的声音了. 无论在现实里还是在虚拟世界里, 自己其实一直都是个害怕发声的人: 我感到时刻被周围人的目光所裹挟, 担心无论说什么都会使人失望; 讨好他人, 很少说出自己的真实想法; 在公共场所/宿舍, 我用绝对安静, 去鄙视那些喧哗的人. 我好像保持着一个很好的形象, 但我失去了表达自己的机会; 事实上这个形象也未必就很好.</p>
-<p>渐渐地, 我发现自己无法准确表达一些应当很容易传达的东西. 我意识到一直不去表达是不行的. 但我不希望太大张旗鼓, 尽管有时无可避免地想获得一点点真心的关注. 于是我想到这里, 这是我一手创造的空间, 这里有来来往往的冷漠又友好的陌生人, 有点像在一座完全陌生的小镇里, 拿着自己心爱的乐器独自演奏.</p>
-<p>我会继续写下去.</p>
-
+		<p>碎碎念而已.<br>
 	
 	</div>
   <a type="button" href="/2019/05/08/restart-hexo-blog/#more" class="btn btn-default more">Read More</a>
@@ -458,82 +270,7 @@ $$</p>
   <div class="row">
 	
 	
-		<link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2>摘要</h2>
-<p>介绍了WIEN2k中自旋非极化下通过LAPWSO考虑自旋轨道耦合(SOC)效应的第一性原理计算的流程. 以Si和Au为例子, 简单分析了SOC对能带结构的影响.</p>
-<p>&lt;!--more--&gt;</p>
-<h2>WIEN2k中实现的SOC</h2>
-<p>WIEN2k中价层轨道的SOC贡献是通过LAPWSO程序考虑的. 它基于一种所谓的二次变分&lt;sup id=&quot;fnref:1&quot;&gt;&lt;a href=&quot;#fn:1&quot; rel=&quot;footnote&quot;&gt;&lt;span class=&quot;hint--top hint--error hint--medium hint--rounded hint--bounce&quot; aria-label=&quot;<a href="http://www.encyclopediaofmath.org/index.php?title=Second_variation&amp;oldid=31231" target="_blank" rel="noopener">Second variation</a>. Encyclopedia of Mathematics.&quot;&gt;[1]&lt;/span&gt;&lt;/a&gt;&lt;/sup&gt;的方法, 通过读取LAPW1计算的本征态的波函数与能量, 计算微扰$\hat{H}_{\rm SO}$的矩阵元并对角化, 得到包含SOC的波函数与能量. LAPWSO可以包含在SCF循环里, 也可以非自洽地运行.</p>
-<h2>实际例子</h2>
-<h3>diamond Si</h3>
-<p>以diamond Si (10.405822 au)为例, RMT取1.8. 初始化命令</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">init_lapw -b -numk 64</span><br></pre></td></tr></table></figure></p>
-<p>体系共8个价电子. 先看不加SOC的结果. 执行</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run_lapw -ec 0.0000001</span><br></pre></td></tr></table></figure></p>
-<p>仔细检查energy文件. 在第1个和第7个k点, 由能带4和5分别为价带和导带, 得到带隙为0.780 eV, 涉及k矢跃迁为000($\Gamma$)-100(X).</p>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"> 0.000000000000E+00 0.000000000000E+00 0.000000000000E+00         1   291    15  1.0</span><br><span class="line">           1 -0.476709975533258</span><br><span class="line">           2  0.382390732021062</span><br><span class="line">           3  0.382390732021068</span><br><span class="line">           4  0.382390732021068</span><br><span class="line">           5  0.567940696174970</span><br><span class="line">           6  0.567940696174970</span><br><span class="line">           7  0.567940696174976</span><br><span class="line">           8  0.594331247119800</span><br><span class="line">...</span><br><span class="line"> 1.000000000000E+00 0.000000000000E+00 0.000000000000E+00         7   294    20  3.0</span><br><span class="line">           1 -0.183034494762965</span><br><span class="line">           2 -0.183034494762950</span><br><span class="line">           3  0.180029340741516</span><br><span class="line">           4  0.180029340741516</span><br><span class="line">           5  0.439692381439167</span><br><span class="line">           6  0.439692381439175</span><br><span class="line">           7   1.09817099212224</span><br><span class="line">           8   1.09817099212225</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
-<p>关于能带的组成, 考虑$\Gamma$点上能带组分, 由TB分析可知, 上面8个能级从低到高依次是Si的$\sigma_{3s}$, ${\sigma/\pi}<em>{3p}$, ${\sigma/\pi}</em>{3p}^\ast$和$\sigma_{3s}^\ast$. 在一条k点路径上的组分变化可以从下面这张VASP计算的投影能带图看出&lt;sup id=&quot;fnref:2&quot;&gt;&lt;a href=&quot;#fn:2&quot; rel=&quot;footnote&quot;&gt;&lt;span class=&quot;hint--top hint--error hint--medium hint--rounded hint--bounce&quot; aria-label=&quot;因为用<a href="https://github.com/minyez/mykit">mykit</a>制作的图, 目前只支持到VASP :(&quot;&gt;[2]&lt;/span&gt;&lt;/a&gt;&lt;/sup&gt;.</p>
-<p><figure class="null"><img src="Si_X-L-G-X.png" alt="Si投影能带图. 红色为s成分, 蓝色为p成分"><figcaption>Si投影能带图. 红色为s成分, 蓝色为p成分</figcaption></figure></p>
-<p>上面这些都是对于无SOC的计算结果的分析. 下面利用LAPWSO微扰地考虑SOC. 首先用<code>save_lapw</code>保存上面的计算结果, 然后运行<code>initso</code>命令以初始化<code>lapwso</code>所需的主要输入文件<code>Si.inso</code></p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">save_lapw -d scf-no-soc</span><br><span class="line">initso</span><br></pre></td></tr></table></figure></p>
-<p><code>initso</code>是交互式命令, 会询问下面几个设置</p>
-<ol>
-<li>指定Direction of moment</li>
-<li>指定某些原子不考虑SOC</li>
-<li>修改考虑SOC的能带的最高能量(EMAX)</li>
-<li>是否在<code>case.in1</code>中添加RLO</li>
-<li>选择自旋极化方式. 因为在自旋极化情况下考虑SOC时, 体系的对称性有可能小于无SOC的情形. 如果选择<code>y</code>, <code>symmetso</code>程序将被执行, 确定考虑SOC后体系的对称性并修改<code>struct</code>文件.</li>
-</ol>
-<p>暂时不深究几个问题的含义, 一路回车通关. 结束后执行</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run_lapw -ec 0.0000001 -so</span><br></pre></td></tr></table></figure></p>
-<p>开始运行包含LAPWSO在内的SCF循环.</p>
-<p>包含SOC的哈密顿量对角化后得到的本征值保存在<code>case.energyso</code>中. 与非极化计算的<code>case.energy</code>文件不同的是, SOC下不再有简单的自旋简并, 因此原则上各k点的能带数量是无SOC时的两倍. 还是看第1和第7个k点的能量</p>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"> 0.000000000000E+00 0.000000000000E+00 0.000000000000E+00         1   291    30  1.0</span><br><span class="line">...</span><br><span class="line">           1 -0.476709708261459</span><br><span class="line">           2 -0.476709708261458</span><br><span class="line">           3  0.380103284844223</span><br><span class="line">           4  0.380103284844224</span><br><span class="line">           5  0.383531827460128</span><br><span class="line">           6  0.383531827460128</span><br><span class="line">           7  0.383531827479756</span><br><span class="line">           8  0.383531827479756</span><br><span class="line">           9  0.566261029915788</span><br><span class="line">          10  0.566261029915788</span><br><span class="line">          11  0.568777497161570</span><br><span class="line">          12  0.568777497161571</span><br><span class="line">          13  0.568777497196808</span><br><span class="line">          14  0.568777497196810</span><br><span class="line">          15  0.594331439770928</span><br><span class="line">          16  0.594331439770930</span><br><span class="line">...</span><br><span class="line"> 0.100000000000E+01 0.000000000000E+00 0.000000000000E+00         7   294    28  3.0</span><br><span class="line">           1 -0.183035347355239</span><br><span class="line">           2 -0.183035347355239</span><br><span class="line">           3 -0.183035347355239</span><br><span class="line">           4 -0.183035347355237</span><br><span class="line">           5  0.180025326616621</span><br><span class="line">           6  0.180025326616621</span><br><span class="line">           7  0.180025326616631</span><br><span class="line">           8  0.180025326616633</span><br><span class="line">           9  0.439692350006189</span><br><span class="line">          10  0.439692350006189</span><br><span class="line">          11  0.439692350006200</span><br><span class="line">          12  0.439692350006200</span><br><span class="line">          13   1.09815900469418</span><br><span class="line">          14   1.09815900469418</span><br><span class="line">          15   1.09815900469536</span><br><span class="line">          16   1.09815900469536</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
-<p>此时的价带和导带变成了8和9, 带隙为0.764 eV. 此外, $\Gamma$点上原来三重简并的3p成键与反键轨道均裂分为两组简并轨道, 能量较高的为四重简并, 较低的为二重简并. 考虑SOC后的带隙相比未考虑的情形只减小了0.016 eV, 反映出在Si等轻元素中相对论效应较弱的事实.</p>
-<h3>FCC Au</h3>
-<p>以FCC Au (7.67 au)为例, 参考Novak老师的关于spin-orbit coupling笔记中的计算&lt;sup id=&quot;fnref:3&quot;&gt;&lt;a href=&quot;#fn:3&quot; rel=&quot;footnote&quot;&gt;&lt;span class=&quot;hint--top hint--error hint--medium hint--rounded hint--bounce&quot; aria-label=&quot;Prof. P. Novak, <a href="http://susi.theochem.tuwien.ac.at/reg_user/textbooks/novak_lecture_on_spinorbit.pdf" target="_blank" rel="noopener">Notes about spin-orbit</a>, p12. 内容基于WIEN97.
-&quot;&gt;[3]&lt;/span&gt;&lt;/a&gt;&lt;/sup&gt;. RMT值取2.6, GMAX取16. 初始化命令</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">init_lapw -b -numk 5000 -rkmax 9</span><br><span class="line">sed -i <span class="string">'s/ 12.00/ 16.00/g'</span> Au.in2 <span class="comment"># change GMAX</span></span><br></pre></td></tr></table></figure></p>
-<p>共17个价电子. 按和Si中相同的步骤, 分别进行无SOC和在LAPWSO下考虑SOC的计算. 直接对比$\Gamma$点上的能量. 先看无SOC的结果</p>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">0.000000000000E+00 0.000000000000E+00 0.000000000000E+00         1    77    13  1.0</span><br><span class="line">          1  -3.48417834812053</span><br><span class="line">          2  -3.48417834812053</span><br><span class="line">          3  -3.48417834812053</span><br><span class="line">          4 -4.633683657763327E-002</span><br><span class="line">          5  0.341371911764138</span><br><span class="line">          6  0.341371911764145</span><br><span class="line">          7  0.341371911764145</span><br><span class="line">          8  0.456634603361144</span><br><span class="line">          9  0.456634603361151</span><br><span class="line">         10   1.75774908584153</span><br><span class="line">         11   2.06272605171851</span><br><span class="line">         12   2.06272605171851</span><br><span class="line">         13   2.06272605171851</span><br></pre></td></tr></table></figure></p>
-<p>VASP的投影能带如下图所示. 从成分上看, 占据态分别是$5p$(1-3), $6s$(4), $t_{2g}$(5-7), $e_g$(8-9).</p>
-<p><figure class="null"><img src="Au_X-L-G-X.png" alt="Au投影能带图. 红蓝黄绿色分别为spdf成分."><figcaption>Au投影能带图. 红蓝黄绿色分别为spdf成分.</figcaption></figure></p>
-<p>再看考虑SOC后的结果<code>energyso</code>. 由于轨道增加一倍, 下面的18个轨道都是占据态&lt;sup id=&quot;fnref:4&quot;&gt;&lt;a href=&quot;#fn:4&quot; rel=&quot;footnote&quot;&gt;&lt;span class=&quot;hint--top hint--error hint--medium hint--rounded hint--bounce&quot; aria-label=&quot;可以通过增大<code>inso</code>中的<code>EMAX</code>来获取更多的SOC态的本征值&quot;&gt;[4]&lt;/span&gt;&lt;/a&gt;&lt;/sup&gt;. 很明显的, 原来的$t_{2g}$和$e_g$进一步裂分成了三组轨道, 能量从低到高的简并度分别为4, 2和4, 它们在群表示上的记号分别为$\Gamma_8, \Gamma_7$和$\Gamma'_8$.</p>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">0.000000000000E+00 0.000000000000E+00 0.000000000000E+00         1    77    18  1.0</span><br><span class="line">          1  -4.20742280553107</span><br><span class="line">          2  -4.20742280553106</span><br><span class="line">          3  -3.14951843978248</span><br><span class="line">          4  -3.14951843978248</span><br><span class="line">          5  -3.14951842668932</span><br><span class="line">          6  -3.14951842668932</span><br><span class="line">          7 -4.585036452752571E-002</span><br><span class="line">          8 -4.585036452752490E-002</span><br><span class="line">          9  0.294994273106371</span><br><span class="line">         10  0.294994273106371</span><br><span class="line">         11  0.294994274995205</span><br><span class="line">         12  0.294994274995205</span><br><span class="line">         13  0.381494069224123</span><br><span class="line">         14  0.381494069224123</span><br><span class="line">         15  0.473340026931149</span><br><span class="line">         16  0.473340026931150</span><br><span class="line">         17  0.473340027624113</span><br><span class="line">         18  0.473340027624115</span><br></pre></td></tr></table></figure></p>
-<p>考虑和不考虑SOC的$E_F$分别为0.705和0.699 Ry. 同Novak老师的能带位置结果(下表括号内数字)进行比较, 发现结果惊人一致(Novak老师的结果可还是用WIEN97算的啊).</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">$E-E_F$ (mRy)</th>
-<th style="text-align:center">No SOC</th>
-<th style="text-align:center">SOC by LAPWSO</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">$\Gamma_8$</td>
-<td style="text-align:center">-358  (-357)</td>
-<td style="text-align:center">-410 (-410)</td>
-</tr>
-<tr>
-<td style="text-align:center">$\Gamma_7$</td>
-<td style="text-align:center">-358  (-357)</td>
-<td style="text-align:center">-324 (-323)</td>
-</tr>
-<tr>
-<td style="text-align:center">$\Gamma'_8$</td>
-<td style="text-align:center">-242  (-241)</td>
-<td style="text-align:center">-232 (-230)</td>
-</tr>
-</tbody>
-</table>
-<h2>TODO</h2>
-<ul>
-<li>[ ] 二次变分的原理.</li>
-<li>[ ] 对<code>initso</code>设置内容的阐明, direction of moment和RLO.</li>
-<li>[ ] 自旋极化计算.
-&lt;div id=&quot;footnotes&quot;&gt;&lt;hr&gt;&lt;div id=&quot;footnotelist&quot;&gt;&lt;ol style=&quot;list-style: none; padding-left: 0; margin-left: 40px&quot;&gt;&lt;li id=&quot;fn:1&quot;&gt;&lt;span style=&quot;display: inline-block; vertical-align: top; padding-right: 10px; margin-left: -40px&quot;&gt;1.&lt;/span&gt;&lt;span style=&quot;display: inline-block; vertical-align: top; margin-left: 10px;&quot;&gt;&lt;a href=&quot;http://www.encyclopediaofmath.org/index.php?title=Second_variation&amp;oldid=31231&quot;&gt;Second variation&lt;/a&gt;. Encyclopedia of Mathematics.&lt;a href=&quot;#fnref:1&quot; rev=&quot;footnote&quot;&gt; ↩&lt;/a&gt;&lt;/span&gt;&lt;/li&gt;&lt;li id=&quot;fn:2&quot;&gt;&lt;span style=&quot;display: inline-block; vertical-align: top; padding-right: 10px; margin-left: -40px&quot;&gt;2.&lt;/span&gt;&lt;span style=&quot;display: inline-block; vertical-align: top; margin-left: 10px;&quot;&gt;因为用&lt;a href=&quot;https://github.com/minyez/mykit&quot;&gt;mykit&lt;/a&gt;制作的图, 目前只支持到VASP :(&lt;a href=&quot;#fnref:2&quot; rev=&quot;footnote&quot;&gt; ↩&lt;/a&gt;&lt;/span&gt;&lt;/li&gt;&lt;li id=&quot;fn:3&quot;&gt;&lt;span style=&quot;display: inline-block; vertical-align: top; padding-right: 10px; margin-left: -40px&quot;&gt;3.&lt;/span&gt;&lt;span style=&quot;display: inline-block; vertical-align: top; margin-left: 10px;&quot;&gt;Prof. P. Novak, &lt;a href=&quot;http://susi.theochem.tuwien.ac.at/reg_user/textbooks/novak_lecture_on_spinorbit.pdf&quot;&gt;Notes about spin-orbit&lt;/a&gt;, p12. 内容基于WIEN97.&lt;a href=&quot;#fnref:3&quot; rev=&quot;footnote&quot;&gt; ↩&lt;/a&gt;&lt;/span&gt;&lt;/li&gt;&lt;li id=&quot;fn:4&quot;&gt;&lt;span style=&quot;display: inline-block; vertical-align: top; padding-right: 10px; margin-left: -40px&quot;&gt;4.&lt;/span&gt;&lt;span style=&quot;display: inline-block; vertical-align: top; margin-left: 10px;&quot;&gt;可以通过增大&lt;code&gt;inso&lt;/code&gt;中的&lt;code&gt;EMAX&lt;/code&gt;来获取更多的SOC态的本征值&lt;a href=&quot;#fnref:4&quot; rev=&quot;footnote&quot;&gt; ↩&lt;/a&gt;&lt;/span&gt;&lt;/li&gt;&lt;/ol&gt;&lt;/div&gt;&lt;/div&gt;</li>
-</ul>
-
+		<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>介绍了WIEN2k中自旋非极化下通过LAPWSO考虑自旋轨道耦合(SOC)效应的第一性原理计算的流程. 以Si和Au为例子, 简单分析了SOC对能带结构的影响.</p>
 	
 	</div>
   <a type="button" href="/2019/05/07/wien2k-lapwso-1/#more" class="btn btn-default more">Read More</a>
@@ -554,95 +291,7 @@ $$</p>
   <div class="row">
 	
 	
-		<link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2>摘要</h2>
-<p>整理了调用Python <code>re</code>包时的常用操作和命令. &lt;!--more--&gt;</p>
-<p>这里主要按照使用情景, 对操作和命令进行分类, 这样也顺带梳理不同情境下可能用到的正则表达式. 目前更新到模式组方法的比较.</p>
-<h2>基本函数</h2>
-<p>下表列出了常用的re函数, 其中变量类型仅为自己常用的情况, 具体见<a href="https://docs.python.org/3/library/re.html" target="_blank" rel="noopener">re文档</a>(Python 3).</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">函数</th>
-<th style="text-align:left">参数</th>
-<th style="text-align:left">功能</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left"><code>re.compile</code></td>
-<td style="text-align:left"><code>pat</code>(s)</td>
-<td style="text-align:left">返回一个与正则表达式<code>pat</code>对应的regular expression对象.</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>re.match</code></td>
-<td style="text-align:left"><code>pat</code>(s), <code>string</code>(s)</td>
-<td style="text-align:left">对<code>string</code>从头匹配<code>pat</code>, 返回Match对象</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>re.fullmatch</code></td>
-<td style="text-align:left">同<code>re.match</code></td>
-<td style="text-align:left">对整个<code>string</code>匹配<code>pat</code>, 返回Match对象</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>re.search</code></td>
-<td style="text-align:left">同<code>re.match</code></td>
-<td style="text-align:left">在<code>string</code>中搜索匹配模式<code>pat</code>的子字符串, 返回Match对象</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>re.sub</code></td>
-<td style="text-align:left"><code>pat</code>(s), <code>repl</code>(s), <code>s</code>(s)</td>
-<td style="text-align:left">将<code>s</code>中匹配<code>pat</code>的字符串<strong>全部</strong>替换为<code>repl</code></td>
-</tr>
-</tbody>
-</table>
-<p>一些注意点</p>
-<ul>
-<li>我们可能习惯在命令行下使用通配符<code>*</code>, 但是在正则表达式下<code>*</code>的作用是匹配任意次.</li>
-<li><code>re.match(&quot;^&quot;+pat+&quot;$&quot;, s)</code>匹配整条字符串, 因此与<code>re.fullmatch(pat, s)</code>等价</li>
-</ul>
-<h2>一次匹配字符串</h2>
-<p>用<code>re.match</code>和<code>re.fullmatch</code>进行匹配</p>
-<h3>匹配名为<code>V_x.y</code>的文件夹</h3>
-<p>其中<code>x</code>为数字0或1 <code>y</code>为长度大于等于1的数字</p>
-<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>dname = <span class="string">"V_0.98"</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>re.fullmatch(<span class="string">r"V_[01]\.[0-9]+"</span>, dname)</span><br><span class="line">&lt;re.Match object; span=(<span class="number">0</span>, <span class="number">6</span>), match=<span class="string">'V_0.98'</span>&gt;</span><br></pre></td></tr></table></figure></p>
-<h3>匹配一条K点路径</h3>
-<p>匹配一条类似<code>GM-X-L-M</code>格式的K点路径, 要求每一个特殊K点由1到2个大写字母组成.</p>
-<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>re.match(<span class="string">r'^([A-Z]&#123;1,2&#125;-)+[A-Z]&#123;1,2&#125;$'</span>, <span class="string">'GM-X-L-GM-L'</span>)</span><br><span class="line">&lt;re.Match object; span=(<span class="number">0</span>, <span class="number">11</span>), match=<span class="string">'GM-X-L-GM-L'</span>&gt;</span><br></pre></td></tr></table></figure></p>
-<p>简单解读:</p>
-<ul>
-<li><code>[A-Z]{1,2}</code>对大写字母匹配1次或2次</li>
-<li><code>()+</code>: 对括号内(组)模式匹配1次或多次</li>
-</ul>
-<h2>compile函数</h2>
-<p>利用<code>re.compile</code>产生模式对应的regular expression对象. regular expression对象拥有与<code>re</code>函数同名的方法, 之后所有有关该模式的匹配都通过该对象进行.</p>
-<p>例如匹配邮件中用户名</p>
-<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>PAT_USERNAME = re.compile(<span class="string">r'\w+'</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>PAT_USERNAME.match(<span class="string">'bob@163.com'</span>)</span><br><span class="line">&lt;re.Match object; span=(<span class="number">0</span>, <span class="number">3</span>), match=<span class="string">'bob'</span>&gt;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>PAT_USERNAME.match(<span class="string">'chris@163.com'</span>)</span><br><span class="line">&lt;re.Match object; span=(<span class="number">0</span>, <span class="number">5</span>), match=<span class="string">'chris'</span>&gt;</span><br></pre></td></tr></table></figure></p>
-<p>这个例子可能还不怎么明显, 但当模式非常复杂时, regular expression对象代替字符串模式要方便很多, 也更易读.</p>
-<h2>利用group和groups获得匹配内容</h2>
-<p>使用regex时, 我们有时需要获得具体的匹配内容, 这可以通过在模式中加入<code>()</code>以定义组(group)这一方式实现.</p>
-<p>在上面匹配<code>V_x.y</code>的例子中, 如果我们要获得后面的具体数字</p>
-<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># obtain and print the ratio of volume from the name of directory</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>dname = <span class="string">"V_0.98"</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>matched = re.fullmatch(<span class="string">r"V_([01]\.[0-9]+)"</span>, dname)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>matched.group()</span><br><span class="line"><span class="string">'V_0.98'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>matched.group(<span class="number">1</span>)</span><br><span class="line"><span class="string">'0.98'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>matched.group(<span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line">(<span class="string">'V_0.98'</span>, <span class="string">'0.98'</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>matched.group(<span class="number">2</span>)</span><br><span class="line">IndexError: no such group</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>matched.groups()</span><br><span class="line">(<span class="string">'0.98'</span>,)</span><br></pre></td></tr></table></figure></p>
-<p>这里比较了Match对象的两种方法<code>group</code>和<code>groups</code>. 总结一下</p>
-<ul>
-<li>如果没有参数或参数为<code>0</code>, <code>group</code>返回的是整条匹配的子字符串.</li>
-<li>如果参数不为<code>0</code>, 则返回第n个组(括号)中匹配的字符串.</li>
-<li>参数个数等于1时, 返回一个字符串; 大于1时返回一个字符串元组.</li>
-<li>如果参数大于被匹配模式中包含的组数, 抛出<code>IndexError</code>.</li>
-<li><code>groups</code>返回所有组的匹配结果, 总是一个字符串元组.</li>
-</ul>
-<h2>利用group标记的替换</h2>
-<p>对于包含多个参数的输入</p>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">param1 | param2 | param3 # this is comment</span><br></pre></td></tr></table></figure></p>
-<p>注释以&quot;#&quot;开头, 是可选的, 参数之间用<code>|</code>隔开. 例如, 一条包含两个参数的字符串及其对应的匹配模式</p>
-<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">s = <span class="string">"2.0  |  1.E-15   # pwm, stctol"</span></span><br><span class="line">pat = <span class="string">r"^([\w \.-]+)\|([\w \.-]+)(#[\w \(\),\.-]*)?$"</span></span><br></pre></td></tr></table></figure></p>
-<p>可利用group进行灵活有效的替换. 比如说, 现在只将第一个参数替换为5.0, 则</p>
-<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>re.sub(pat, <span class="string">r"5.0 | \2 \3"</span>, s)</span><br><span class="line"><span class="string">'5.0 |   1.E-15          # pwm, stctol'</span></span><br></pre></td></tr></table></figure></p>
-<p>其中标记<code>\2</code>表示第二个组所匹配的子字符串, 以此类推. 这种方法的好处是只需要知道被匹配参数在文件中的位置(行号, 行内参数的总数以及所要参数的序号)就可以方便地替换, 不需要依赖<code>split</code>和其他判断函数.</p>
-<p>具体来说, 对于参数个数可变的情形, 利用函数动态地产生匹配模式和替换格式</p>
-<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_pattern</span><span class="params">(n)</span>:</span></span><br><span class="line">    <span class="string">'''Generate n parameters pattern'''</span></span><br><span class="line">    s = [<span class="string">r"([\w \.-]+)"</span>, ] * n</span><br><span class="line">    <span class="keyword">return</span> <span class="string">r'^'</span> + <span class="string">r'\|'</span>.join(s) + <span class="string">r'(#[\w \(\),\.-]*)?$'</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_substr</span><span class="params">(n, i, value)</span>:</span></span><br><span class="line">    <span class="string">'''Return the sub string of n-parameter line with i+1-th parameter as value'''</span></span><br><span class="line">    sublist = [<span class="string">"\\"</span>+str(i+<span class="number">1</span>) <span class="keyword">for</span> i <span class="keyword">in</span> range(n)]</span><br><span class="line">    sublist[i] = str(value)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">' | '</span>.join(sublist) + <span class="string">' \\'</span> + str(n+<span class="number">1</span>)</span><br></pre></td></tr></table></figure></p>
-<p>还是用前面的两个参数的行(<code>s</code>)作为例子, 替换参数的位置记录在字典<code>params</code>里, 要替换的参数值记录在字典<code>new_value</code>中</p>
-<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">s = <span class="string">"2.0  |  1.E-15   # pwm, stctol"</span></span><br><span class="line">params = &#123;<span class="string">"pwm"</span>: (<span class="number">2</span>, <span class="number">0</span>), <span class="string">"stctol"</span>: (<span class="number">2</span>, <span class="number">1</span>)&#125;</span><br><span class="line">new_value = &#123;<span class="string">"pwm"</span>: <span class="number">5.0</span>, <span class="string">"stctol"</span>: <span class="number">1.0e-20</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> k, nv <span class="keyword">in</span> new_value.items():</span><br><span class="line">    n, i = params.get(k, (<span class="keyword">None</span>, <span class="keyword">None</span>))</span><br><span class="line">    <span class="keyword">if</span> n <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</span><br><span class="line">        pat = get_pattern(n)</span><br><span class="line">        sub = get_substr(n, i, nv)</span><br><span class="line">        s = re.sub(pat, sub, s)</span><br><span class="line">print(s)</span><br><span class="line"><span class="comment"># result: "5.0  | 1e-20 # pwm, stctol"</span></span><br></pre></td></tr></table></figure></p>
-
+		<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>整理了调用Python <code>re</code>包时的常用操作和命令.
 	
 	</div>
   <a type="button" href="/2019/05/06/re-summary/#more" class="btn btn-default more">Read More</a>
@@ -663,43 +312,7 @@ $$</p>
   <div class="row">
 	
 	
-		<link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2>摘要</h2>
-<p>尝试在Hexo博文中嵌入Jupyter notebook (<code>.ipynb</code>)以展示Python代码 (快速入门到光速入土).</p>
-<p>&lt;!--more--&gt;</p>
-<h2>前提准备</h2>
-<p>首先安装<code>hexo-jupyter-notebook</code>和<code>co</code>两个npm包, 后者为前者的依赖</p>
-<p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-jupyter-notebook --save</span><br><span class="line">npm install co</span><br></pre></td></tr></table></figure></p>
-<p>像<a href="/2019/05/01/embed-videos/" title="在Hexo博文中嵌入视频">在Hexo博文中嵌入视频</a>一文中的视频画面一样, 为了将嵌入帧尺寸做成响应式的, 修改<code>node_modules/hexo-jupyter-notebook/main.py</code>中的<code>template</code>变量, 加入<code>auto-resizable-iframe</code>容器</p>
-<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">    template = <span class="string">"""</span></span><br><span class="line"><span class="string">&lt;div class="auto-resizable-iframe"&gt;&lt;div&gt;</span></span><br><span class="line"><span class="string">&lt;iframe id='ipynb' marginheight="0" frameborder="0" srcdoc="%s"  style="scrolling:no;"&gt;</span></span><br><span class="line"><span class="string">&lt;/iframe&gt;&lt;/div&gt;&lt;/div&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">&lt;script&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">$("#ipynb").load( function() &#123;</span></span><br><span class="line"><span class="string">console.log($("#ipynb").contents().find("body").find("#notebook"));</span></span><br><span class="line"><span class="string">document.getElementById('ipynb').height=$("#ipynb").contents().find("#notebook").height()+100;</span></span><br><span class="line"><span class="string">&#125;)</span></span><br><span class="line"><span class="string">&lt;/script&gt;</span></span><br><span class="line"><span class="string">    """</span> % restr.replace(<span class="string">"\""</span>, <span class="string">"'"</span>)</span><br></pre></td></tr></table></figure></p>
-<p>有这一部分后, 我就没有像参考链接里那样用jQuery来控制尺寸.</p>
-<p>再准备好要嵌入的ipynb文件, 准备工作就做好了. 我这里用的是之前练习matplotlib时写的<code>meshgrid_plot.ipynb</code></p>
-<h2>嵌入ipynb</h2>
-<p>做好上述准备后, 进行下面三步操作</p>
-<ol>
-<li>
-<p>在<code>_config.yml</code>中打开<code>post_asset_folder</code></p>
-<p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">post_asset_folder:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure></p>
-</li>
-<li>
-<p>在<code>source/assets</code>中新建<code>codes</code>文件夹, 将准备好的ipynb放入其中.</p>
-</li>
-<li>
-<p>Markdown文本中, 在要嵌入ipynb的位置加入</p>
-<p><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% asset<span class="emphasis">_jupyter /usr/local/bin/python3 ../../assets/codes/meshgrid_</span>plot.ipynb %&#125;</span><br></pre></td></tr></table></figure></p>
-</li>
-</ol>
-<p>嵌入效果如图所示.</p>
-<p><figure class="null"><img src="meshgrid_demo.png" alt="ipynb嵌入效果"><figcaption>ipynb嵌入效果</figcaption></figure></p>
-<h2>结论</h2>
-<p>成功利用<code>hexo-jupyter-notebook</code>包, 在Hexo博文中嵌入了Jupyter notebook. 然而自己对这个效果不是很满意, 主要是两个原因</p>
-<ol>
-<li>嵌入的ipynb代码有滚动条. 修改<code>iframe</code>的大小(试到3000px)或修改JS里<code>+100</code>为更大数值, 也不能解决.</li>
-<li>更关键的, <code>hexo s</code>渲染时间显著增加, 从600 ms左右增加到1.34 s. 且持续一段时间后系统明显卡顿, 调试变得更麻烦了.</li>
-</ol>
-<p>遂最终放弃了嵌入ipynb的想法  _(xз」∠)_</p>
-<h2>参考</h2>
-<p><a href="https://www.google.com/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;ved=2ahUKEwj5-v20yf7hAhUFRqwKHYyID48QFjAAegQIBRAB&amp;url=https%3A%2F%2Fmedium.com%2F%40juanx002%2Fblogging-jupyter-notebooks-ipynb-with-hexo-on-github-7948b72636dc&amp;usg=AOvVaw1xUf2rSePZCUw7anF7uVRu" target="_blank" rel="noopener">Blogging Jupyter Notebooks (.ipynb) with Hexo on GitHub - Medium</a></p>
-
+		<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>尝试在Hexo博文中嵌入Jupyter notebook (<code>.ipynb</code>)以展示Python代码 (快速入门到光速入土).</p>
 	
 	</div>
   <a type="button" href="/2019/05/03/embed-jupyter-in-hexo/#more" class="btn btn-default more">Read More</a>
@@ -772,65 +385,65 @@ $$</p>
 		<h4>Tag Cloud</h4>
 		<ul class="tag_box inline list-unstyled">		
 		
-			<li><a href="/tags/Youtube/">Youtube<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/Intel/">Intel<span class="badge">4</span></a></li>
-		
-			<li><a href="/tags/regex/">regex<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/WIEN2k/">WIEN2k<span class="badge">4</span></a></li>
-		
-			<li><a href="/tags/Bootstrap/">Bootstrap<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/Hexo/">Hexo<span class="badge">3</span></a></li>
-		
-			<li><a href="/tags/Fortran/">Fortran<span class="badge">2</span></a></li>
-		
-			<li><a href="/tags/DFT/">DFT<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/Freemind/">Freemind<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/GPAW/">GPAW<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/ShadowsocksR/">ShadowsocksR<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/Bugfix/">Bugfix<span class="badge">4</span></a></li>
-		
-			<li><a href="/tags/MKL/">MKL<span class="badge">1</span></a></li>
+			<li><a href="/tags/bilibili/">bilibili<span class="badge">1</span></a></li>
 		
 			<li><a href="/tags/VPS/">VPS<span class="badge">1</span></a></li>
 		
-			<li><a href="/tags/SOC/">SOC<span class="badge">1</span></a></li>
+			<li><a href="/tags/MPI/">MPI<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/DFT/">DFT<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/Hexo/">Hexo<span class="badge">3</span></a></li>
+		
+			<li><a href="/tags/Jupyter/">Jupyter<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/Pandoc/">Pandoc<span class="badge">2</span></a></li>
+		
+			<li><a href="/tags/Markdown/">Markdown<span class="badge">2</span></a></li>
+		
+			<li><a href="/tags/macOS/">macOS<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/WIEN2k/">WIEN2k<span class="badge">4</span></a></li>
+		
+			<li><a href="/tags/ShadowsocksR/">ShadowsocksR<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/gprof/">gprof<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/MKL/">MKL<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/Fortran/">Fortran<span class="badge">2</span></a></li>
+		
+			<li><a href="/tags/FFTW/">FFTW<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/Tutorial/">Tutorial<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/Freemind/">Freemind<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/Intel/">Intel<span class="badge">4</span></a></li>
+		
+			<li><a href="/tags/Grid-technique/">Grid technique<span class="badge">1</span></a></li>
 		
 			<li><a href="/tags/Panflute/">Panflute<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/AST/">AST<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/regex/">regex<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/F2PY/">F2PY<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/Compilation/">Compilation<span class="badge">4</span></a></li>
+		
+			<li><a href="/tags/LaTeX/">LaTeX<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/SOC/">SOC<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/Call-graph/">Call graph<span class="badge">1</span></a></li>
 		
 			<li><a href="/tags/Python/">Python<span class="badge">2</span></a></li>
 		
 			<li><a href="/tags/Make/">Make<span class="badge">1</span></a></li>
 		
 			<li><a href="/tags/Numerical-method/">Numerical method<span class="badge">2</span></a></li>
-		
-			<li><a href="/tags/Compilation/">Compilation<span class="badge">4</span></a></li>
-		
-			<li><a href="/tags/FFTW/">FFTW<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/Blogging/">Blogging<span class="badge">2</span></a></li>
-		
-			<li><a href="/tags/Valgrind/">Valgrind<span class="badge">2</span></a></li>
-		
-			<li><a href="/tags/gprof/">gprof<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/MPI/">MPI<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/Grid-technique/">Grid technique<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/Tutorial/">Tutorial<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/Pandoc/">Pandoc<span class="badge">2</span></a></li>
-		
-			<li><a href="/tags/Call-graph/">Call graph<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/Markdown/">Markdown<span class="badge">2</span></a></li>
 		
 		
 		   <li><a href="/tags">...<span class="badge">38</span></a></li>
@@ -878,7 +491,7 @@ $$</p>
     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
   
-	| <span class="post-count">33.1k</span> words
+	| <span class="post-count">31.7k</span> words
   
 </p>
  </footer>
