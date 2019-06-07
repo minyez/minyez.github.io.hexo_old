@@ -135,19 +135,19 @@
               <li><a href="/tags" style="font-size: 20px; font-family: 'Calibri Light',Arial">All Tags</a><span></span></li>
               <li class="divider"></li>
               
-              <li><a href="/tags/Bugfix/" style="font-size: 15px; font-family: 微软雅黑">Bugfix<span></span></a></li>
-              
-              <li><a href="/tags/WIEN2k/" style="font-size: 15px; font-family: 微软雅黑">WIEN2k<span></span></a></li>
+              <li><a href="/tags/Compilation/" style="font-size: 15px; font-family: 微软雅黑">Compilation<span></span></a></li>
               
               <li><a href="/tags/Intel/" style="font-size: 15px; font-family: 微软雅黑">Intel<span></span></a></li>
               
-              <li><a href="/tags/Compilation/" style="font-size: 15px; font-family: 微软雅黑">Compilation<span></span></a></li>
+              <li><a href="/tags/Bugfix/" style="font-size: 15px; font-family: 微软雅黑">Bugfix<span></span></a></li>
+              
+              <li><a href="/tags/WIEN2k/" style="font-size: 15px; font-family: 微软雅黑">WIEN2k<span></span></a></li>
               
               <li><a href="/tags/Hexo/" style="font-size: 15px; font-family: 微软雅黑">Hexo<span></span></a></li>
               
               <li><a href="/tags/VASP/" style="font-size: 15px; font-family: 微软雅黑">VASP<span></span></a></li>
               
-              <li><a href="/tags/Valgrind/" style="font-size: 15px; font-family: 微软雅黑">Valgrind<span></span></a></li>
+              <li><a href="/tags/Python/" style="font-size: 15px; font-family: 微软雅黑">Python<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -282,7 +282,7 @@
 <h2 id="Makefile具体写法"><a href="#Makefile具体写法" class="headerlink" title="Makefile具体写法"></a>Makefile具体写法</h2><p>接下来以构造可执行程序<code>prime</code>为例，讲解Makefile的写法和<code>make</code>的运行。</p>
 <h3 id="最直接的Makefile"><a href="#最直接的Makefile" class="headerlink" title="最直接的Makefile"></a>最直接的Makefile</h3><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">prime: read_a.o isqrt.o judge_p.o main.o </span></span><br><span class="line">    gcc -o prime read_a.o isqrt.o main.o judge_p.o -lm</span><br><span class="line"></span><br><span class="line"><span class="section">read_a.o: read_a.c</span></span><br><span class="line">    gcc -c read.c</span><br><span class="line"></span><br><span class="line"><span class="section">isqrt.o: isqrt.c</span></span><br><span class="line">    gcc -c isqrt.c</span><br><span class="line"></span><br><span class="line"><span class="section">judge_p.o: judge_p.c</span></span><br><span class="line">    gcc -c judge_p.c</span><br><span class="line"></span><br><span class="line"><span class="section">main.o: main.c</span></span><br><span class="line">    gcc -c main.c</span><br><span class="line"></span><br><span class="line"><span class="section">clean:</span></span><br><span class="line">    rm -f prime read_a.o isqrt.o judge_p.o  main.o</span><br></pre></td></tr></table></figure>
 <p>此时在命令行输入</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> make</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> make</span><br></pre></td></tr></table></figure>
 <p>即可编译所有.o文件和<code>prime</code>。基本流程是：</p>
 <ol>
 <li><p>确定最终目标”prime”，确认前提文件.o是否存在；</p>

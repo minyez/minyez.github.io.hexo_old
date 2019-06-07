@@ -135,19 +135,19 @@
               <li><a href="/tags" style="font-size: 20px; font-family: 'Calibri Light',Arial">All Tags</a><span></span></li>
               <li class="divider"></li>
               
-              <li><a href="/tags/Bugfix/" style="font-size: 15px; font-family: 微软雅黑">Bugfix<span></span></a></li>
-              
-              <li><a href="/tags/WIEN2k/" style="font-size: 15px; font-family: 微软雅黑">WIEN2k<span></span></a></li>
+              <li><a href="/tags/Compilation/" style="font-size: 15px; font-family: 微软雅黑">Compilation<span></span></a></li>
               
               <li><a href="/tags/Intel/" style="font-size: 15px; font-family: 微软雅黑">Intel<span></span></a></li>
               
-              <li><a href="/tags/Compilation/" style="font-size: 15px; font-family: 微软雅黑">Compilation<span></span></a></li>
+              <li><a href="/tags/Bugfix/" style="font-size: 15px; font-family: 微软雅黑">Bugfix<span></span></a></li>
+              
+              <li><a href="/tags/WIEN2k/" style="font-size: 15px; font-family: 微软雅黑">WIEN2k<span></span></a></li>
               
               <li><a href="/tags/Hexo/" style="font-size: 15px; font-family: 微软雅黑">Hexo<span></span></a></li>
               
               <li><a href="/tags/VASP/" style="font-size: 15px; font-family: 微软雅黑">VASP<span></span></a></li>
               
-              <li><a href="/tags/Valgrind/" style="font-size: 15px; font-family: 微软雅黑">Valgrind<span></span></a></li>
+              <li><a href="/tags/Python/" style="font-size: 15px; font-family: 微软雅黑">Python<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -218,7 +218,7 @@
 <p>所以看来在做大规模并行时，GPAW要求BLACS/ScaLAPACK是必须的，从计算的经济性角度上来看也是可以理解的，帮用户省些钱。我也尝试了用GCC(4.8.5)编译依赖和GPAW，但在链接ScaLAPACK时遇到了问题，要求我用<code>-fPIC</code>选项重新编译所有静态库，但其实我在编译时一直带着该选项。在此注明。</p>
 <h3 id="开始编译"><a href="#开始编译" class="headerlink" title="开始编译"></a>开始编译</h3><p>在GPAW根目录下，输入</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python setup.py install --user</span><br></pre></td></tr></table></figure>
-<p>开始编译。C扩展的编译过程会创建<code>build</code>文件夹，编译结束后会将<code>gpaw</code>文件夹和编译产生的C扩展库<code>_gpaw.so</code>复制到<code>~/.local/lib/python2.7/site-packages/</code>下，复制<code>gpaw</code>等可执行程序到<code>~/.local/bin</code>下。</p>
+<p>开始编译。C扩展的编译过程会创建<code>build</code>文件夹，编译结束后会将<code>gpaw</code>文件夹和编译产生的C扩展库<code>_gpaw.so</code>复制到<code>&lt;sub&gt;/.local/lib/python2.7/site-packages/</code>下，复制<code>gpaw</code>等可执行程序到<code>&lt;/sub&gt;/.local/bin</code>下。</p>
 <h3 id="安装PAW集测试"><a href="#安装PAW集测试" class="headerlink" title="安装PAW集测试"></a>安装PAW集测试</h3><p>测试前需要将<code>~/.local/bin</code>添加到<code>PATH</code>下。此时还仍然无法进行计算，因为GPAW依赖于赝势和PAW数据集，而下载的源代码中并不包含这一部分。此时需要执行(例如在GPAW根目录下)</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gpaw install-data pawdir</span><br></pre></td></tr></table></figure>
 <p>让GPAW下载PAW数据集(需要联网，PKUHPC上请使用<code>connect</code>命令，见<a href="https://its.pku.edu.cn/download_ipgwclient.jsp" target="_blank" rel="noopener">pku-its-download</a>)。下载完成后，GPAW会将<code>pawdir</code>绝对路径添加到<code>~/.gpaw/rc.py</code>中，以作为赝势PAW搜索路径。</p>
@@ -342,7 +342,7 @@ s.setAttribute('data-timestamp', +new Date());
 	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
     <ul id="tags" class="tag_box list-unstyled collapse in">	  
 	    
-  <li><a href="/tags/Intel/">Intel<span class="badge">4</span></a></li> <li><a href="/tags/Compilation/">Compilation<span class="badge">4</span></a></li> <li><a href="/tags/GPAW/">GPAW<span class="badge">1</span></a></li>
+  <li><a href="/tags/Compilation/">Compilation<span class="badge">4</span></a></li> <li><a href="/tags/Intel/">Intel<span class="badge">4</span></a></li> <li><a href="/tags/GPAW/">GPAW<span class="badge">1</span></a></li>
 
     </ul>
 	</div>

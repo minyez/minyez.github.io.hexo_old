@@ -135,19 +135,19 @@
               <li><a href="/tags" style="font-size: 20px; font-family: 'Calibri Light',Arial">All Tags</a><span></span></li>
               <li class="divider"></li>
               
-              <li><a href="/tags/Bugfix/" style="font-size: 15px; font-family: 微软雅黑">Bugfix<span></span></a></li>
-              
-              <li><a href="/tags/WIEN2k/" style="font-size: 15px; font-family: 微软雅黑">WIEN2k<span></span></a></li>
+              <li><a href="/tags/Compilation/" style="font-size: 15px; font-family: 微软雅黑">Compilation<span></span></a></li>
               
               <li><a href="/tags/Intel/" style="font-size: 15px; font-family: 微软雅黑">Intel<span></span></a></li>
               
-              <li><a href="/tags/Compilation/" style="font-size: 15px; font-family: 微软雅黑">Compilation<span></span></a></li>
+              <li><a href="/tags/Bugfix/" style="font-size: 15px; font-family: 微软雅黑">Bugfix<span></span></a></li>
+              
+              <li><a href="/tags/WIEN2k/" style="font-size: 15px; font-family: 微软雅黑">WIEN2k<span></span></a></li>
               
               <li><a href="/tags/Hexo/" style="font-size: 15px; font-family: 微软雅黑">Hexo<span></span></a></li>
               
               <li><a href="/tags/VASP/" style="font-size: 15px; font-family: 微软雅黑">VASP<span></span></a></li>
               
-              <li><a href="/tags/Valgrind/" style="font-size: 15px; font-family: 微软雅黑">Valgrind<span></span></a></li>
+              <li><a href="/tags/Python/" style="font-size: 15px; font-family: 微软雅黑">Python<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -234,7 +234,7 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo publish dname</span><br></pre></td></tr></table></figure>
 <p>发布，此时Hexo会将<code>dname.md</code>和<code>dname</code>按照<code>new_post_name</code>的格式重命名后，移动到<code>source/_post</code>文件夹下，不需要自己手动改名。</p>
 <h2 id="Hexo写作"><a href="#Hexo写作" class="headerlink" title="Hexo写作"></a>Hexo写作</h2><p>Hexo博客正文写作基于Markdown语法，网络上已经有非常多的教程和帮助文档，例如我现在在<a href="https://kapeli.com/dash" target="_blank" rel="noopener">Dash</a>中使用的<a href="http://daringfireball.net/projects/markdown/syntax#" target="_blank" rel="noopener">cheat sheet</a>。对于Hexo比较特别的是，为了识别博文的基本信息，我们需要一个front matter。另外，除了基本Markdown语法以外，我们还可以使用开源作者编写的Hexo渲染器及主题允许的各种特性，来丰富我们的写作手段。</p>
-<h3 id="Front-matter"><a href="#Front-matter" class="headerlink" title="Front matter"></a>Front matter</h3><p><del>对任一篇Hexo博文，文件夹非必须，但一定会有对应的<code>.md</code>文件。</del>Hexo要求博文的<code>.md</code>文件开头需要有一个YAML格式的front matter。根据该front matter，Hexo可识别博文的标题、创建日期、标签、分类等各种特征以及需要用到的渲染器。Front matter的基本格式为</p>
+<h3 id="Front-matter"><a href="#Front-matter" class="headerlink" title="Front matter"></a>Front matter</h3><p><sub></sub>对任一篇Hexo博文，文件夹非必须，但一定会有对应的<code>.md</code>文件。<sub></sub>Hexo要求博文的<code>.md</code>文件开头需要有一个YAML格式的front matter。根据该front matter，Hexo可识别博文的标题、创建日期、标签、分类等各种特征以及需要用到的渲染器。Front matter的基本格式为</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">title:</span> <span class="string">pname</span>              <span class="comment"># 标题</span></span><br><span class="line"><span class="attr">date:</span> <span class="number">2018</span><span class="bullet">-02</span><span class="bullet">-21</span> <span class="number">16</span><span class="string">:58:25</span> <span class="comment"># 创建时间</span></span><br><span class="line"><span class="attr">tags:</span>                     <span class="comment"># 标签. 不止一个时写成[tag1, tag2]格式</span></span><br><span class="line"><span class="attr">categories:</span>               <span class="comment"># 分类</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></table></figure>
 <p>利用<code>hexo new post</code>产生的博文，front matter会套用<code>scaffold</code>中的<code>post.md</code>，相当于post的初始化模板</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">title:</span> <span class="string">&#123;&#123;</span> <span class="string">title</span> <span class="string">&#125;&#125;</span></span><br><span class="line"><span class="attr">date:</span> <span class="string">&#123;&#123;</span> <span class="string">date</span> <span class="string">&#125;&#125;</span></span><br><span class="line"><span class="attr">tags:</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></table></figure>
@@ -325,7 +325,7 @@
 
 <p>对于比较长的流程, 需要在<code>_config.yml</code>中</p>
 <h2 id="Freemind特性"><a href="#Freemind特性" class="headerlink" title="Freemind特性"></a>Freemind特性</h2><h3 id="首页摘要"><a href="#首页摘要" class="headerlink" title="首页摘要"></a>首页摘要</h3><p>在要作为摘要的文字后面加上<code>&lt;!--more--&gt;</code>，首页将只显示<code>&lt;!--more--&gt;</code>前面的内容，同时出现”Read More”的按钮。摘要内容仍然会在正文中显示。</p>
-<h3 id="标签插件"><a href="#标签插件" class="headerlink" title="标签插件"></a>标签插件</h3><p>使用标签插件(Tag plugins)可以使得文章的可读性更好。在这里我参考了wxpan提供的<a href="https://github.com/PytLab/hexo-theme-freemind/blob/source/_posts/tag-plugins-cn.md">样例</a>。<del>总结一些tag plugins用法，包括一般Hexo和Bootstrap的tag plugins。</del>在使用插件前，需要先安装<a href="https://github.com/wzpan/hexo-tag-bootstrap">Bootstrap</a></p>
+<h3 id="标签插件"><a href="#标签插件" class="headerlink" title="标签插件"></a>标签插件</h3><p>使用标签插件(Tag plugins)可以使得文章的可读性更好。在这里我参考了wxpan提供的<a href="https://github.com/PytLab/hexo-theme-freemind/blob/source/_posts/tag-plugins-cn.md">样例</a>。<sub></sub>总结一些tag plugins用法，包括一般Hexo和Bootstrap的tag plugins。<sub></sub>在使用插件前，需要先安装<a href="https://github.com/wzpan/hexo-tag-bootstrap">Bootstrap</a></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-tag-bootstrap --save</span><br></pre></td></tr></table></figure>
 <h4 id="标签-label"><a href="#标签-label" class="headerlink" title="标签(label)"></a>标签(label)</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;% label <span class="keyword">default</span> %&#125;</span><br><span class="line">&#123;% label warn warning %&#125;</span><br><span class="line">&#123;% label succ success %&#125;</span><br><span class="line">&#123;% label danger danger %&#125;</span><br><span class="line">&#123;% label prim primary %&#125;</span><br><span class="line">&#123;% label info info %&#125;</span><br></pre></td></tr></table></figure>
 <p>效果是插入一个醒目的颜色小标签<br><span class="label label-default">default</span> <span class="label label-warning">warn</span> <span class="label label-success">succ</span> <span class="label label-danger">danger</span> <span class="label label-primary">prim</span> <span class="label label-info">info</span></p>
@@ -343,7 +343,7 @@
 <p>效果是<span class="badge badge-secondary">徽章测试</span></p>
 <h2 id="Freemind调教"><a href="#Freemind调教" class="headerlink" title="Freemind调教"></a>Freemind调教</h2><div class="alert alert-warning"><i class="fa fa-bell  float-left"></i>  <p>若非特别指出，所有的关于Freemind的调教都是在<code>themes/freemind</code>文件夹内，不要与Hexo根目录混淆。 </p>
 </div>
-<h3 id="网站图标"><a href="#网站图标" class="headerlink" title="网站图标"></a>网站图标</h3><p><del>Hexo会在根目录下<code>source/assets/images/favicon/</code>内寻找图片作为网站图标。另一种方法是在<code>_config.yml</code>内通过编辑<code>favicon</code>标签显示指定</del></p>
+<h3 id="网站图标"><a href="#网站图标" class="headerlink" title="网站图标"></a>网站图标</h3><p><sub></sub>Hexo会在根目录下<code>source/assets/images/favicon/</code>内寻找图片作为网站图标。另一种方法是在<code>_config.yml</code>内通过编辑<code>favicon</code>标签显示指定<sub></sub></p>
 <p>网站图标设定功能在<code>layout/_partial/head.ejs</code>中定义</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">%</span> <span class="attr">if</span> (<span class="attr">theme.favicon</span>)&#123; %&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">"&lt;%- config.root %&gt;assets/images/favicon/icon.png"</span> <span class="attr">rel</span>=<span class="string">"icon"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">%</span> &#125; %&gt;</span></span><br></pre></td></tr></table></figure>
 <p>在<code>_config.yml</code>中设置</p>
@@ -417,7 +417,7 @@
 <li>增加背景图片, 位置由YAML中<code>background</code>变量指定.</li>
 </ol>
 <h3 id="2019-05-25"><a href="#2019-05-25" class="headerlink" title="2019-05-25"></a>2019-05-25</h3><ol>
-<li>利用<code>hexo-wordcount</code>进行全站和页面字数统计<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script><textarea id="flowchart-0-code" style="display: none">st=>start: Start
+<li>利用<code>hexo-wordcount</code>进行全站和页面字数统计<br><script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script><textarea id="flowchart-0-code" style="display: none">st=>start: Start
 op=>operation: Your Operation
 cond=>condition: Yes or No?
 e=>end
