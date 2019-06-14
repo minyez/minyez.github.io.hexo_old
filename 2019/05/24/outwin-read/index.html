@@ -195,128 +195,44 @@
 	<div class="mypage">		
 	  		
 
-	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2>摘要</h2>
-<p>阅读WIEN2k v16.1版本中例程<code>outwin</code>的源码, 以理解其所用到的算法. &lt;!--more--&gt;</p>
-<h2>背景</h2>
-<p>outwin.f在WIEN2k各程序中出现, 它包含例程<code>outwin</code>. 之前大略知道它是用来计算原子球内的径向波函数的, 但对于其算法一直很模糊, 一方面由于它涉及相对论方程, 另一方面它除了输入参数的德语注释外一句注释也没有. 最近在研究局域基组生成的问题, 而这个例程出现频率非常高, 因此准备多啃一下这块代码.</p>
+	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>阅读WIEN2k v16.1版本中例程<code>outwin</code>的源码, 以理解其所用到的算法. <a id="more"></a></p>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>outwin.f在WIEN2k各程序中出现, 它包含例程<code>outwin</code>. 之前大略知道它是用来计算原子球内的径向波函数的, 但对于其算法一直很模糊, 一方面由于它涉及相对论方程, 另一方面它除了输入参数的德语注释外一句注释也没有. 最近在研究局域基组生成的问题, 而这个例程出现频率非常高, 因此准备多啃一下这块代码.</p>
 <p>不同SRC文件下的outwin.f版本也不尽同. SRC_nmr, SRC_lapw7等仍然使用Adams-Moulton四阶算法, SRC_lapw2对于第四个以外的格点允许用五阶算法. SRC_lapw7中的注释更多一些, 但仍然用的是四阶算法. 这里尝试对SRC_lapw7中的outwin.f源码进行解读.</p>
-<h2>原理</h2>
-<p>在Rydberg单位下, 具有量子数$\kappa$的大分量波函数$u(r)=G(r)/r$满足&lt;sup id=&quot;fnref:1&quot;&gt;&lt;a href=&quot;#fn:1&quot; rel=&quot;footnote&quot;&gt;&lt;span class=&quot;hint--top hint--error hint--medium hint--rounded hint--bounce&quot; aria-label=&quot;参考这一篇<a href="https://users.wfu.edu/natalie/papers/pwpaw/notes/atompaw/scalarrelativistic.pdf" target="_blank" rel="noopener">报告</a>&quot;&gt;[1]&lt;/span&gt;&lt;/a&gt;&lt;/sup&gt;</p>
-<p>$$
-\begin{equation}
-\begin{aligned}
-\frac{d}{d r} G(r) &amp;= \frac{G(r)}{r}+M(r) F(r) \
-\frac{d}{d r} F(r) &amp;= -\frac{F(r)}{r}+\left(\frac{\kappa(\kappa+1)}{r^{2}} \frac{1}{M(r)}-(E-V(r))\right) G(r)
-\end{aligned}
-\end{equation}\label{eq:r-GF}
-$$</p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>在Rydberg单位下, 具有量子数$\kappa$的大分量波函数$u(r)=G(r)/r$满足<sup id="fnref:1"><a href="#fn:1" rel="footnote"><span class="hint--top hint--error hint--medium hint--rounded hint--bounce" aria-label="参考这一篇[报告](https://users.wfu.edu/natalie/papers/pwpaw/notes/atompaw/scalarrelativistic.pdf)">[1]</span></a></sup></p>
+<p>$$<br>\begin{equation}<br>\begin{aligned}<br>    \frac{d}{d r} G(r) &amp;= \frac{G(r)}{r}+M(r) F(r) \\<br>    \frac{d}{d r} F(r) &amp;= -\frac{F(r)}{r}+\left(\frac{\kappa(\kappa+1)}{r^{2}} \frac{1}{M(r)}-(E-V(r))\right) G(r)<br>\end{aligned}<br>\end{equation}\label{eq:r-GF}<br>$$</p>
 <p>其中</p>
-<p>$$
-\begin{equation}
-M(r) \equiv 1+\left(\frac{\alpha}{2}\right)^{2}(E-V(r)) = 1+\frac{E-V(r)}{c^2}
-\end{equation}\label{eq:m}
-$$</p>
+<p>$$<br>\begin{equation}<br>M(r) \equiv 1+\left(\frac{\alpha}{2}\right)^{2}(E-V(r)) = 1+\frac{E-V(r)}{c^2}<br>\end{equation}\label{eq:m}<br>$$</p>
 <p>$\alpha$为精细结构常数, 在Rydberg单位下$\alpha=2/c$, $c$为光速. 为在步长$h$的对数格点上进行数值计算, 作变量替换$r=r_0 e^x$, $\mathrm{d}r=r\mathrm{d}x$, 得到关于$x$的方程组</p>
-<p>$$
-\begin{equation}
-\begin{aligned}
-G' &amp;= G + M r F \
-F' &amp;= - F + \left(\frac{\kappa(\kappa+1)}{rM}-r(E-V)\right) G
-\end{aligned}
-\end{equation}\label{eq:x-GF}
-$$</p>
+<p>$$<br>\begin{equation}<br>\begin{aligned}<br>    G’ &amp;= G + M r F \\<br>    F’ &amp;= - F + \left(\frac{\kappa(\kappa+1)}{rM}-r(E-V)\right) G<br>\end{aligned}<br>\end{equation}\label{eq:x-GF}<br>$$</p>
 <p>方便起见, 上式中略去了<em>G,F,M</em>的变量$r\equiv r(x)$, 撇号表示关于<em>x</em>求导.</p>
-<h2>源码解读</h2>
-<h3>参数</h3>
-<h3>行66-81</h3>
-<h3>行83-91</h3>
-<p>从81行开始是对第四个及以后的格点的循环. <code>X</code>为*-h*, <code>DRDI</code>为<em>rh</em>. 其他一些的中间量与式$\eqref{eq:x-GF}$中量的关系是</p>
-<p>$$
-\begin{equation}
-\begin{aligned}
-\mathrm{PHI} &amp;= rh\frac{E-V}{c}\
-\mathrm{U} &amp;= rhc + \mathrm{PHI} = rhc\left[1+\frac{E-V}{c^2}\right] = rhcM \
-\mathrm{Y} &amp;= -\kappa(\kappa+1)h^2/\mathrm{U} + \mathrm{PHI} = - \frac{h}{c}\left[\frac{\kappa(\kappa+1)}{rM} - r(E-V)\right]
-\end{aligned}
-\end{equation}
-$$</p>
+<h2 id="源码解读"><a href="#源码解读" class="headerlink" title="源码解读"></a>源码解读</h2><h3 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h3><h3 id="行66-81"><a href="#行66-81" class="headerlink" title="行66-81"></a>行66-81</h3><h3 id="行83-91"><a href="#行83-91" class="headerlink" title="行83-91"></a>行83-91</h3><p>从81行开始是对第四个及以后的格点的循环. <code>X</code>为<em>-h</em>, <code>DRDI</code>为<em>rh</em>. 其他一些的中间量与式$\eqref{eq:x-GF}$中量的关系是</p>
+<p>$$<br>\begin{equation}<br>\begin{aligned}<br>\mathrm{PHI} &amp;= rh\frac{E-V}{c}\\<br>\mathrm{U} &amp;= rhc + \mathrm{PHI} = rhc\left[1+\frac{E-V}{c^2}\right] = rhcM \\<br>\mathrm{Y} &amp;= -\kappa(\kappa+1)h^2/\mathrm{U} + \mathrm{PHI} = - \frac{h}{c}\left[\frac{\kappa(\kappa+1)}{rM} - r(E-V)\right]<br>\end{aligned}<br>\end{equation}<br>$$</p>
 <p>从而可以将式$\eqref{eq:x-GF}$写成</p>
-<p>$$
-\begin{equation}
-\begin{aligned}
-G' &amp;= G + \frac{\mathrm{U}}{hc}F \
-F' &amp;= - F - \frac{c}{h}\mathrm{Y} G
-\end{aligned}
-\end{equation}\label{eq:UYGF}
-$$</p>
-<p>令$A=G, B=F/c$, $A'=G', B'=F'/c$, 得到</p>
-<p>$$
-\begin{equation}
-\begin{aligned}
-A' &amp;= A + \frac{\mathrm{U}}{h}B \
-B' &amp;= - B - \frac{\mathrm{Y}}{h} A
-\end{aligned}
-\end{equation}\label{eq:UYAB}
-$$</p>
-<h3>行92-96</h3>
-<p>由行列式解线性方程的知识可知, 这部分求解的是这样一个矩阵方程</p>
-<p>$$\begin{equation}
-\begin{bmatrix}
-\frac{8}{3} + X &amp; -U \
-Y &amp; \frac{8}{3} - X \
-\end{bmatrix}
-\begin{bmatrix}
-A_c \
-B_c \
-\end{bmatrix}=
-\begin{bmatrix}
-B1 \
-B2 \
-\end{bmatrix}
-\end{equation}\label{eq:mat-92-96}$$</p>
+<p>$$<br>\begin{equation}<br>\begin{aligned}<br>    G’ &amp;= G + \frac{\mathrm{U}}{hc}F \\<br>    F’ &amp;= - F - \frac{c}{h}\mathrm{Y} G<br>\end{aligned}<br>\end{equation}\label{eq:UYGF}<br>$$</p>
+<p>令$A=G, B=F/c$, $A’=G’, B’=F’/c$, 得到</p>
+<p>$$<br>\begin{equation}<br>\begin{aligned}<br>    A’ &amp;= A + \frac{\mathrm{U}}{h}B \\<br>    B’ &amp;= - B - \frac{\mathrm{Y}}{h} A<br>\end{aligned}<br>\end{equation}\label{eq:UYAB}<br>$$</p>
+<h3 id="行92-96"><a href="#行92-96" class="headerlink" title="行92-96"></a>行92-96</h3><p>由行列式解线性方程的知识可知, 这部分求解的是这样一个矩阵方程</p>
+<p>$$\begin{equation}<br>\begin{bmatrix}<br>\frac{8}{3} + X &amp; -U \\<br>Y &amp; \frac{8}{3} - X \\<br>\end{bmatrix}<br>\begin{bmatrix}<br>A_c \\<br>B_c \\<br>\end{bmatrix}=<br>\begin{bmatrix}<br>B1 \\<br>B2 \\<br>\end{bmatrix}<br>\end{equation}\label{eq:mat-92-96}$$</p>
 <p>这里下标c表示在代码(code)中的定义. <code>B1</code>和<code>B2</code>在93和94行计算, 基于<a href="https://en.wikipedia.org/wiki/Linear_multistep_method#Adams%E2%80%93Moulton_methods" target="_blank" rel="noopener">Adams-Moulton算法</a>, 因为8/3来自于四阶算法</p>
-<p>$$
-y_{n+3}=y_{n+2}+h\left(\frac{9}{24} f\left(t_{n+3}, y_{n+3}\right)+\frac{19}{24} f\left(t_{n+2}, y_{n+2}\right)-\frac{5}{24} f\left(t_{n+1}, y_{n+1}\right)+\frac{1}{24} f\left(t_{n}, y_{n}\right)\right)
-$$</p>
-<p>其中$f(t_n, y_n)=y'<em>n$为第n格点上y的导数. 利用上式可以将$A'</em>{n+3}$表示为</p>
-<p>$$
-hA'<em>{n+3} = \frac{8}{3}A</em>{n+3} - \frac{8}{3}A_{n+2} - \frac{19}{9}hA'<em>{n+2} + \frac{5h}{9}A'</em>{n+1} - \frac{h}{9}A'_n
-$$</p>
+<p>$$<br>y_{n+3}=y_{n+2}+h\left(\frac{9}{24} f\left(t_{n+3}, y_{n+3}\right)+\frac{19}{24} f\left(t_{n+2}, y_{n+2}\right)-\frac{5}{24} f\left(t_{n+1}, y_{n+1}\right)+\frac{1}{24} f\left(t_{n}, y_{n}\right)\right)<br>$$</p>
+<p>其中$f(t_n, y_n)=y’_n$为第n格点上y的导数. 利用上式可以将$A’_{n+3}$表示为</p>
+<p>$$<br>hA’_{n+3} = \frac{8}{3}A_{n+3} - \frac{8}{3}A_{n+2} - \frac{19}{9}hA’_{n+2} + \frac{5h}{9}A’_{n+1} - \frac{h}{9}A’_n<br>$$</p>
 <p>将式$\eqref{eq:UYAB}$两边乘以$h$后, 在格点$n+3$处的表达式为</p>
-<p>$$
-\begin{equation}
-\begin{aligned}
-\left[\frac{8}{3} - h\right]A_{n+3} - U_{n+3} B_{n+3} &amp;= \frac{8}{3}A_{n+2} + \frac{19}{9}hA'<em>{n+2} - \frac{5}{9}hA'</em>{n+1} + \frac{1}{9}hA'<em>n \
-\left[\frac{8}{3} + h\right]B</em>{n+3} + Y_{n+3} A_{n+3} &amp;= \frac{8}{3}B_{n+2} + \frac{19}{9}hB'<em>{n+2} - \frac{5}{9}hB'</em>{n+1} + \frac{1}{9}hB'_n
-\end{aligned}
-\end{equation}\label{eq:n-3-UYAB}
-$$</p>
+<p>$$<br>\begin{equation}<br>\begin{aligned}<br>    \left[\frac{8}{3} - h\right]A_{n+3} - U_{n+3} B_{n+3} &amp;= \frac{8}{3}A_{n+2} + \frac{19}{9}hA’_{n+2} - \frac{5}{9}hA’_{n+1} + \frac{1}{9}hA’_n \\<br>    \left[\frac{8}{3} + h\right]B_{n+3} + Y_{n+3} A_{n+3} &amp;= \frac{8}{3}B_{n+2} + \frac{19}{9}hB’_{n+2} - \frac{5}{9}hB’_{n+1} + \frac{1}{9}hB’_n<br>\end{aligned}<br>\end{equation}\label{eq:n-3-UYAB}<br>$$</p>
 <p>如果把上式看成未知数$A_{n+3}$和$B_{n+3}$的二元一次方程, 其系数矩阵和$\eqref{eq:mat-92-96}$是相同的. 检查<code>DGn</code>和<code>DFn</code>的含义(见下面一节)以及系数<code>Rn</code>, 可以发现式子$\eqref{eq:n-3-UYAB}$右侧与<code>B1</code>和<code>B2</code>也是一致的. 因此我们定义的$A$和$B$与outwin.f中的含义是一致的.</p>
-<h3>行98-103</h3>
-<p>更新最外的三个点的导数值, 以用于计算下一个格点上的<code>B1</code>和<code>B2</code>. 其中<code>Dx1</code>和<code>Dx2</code>分别用<code>Dx2</code>和<code>Dx3</code>替代, 即97, 98, 101和102行, 在格点迭代的语境下很好理解. <code>DG3</code>的更新表达式</p>
-<p><figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DG3 = U*B(K) - X*A(K)</span><br></pre></td></tr></table></figure></p>
-<p>由式$\eqref{eq:UYAB}$和<code>X</code>等于*-h*, 可得</p>
-<p>$$
-DG3 = U_K B_K + h A_K = h(A_K + \frac{U_K}{h}B_K) = hA'_K
-$$</p>
+<h3 id="行98-103"><a href="#行98-103" class="headerlink" title="行98-103"></a>行98-103</h3><p>更新最外的三个点的导数值, 以用于计算下一个格点上的<code>B1</code>和<code>B2</code>. 其中<code>Dx1</code>和<code>Dx2</code>分别用<code>Dx2</code>和<code>Dx3</code>替代, 即97, 98, 101和102行, 在格点迭代的语境下很好理解. <code>DG3</code>的更新表达式</p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DG3 = U*B(K) - X*A(K)</span><br></pre></td></tr></table></figure>
+<p>由式$\eqref{eq:UYAB}$和<code>X</code>等于<em>-h</em>, 可得</p>
+<p>$$<br>DG3 = U_K B_K + h A_K = h(A_K + \frac{U_K}{h}B_K) = hA’_K<br>$$</p>
 <p>因此<code>DG3</code>是$h$乘以A在格点K上的导数. 同理, <code>DF3</code>的更新表达式</p>
-<p><figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DF3 = X*B(K) - Y*A(K)</span><br></pre></td></tr></table></figure></p>
-<p>意味着$DF3 = -h B_K - Y_K A_K = h B'_K$. 因此<code>DF3</code>是$h$乘以B在格点K上的导数.</p>
-<h3>行107-109</h3>
-<p>这一个循环对<em>B</em>进行了scaling, $B \to cB/2= F/2=\alpha F$. 报告&lt;sup id=&quot;fnref:1&quot;&gt;&lt;a href=&quot;#fn:1&quot; rel=&quot;footnote&quot;&gt;&lt;span class=&quot;hint--top hint--error hint--medium hint--rounded hint--bounce&quot; aria-label=&quot;参考这一篇<a href="https://users.wfu.edu/natalie/papers/pwpaw/notes/atompaw/scalarrelativistic.pdf" target="_blank" rel="noopener">报告</a>&quot;&gt;[1]&lt;/span&gt;&lt;/a&gt;&lt;/sup&gt;指出<em>F</em>与小分量有关, 但具体关系暂未推导.</p>
-<h3>行111-113</h3>
-<p>由于$A=G=ru$, 因此<code>VAL</code>就是最后一个格点上的波函数值. 而<code>SLO</code>的数学表示</p>
-<p>$$
-(h\frac{\mathrm{d}A}{hr\mathrm{d}x}-u)/r
-=\frac{\mathrm{d}(ru)}{r \mathrm{d}r} - \frac{u}{r}
-=\frac{r\mathrm{d}u}{r \mathrm{d}r} = \frac{\mathrm{d}u}{\mathrm{d}r}
-$$</p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DF3 = X*B(K) - Y*A(K)</span><br></pre></td></tr></table></figure>
+<p>意味着$DF3 = -h B_K - Y_K A_K = h B’_K$. 因此<code>DF3</code>是$h$乘以B在格点K上的导数.</p>
+<h3 id="行107-109"><a href="#行107-109" class="headerlink" title="行107-109"></a>行107-109</h3><p>这一个循环对<em>B</em>进行了scaling, $B \to cB/2= F/2=\alpha F$. 报告<sup id="fnref:1"><a href="#fn:1" rel="footnote"><span class="hint--top hint--error hint--medium hint--rounded hint--bounce" aria-label="参考这一篇[报告](https://users.wfu.edu/natalie/papers/pwpaw/notes/atompaw/scalarrelativistic.pdf)">[1]</span></a></sup>指出<em>F</em>与小分量有关, 但具体关系暂未推导.</p>
+<h3 id="行111-113"><a href="#行111-113" class="headerlink" title="行111-113"></a>行111-113</h3><p>由于$A=G=ru$, 因此<code>VAL</code>就是最后一个格点上的波函数值. 而<code>SLO</code>的数学表示</p>
+<p>$$<br>(h\frac{\mathrm{d}A}{hr\mathrm{d}x}-u)/r<br>=\frac{\mathrm{d}(ru)}{r \mathrm{d}r} - \frac{u}{r}<br>=\frac{r\mathrm{d}u}{r \mathrm{d}r} = \frac{\mathrm{d}u}{\mathrm{d}r}<br>$$</p>
 <p>为波函数在边界上的导数.</p>
-<h2>总结</h2>
-<p>outwin.f中的<code>outwin</code>例程利用Adams-Moulton算法求解标量相对论方程$\eqref{eq:r-GF}$, 在对数格点上得到量子数$\kappa$下的大分量波函数, 以函数乘矢径长的形式存储在$A$中.</p>
-<h2>脚注</h2>
-<p>&lt;div id=&quot;footnotes&quot;&gt;&lt;hr&gt;&lt;div id=&quot;footnotelist&quot;&gt;&lt;ol style=&quot;list-style: none; padding-left: 0; margin-left: 40px&quot;&gt;&lt;li id=&quot;fn:1&quot;&gt;&lt;span style=&quot;display: inline-block; vertical-align: top; padding-right: 10px; margin-left: -40px&quot;&gt;1.&lt;/span&gt;&lt;span style=&quot;display: inline-block; vertical-align: top; margin-left: 10px;&quot;&gt;参考这一篇&lt;a href=&quot;https://users.wfu.edu/natalie/papers/pwpaw/notes/atompaw/scalarrelativistic.pdf&quot;&gt;报告&lt;/a&gt;&lt;a href=&quot;#fnref:1&quot; rev=&quot;footnote&quot;&gt; ↩&lt;/a&gt;&lt;/span&gt;&lt;/li&gt;&lt;/ol&gt;&lt;/div&gt;&lt;/div&gt;</p>
-	  
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>outwin.f中的<code>outwin</code>例程利用Adams-Moulton算法求解标量相对论方程$\eqref{eq:r-GF}$, 在对数格点上得到量子数$\kappa$下的大分量波函数, 以函数乘矢径长的形式存储在$A$中.</p>
+<h2 id="脚注"><a href="#脚注" class="headerlink" title="脚注"></a>脚注</h2><div id="footnotes"><hr><div id="footnotelist"><ol style="list-style: none; padding-left: 0; margin-left: 40px"><li id="fn:1"><span style="display: inline-block; vertical-align: top; padding-right: 10px; margin-left: -40px">1.</span><span style="display: inline-block; vertical-align: top; margin-left: 10px;">参考这一篇<a href="https://users.wfu.edu/natalie/papers/pwpaw/notes/atompaw/scalarrelativistic.pdf" target="_blank" rel="noopener">报告</a><a href="#fnref:1" rev="footnote"> ↩</a></span></li></ol></div></div>	  
 	</div>
 
     
@@ -400,7 +316,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	<div class="meta-widget">
 	<i class="fa fa-tachometer"></i>
-	<span class="post-count">1.7k</span> words
+	<span class="post-count">1.4k</span> words
 	</div>
 	
 
@@ -435,7 +351,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">摘要</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">背景</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">原理</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">源码解读</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">参数</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">行66-81</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">行83-91</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">行92-96</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">行98-103</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">行107-109</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">行111-113</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">总结</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">脚注</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#摘要"><span class="toc-article-text">摘要</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#背景"><span class="toc-article-text">背景</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#原理"><span class="toc-article-text">原理</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#源码解读"><span class="toc-article-text">源码解读</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#参数"><span class="toc-article-text">参数</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#行66-81"><span class="toc-article-text">行66-81</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#行83-91"><span class="toc-article-text">行83-91</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#行92-96"><span class="toc-article-text">行92-96</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#行98-103"><span class="toc-article-text">行98-103</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#行107-109"><span class="toc-article-text">行107-109</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#行111-113"><span class="toc-article-text">行111-113</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#总结"><span class="toc-article-text">总结</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#脚注"><span class="toc-article-text">脚注</span></a></li></ol>
 		</div>
 	
 	</div>
@@ -475,7 +391,7 @@ var disqus_shortname = 'shigaro';
     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
   
-	| <span class="post-count">33.1k</span> words
+	| <span class="post-count">31.7k</span> words
   
 </p>
  </footer>
