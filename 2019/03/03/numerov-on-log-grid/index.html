@@ -135,19 +135,19 @@
               <li><a href="/tags" style="font-size: 20px; font-family: 'Calibri Light',Arial">All Tags</a><span></span></li>
               <li class="divider"></li>
               
-              <li><a href="/tags/Compilation/" style="font-size: 15px; font-family: 微软雅黑">Compilation<span></span></a></li>
-              
-              <li><a href="/tags/Intel/" style="font-size: 15px; font-family: 微软雅黑">Intel<span></span></a></li>
-              
               <li><a href="/tags/Bugfix/" style="font-size: 15px; font-family: 微软雅黑">Bugfix<span></span></a></li>
               
               <li><a href="/tags/WIEN2k/" style="font-size: 15px; font-family: 微软雅黑">WIEN2k<span></span></a></li>
+              
+              <li><a href="/tags/Intel/" style="font-size: 15px; font-family: 微软雅黑">Intel<span></span></a></li>
+              
+              <li><a href="/tags/Compilation/" style="font-size: 15px; font-family: 微软雅黑">Compilation<span></span></a></li>
               
               <li><a href="/tags/Hexo/" style="font-size: 15px; font-family: 微软雅黑">Hexo<span></span></a></li>
               
               <li><a href="/tags/VASP/" style="font-size: 15px; font-family: 微软雅黑">VASP<span></span></a></li>
               
-              <li><a href="/tags/Python/" style="font-size: 15px; font-family: 微软雅黑">Python<span></span></a></li>
+              <li><a href="/tags/Valgrind/" style="font-size: 15px; font-family: 微软雅黑">Valgrind<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -195,52 +195,117 @@
 	<div class="mypage">		
 	  		
 
-	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>本文在两种数值格点(均匀格点和对数格点)上推导了Numerov方法的递推方程, 给出了简单的Python实现.</p>
-<a id="more"></a>
-<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p><a href="https://en.wikipedia.org/wiki/Numerov%27s_method" target="_blank" rel="noopener">Numerov方法</a>是数值求解常微分方程(ODE)的一种方法, 适用于不含一阶项的二阶ODE</p>
-<p>$$\begin{equation}<br>y’’ + f(r)y = s(r).<br>\end{equation}\label{eq:numerov-ode}<br>$$</p>
+	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2>摘要</h2>
+<p>本文在两种数值格点(均匀格点和对数格点)上推导了Numerov方法的递推方程, 给出了简单的Python实现.</p>
+<p>&lt;!--more--&gt;</p>
+<h2>背景</h2>
+<p><a href="https://en.wikipedia.org/wiki/Numerov%27s_method" target="_blank" rel="noopener">Numerov方法</a>是数值求解常微分方程(ODE)的一种方法, 适用于不含一阶项的二阶ODE</p>
+<p>$$\begin{equation}
+y'' + f(r)y = s(r).
+\end{equation}\label{eq:numerov-ode}
+$$</p>
 <p>在物理上有很多方程满足这种形式, 其中与我最为相关的是薛定谔方程(SE), 更确切的是三维有心势下的径向薛定谔方程(rSE). 原子单位下, rSE写成</p>
-<p>$$<br>\left[-\frac{d^2}{d r^2} + \frac{l(l+1)}{r^2} + 2V(r)\right]R_l(r) = E_lR_l(r)<br>$$</p>
+<p>$$
+\left[-\frac{d^2}{d r^2} + \frac{l(l+1)}{r^2} + 2V(r)\right]R_l(r) = E_lR_l(r)
+$$</p>
 <p>其中$R_l$是定义在一维实空间$r$上的波函数$u_l$与矢径长$r$的积, $R_l(r)=ru_l(r)$, $E_l$是能量, $l$是角量子数. 这个方程满足Numerov方程要求的ODE形式</p>
-<p>$$<br>\begin{cases}<br>f(r) = -\frac{l(l+1)}{r^2} - 2V(r) + E_l \\<br>s(r) = 0<br>\end{cases}<br>$$</p>
+<p>$$
+\begin{cases}
+f(r) = -\frac{l(l+1)}{r^2} - 2V(r) + E_l \
+s(r) = 0
+\end{cases}
+$$</p>
 <p>因此可以用该方法数值求解. 本文首先在两种格点方案, 均匀格点和对数格点上推导Numerov方法的核心方程, 即格点递推公式, 然后给出简单的Python实现.</p>
-<h2 id="推导"><a href="#推导" class="headerlink" title="推导"></a>推导</h2><h3 id="均匀格点"><a href="#均匀格点" class="headerlink" title="均匀格点"></a>均匀格点</h3><p>首先在均匀格点上推导一下Numerov方法. 在$r$点附近对函数$y$作Taylor展开</p>
-<p>$$<br>\begin{equation}\label{eq:deriv-1}<br>y(r\pm h) = y(r) \pm hy’(r) + \frac{h^2}{2}y’’(r) \pm \frac{h^3}{6}y’’’(r) + \frac{h^4}{24}y’’’’(r) + \cdots<br>\end{equation}<br>$$</p>
+<h2>推导</h2>
+<h3>均匀格点</h3>
+<p>首先在均匀格点上推导一下Numerov方法. 在$r$点附近对函数$y$作Taylor展开</p>
+<p>$$
+\begin{equation}\label{eq:deriv-1}
+y(r\pm h) = y(r) \pm hy'(r) + \frac{h^2}{2}y''(r) \pm \frac{h^3}{6}y'''(r) + \frac{h^4}{24}y''''(r) + \cdots
+\end{equation}
+$$</p>
 <p>将正负两式相加</p>
-<p>$$<br>\begin{equation}\label{eq:deriv-2}<br>y(r-h)+y(r+h) = 2y(r) + h^2y’’(r) + \frac{h^4}{12}y’’’’(r) + \mathcal{O}(h^6)<br>\end{equation}<br>$$</p>
+<p>$$
+\begin{equation}\label{eq:deriv-2}
+y(r-h)+y(r+h) = 2y(r) + h^2y''(r) + \frac{h^4}{12}y''''(r) + \mathcal{O}(h^6)
+\end{equation}
+$$</p>
 <p>由于</p>
-<p>$$<br>y’’’’(r) = \frac{d^2}{d r^2}\left[f(r)y(r)-s(r)\right],<br>$$</p>
-<p>定义$p(r):=f(r)y(r)-s(r), p=y’’, p’’=y’’’’$, 可以采用与式$\eqref{eq:deriv-1}\eqref{eq:deriv-2}$类似的办法处理$p$, 得到</p>
-<p>$$<br>\begin{equation}\label{eq:deriv-3}<br>p(r-h)+p(r+h) = 2p(r) + h^2 p’’(r) + \frac{h^4}{12}p’’’’(r) + \mathcal{O}(h^6).<br>\end{equation}<br>$$</p>
-<p>把$p, p’’$表达式$\eqref{eq:deriv-3}$回代到式$\eqref{eq:deriv-2}$中,</p>
-<p>$$<br>y(r-h)+y(r+h) = 2y(r) + h^2p(r) + \frac{h^4}{12}\left[p(r-h)+p(r+h)-2p(r)\right] + \mathcal{O}(h^6).<br>$$</p>
+<p>$$
+y''''(r) = \frac{d^2}{d r^2}\left[f(r)y(r)-s(r)\right],
+$$</p>
+<p>定义$p(r):=f(r)y(r)-s(r), p=y'', p''=y''''$, 可以采用与式$\eqref{eq:deriv-1}\eqref{eq:deriv-2}$类似的办法处理$p$, 得到</p>
+<p>$$
+\begin{equation}\label{eq:deriv-3}
+p(r-h)+p(r+h) = 2p(r) + h^2 p''(r) + \frac{h^4}{12}p''''(r) + \mathcal{O}(h^6).
+\end{equation}
+$$</p>
+<p>把$p, p''$表达式$\eqref{eq:deriv-3}$回代到式$\eqref{eq:deriv-2}$中,</p>
+<p>$$
+y(r-h)+y(r+h) = 2y(r) + h^2p(r) + \frac{h^4}{12}\left[p(r-h)+p(r+h)-2p(r)\right] + \mathcal{O}(h^6).
+$$</p>
 <p>稍作整理, 得到</p>
-<p>$$<br>\begin{aligned}<br>\left[1+\frac{h^2}{12}f(r-h)\right]y(r-h) +&amp; \left[1+\frac{h^2}{12}f(r+h)\right]y(r+h) = \\<br>&amp;2\left[1+\frac{h^2}{12}f(r)\right]y(r) - h^2f(r)y(r) + \frac{h^2}{12}\left[s(r-h)+10s(r)+s(r+h)\right] + \mathcal{O}(h^6).<br>\end{aligned}<br>$$</p>
+<p>$$
+\begin{aligned}
+\left[1+\frac{h^2}{12}f(r-h)\right]y(r-h) +&amp; \left[1+\frac{h^2}{12}f(r+h)\right]y(r+h) = \
+&amp;2\left[1+\frac{h^2}{12}f(r)\right]y(r) - h^2f(r)y(r) + \frac{h^2}{12}\left[s(r-h)+10s(r)+s(r+h)\right] + \mathcal{O}(h^6).
+\end{aligned}
+$$</p>
 <p>这就是Numerov方法的一般方程. 特别的, 对于齐次方程, $s=0$, 式子可以化简成</p>
-<p>$$<br>\left[1+\frac{h^2}{12}f(r+h)\right]y(r+h) = 2\left[1+\frac{h^2}{12}f(r)\right]y(r) - \left[1+\frac{h^2}{12}f(r-h)\right]y(r-h) - h^2f(r)y(r) + \mathcal{O}(h^6).<br>$$</p>
+<p>$$
+\left[1+\frac{h^2}{12}f(r+h)\right]y(r+h) = 2\left[1+\frac{h^2}{12}f(r)\right]y(r) - \left[1+\frac{h^2}{12}f(r-h)\right]y(r-h) - h^2f(r)y(r) + \mathcal{O}(h^6).
+$$</p>
 <p>取间距为$h$的均匀格点, 此时上式化成三点递推方程,</p>
-<p>$$<br>(1+\frac{h^2}{12}f_{n+1})y_{n+1} = 2(1+\frac{h^2}{12}f_n)y_n - (1+\frac{h^2}{12}f_{n-1})y_{n-1} - h^2f_n y_n<br>$$</p>
+<p>$$
+(1+\frac{h^2}{12}f_{n+1})y_{n+1} = 2(1+\frac{h^2}{12}f_n)y_n - (1+\frac{h^2}{12}f_{n-1})y_{n-1} - h^2f_n y_n
+$$</p>
 <p>精确到步长的六次方. 实际应用当中, 我们需要先确定前两个格点上的值, 然后就可以用上式推出第三点及之后所有格点上的函数值.</p>
-<h3 id="对数格点"><a href="#对数格点" class="headerlink" title="对数格点"></a>对数格点</h3><p>除了实空间均匀格点, 我们也可以使用对数均匀格点(logarithmic grid), 其上第n个实空间格点为</p>
-<p>$$<br>r_n = r_0 e^{nh}<br>$$</p>
-<p>上面的Numerov方法不能直接用于格点$\{r_n\}$, 因为这种情况下格点$r$间距是变化的, 但是我们可以通过代数变换使之成为可能. 首先定义变量替换$x\mapsto r$</p>
-<p>$$<br>r(x) = r_0e^x<br>$$</p>
+<h3>对数格点</h3>
+<p>除了实空间均匀格点, 我们也可以使用对数均匀格点(logarithmic grid), 其上第n个实空间格点为</p>
+<p>$$
+r_n = r_0 e^{nh}
+$$</p>
+<p>上面的Numerov方法不能直接用于格点${r_n}$, 因为这种情况下格点$r$间距是变化的, 但是我们可以通过代数变换使之成为可能. 首先定义变量替换$x\mapsto r$</p>
+<p>$$
+r(x) = r_0e^x
+$$</p>
 <p>及定义$Y(x)$为</p>
-<p>$$\begin{equation}<br>y(r) = r_0e^{x/2}Y(x).<br>\end{equation}\label{eq:log-trans-y}$$</p>
+<p>$$\begin{equation}
+y(r) = r_0e^{x/2}Y(x).
+\end{equation}\label{eq:log-trans-y}$$</p>
 <p>从而</p>
-<p>$$<br>\begin{aligned}<br>\frac{d^2}{d r^2}y(r) &amp;= \frac{1}{r_0e^x}\frac{d}{dx}\left[\frac{1}{e^x}\frac{d}{d x}\left(e^{x/2}Y(x)\right)\right] \\<br>&amp;=\frac{1}{r_0e^x}\left[-\frac{1}{4}e^{-x/2}Y(x) + e^{-x/2}Y’’(x)\right] \\<br>\end{aligned}<br>$$</p>
+<p>$$
+\begin{aligned}
+\frac{d^2}{d r^2}y(r) &amp;= \frac{1}{r_0e^x}\frac{d}{dx}\left[\frac{1}{e^x}\frac{d}{d x}\left(e^{x/2}Y(x)\right)\right] \
+&amp;=\frac{1}{r_0e^x}\left[-\frac{1}{4}e^{-x/2}Y(x) + e^{-x/2}Y''(x)\right] \
+\end{aligned}
+$$</p>
 <p>其中撇号代表对$x$求导而非$r$. 代回到式$\eqref{eq:numerov-ode}$的ODE中</p>
-<p>$$<br>\begin{aligned}<br>\frac{1}{r_0}e^{-3x/2}\left[-\frac{1}{4}Y(x) + Y’’(x)\right] + f(r)r_0e^{x/2}Y(x) &amp;= s(r)\\<br>Y’’ + \left[f(r)r^2_0e^{2x}-\frac{1}{4}\right]Y(x) &amp;= r_0e^{3x/2}s(r).<br>\end{aligned}<br>$$</p>
+<p>$$
+\begin{aligned}
+\frac{1}{r_0}e^{-3x/2}\left[-\frac{1}{4}Y(x) + Y''(x)\right] + f(r)r_0e^{x/2}Y(x) &amp;= s(r)\
+Y'' + \left[f(r)r^2_0e^{2x}-\frac{1}{4}\right]Y(x) &amp;= r_0e^{3x/2}s(r).
+\end{aligned}
+$$</p>
 <p>令</p>
-<p>$$\begin{equation}<br>\begin{aligned}<br>F(x):=&amp;f(r)r^2_0e^{2x}-\frac{1}{4}= f(r(x))r(x)^2-\frac{1}{4} \\<br>S(x):=&amp;r_0e^{3x/2}s(r) = \sqrt{\frac{r(x)^3}{r_0}}s(r(x))<br>\end{aligned}<br>\end{equation}\label{eq:log-trans-f-s}$$</p>
+<p>$$\begin{equation}
+\begin{aligned}
+F(x):=&amp;f(r)r^2_0e^{2x}-\frac{1}{4}= f(r(x))r(x)^2-\frac{1}{4} \
+S(x):=&amp;r_0e^{3x/2}s(r) = \sqrt{\frac{r(x)^3}{r_0}}s(r(x))
+\end{aligned}
+\end{equation}\label{eq:log-trans-f-s}$$</p>
 <p>于是得到ODE</p>
-<p>$$<br>Y’’(x) + F(x)Y(x) = S(x)<br>$$</p>
+<p>$$
+Y''(x) + F(x)Y(x) = S(x)
+$$</p>
 <p>这与原始ODE$\eqref{eq:numerov-ode}$相似, 但它定义在变量$x$上而非实空间$r$上. 由于格点$x$是均匀的, 我们可以应用前面均匀格点的算法解出$Y(x)$, 然后再通过式$\eqref{eq:log-trans-y}$变换回$y(r)$.</p>
-<h2 id="Python实现"><a href="#Python实现" class="headerlink" title="Python实现"></a>Python实现</h2><p>以下是忽略了s后, Numerov方法在均匀格点和对数格点上的Python实现. Numba装饰器用于编译优化.</p>
+<h2>Python实现</h2>
+<p>以下是忽略了s后, Numerov方法在均匀格点和对数格点上的Python实现. Numba装饰器用于编译优化.</p>
 <p>首先是均匀格点上的实现<code>numerov</code>, 参考了<a href="https://www.physics.rutgers.edu/grad/509/src_prog/hmw/Hydrogen.html" target="_blank" rel="noopener">Kristjan Haule</a>的代码.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@numba.njit</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">numerov</span><span class="params">(f, h, y0, dy0)</span>:</span></span><br><span class="line">    <span class="string">'''Solve y''(r) + f(r)y(r)=0 by Numerov method on a linear r grid</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        f (1d-array): f</span></span><br><span class="line"><span class="string">        h (float): the step size of linear grid</span></span><br><span class="line"><span class="string">        y0 (float): y value at the first grid point</span></span><br><span class="line"><span class="string">        dy0 (float): first-order derivaitve at the first grid point</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    y = np.zeros(len(f))</span><br><span class="line">    y[<span class="number">0</span>] = y0</span><br><span class="line">    y[<span class="number">1</span>] = y0 + h * dy0</span><br><span class="line">    h2 = h**<span class="number">2</span></span><br><span class="line">    h2d12 = h2/<span class="number">12.0</span></span><br><span class="line">    w0 = y0 * (<span class="number">1</span> + h2d12 * f[<span class="number">0</span>])</span><br><span class="line">    w1 = y[<span class="number">1</span>] * (<span class="number">1</span> + h2d12 * f[<span class="number">1</span>])</span><br><span class="line">    yn = y[<span class="number">1</span>]</span><br><span class="line">    fn = f[<span class="number">1</span>]</span><br><span class="line">    <span class="keyword">for</span> n <span class="keyword">in</span> range(<span class="number">2</span>, len(f)):</span><br><span class="line">        w2 = <span class="number">2</span> * w1 - w0 - h2 * fn * yn</span><br><span class="line">        fn = f[n]</span><br><span class="line">        yn = w2 / (<span class="number">1</span> + h2d12 * fn)</span><br><span class="line">        y[n] = yn</span><br><span class="line">        w0, w1 = w1, w2</span><br><span class="line">    <span class="keyword">return</span> y</span><br></pre></td></tr></table></figure>
+<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@numba.njit</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">numerov</span><span class="params">(f, h, y0, dy0)</span>:</span></span><br><span class="line">    <span class="string">'''Solve y''(r) + f(r)y(r)=0 by Numerov method on a linear r grid</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        f (1d-array): f</span></span><br><span class="line"><span class="string">        h (float): the step size of linear grid</span></span><br><span class="line"><span class="string">        y0 (float): y value at the first grid point</span></span><br><span class="line"><span class="string">        dy0 (float): first-order derivaitve at the first grid point</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    y = np.zeros(len(f))</span><br><span class="line">    y[<span class="number">0</span>] = y0</span><br><span class="line">    y[<span class="number">1</span>] = y0 + h * dy0</span><br><span class="line">    h2 = h**<span class="number">2</span></span><br><span class="line">    h2d12 = h2/<span class="number">12.0</span></span><br><span class="line">    w0 = y0 * (<span class="number">1</span> + h2d12 * f[<span class="number">0</span>])</span><br><span class="line">    w1 = y[<span class="number">1</span>] * (<span class="number">1</span> + h2d12 * f[<span class="number">1</span>])</span><br><span class="line">    yn = y[<span class="number">1</span>]</span><br><span class="line">    fn = f[<span class="number">1</span>]</span><br><span class="line">    <span class="keyword">for</span> n <span class="keyword">in</span> range(<span class="number">2</span>, len(f)):</span><br><span class="line">        w2 = <span class="number">2</span> * w1 - w0 - h2 * fn * yn</span><br><span class="line">        fn = f[n]</span><br><span class="line">        yn = w2 / (<span class="number">1</span> + h2d12 * fn)</span><br><span class="line">        y[n] = yn</span><br><span class="line">        w0, w1 = w1, w2</span><br><span class="line">    <span class="keyword">return</span> y</span><br></pre></td></tr></table></figure></p>
 <p>然后是对数格点上的实现<code>numerov_log</code>:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@numba.njit</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">numerov_log</span><span class="params">(r, f, y0, dy0)</span>:</span></span><br><span class="line">    <span class="string">'''Solve y''(r) + f(r)y(r) = 0 by Numerov method on an exponential r grid</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        r (1d-array): the logarithmic grid</span></span><br><span class="line"><span class="string">        f (1d-array)</span></span><br><span class="line"><span class="string">        y0 (float): y at the first grid</span></span><br><span class="line"><span class="string">        dy0 (float): first-order derivaitve at the first grid</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    r0 = r[<span class="number">0</span>]</span><br><span class="line">    <span class="comment"># calculate F(x)</span></span><br><span class="line">    F = np.multiply(f, np.power(r, <span class="number">2</span>)) - <span class="number">0.25E0</span></span><br><span class="line">    x = np.log(r/r0)</span><br><span class="line">    <span class="comment"># step size in x</span></span><br><span class="line">    hx = x[<span class="number">1</span>] - x[<span class="number">0</span>]</span><br><span class="line">    <span class="comment"># convert boundary condition of y to Y</span></span><br><span class="line">    Y0 = y0 / r0</span><br><span class="line">    dY0 = - Y0/<span class="number">2</span> + dy0 * r0</span><br><span class="line">    <span class="comment"># call Numerov on linear grid x</span></span><br><span class="line">    Y = numerov(F, hx, Y0, dY0)</span><br><span class="line">    <span class="keyword">return</span> Y * np.sqrt(r * r0)</span><br></pre></td></tr></table></figure>	  
+<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@numba.njit</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">numerov_log</span><span class="params">(r, f, y0, dy0)</span>:</span></span><br><span class="line">    <span class="string">'''Solve y''(r) + f(r)y(r) = 0 by Numerov method on an exponential r grid</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Args:</span></span><br><span class="line"><span class="string">        r (1d-array): the logarithmic grid</span></span><br><span class="line"><span class="string">        f (1d-array)</span></span><br><span class="line"><span class="string">        y0 (float): y at the first grid</span></span><br><span class="line"><span class="string">        dy0 (float): first-order derivaitve at the first grid</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    r0 = r[<span class="number">0</span>]</span><br><span class="line">    <span class="comment"># calculate F(x)</span></span><br><span class="line">    F = np.multiply(f, np.power(r, <span class="number">2</span>)) - <span class="number">0.25E0</span></span><br><span class="line">    x = np.log(r/r0)</span><br><span class="line">    <span class="comment"># step size in x</span></span><br><span class="line">    hx = x[<span class="number">1</span>] - x[<span class="number">0</span>]</span><br><span class="line">    <span class="comment"># convert boundary condition of y to Y</span></span><br><span class="line">    Y0 = y0 / r0</span><br><span class="line">    dY0 = - Y0/<span class="number">2</span> + dy0 * r0</span><br><span class="line">    <span class="comment"># call Numerov on linear grid x</span></span><br><span class="line">    Y = numerov(F, hx, Y0, dY0)</span><br><span class="line">    <span class="keyword">return</span> Y * np.sqrt(r * r0)</span><br></pre></td></tr></table></figure></p>
+	  
 	</div>
 
     
@@ -359,7 +424,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#摘要"><span class="toc-article-text">摘要</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#背景"><span class="toc-article-text">背景</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#推导"><span class="toc-article-text">推导</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#均匀格点"><span class="toc-article-text">均匀格点</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#对数格点"><span class="toc-article-text">对数格点</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Python实现"><span class="toc-article-text">Python实现</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">摘要</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">背景</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">推导</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">均匀格点</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">对数格点</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">Python实现</span></a></li></ol>
 		</div>
 	
 	</div>
@@ -399,7 +464,7 @@ var disqus_shortname = 'shigaro';
     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
   
-	| <span class="post-count">31.7k</span> words
+	| <span class="post-count">33.1k</span> words
   
 </p>
  </footer>

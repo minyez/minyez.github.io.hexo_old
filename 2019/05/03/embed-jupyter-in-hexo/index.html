@@ -135,19 +135,19 @@
               <li><a href="/tags" style="font-size: 20px; font-family: 'Calibri Light',Arial">All Tags</a><span></span></li>
               <li class="divider"></li>
               
-              <li><a href="/tags/Compilation/" style="font-size: 15px; font-family: 微软雅黑">Compilation<span></span></a></li>
-              
-              <li><a href="/tags/Intel/" style="font-size: 15px; font-family: 微软雅黑">Intel<span></span></a></li>
-              
               <li><a href="/tags/Bugfix/" style="font-size: 15px; font-family: 微软雅黑">Bugfix<span></span></a></li>
               
               <li><a href="/tags/WIEN2k/" style="font-size: 15px; font-family: 微软雅黑">WIEN2k<span></span></a></li>
+              
+              <li><a href="/tags/Intel/" style="font-size: 15px; font-family: 微软雅黑">Intel<span></span></a></li>
+              
+              <li><a href="/tags/Compilation/" style="font-size: 15px; font-family: 微软雅黑">Compilation<span></span></a></li>
               
               <li><a href="/tags/Hexo/" style="font-size: 15px; font-family: 微软雅黑">Hexo<span></span></a></li>
               
               <li><a href="/tags/VASP/" style="font-size: 15px; font-family: 微软雅黑">VASP<span></span></a></li>
               
-              <li><a href="/tags/Python/" style="font-size: 15px; font-family: 微软雅黑">Python<span></span></a></li>
+              <li><a href="/tags/Valgrind/" style="font-size: 15px; font-family: 微软雅黑">Valgrind<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -195,34 +195,42 @@
 	<div class="mypage">		
 	  		
 
-	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>尝试在Hexo博文中嵌入Jupyter notebook (<code>.ipynb</code>)以展示Python代码 (快速入门到光速入土).</p>
-<a id="more"></a>
-<h2 id="前提准备"><a href="#前提准备" class="headerlink" title="前提准备"></a>前提准备</h2><p>首先安装<code>hexo-jupyter-notebook</code>和<code>co</code>两个npm包, 后者为前者的依赖</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-jupyter-notebook --save</span><br><span class="line">npm install co</span><br></pre></td></tr></table></figure>
+	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2>摘要</h2>
+<p>尝试在Hexo博文中嵌入Jupyter notebook (<code>.ipynb</code>)以展示Python代码 (快速入门到光速入土).</p>
+<p>&lt;!--more--&gt;</p>
+<h2>前提准备</h2>
+<p>首先安装<code>hexo-jupyter-notebook</code>和<code>co</code>两个npm包, 后者为前者的依赖</p>
+<p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-jupyter-notebook --save</span><br><span class="line">npm install co</span><br></pre></td></tr></table></figure></p>
 <p>像<a href="/2019/05/01/embed-videos/" title="在Hexo博文中嵌入视频">在Hexo博文中嵌入视频</a>一文中的视频画面一样, 为了将嵌入帧尺寸做成响应式的, 修改<code>node_modules/hexo-jupyter-notebook/main.py</code>中的<code>template</code>变量, 加入<code>auto-resizable-iframe</code>容器</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">    template = <span class="string">"""</span></span><br><span class="line"><span class="string">&lt;div class="auto-resizable-iframe"&gt;&lt;div&gt;</span></span><br><span class="line"><span class="string">&lt;iframe id='ipynb' marginheight="0" frameborder="0" srcdoc="%s"  style="scrolling:no;"&gt;</span></span><br><span class="line"><span class="string">&lt;/iframe&gt;&lt;/div&gt;&lt;/div&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">&lt;script&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">$("#ipynb").load( function() &#123;</span></span><br><span class="line"><span class="string">console.log($("#ipynb").contents().find("body").find("#notebook"));</span></span><br><span class="line"><span class="string">document.getElementById('ipynb').height=$("#ipynb").contents().find("#notebook").height()+100;</span></span><br><span class="line"><span class="string">&#125;)</span></span><br><span class="line"><span class="string">&lt;/script&gt;</span></span><br><span class="line"><span class="string">    """</span> % restr.replace(<span class="string">"\""</span>, <span class="string">"'"</span>)</span><br></pre></td></tr></table></figure>
+<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">    template = <span class="string">"""</span></span><br><span class="line"><span class="string">&lt;div class="auto-resizable-iframe"&gt;&lt;div&gt;</span></span><br><span class="line"><span class="string">&lt;iframe id='ipynb' marginheight="0" frameborder="0" srcdoc="%s"  style="scrolling:no;"&gt;</span></span><br><span class="line"><span class="string">&lt;/iframe&gt;&lt;/div&gt;&lt;/div&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">&lt;script&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">$("#ipynb").load( function() &#123;</span></span><br><span class="line"><span class="string">console.log($("#ipynb").contents().find("body").find("#notebook"));</span></span><br><span class="line"><span class="string">document.getElementById('ipynb').height=$("#ipynb").contents().find("#notebook").height()+100;</span></span><br><span class="line"><span class="string">&#125;)</span></span><br><span class="line"><span class="string">&lt;/script&gt;</span></span><br><span class="line"><span class="string">    """</span> % restr.replace(<span class="string">"\""</span>, <span class="string">"'"</span>)</span><br></pre></td></tr></table></figure></p>
 <p>有这一部分后, 我就没有像参考链接里那样用jQuery来控制尺寸.</p>
 <p>再准备好要嵌入的ipynb文件, 准备工作就做好了. 我这里用的是之前练习matplotlib时写的<code>meshgrid_plot.ipynb</code></p>
-<h2 id="嵌入ipynb"><a href="#嵌入ipynb" class="headerlink" title="嵌入ipynb"></a>嵌入ipynb</h2><p>做好上述准备后, 进行下面三步操作</p>
+<h2>嵌入ipynb</h2>
+<p>做好上述准备后, 进行下面三步操作</p>
 <ol>
-<li><p>在<code>_config.yml</code>中打开<code>post_asset_folder</code></p>
- <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">post_asset_folder:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<li>
+<p>在<code>_config.yml</code>中打开<code>post_asset_folder</code></p>
+<p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">post_asset_folder:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure></p>
 </li>
-<li><p>在<code>source/assets</code>中新建<code>codes</code>文件夹, 将准备好的ipynb放入其中.</p>
+<li>
+<p>在<code>source/assets</code>中新建<code>codes</code>文件夹, 将准备好的ipynb放入其中.</p>
 </li>
-<li><p>Markdown文本中, 在要嵌入ipynb的位置加入</p>
- <figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% asset<span class="emphasis">_jupyter /usr/local/bin/python3 ../../assets/codes/meshgrid_</span>plot.ipynb %&#125;</span><br></pre></td></tr></table></figure>
+<li>
+<p>Markdown文本中, 在要嵌入ipynb的位置加入</p>
+<p><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% asset<span class="emphasis">_jupyter /usr/local/bin/python3 ../../assets/codes/meshgrid_</span>plot.ipynb %&#125;</span><br></pre></td></tr></table></figure></p>
 </li>
 </ol>
 <p>嵌入效果如图所示.</p>
 <p><figure class="null"><img src="meshgrid_demo.png" alt="ipynb嵌入效果"><figcaption>ipynb嵌入效果</figcaption></figure></p>
-<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>成功利用<code>hexo-jupyter-notebook</code>包, 在Hexo博文中嵌入了Jupyter notebook. 然而自己对这个效果不是很满意, 主要是两个原因</p>
+<h2>结论</h2>
+<p>成功利用<code>hexo-jupyter-notebook</code>包, 在Hexo博文中嵌入了Jupyter notebook. 然而自己对这个效果不是很满意, 主要是两个原因</p>
 <ol>
 <li>嵌入的ipynb代码有滚动条. 修改<code>iframe</code>的大小(试到3000px)或修改JS里<code>+100</code>为更大数值, 也不能解决.</li>
 <li>更关键的, <code>hexo s</code>渲染时间显著增加, 从600 ms左右增加到1.34 s. 且持续一段时间后系统明显卡顿, 调试变得更麻烦了.</li>
 </ol>
 <p>遂最终放弃了嵌入ipynb的想法  _(xз」∠)_</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.google.com/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;ved=2ahUKEwj5-v20yf7hAhUFRqwKHYyID48QFjAAegQIBRAB&amp;url=https%3A%2F%2Fmedium.com%2F%40juanx002%2Fblogging-jupyter-notebooks-ipynb-with-hexo-on-github-7948b72636dc&amp;usg=AOvVaw1xUf2rSePZCUw7anF7uVRu" target="_blank" rel="noopener">Blogging Jupyter Notebooks (.ipynb) with Hexo on GitHub - Medium</a></p>
+<h2>参考</h2>
+<p><a href="https://www.google.com/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;ved=2ahUKEwj5-v20yf7hAhUFRqwKHYyID48QFjAAegQIBRAB&amp;url=https%3A%2F%2Fmedium.com%2F%40juanx002%2Fblogging-jupyter-notebooks-ipynb-with-hexo-on-github-7948b72636dc&amp;usg=AOvVaw1xUf2rSePZCUw7anF7uVRu" target="_blank" rel="noopener">Blogging Jupyter Notebooks (.ipynb) with Hexo on GitHub - Medium</a></p>
 	  
 	</div>
 
@@ -307,7 +315,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	<div class="meta-widget">
 	<i class="fa fa-tachometer"></i>
-	<span class="post-count">468</span> words
+	<span class="post-count">471</span> words
 	</div>
 	
 
@@ -342,7 +350,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#摘要"><span class="toc-article-text">摘要</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#前提准备"><span class="toc-article-text">前提准备</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#嵌入ipynb"><span class="toc-article-text">嵌入ipynb</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#结论"><span class="toc-article-text">结论</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#参考"><span class="toc-article-text">参考</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">摘要</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">前提准备</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">嵌入ipynb</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">结论</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">参考</span></a></li></ol>
 		</div>
 	
 	</div>
@@ -382,7 +390,7 @@ var disqus_shortname = 'shigaro';
     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
   
-	| <span class="post-count">31.7k</span> words
+	| <span class="post-count">33.1k</span> words
   
 </p>
  </footer>
