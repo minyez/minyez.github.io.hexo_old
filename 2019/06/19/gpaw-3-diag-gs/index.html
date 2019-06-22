@@ -206,7 +206,7 @@
 <p>测试命令如下</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Ecut_kx_pairs = [(<span class="number">300</span>, <span class="number">6</span>), (<span class="number">300</span>, <span class="number">9</span>), (<span class="number">400</span>, <span class="number">12</span>), (<span class="number">400</span>, <span class="number">18</span>), (<span class="number">600</span>, <span class="number">6</span>), (<span class="number">600</span>, <span class="number">18</span>)]</span><br><span class="line">egs = [<span class="string">"cg"</span>, <span class="string">"dav"</span>, <span class="string">"rmm-diis"</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> Ecut, kx <span class="keyword">in</span> Ecut_kx_pairs:</span><br><span class="line">    <span class="keyword">for</span> eg <span class="keyword">in</span> egs:</span><br><span class="line">        suffix = <span class="string">f"Ecut_<span class="subst">&#123;Ecut&#125;</span>_kx_<span class="subst">&#123;kx&#125;</span>_<span class="subst">&#123;es&#125;</span>"</span></span><br><span class="line">        calc = GPAW(mode=PW(Ecut), xc=<span class="string">"PBE"</span>, eigensolver=es</span><br><span class="line">                    kpts=&#123;<span class="string">'size'</span>: (kx, kx, <span class="number">1</span>), <span class="string">'gamma'</span>: <span class="keyword">True</span>&#125;,</span><br><span class="line">                    occupations=FermiDirac(<span class="number">0.01</span>), parallel=&#123;<span class="string">'domain'</span>: <span class="number">1</span>&#125;,</span><br><span class="line">                    txt=<span class="string">f'MoS2_gs_<span class="subst">&#123;suffix&#125;</span>.txt'</span>)</span><br><span class="line">        mos2.set_calculator(calc)</span><br><span class="line">        mos2.get_potential_energy()</span><br><span class="line">        calc.write(<span class="string">f'MoS2_gs_<span class="subst">&#123;suffix&#125;</span>.gpw'</span>)</span><br><span class="line">        calc.diagonalize_full_hamiltonian()</span><br><span class="line">        calc.write(<span class="string">f'MoS2_fulldiag_<span class="subst">&#123;suffix&#125;</span>.gpw'</span>)</span><br></pre></td></tr></table></figure>
 <p>CG使用4核并行, Davidson和RMM-DIIS使用16核并行. 测试结果如下表, 后三列中的值是分别用对角化和基态迭代计算得到的前20个能级的本征能量差, 定义为</p>
-<p>$$<br>\Delta_{20} \equiv \sum_k\sum^{n&lt;20}_{n=0}{\epsilon^{diag}_{nk}-\epsilon^{gs}_{nk}}.<br>$$</p>
+<p>$$<br>\Delta_{20} \equiv \sum_k\sum^{n&lt;20}_{n=0}{\abs{\epsilon^{diag}_{nk}-\epsilon^{gs}_{nk}}}.<br>$$</p>
 <p>第三列是对角化得到的能带总数. 当取平面波截断到600 eV时, 使用Davidson和RMM-DIIS时的本征能量差非常大. 10次方误差来源是指标为0的能带的能量.</p>
 <table>
 <thead>
@@ -224,49 +224,49 @@
 <td style="text-align:left">300</td>
 <td style="text-align:left">6</td>
 <td style="text-align:left">2368</td>
-<td style="text-align:center">-8.2E-01</td>
-<td style="text-align:center">-2.5E+00</td>
-<td style="text-align:center">-1.6E+01</td>
+<td style="text-align:center">8.2E-01</td>
+<td style="text-align:center">2.6E+00</td>
+<td style="text-align:center">1.6E+01</td>
 </tr>
 <tr>
 <td style="text-align:left">300</td>
 <td style="text-align:left">9</td>
 <td style="text-align:left">2368</td>
-<td style="text-align:center">-8.2E-01</td>
-<td style="text-align:center">-1.0E+00</td>
-<td style="text-align:center">-1.9E+01</td>
+<td style="text-align:center">8.2E-01</td>
+<td style="text-align:center">1.0E+00</td>
+<td style="text-align:center">1.9E+01</td>
 </tr>
 <tr>
 <td style="text-align:left">400</td>
 <td style="text-align:left">12</td>
 <td style="text-align:left">3655</td>
-<td style="text-align:center">-2.7E-01</td>
-<td style="text-align:center">-1.6E+00</td>
-<td style="text-align:center">-2.5E+01</td>
+<td style="text-align:center">2.7E-01</td>
+<td style="text-align:center">1.6E+00</td>
+<td style="text-align:center">2.5E+01</td>
 </tr>
 <tr>
 <td style="text-align:left">400</td>
 <td style="text-align:left">18</td>
 <td style="text-align:left">3655</td>
-<td style="text-align:center">-4.5E-02</td>
-<td style="text-align:center">-2.0E+00</td>
-<td style="text-align:center">-5.2E+01</td>
+<td style="text-align:center">4.5E-02</td>
+<td style="text-align:center">2.0E+00</td>
+<td style="text-align:center">5.2E+01</td>
 </tr>
 <tr>
 <td style="text-align:left">600</td>
 <td style="text-align:left">6</td>
 <td style="text-align:left">6666</td>
-<td style="text-align:center">-4.7E+00</td>
-<td style="text-align:center">-5.6E+09</td>
+<td style="text-align:center">4.7E+00</td>
+<td style="text-align:center">5.6E+09</td>
 <td style="text-align:center"></td>
 </tr>
 <tr>
 <td style="text-align:left">600</td>
 <td style="text-align:left">18</td>
 <td style="text-align:left">6666</td>
-<td style="text-align:center">-3.5E+00</td>
-<td style="text-align:center">-6.2E+10</td>
-<td style="text-align:center">-6.2E+10</td>
+<td style="text-align:center">3.5E+00</td>
+<td style="text-align:center">6.2E+10</td>
+<td style="text-align:center">6.2E+10</td>
 </tr>
 </tbody>
 </table>
@@ -288,37 +288,37 @@
 <td style="text-align:left">6</td>
 <td style="text-align:left">-4.61 (default)</td>
 <td style="text-align:center">0</td>
-<td style="text-align:center">-4.7E+00</td>
+<td style="text-align:center">4.7E+00</td>
 </tr>
 <tr>
 <td style="text-align:left">6</td>
 <td style="text-align:left">-6</td>
 <td style="text-align:center">4.9383</td>
-<td style="text-align:center">-2.7E-04</td>
+<td style="text-align:center">2.7E-04</td>
 </tr>
 <tr>
 <td style="text-align:left">6</td>
 <td style="text-align:left">-8</td>
 <td style="text-align:center">5.0000</td>
-<td style="text-align:center">-4.0E-09</td>
+<td style="text-align:center">4.0E-09</td>
 </tr>
 <tr>
 <td style="text-align:left">18</td>
 <td style="text-align:left">-4.61 (default)</td>
 <td style="text-align:center">0</td>
-<td style="text-align:center">-3.5E+00</td>
+<td style="text-align:center">3.5E+00</td>
 </tr>
 <tr>
 <td style="text-align:left">18</td>
 <td style="text-align:left">-6</td>
 <td style="text-align:center">9.4296</td>
-<td style="text-align:center">-1.5E-06</td>
+<td style="text-align:center">1.5E-06</td>
 </tr>
 <tr>
 <td style="text-align:left">18</td>
 <td style="text-align:left">-8</td>
 <td style="text-align:center">10.018</td>
-<td style="text-align:center">-1.5E-08</td>
+<td style="text-align:center">1.5E-08</td>
 </tr>
 </tbody>
 </table>
