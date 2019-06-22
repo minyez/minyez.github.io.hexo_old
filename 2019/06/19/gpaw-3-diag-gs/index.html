@@ -273,7 +273,9 @@
 <p>下图是设置三种不同的求解器时, 在600 eV截断下全对角化得到的所有k点上的本征值谱, 横坐标是能带指标. 当GPAW采用Davidson和RMM-DIIS时, 全对角化后部分k点上的能量系统偏低200 eV. 使用CG时怎没有这样的问题.</p>
 <p><figure class="null"><img src="diag_eigensolver.png" alt="600 eV平面波截断时对角化所得本征值"><figcaption>600 eV平面波截断时对角化所得本征值</figcaption></figure></p>
 <p>这里基本可以得到结论, 当需要在较大基组下对角化哈密顿量时, 基态计算采用CG求解器是比较保险的做法. 这里有一个了令人疑惑的地方是, 源码中<code>PWWaveFunctions</code>对象的对角化方法利用的是C扩展中的Scalapack功能, 与求解器应该没有直接的联系, 但结果看来求解器确实会影响对角化结果. 要理解这一点, 一种解释就是在大的截断下, 不同的求解器收敛到了不同的电子密度.</p>
-<h2 id="CG下比较不同密度收敛限"><a href="#CG下比较不同密度收敛限" class="headerlink" title="CG下比较不同密度收敛限"></a>CG下比较不同密度收敛限</h2><p>下面测试密度收敛限对对角化所得的本征值的影响. 这里Ecut仍然取较大的600 eV, 求解器使用CG. 从下表可以看出, 采用1E-08作为SCF收敛限时, 本征值收敛到非常小的阈值内, 同时SCF和对角化得到的低能能态在能量上完全一致. 另外, 如果不用CG而仍然用Davidson或者RMM-DIIS, 增大密度收敛限$\Delta_{20}$相比上一节没有改善.</p>
+<h2 id="CG下比较不同密度收敛限"><a href="#CG下比较不同密度收敛限" class="headerlink" title="CG下比较不同密度收敛限"></a>CG下比较不同密度收敛限</h2><p>下面测试密度收敛限对对角化所得的本征值的影响. 这里Ecut仍然取较大的600 eV, 求解器使用CG. 通过改变GPAW初始化时的<code>convergence</code>参数, 调整密度收敛限, 如</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">calc = GPAW(mode=PW(Ecut), xc=<span class="string">"PBE"</span>, eigensolver=es,</span><br><span class="line">            convergence=&#123;<span class="string">'density'</span>: <span class="number">1E-6</span>&#125;)</span><br></pre></td></tr></table></figure>
+<p>测试结果如下表. 可以看出, 采用1E-08作为SCF收敛限时, 本征值收敛到非常小的阈值内, 同时SCF和对角化得到的低能能态在能量上完全一致. 另外, 如果不用CG而仍然用Davidson或者RMM-DIIS, 增大密度收敛限$\Delta_{20}$相比上一节没有改善.</p>
 <table>
 <thead>
 <tr>
@@ -407,7 +409,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	<div class="meta-widget">
 	<i class="fa fa-tachometer"></i>
-	<span class="post-count">1.2k</span> words
+	<span class="post-count">1.3k</span> words
 	</div>
 	
 
