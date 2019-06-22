@@ -10,6 +10,7 @@ npm install hexo-generator-feed --save
 npm install hexo-generator-search --save
 npm install hexo-tag-bootstrap --save
 npm install hexo-reference --save
+npm install hexo-filter-sub --save
 # Use MathJax
 npm install hexo-renderer-mathjax --save
 # prism highlight

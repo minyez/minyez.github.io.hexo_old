@@ -183,8 +183,4 @@ $$
 
 outwin.f中的`outwin`例程利用Adams-Moulton算法求解标量相对论方程$\eqref{eq:r-GF}$, 在对数格点上得到量子数$\kappa$下的大分量波函数, 以函数乘矢径长的形式存储在$A$中.
 
-## TODO
-
-- [ ] Adams-Moulton算法推导, 可参考[wikiversity](https://en.wikiversity.org/wiki/Adams-Bashforth_and_Adams-Moulton_methods#Exercises)
-
 ## 脚注
