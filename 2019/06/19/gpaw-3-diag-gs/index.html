@@ -135,19 +135,19 @@
               <li><a href="/tags" style="font-size: 20px; font-family: 'Calibri Light',Arial">All Tags</a><span></span></li>
               <li class="divider"></li>
               
+              <li><a href="/tags/Compilation/" style="font-size: 15px; font-family: 微软雅黑">Compilation<span></span></a></li>
+              
               <li><a href="/tags/Bugfix/" style="font-size: 15px; font-family: 微软雅黑">Bugfix<span></span></a></li>
               
               <li><a href="/tags/WIEN2k/" style="font-size: 15px; font-family: 微软雅黑">WIEN2k<span></span></a></li>
               
               <li><a href="/tags/Intel/" style="font-size: 15px; font-family: 微软雅黑">Intel<span></span></a></li>
               
-              <li><a href="/tags/Compilation/" style="font-size: 15px; font-family: 微软雅黑">Compilation<span></span></a></li>
+              <li><a href="/tags/Valgrind/" style="font-size: 15px; font-family: 微软雅黑">Valgrind<span></span></a></li>
               
               <li><a href="/tags/Hexo/" style="font-size: 15px; font-family: 微软雅黑">Hexo<span></span></a></li>
               
               <li><a href="/tags/DFT/" style="font-size: 15px; font-family: 微软雅黑">DFT<span></span></a></li>
-              
-              <li><a href="/tags/Tutorial/" style="font-size: 15px; font-family: 微软雅黑">Tutorial<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -206,7 +206,7 @@
 <p>测试命令如下</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Ecut_kx_pairs = [(<span class="number">300</span>, <span class="number">6</span>), (<span class="number">300</span>, <span class="number">9</span>), (<span class="number">400</span>, <span class="number">12</span>), (<span class="number">400</span>, <span class="number">18</span>), (<span class="number">600</span>, <span class="number">6</span>), (<span class="number">600</span>, <span class="number">18</span>)]</span><br><span class="line">egs = [<span class="string">"cg"</span>, <span class="string">"dav"</span>, <span class="string">"rmm-diis"</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> Ecut, kx <span class="keyword">in</span> Ecut_kx_pairs:</span><br><span class="line">    <span class="keyword">for</span> eg <span class="keyword">in</span> egs:</span><br><span class="line">        suffix = <span class="string">f"Ecut_<span class="subst">&#123;Ecut&#125;</span>_kx_<span class="subst">&#123;kx&#125;</span>_<span class="subst">&#123;es&#125;</span>"</span></span><br><span class="line">        calc = GPAW(mode=PW(Ecut), xc=<span class="string">"PBE"</span>, eigensolver=es</span><br><span class="line">                    kpts=&#123;<span class="string">'size'</span>: (kx, kx, <span class="number">1</span>), <span class="string">'gamma'</span>: <span class="keyword">True</span>&#125;,</span><br><span class="line">                    occupations=FermiDirac(<span class="number">0.01</span>), parallel=&#123;<span class="string">'domain'</span>: <span class="number">1</span>&#125;,</span><br><span class="line">                    txt=<span class="string">f'MoS2_gs_<span class="subst">&#123;suffix&#125;</span>.txt'</span>)</span><br><span class="line">        mos2.set_calculator(calc)</span><br><span class="line">        mos2.get_potential_energy()</span><br><span class="line">        calc.write(<span class="string">f'MoS2_gs_<span class="subst">&#123;suffix&#125;</span>.gpw'</span>)</span><br><span class="line">        calc.diagonalize_full_hamiltonian()</span><br><span class="line">        calc.write(<span class="string">f'MoS2_fulldiag_<span class="subst">&#123;suffix&#125;</span>.gpw'</span>)</span><br></pre></td></tr></table></figure>
 <p>CG使用4核并行, Davidson和RMM-DIIS使用16核并行. 测试结果如下表, 后三列中的值是分别用对角化和基态迭代计算得到的前20个能级的本征能量差, 定义为</p>
-<p>$$<br>\Delta_{20} \equiv \sum_k\sum^{n&lt;20}_{n=0}{\abs{\epsilon^{diag}_{nk}-\epsilon^{gs}_{nk}}}.<br>$$</p>
+<p>$$<br>\Delta_{20} \equiv \sum_k\sum^{n&lt;20}_{n=0}{|\epsilon^{diag}_{nk}-\epsilon^{gs}_{nk}|}.<br>$$</p>
 <p>第三列是对角化得到的能带总数. 当取平面波截断到600 eV时, 使用Davidson和RMM-DIIS时的本征能量差非常大. 10次方误差来源是指标为0的能带的能量.</p>
 <table>
 <thead>
@@ -272,7 +272,7 @@
 </table>
 <p>下图是设置三种不同的求解器时, 在600 eV截断下全对角化得到的所有k点上的本征值谱, 横坐标是能带指标. 当GPAW采用Davidson和RMM-DIIS时, 全对角化后部分k点上的能量系统偏低200 eV. 使用CG时怎没有这样的问题.</p>
 <p><figure class="null"><img src="diag_eigensolver.png" alt="600 eV平面波截断时对角化所得本征值"><figcaption>600 eV平面波截断时对角化所得本征值</figcaption></figure></p>
-<p>这里基本可以得到结论, 当需要在较大基组下对角化哈密顿量时, 基态计算采用CG求解器是比较保险的做法. 这里有一个了令人疑惑的地方是, 源码中<code>PWWaveFunctions</code>对象的对角化方法利用的是C扩展中的Scalapack功能, 与求解器应该没有直接的联系, 但结果看来求解器确实会影响对角化结果. 要理解这一点, 一种解释就是在大的截断下, 不同的求解器收敛到了不同的电子密度.</p>
+<p>这里基本可以得到结论, 当需要在较大基组下对角化哈密顿量时, 基态计算采用CG求解器是比较保险的做法. 这里有一个了令人疑惑的地方是, 源码中<code>PWWaveFunctions</code>对象的对角化方法利用的是C扩展中的Scalapack功能, 与求解器应该没有直接的联系, 但结果看来求解器确实会影响对角化结果.</p>
 <h2 id="CG下比较不同密度收敛限"><a href="#CG下比较不同密度收敛限" class="headerlink" title="CG下比较不同密度收敛限"></a>CG下比较不同密度收敛限</h2><p>下面测试密度收敛限对对角化所得的本征值的影响. 这里Ecut仍然取较大的600 eV, 求解器使用CG. 通过改变GPAW初始化时的<code>convergence</code>参数, 调整密度收敛限, 如</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">calc = GPAW(mode=PW(Ecut), xc=<span class="string">"PBE"</span>, eigensolver=es,</span><br><span class="line">            convergence=&#123;<span class="string">'density'</span>: <span class="number">1E-6</span>&#125;)</span><br></pre></td></tr></table></figure>
 <p>测试结果如下表. 可以看出, 采用1E-08作为SCF收敛限时, 本征值收敛到非常小的阈值内, 同时SCF和对角化得到的低能能态在能量上完全一致. 另外, 如果不用CG而仍然用Davidson或者RMM-DIIS, 增大密度收敛限$\Delta_{20}$相比上一节没有改善.</p>
@@ -334,9 +334,9 @@
 	<div class="pagination">
 <ul class="pagination">
 	 
-		
-          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
-        
+				
+    	<li class="prev"><a href="/2019/07/05/valgrind-2/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
 
         <li><a href="/archives"><i class="fa fa-archive"></i>Archive</a></li>
 
@@ -409,7 +409,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	<div class="meta-widget">
 	<i class="fa fa-tachometer"></i>
-	<span class="post-count">1.3k</span> words
+	<span class="post-count">1.2k</span> words
 	</div>
 	
 
@@ -484,7 +484,7 @@ var disqus_shortname = 'shigaro';
     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
   
-	| <span class="post-count">34.6k</span> words
+	| <span class="post-count">37.1k</span> words
   
 </p>
  </footer>
