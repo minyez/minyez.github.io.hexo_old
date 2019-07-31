@@ -207,7 +207,105 @@
   <div class="row">
 	
 	
-		<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文收集了一些笔者常用的(Xm)Grace使用的技巧.
+		<link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2>前言</h2>
+<p>本文收集了一些笔者常用的(Xm)Grace使用的技巧.&lt;!--more--&gt;
+以下操作均可以在<a href="https://sourceforge.net/projects/qtgrace/" target="_blank" rel="noopener">qtgrace</a>下实现.</p>
+<h2>数据集变换</h2>
+<p>Grace中支持多种数据处理, 从简单的求前后两点的差, 到复杂的函数变换和非线性拟合.</p>
+<h3>差分</h3>
+<p>XmGrace包含差分功能, 支持三种不同差分方式: 向前差分(Forward), 向后差分(Backword)或者居中差分(centered).</p>
+<p>$$
+\begin{aligned}
+\text{forward} &amp;: y'<em>{i, f} = \frac{y</em>{i+1}-y_i}{x_{i+1}-x_i}\
+\text{backward} &amp;: y'<em>{i, b} = \frac{y_i-y</em>{i-1}}{x_i-x_{i-1}}\
+\text{centered} &amp;: y'<em>{i, c} = \frac{y</em>{i+1}-y_{i-1}}{x_{i+1}-x_{i-1}}\
+\end{aligned}
+$$</p>
+<p>以函数$y=4(x-0.5)^2$为例, 其导数$y'=8x-4$.</p>
+<ol>
+<li>
+<p>选中差分功能: Data-&gt;Tranformation-&gt;Differences</p>
+<p><figure class="null"><img src="differences_1.jpg" alt="选中XmGrace的差分功能"><figcaption>选中XmGrace的差分功能</figcaption></figure></p>
+</li>
+<li>
+<p>选中一组数据, 确认差分方案</p>
+<p><figure class="null"><img src="differences_2.jpg" alt="差分功能界面, 向前差分"><figcaption>差分功能界面, 向前差分</figcaption></figure></p>
+</li>
+<li>
+<p>Accept确认.</p>
+</li>
+<li>
+<p>检查差分结果. 需要注意, 这里向前向后差分结果是相同的, 原因是向后差分的横坐标错了. 因此建议使用向前或居中差分.</p>
+<p><figure class="null"><img src="differences_3.jpg" alt="差分功能界面, 向前差分"><figcaption>差分功能界面, 向前差分</figcaption></figure></p>
+</li>
+</ol>
+<h3>表达式求值</h3>
+<p>用<code>Evaluate expression</code>功能, 可以对数据进行自定义的函数变换. 它可以对单组数据的xy进行操作, 也可以在多组数据间操作, 非常方便. 该功能和Differences一样在Transformations标签里, 具体位置见第一张图.</p>
+<p><figure class="null"><img src="eval_expr_1.jpg" alt="表达式求值, 对数据作变换"><figcaption>表达式求值, 对数据作变换</figcaption></figure></p>
+<ol>
+<li>选中想要操作的数据.</li>
+<li>填写函数变换的表达式.</li>
+<li>勾选Sync. selection, 使变换后的数据直接替换原有数据set. 如果不勾选, Destination下的数据栏中也没有选中任何set, 则变换后的数据会存在新的set中.</li>
+<li>确认.</li>
+</ol>
+<p>这里主要说一下第二条. 在写表达式时, <code>y</code>表示纵坐标, <code>x</code>表示横坐标. 一些常用的变换</p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># 向上平移0.5</span><br><span class="line">y = y + 0.5</span><br><span class="line"># 以第10个数据为零点进行平移</span><br><span class="line">y = y - y[9]</span><br><span class="line"># 求G0.S0和G1.S1之间的差</span><br><span class="line">y = G0.S0.y - G1.S1.y</span><br><span class="line"># 求自然对数</span><br><span class="line">y = ln(y)</span><br><span class="line"># 将横坐标转为角度</span><br><span class="line">x = x * 180 / PI</span><br></pre></td></tr></table></figure></p>
+<p>更多的函数可以参考官网<a href="http://plasma-gate.weizmann.ac.il/Xmgr/doc/trans.html" target="_blank" rel="noopener">Xmgr: transformations</a></p>
+<h2>双y轴(Double y-axis)</h2>
+<p>参考这一<a href="sachinashanbhag.blogspot.com/2012/06/grace-tutorial-how-to-plot-graph-with.html">链接</a>, 制作包含两个不同y轴的图, 以在同一张图中展示用有相同横坐标, 但纵坐标范围不同的两组数据.</p>
+<p><figure class="null"><img src="double_y_1.jpg" alt=" "><figcaption> </figcaption></figure></p>
+<ol>
+<li>
+<p>在窗口个中放置两张并排的图. Edit-&gt;Arrange graphs...</p>
+</li>
+<li>
+<p>将cols改为2.</p>
+</li>
+<li>
+<p>确认.</p>
+<p><figure class="null"><img src="double_y_2.jpg" alt=" "><figcaption> </figcaption></figure></p>
+</li>
+<li>
+<p>将右图盖到左图上. Edit-&gt;Overlay graphs...</p>
+</li>
+<li>
+<p>选中G1为要覆盖的图.</p>
+</li>
+<li>
+<p>选中G0为被覆盖上的图.</p>
+</li>
+<li>
+<p>将Smart axis hint设置为&quot;Same X axis scaling&quot;.</p>
+</li>
+<li>
+<p>确认. 这个时候两张图覆盖在了一起, 都窝在整个窗口的左侧.</p>
+<p><figure class="null"><img src="double_y_3.jpg" alt=" "><figcaption> </figcaption></figure></p>
+</li>
+<li>
+<p>调节图的范围. Plot-&gt;Graph appearance. 在Viewpoint设置G0的xmax, 例如1.15.</p>
+</li>
+<li>
+<p>对G1作同样的操作.</p>
+</li>
+<li>
+<p>确认.</p>
+<p><figure class="null"><img src="double_y_4.jpg" alt=" "><figcaption> </figcaption></figure></p>
+</li>
+<li>
+<p>为了分辨两个y轴, 用不同的颜色来区分. 双击右侧的y轴</p>
+</li>
+<li>
+<p>确认在目前正在操作G1.</p>
+</li>
+<li>
+<p>正常操作, 调节G1 y轴的属性.</p>
+</li>
+<li>
+<p>确认.</p>
+</li>
+</ol>
+<p>有一点需要注意的是, 当调整y轴粗细比1大的时候, 可能会在某个y轴上看到黑线. 这是图的边框, 可以通过将Graph appearance中Frame标签下Frame box的透明度调到最低来消除.</p>
+
 	
 	</div>
   <a type="button" href="/2019/07/31/grace-tips/#more" class="btn btn-default more">Read More</a>
@@ -228,7 +326,60 @@
   <div class="row">
 	
 	
-		<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>利用Valgrind检测自定义类中内存分配和释放情况. 报告结果依赖于编译器.<br>
+		<link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2>摘要</h2>
+<p>利用Valgrind检测自定义类中内存分配和释放情况. 报告结果依赖于编译器.
+&lt;!--more--&gt;</p>
+<h2>背景</h2>
+<p>最近考虑重构GAP代码, 于是学习了有关Fortran面向对象编程的知识, 接触到了设计模式(Design Pattern)的概念. 其中使用自定义类和用委派关系实现继承是自己之前很少在Fortran中用的, 主要还是面向过程的编程思维. 事实上面向对象的思维也是在研究生后学Python过程中慢慢转过去的. 有关设计模式的学习内容以后有机会再整理上来.</p>
+<p>这篇文章算是记录一点点在Fortran中进行面向对象编程的实践, 主要用的是<a href="main.f90">main.f90</a>和<a href="mytypes.f90">mytypes.f90</a>这两段非常短的代码.</p>
+<ul>
+<li>mytypes.f90包含一个模块, 其中定义了<code>myarrays</code>类, 其数据包含两个可分配数组, 分别是一维整型数组和二维浮点数数组, 并定义了相关constructor和destructor例程.</li>
+<li>main.f90是主程序, 仅调用constructor和destructor方法, 因此原则上没有内存泄漏.</li>
+</ul>
+<p>接下来就是用Valgrind作内存检测, 看一看. 编译用的Makefile在<a href="Makefile">这里</a>, 编译得到的可执行程序是<code>test</code>. 测试平台是Fedora 27.</p>
+<h2>依赖编译器的Valgrind报告</h2>
+<h3>gfortran编译</h3>
+<p>使用gfortran (GCC 7.3.1)编译得到的<code>test</code>, Valgrind检测没有报错, 但堆调用中的alloc数为23, 比<code>new_my_array</code>例程中<code>allocate</code>语句(2)要多很多.</p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ valgrind --leak-check=full --show-leak-kinds=all ./test</span><br><span class="line">==10854== Memcheck, a memory error detector</span><br><span class="line">==10854== Copyright (C) 2002-2017, and GNU GPL&apos;d, by Julian Seward et al.</span><br><span class="line">==10854== Using Valgrind-3.14.0 and LibVEX; rerun with -h for copyright info</span><br><span class="line">==10854== Command: ./test</span><br><span class="line">==10854==</span><br><span class="line">==10854==</span><br><span class="line">==10854== HEAP SUMMARY:</span><br><span class="line">==10854==     in use at exit: 0 bytes in 0 blocks</span><br><span class="line">==10854==   total heap usage: 23 allocs, 23 frees, 13,520 bytes allocated</span><br><span class="line">==10854==</span><br><span class="line">==10854== All heap blocks were freed -- no leaks are possible</span><br><span class="line">==10854==</span><br><span class="line">==10854== For counts of detected and suppressed errors, rerun with: -v</span><br><span class="line">==10854== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)</span><br></pre></td></tr></table></figure></p>
+<h3>Intel Fortran编译</h3>
+<p>用Intel Fortran (2018 update 1)编译, 堆调用中的alloc数为4, 虽然也大于2但比gfortran里的23要小. 此外, Valgrind报告了32 bytes的&quot;still reachable&quot;泄漏, 这一泄漏和该版本Fedora中glibc的<a href="https://bugzilla.redhat.com/show_bug.cgi?id=1624387" target="_blank" rel="noopener">bug</a>有关. 没有报错.</p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">$ valgrind --leak-check=full --show-leak-kinds=all ./test</span><br><span class="line">==13583== Memcheck, a memory error detector</span><br><span class="line">==13583== Copyright (C) 2002-2017, and GNU GPL&apos;d, by Julian Seward et al.</span><br><span class="line">==13583== Using Valgrind-3.14.0 and LibVEX; rerun with -h for copyright info</span><br><span class="line">==13583== Command: ./test</span><br><span class="line">==13583==</span><br><span class="line">==13583==</span><br><span class="line">==13583== HEAP SUMMARY:</span><br><span class="line">==13583==     in use at exit: 32 bytes in 1 blocks</span><br><span class="line">==13583==   total heap usage: 4 allocs, 3 frees, 152 bytes allocated</span><br><span class="line">==13583==</span><br><span class="line">==13583== 32 bytes in 1 blocks are still reachable in loss record 1 of 1</span><br><span class="line">==13583==    at 0x4C2F01A: calloc (vg_replace_malloc.c:752)</span><br><span class="line">==13583==    by 0x5971714: _dlerror_run (in /usr/lib64/libdl-2.26.so)</span><br><span class="line">==13583==    by 0x5971129: dlsym (in /usr/lib64/libdl-2.26.so)</span><br><span class="line">==13583==    by 0x41165E: real_aio_init (in /home/stevezhang/codes/code-self-teaching/f90/oop/derived_types/test)</span><br><span class="line">==13583==    by 0x40849B: for__once_private (in /home/stevezhang/codes/code-self-teaching/f90/oop/derived_types/test)</span><br><span class="line">==13583==    by 0x4066B4: for_rtl_init_ (in /home/stevezhang/codes/code-self-teaching/f90/oop/derived_types/test)</span><br><span class="line">==13583==    by 0x402948: main (in /home/stevezhang/codes/code-self-teaching/f90/oop/derived_types/test)</span><br><span class="line">==13583==</span><br><span class="line">==13583== LEAK SUMMARY:</span><br><span class="line">==13583==    definitely lost: 0 bytes in 0 blocks</span><br><span class="line">==13583==    indirectly lost: 0 bytes in 0 blocks</span><br><span class="line">==13583==      possibly lost: 0 bytes in 0 blocks</span><br><span class="line">==13583==    still reachable: 32 bytes in 1 blocks</span><br><span class="line">==13583==         suppressed: 0 bytes in 0 blocks</span><br><span class="line">==13583==</span><br><span class="line">==13583== For counts of detected and suppressed errors, rerun with: -v</span><br><span class="line">==13583== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)</span><br></pre></td></tr></table></figure></p>
+<p>接下来做一些小的实验. 如果在主程序中特意省略掉destructor, 会得到104 bytes的&quot;possibly lost&quot;, 同时Error Summary中出现两个错误.
+比较奇怪的是, 原则上当rank为2时, 2个整型和4个浮点数对应的内存损失为24 bytes.</p>
+<p>进一步实验</p>
+<ul>
+<li>将rank从2增加到4, 损失增加到160 bytes. 原则上应该是80 (4整型, 16浮点数).</li>
+<li>增加另一个<code>myarrays</code>对象, 损失增加到208 bytes.</li>
+<li>修改destructor方法<code>destroy_my_array</code>, 跳过二维数组<code>rarr2d</code>的deallocate, 在主程序中调用destructor. 此时内存损失为56 (rank=2)和104 (rank 4) bytes.</li>
+</ul>
+<p>这表明有80 bytes好像被&quot;附着&quot;在每个自定义类的对象上. 更具体的, 每个可分配数组&quot;附着&quot;了40 bytes的内存.</p>
+<h3>回看gfortran</h3>
+<p>现在回到gfortran编译上, 也是有意地去掉destructor, 看看Valgrind如何响应.</p>
+<p>当rank=2时, Valgrind报告了24 bytes的&quot;still reachable&quot;泄漏, 没有报错. 这个泄漏量和根据数据类型预计的量是一样的, 与此同时Valgrind类认为这一内存泄漏是不构成关键的性能问题.</p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">$ valgrind --leak-check=full --show-leak-kinds=all ./test</span><br><span class="line">==16808== Memcheck, a memory error detector</span><br><span class="line">==16808== Copyright (C) 2002-2017, and GNU GPL&apos;d, by Julian Seward et al.</span><br><span class="line">==16808== Using Valgrind-3.14.0 and LibVEX; rerun with -h for copyright info</span><br><span class="line">==16808== Command: ./test</span><br><span class="line">==16808==</span><br><span class="line">==16808==</span><br><span class="line">==16808== HEAP SUMMARY:</span><br><span class="line">==16808==     in use at exit: 24 bytes in 2 blocks</span><br><span class="line">==16808==   total heap usage: 23 allocs, 21 frees, 13,520 bytes allocated</span><br><span class="line">==16808==</span><br><span class="line">==16808== 8 bytes in 1 blocks are still reachable in loss record 1 of 2</span><br><span class="line">==16808==    at 0x4C2CDCB: malloc (vg_replace_malloc.c:299)</span><br><span class="line">==16808==    by 0x400F25: __mytypes_MOD_new_my_array (mytypes.f90:17)</span><br><span class="line">==16808==    by 0x40116C: MAIN__ (main.f90:8)</span><br><span class="line">==16808==    by 0x4011AF: main (main.f90:3)</span><br><span class="line">==16808==</span><br><span class="line">==16808== 16 bytes in 1 blocks are still reachable in loss record 2 of 2</span><br><span class="line">==16808==    at 0x4C2CDCB: malloc (vg_replace_malloc.c:299)</span><br><span class="line">==16808==    by 0x4010C1: __mytypes_MOD_new_my_array (mytypes.f90:20)</span><br><span class="line">==16808==    by 0x40116C: MAIN__ (main.f90:8)</span><br><span class="line">==16808==    by 0x4011AF: main (main.f90:3)</span><br><span class="line">==16808==</span><br><span class="line">==16808== LEAK SUMMARY:</span><br><span class="line">==16808==    definitely lost: 0 bytes in 0 blocks</span><br><span class="line">==16808==    indirectly lost: 0 bytes in 0 blocks</span><br><span class="line">==16808==      possibly lost: 0 bytes in 0 blocks</span><br><span class="line">==16808==    still reachable: 24 bytes in 2 blocks</span><br><span class="line">==16808==         suppressed: 0 bytes in 0 blocks</span><br><span class="line">==16808==</span><br><span class="line">==16808== For counts of detected and suppressed errors, rerun with: -v</span><br><span class="line">==16808== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)</span><br></pre></td></tr></table></figure></p>
+<h2>&quot;内存泄漏&quot;再探</h2>
+<p>在检索上面still reachable leak问题的时候, 发现了SO上关于的一个<a href="https://stackoverflow.com/a/3857638" target="_blank" rel="noopener">回答</a></p>
+<blockquote>
+<p>There is more than one way to define &quot;memory leak&quot;. In particular, there are two primary definitions of &quot;memory leak&quot; that are in common usage among programmers.</p>
+<p>The first commonly used definition of &quot;memory leak&quot; is, &quot;Memory was allocated and was not subsequently freed before the program terminated.&quot; However, many programmers (rightly) argue that certain types of memory leaks that fit this definition don't actually pose any sort of problem, and therefore should not be considered true &quot;memory leaks&quot;.</p>
+<p>An arguably stricter (and more useful) definition of &quot;memory leak&quot; is, &quot;Memory was allocated and cannot be subsequently freed because the program no longer has any pointers to the allocated memory block.&quot; In other words, you cannot free memory that you no longer have any pointers to. Such memory is therefore a &quot;memory leak&quot;. Valgrind uses this stricter definition of the term &quot;memory leak&quot;. This is the type of leak which can potentially cause significant heap depletion, especially for long lived processes.</p>
+<p>The &quot;still reachable&quot; category within Valgrind's leak report refers to allocations that fit only the first definition of &quot;memory leak&quot;. These blocks were not freed, but they could have been freed (if the programmer had wanted to) because the program still was keeping track of pointers to those memory blocks.</p>
+<p>In general, there is no need to worry about &quot;still reachable&quot; blocks. They don't pose the sort of problem that true memory leaks can cause. For instance, there is normally no potential for heap exhaustion from &quot;still reachable&quot; blocks. This is because these blocks are usually one-time allocations, references to which are kept throughout the duration of the process's lifetime. While you could go through and ensure that your program frees all allocated memory, there is usually no practical benefit from doing so since the operating system will reclaim all of the process's memory after the process terminates, anyway. Contrast this with true memory leaks which, if left unfixed, could cause a process to run out of memory if left running long enough, or will simply cause a process to consume far more memory than is necessary.</p>
+</blockquote>
+<p>翻译如下</p>
+<blockquote>
+<p>定义&quot;内存泄漏&quot;的方式不止一种. 特别的, 在程序员间常用的主要有两种&quot;内存泄漏&quot;的定义.</p>
+<p>第一种常用的定义是, &quot;内存被分配, 随后没有在程序结束前被释放&quot;. 但是, 很多程序员(正确地)主张说符合这一定义的内存泄漏并不会造成问题, 因此并不被认为是真正的内存泄漏.</p>
+<p>&quot;内存泄漏&quot;的一种可能更为严格(也更有用)的定义是, &quot;内存被分配后, 由于程序失去了指向被分配内存块的指针而无法被释放&quot;. 换句话说, 你无法释放没有指针指向的内存. 所以这样的内存属于&quot;内存泄漏&quot;. Valgrind用的是这一更为严格的定义. 这类泄漏可能产生严重的堆损耗, 特别是在长期活动的进程中.</p>
+<p>Valgrind的泄漏报告中&quot;still reachable&quot;分类指的是只满足第一类定义的内存分配. 这些内存块没有被释放, 但他们是可以被释放的(只要程序员愿意), 因为程序仍然保有指向这些内存块的指针.</p>
+<p>一般而言, 不必担心&quot;still reachable&quot;的内存块. 他们不会带来真正的内存泄漏会导致的问题. 比如说, &quot;still reachable&quot;的内存块通常不会导致堆耗尽. 这是因为这些块都是单次分配, 程序在整个生命周期中都保留对他们的指向. 你当然可以梳理整个程序, 保证这些内存块都被释放, 但这实际并没什么好处, 因为操作系统会在进程结束后回收进程的全部内存. 与之相对, 如果真正的内存泄漏没有被修正, 那么就会导致一个进程在运行足够长时间后耗尽所有内存, 或者说消耗比它所必需的多得多的内存.</p>
+</blockquote>
+<p>这是对之前<a href="/2019/03/23/valgrind-1/" title="Valgrind(一)——Memcheck初探">Valgrind(一)——Memcheck初探</a>一文最后的泄漏类型梳理的重要补充. 答主非常细心的区分了两种内存泄漏的类型. 我们重新来看当时的abc程序</p>
+<p><figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">program</span></span> abc</span><br><span class="line">    <span class="keyword">integer</span> :: i</span><br><span class="line">    <span class="keyword">integer</span>, <span class="keyword">allocatable</span> :: <span class="keyword">data</span>(:)</span><br><span class="line"></span><br><span class="line">    <span class="built_in">allocate</span>(<span class="keyword">data</span>(<span class="number">5</span>))</span><br><span class="line">    <span class="built_in">print</span>*, rank(<span class="keyword">data</span>), <span class="built_in">size</span>(<span class="keyword">data</span>), loc(<span class="keyword">data</span>)</span><br><span class="line">    <span class="keyword">do</span> i = <span class="number">1</span>, <span class="number">5</span></span><br><span class="line">        <span class="keyword">data</span>(i-<span class="number">1</span>) = i</span><br><span class="line">    <span class="keyword">end</span> <span class="keyword">do</span></span><br><span class="line">    <span class="built_in">print</span>*, <span class="keyword">data</span>(<span class="number">1</span>)</span><br><span class="line">    <span class="built_in">print</span>*, rank(<span class="keyword">data</span>), <span class="built_in">size</span>(<span class="keyword">data</span>), loc(<span class="keyword">data</span>)</span><br><span class="line"><span class="keyword">end</span> <span class="function"><span class="keyword">program</span></span> abc</span><br></pre></td></tr></table></figure></p>
+<p>并将<code>data</code>越界赋值语句注释. 用gfortran编译会得到20 bytes的definite loss. 如果用ifort, 则会得到60 bytes的possibly lost. 令人摸不着头脑的是, 如果把这一段代码放到main.f90中, 注释掉原来的myarrays的部分, 同样用gfortran编译, 得到的是20 bytes的still reachable leak. ifort仍给出60 bytes的possibly lost.</p>
+<h2>总结</h2>
+<p>从以上非常直接的例子里可以得到的两个结论, 首先是do not oversmart your compiler. 跟人类语言互译一样, 不同编译器可能将一段高级语言翻译成风格不同的机器码, 这可能就是导致Valgrind检测结果不同的原因. 其次, 也是很自然的, 既然编译器存在这样的不确定性, 那么编程人员就应该写好内存分配和释放的语句, 从源头减少这样的不确定性.</p>
+
 	
 	</div>
   <a type="button" href="/2019/07/05/valgrind-2/#more" class="btn btn-default more">Read More</a>
@@ -249,7 +400,55 @@
   <div class="row">
 	
 	
-		<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文将简单介绍GPAW中的进行准粒子计算的<code>G0W0</code>类, 并使用<code>GWBands</code>类制作单层二硫化钼的能带结构图.
+		<link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2>前言</h2>
+<p>本文将简单介绍GPAW中的进行准粒子计算的<code>G0W0</code>类, 并使用<code>GWBands</code>类制作单层二硫化钼的能带结构图.&lt;!--more--&gt;</p>
+<p>无论是否自洽, GW计算都需要一组单粒子态作为输入, 这组单粒子态中需要包含大量的非占据态. 目前主流是采用Kohn-Sham DFT产生的Kohn-Sham本征态. 这里主要介绍非自洽计算情形, 此时GW结果受到输入影响.</p>
+<p>为了得到包含较多非占据态的本征态一般有两种方法. 第一种是在基态计算中包含大量的非占据态, 这种情况电子步迭代效率低. 第二种是首先在较少非占据态下得到收敛的电子密度(电子密度只与占据态有关), 然后在固定电子密度下对角化Kohn-Sham单电子Hamiltonian. 对于局域和半局域泛函, 当电子密度固定时, 久期行列式就完全确定了, 一步即可得到等于基组数量的非占据态. 对于非局域泛函, 也只需要几步以收敛非局域势算符.</p>
+<p>这里用的例子是单层二硫化钼. 首先用ASE构造二硫化钼模型. 晶格常数相比实验上体相稳定结构略有拉伸.</p>
+<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> ase.build <span class="keyword">import</span> mx2</span><br><span class="line">mos2 = mx2(formula=<span class="string">'MoS2'</span>, kind=<span class="string">'2H'</span>, a=<span class="number">3.19</span>, thickness=<span class="number">3.127</span>, size=(<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>), vacuum=<span class="number">5.0</span>)</span><br></pre></td></tr></table></figure></p>
+<h2>基态计算与对角化</h2>
+<p>关于基态和对角化计算已经在<a href="/2019/06/18/gpaw-2-scf-bs/" title="GPAW学习笔记(二)——DFT自洽场与能带计算">GPAW学习笔记(二)——DFT自洽场与能带计算</a>和<a href="/2019/06/19/gpaw-3-diag-gs/" title="GPAW学习笔记(三)——求解器对全哈密顿量对角化的影响">GPAW学习笔记(三)——求解器对全哈密顿量对角化的影响</a>中提及. 这里用了一个比较小的平面波截断以减小计算量. 而k值设的比较大. 若k太小, 后面用<code>GWBands</code>作能带插值时VBM和CBM位置会出错.</p>
+<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> gpaw <span class="keyword">import</span> GPAW, PW, FermiDirac</span><br><span class="line"></span><br><span class="line">Ecut = <span class="number">300</span></span><br><span class="line">kx = <span class="number">18</span></span><br><span class="line">calc = GPAW(mode=PW(Ecut), xc=<span class="string">'PBE'</span>,</span><br><span class="line">            convergence=&#123;<span class="string">"density"</span>: <span class="number">1e-8</span>&#125;,</span><br><span class="line">            kpts=&#123;<span class="string">'size'</span>: (kx, kx, <span class="number">1</span>), <span class="string">'gamma'</span>: <span class="keyword">True</span>&#125;,</span><br><span class="line">            occupations=FermiDirac(<span class="number">0.001</span>), parallel=&#123;<span class="string">'domain'</span>: <span class="number">1</span>&#125;,</span><br><span class="line">            txt=<span class="string">'gs.txt'</span>)</span><br><span class="line">mos2.set_calculator(calc)</span><br><span class="line"><span class="comment"># 基态SCF</span></span><br><span class="line">mos2.get_potential_energy()</span><br><span class="line">calc.write(<span class="string">'gs.gpw'</span>)</span><br><span class="line"><span class="comment"># 对角化哈密顿量, 将波函数和能量写入文件, 以供GW读取</span></span><br><span class="line">calc.diagonalize_full_hamiltonian()</span><br><span class="line">calc.write(<span class="string">'fulldiag.gpw'</span>, <span class="string">'all'</span>)</span><br></pre></td></tr></table></figure></p>
+<h2>GW计算</h2>
+<p>这里用包含4s4p的Mo PAW setup, 因此体系共有14+6+6=26个价电子, 在自旋非极化下有13个占据态, 因此价带顶的指标是12. 现在计算其前5个价带和导带.</p>
+<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> gpaw.response.g0w0 <span class="keyword">import</span> G0W0</span><br><span class="line"></span><br><span class="line">diagfile = <span class="string">'fulldiag.gpw'</span></span><br><span class="line">ecut = <span class="number">50</span></span><br><span class="line"></span><br><span class="line">gw = G0W0(calc=diagfile, bands=(<span class="number">8</span>, <span class="number">18</span>), <span class="comment"># VB at index 12</span></span><br><span class="line">          method=<span class="string">"G0W0"</span>, ecut=<span class="number">50</span>, nblocksmax=<span class="keyword">True</span>,</span><br><span class="line">          truncation=<span class="string">'2D'</span>, q0_correction=<span class="keyword">True</span>,</span><br><span class="line">          domega0=<span class="number">0.03</span>, omega2=<span class="number">10</span>,</span><br><span class="line">          filename=<span class="string">'g0w0'</span>, savepckl=<span class="keyword">True</span>)</span><br><span class="line">gw.calculate()</span><br></pre></td></tr></table></figure></p>
+<p>其中<code>nblocksmax</code>设为True时GPAW将最大化响应函数<code>chi0</code>的分块, 减小每个进程的内存消耗. 8进程测试的内存占用和GW总用时结果如下表, 开启<code>nblocksmax</code>后预测的单进程内存消耗减小, 但是计算消耗时间更长.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left"><code>nlocksmax</code></th>
+<th style="text-align:center">Estimate Mem. per proc. (MB)</th>
+<th style="text-align:center">wall time (s)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">True</td>
+<td style="text-align:center">30</td>
+<td style="text-align:center">1923</td>
+</tr>
+<tr>
+<td style="text-align:left">False</td>
+<td style="text-align:center">233</td>
+<td style="text-align:center">1429</td>
+</tr>
+</tbody>
+</table>
+<p><code>truncation</code>和<code>q0_correction</code>是针对低维体系的参数, 前者加快对于真空层厚度的收敛, 后者则是加快对面内布里渊区采样格点的收敛. 具体可以参考文献1和3.</p>
+<p>参数<code>domega0</code>和<code>omega2</code>与频率积分有关. <code>domega0</code>决定第一个频率点的位置, <code>omega2</code>决定在何处倍增格点间距. 一般来说带隙越小, <code>domega0</code>就要取得越小以对低频响应采样充分.  显然的, <code>domega0</code>越小, <code>omega2</code>越大, 频率格点数越多, 计算量越大. 目前这个设置可以使K点带隙收敛到2 meV以内.</p>
+<h2>作能带图</h2>
+<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pickle</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> matplotlib <span class="keyword">as</span> mpl</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> gpaw.response.gw_bands <span class="keyword">import</span> GWBands</span><br><span class="line"></span><br><span class="line">calcfile = <span class="string">'fulldiag.gpw'</span></span><br><span class="line">gwpckl = <span class="string">'g0w0_results.pckl'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置K点路径</span></span><br><span class="line">K = np.array([<span class="number">1</span> / <span class="number">3</span>, <span class="number">1</span> / <span class="number">3</span>, <span class="number">0</span>])</span><br><span class="line">M = np.array([<span class="number">0.0</span>, <span class="number">0.5</span>, <span class="number">0</span>])</span><br><span class="line">G = np.array([<span class="number">0.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>])</span><br><span class="line">kpoints = np.array([G, K/<span class="number">2</span>, K, M, G])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化GWBands对象. bandrange要和G0W0设置一致, 不过这里第二个指标是要包含进去的</span></span><br><span class="line">GW = GWBands(calcfile=calcfile, gwpckl=gwpckl, kpoints=kpoints, bandrange=(<span class="number">8</span>,<span class="number">17</span>))</span><br><span class="line"><span class="comment"># 设置</span></span><br><span class="line">gwbopts=&#123;<span class="string">"nk_Int"</span>: <span class="number">100</span>, <span class="string">"interpolate"</span>: <span class="keyword">True</span>, <span class="string">"vac"</span>: <span class="keyword">False</span>&#125;</span><br><span class="line"><span class="comment"># 提取PBE, GW和GW-SOC能带插值数据</span></span><br><span class="line">pbe = GW.get_gw_bands(SO=<span class="keyword">False</span>, dft=<span class="keyword">True</span>, **gwbopts)</span><br><span class="line">gw = GW.get_gw_bands(SO=<span class="keyword">False</span>, **gwbopts)</span><br><span class="line">gwsoc = GW.get_gw_bands(SO=<span class="keyword">True</span>, **gwbopts)</span><br><span class="line"><span class="comment"># 提取K点路径的一维坐标</span></span><br><span class="line">x_x = gw[<span class="string">'x_k'</span>]</span><br><span class="line">X = gw[<span class="string">'X'</span>]/x_x[<span class="number">-1</span>]</span><br><span class="line">x_x /= x_x[<span class="number">-1</span>]</span><br><span class="line"><span class="comment"># 对齐VBM</span></span><br><span class="line">ePBE_kn, eGW_kn, eGWsoc_kn = [d[<span class="string">'e_kn'</span>] - d[<span class="string">'vbm'</span>] <span class="keyword">for</span> d <span class="keyword">in</span> [pbe, gw, gwsoc]]</span><br><span class="line"><span class="comment"># 作不同方法得到的能带</span></span><br><span class="line">fig, ax = plt.subplots(<span class="number">1</span>, <span class="number">1</span>, figsize=(<span class="number">8</span>, <span class="number">8</span>))</span><br><span class="line">styles = [</span><br><span class="line">          &#123;<span class="string">'ls'</span>: <span class="string">'-.'</span>, <span class="string">'marker'</span>: <span class="string">''</span>, <span class="string">'color'</span>: <span class="string">'k'</span>, <span class="string">"lw"</span>: <span class="number">3</span>&#125;,</span><br><span class="line">          &#123;<span class="string">'ls'</span>: <span class="string">'--'</span>, <span class="string">'marker'</span>: <span class="string">''</span>, <span class="string">'color'</span>: <span class="string">'#393b79'</span>, <span class="string">"lw"</span>: <span class="number">3</span>&#125;,</span><br><span class="line">          &#123;<span class="string">'ls'</span>: <span class="string">'-'</span>, <span class="string">'marker'</span>: <span class="string">''</span>, <span class="string">'color'</span>: <span class="string">'#d62728'</span>, <span class="string">"lw"</span>: <span class="number">3</span>&#125;,</span><br><span class="line">         ]</span><br><span class="line"><span class="keyword">for</span> i, bands <span class="keyword">in</span> enumerate([ePBE_kn, eGW_kn, eGWsoc_kn]):</span><br><span class="line">    ax.plot(x_x, bands, **styles[i])</span><br><span class="line"><span class="comment"># 能量零点</span></span><br><span class="line">ax.axhline(<span class="number">0.0</span>, color=<span class="string">'k'</span>, linestyle=<span class="string">':'</span>, lw=<span class="number">2</span>)</span><br><span class="line"><span class="comment"># 图例</span></span><br><span class="line">leg_handles = [mpl.lines.Line2D([], [], **style) <span class="keyword">for</span> style <span class="keyword">in</span> styles]</span><br><span class="line">leg_labels = [<span class="string">r'PBE'</span>, <span class="string">r'G$_0$W$_0$'</span>, <span class="string">r'G$_0$W$_0$-SOC'</span>]</span><br><span class="line">ax.legend(leg_handles, leg_labels, fontsize=<span class="number">20</span>)</span><br><span class="line"></span><br><span class="line">ax.set_xlim(<span class="number">0</span>, x_x[<span class="number">-1</span>])</span><br><span class="line">ax.set_ylim([<span class="number">-2</span>, <span class="number">4</span>])</span><br><span class="line">ax.set_ylabel(<span class="string">'Energy (eV)'</span>, fontsize=<span class="number">24</span>)</span><br><span class="line"><span class="comment"># 横坐标特殊k点, 并作分割线</span></span><br><span class="line"><span class="keyword">for</span> p <span class="keyword">in</span> X[:<span class="number">-1</span>]:</span><br><span class="line">    plt.axvline(p, color=<span class="string">'#AAAAAA'</span>, ls=<span class="string">'--'</span>, lw=<span class="number">2</span>)</span><br><span class="line">labels_K = [<span class="string">r'$\Gamma$'</span>, <span class="string">r'$T$'</span>, <span class="string">r'$K$'</span>, <span class="string">r'$M$'</span>, <span class="string">r'$\Gamma$'</span>]</span><br><span class="line">plt.xticks(X, labels_K, fontsize=<span class="number">18</span>)</span><br><span class="line"></span><br><span class="line">plt.yticks(fontsize=<span class="number">17</span>)</span><br><span class="line">fig.tight_layout()</span><br><span class="line">plt.savefig(<span class="string">'MoS2_band_GTKMG.png'</span>, dpi=<span class="number">300</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure></p>
+<p>效果如下图. 可以很容易看到, 在不包含SOC情况下, PBE预测单层MoS2具有$\Gamma-K$的间接带隙, 而GW给出的是K上的直接带隙. 包含SOC会导致K点能带裂分, 在GW下进一步增大$\Gamma$点和K点VBM的能差.</p>
+<p><figure class="null"><img src="MoS2_band_GTKMG.png" alt="PBE, GW方法得到的MoS2能带"><figcaption>PBE, GW方法得到的MoS2能带</figcaption></figure></p>
+<p>另外值得注意的一点是CB在$\Gamma-K$上也有一个能量较低的态(在T=0.5K附近). 在DFT下$T_c$与$K_c$能量差肉眼可见, 而在GW尤其是包含SOC下, 这两个态基本是简并的. 考虑到对未占据态的自能修正为正值, 这说明$K_c$的自能修正要大于$T_c$. 定性分析上, $T_c$主要是Mo的$d_{x^2-y^2}$和$d_{xy}$在面内成键, 而$K_c$是Mo的$d_{z^2}$.(文献2) 后者较为定域, 从GW修正DFT离域误差的角度可定性理解.</p>
+<h2>参考资料</h2>
+<ol>
+<li>Ismail-Beigi, S. <em>Phys. Rev. B</em> <strong>73</strong>, 233103 (2006)</li>
+<li>Zhang, L.; Zunger, A. <em>Nano Lett.</em> <strong>15</strong>, 949-957 (2015)</li>
+<li>Rasmussen, F. et al. <em>Phys. Rev. B</em> <strong>94</strong>, 155406 (2016)</li>
+<li><a href="https://wiki.fysik.dtu.dk/gpaw/tutorials/gw_tutorial/gw_tutorial.html#quasi-particle-spectrum-of-two-dimensional-materials" target="_blank" rel="noopener">Quasi-particle spectrum of two-dimensional materials - GPAW tutorial</a></li>
+</ol>
+
 	
 	</div>
   <a type="button" href="/2019/06/28/gpaw-4-gw/#more" class="btn btn-default more">Read More</a>
@@ -270,7 +469,143 @@
   <div class="row">
 	
 	
-		<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>本文比较了GPAW中不同求解器和不同密度收敛条件下对角化哈密顿量得到的本征值. 结果显示, 为了在较大的平面波截断下全对角化得到正确的Kohn-Sham能级, SCF需要使用CG求解器, 并取较严格的密度收敛标准.
+		<link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2>摘要</h2>
+<p>本文比较了GPAW中不同求解器和不同密度收敛条件下对角化哈密顿量得到的本征值. 结果显示, 为了在较大的平面波截断下全对角化得到正确的Kohn-Sham能级, SCF需要使用CG求解器, 并取较严格的密度收敛标准. &lt;!--more--&gt;</p>
+<h2>背景</h2>
+<p>GW, RPA和BSE等多体微扰计算需要大量的未占据态, 因此在进行这些计算前通常需要对当前基组下构造的哈密顿量进行全对角化以得到所有本征对. 在GPAW中, 这一步为</p>
+<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GPAW.diagonalize_full_hamiltonian(nbands=<span class="keyword">None</span>, ecut=<span class="keyword">None</span>)</span><br></pre></td></tr></table></figure></p>
+<p><code>nbands</code>和<code>ecut</code>都设为None时对角化得到的能带数量由平面波截断决定. GPAW这一方法继承自<code>gpaw.paw.PAW</code>, 实际执行对角化命令的是其中的<code>PWWaveFunctions</code>对象.</p>
+<p>问题出现在用600 eV截断的平面波基组计算单层MoS2的GW时. 在默认能带数的PBE基态计算下, GPAW给出MoS2能谱对应于半导体, 费米能级约为-1 eV, 但对角化后的能谱对应的却是一个金属, 费米能级在-200 eV左右. 我想这种情况可能跟对角化的算法和基态收敛情况有关, 于是进行了下面的简单测试.</p>
+<p>测试的GPAW版本是1.5.2, Python为采用Anaconda3/2019.3发行版. C扩展用Intel 2019编译, 数学库为MKL. 使用<code>mx2</code>函数构造MoS2模型</p>
+<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> ase.build <span class="keyword">import</span> mx2</span><br><span class="line"><span class="keyword">from</span> gpaw <span class="keyword">import</span> GPAW, PW, FermiDirac</span><br><span class="line"></span><br><span class="line">mos2 = mx2(formula=<span class="string">'MoS2'</span>, kind=<span class="string">'2H'</span>, a=<span class="number">3.184</span>, thickness=<span class="number">3.127</span>,</span><br><span class="line">           size=(<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>), vacuum=<span class="number">10</span>)</span><br><span class="line">mos2.pbc = (<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>)</span><br></pre></td></tr></table></figure></p>
+<h2>比较不同求解器</h2>
+<p>GPAW提供了五种求解器, CG, Davidson, RMM-DIIS, DirectLCAO, DirectPW. 这里主要讨论前三种. 简单测试DirectPW发现, 它计算的MoS2的$\Gamma$点带隙为1.7 eV, 要小于其他求解器和VASP的计算值2.7 eV. 初始化时求解器参数均使用GPAW的默认设置.</p>
+<p>测试命令如下</p>
+<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Ecut_kx_pairs = [(<span class="number">300</span>, <span class="number">6</span>), (<span class="number">300</span>, <span class="number">9</span>), (<span class="number">400</span>, <span class="number">12</span>), (<span class="number">400</span>, <span class="number">18</span>), (<span class="number">600</span>, <span class="number">6</span>), (<span class="number">600</span>, <span class="number">18</span>)]</span><br><span class="line">egs = [<span class="string">"cg"</span>, <span class="string">"dav"</span>, <span class="string">"rmm-diis"</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> Ecut, kx <span class="keyword">in</span> Ecut_kx_pairs:</span><br><span class="line">    <span class="keyword">for</span> eg <span class="keyword">in</span> egs:</span><br><span class="line">        suffix = <span class="string">f"Ecut_<span class="subst">&#123;Ecut&#125;</span>_kx_<span class="subst">&#123;kx&#125;</span>_<span class="subst">&#123;es&#125;</span>"</span></span><br><span class="line">        calc = GPAW(mode=PW(Ecut), xc=<span class="string">"PBE"</span>, eigensolver=es</span><br><span class="line">                    kpts=&#123;<span class="string">'size'</span>: (kx, kx, <span class="number">1</span>), <span class="string">'gamma'</span>: <span class="keyword">True</span>&#125;,</span><br><span class="line">                    occupations=FermiDirac(<span class="number">0.01</span>), parallel=&#123;<span class="string">'domain'</span>: <span class="number">1</span>&#125;,</span><br><span class="line">                    txt=<span class="string">f'MoS2_gs_<span class="subst">&#123;suffix&#125;</span>.txt'</span>)</span><br><span class="line">        mos2.set_calculator(calc)</span><br><span class="line">        mos2.get_potential_energy()</span><br><span class="line">        calc.write(<span class="string">f'MoS2_gs_<span class="subst">&#123;suffix&#125;</span>.gpw'</span>)</span><br><span class="line">        calc.diagonalize_full_hamiltonian()</span><br><span class="line">        calc.write(<span class="string">f'MoS2_fulldiag_<span class="subst">&#123;suffix&#125;</span>.gpw'</span>)</span><br></pre></td></tr></table></figure></p>
+<p>CG使用4核并行, Davidson和RMM-DIIS使用16核并行. 测试结果如下表, 后三列中的值是分别用对角化和基态迭代计算得到的前20个能级的本征能量差, 定义为</p>
+<p>$$
+\Delta_{20} \equiv \sum_k\sum^{n&lt;20}<em>{n=0}{|\epsilon^{diag}</em>{nk}-\epsilon^{gs}_{nk}|}.
+$$</p>
+<p>第三列是对角化得到的能带总数. 当取平面波截断到600 eV时, 使用Davidson和RMM-DIIS时的本征能量差非常大. 10次方误差来源是指标为0的能带的能量.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Ecut</th>
+<th style="text-align:left">kx</th>
+<th style="text-align:left">$N_{pw}$</th>
+<th style="text-align:center">CG</th>
+<th style="text-align:center">Dav</th>
+<th style="text-align:center">RMM-DIIS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">300</td>
+<td style="text-align:left">6</td>
+<td style="text-align:left">2368</td>
+<td style="text-align:center">8.2E-01</td>
+<td style="text-align:center">2.6E+00</td>
+<td style="text-align:center">1.6E+01</td>
+</tr>
+<tr>
+<td style="text-align:left">300</td>
+<td style="text-align:left">9</td>
+<td style="text-align:left">2368</td>
+<td style="text-align:center">8.2E-01</td>
+<td style="text-align:center">1.0E+00</td>
+<td style="text-align:center">1.9E+01</td>
+</tr>
+<tr>
+<td style="text-align:left">400</td>
+<td style="text-align:left">12</td>
+<td style="text-align:left">3655</td>
+<td style="text-align:center">2.7E-01</td>
+<td style="text-align:center">1.6E+00</td>
+<td style="text-align:center">2.5E+01</td>
+</tr>
+<tr>
+<td style="text-align:left">400</td>
+<td style="text-align:left">18</td>
+<td style="text-align:left">3655</td>
+<td style="text-align:center">4.5E-02</td>
+<td style="text-align:center">2.0E+00</td>
+<td style="text-align:center">5.2E+01</td>
+</tr>
+<tr>
+<td style="text-align:left">600</td>
+<td style="text-align:left">6</td>
+<td style="text-align:left">6666</td>
+<td style="text-align:center">4.7E+00</td>
+<td style="text-align:center">5.6E+09</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:left">600</td>
+<td style="text-align:left">18</td>
+<td style="text-align:left">6666</td>
+<td style="text-align:center">3.5E+00</td>
+<td style="text-align:center">6.2E+10</td>
+<td style="text-align:center">6.2E+10</td>
+</tr>
+</tbody>
+</table>
+<p>下图是设置三种不同的求解器时, 在600 eV截断下全对角化得到的所有k点上的本征值谱, 横坐标是能带指标. 当GPAW采用Davidson和RMM-DIIS时, 全对角化后部分k点上的能量系统偏低200 eV. 使用CG时怎没有这样的问题.</p>
+<p><figure class="null"><img src="diag_eigensolver.png" alt="600 eV平面波截断时对角化所得本征值"><figcaption>600 eV平面波截断时对角化所得本征值</figcaption></figure></p>
+<p>这里基本可以得到结论, 当需要在较大基组下对角化哈密顿量时, 基态计算采用CG求解器是比较保险的做法. 这里有一个了令人疑惑的地方是, 源码中<code>PWWaveFunctions</code>对象的对角化方法利用的是C扩展中的Scalapack功能, 与求解器应该没有直接的联系, 但结果看来求解器确实会影响对角化结果.</p>
+<h2>CG下比较不同密度收敛限</h2>
+<p>下面测试密度收敛限对对角化所得的本征值的影响. 这里Ecut仍然取较大的600 eV, 求解器使用CG. 通过改变GPAW初始化时的<code>convergence</code>参数, 调整密度收敛限, 如</p>
+<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">calc = GPAW(mode=PW(Ecut), xc=<span class="string">"PBE"</span>, eigensolver=es,</span><br><span class="line">            convergence=&#123;<span class="string">'density'</span>: <span class="number">1E-6</span>&#125;)</span><br></pre></td></tr></table></figure></p>
+<p>测试结果如下表. 可以看出, 采用1E-08作为SCF收敛限时, 本征值收敛到非常小的阈值内, 同时SCF和对角化得到的低能能态在能量上完全一致. 另外, 如果不用CG而仍然用Davidson或者RMM-DIIS, 增大密度收敛限$\Delta_{20}$相比上一节没有改善.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">kx</th>
+<th style="text-align:left">Convergence (Log10)</th>
+<th style="text-align:center">$\sum_{nk}{\epsilon_{nk}}$ (w.r.t default)</th>
+<th style="text-align:center">$\Delta_{20}$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">6</td>
+<td style="text-align:left">-4.61 (default)</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">4.7E+00</td>
+</tr>
+<tr>
+<td style="text-align:left">6</td>
+<td style="text-align:left">-6</td>
+<td style="text-align:center">4.9383</td>
+<td style="text-align:center">2.7E-04</td>
+</tr>
+<tr>
+<td style="text-align:left">6</td>
+<td style="text-align:left">-8</td>
+<td style="text-align:center">5.0000</td>
+<td style="text-align:center">4.0E-09</td>
+</tr>
+<tr>
+<td style="text-align:left">18</td>
+<td style="text-align:left">-4.61 (default)</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">3.5E+00</td>
+</tr>
+<tr>
+<td style="text-align:left">18</td>
+<td style="text-align:left">-6</td>
+<td style="text-align:center">9.4296</td>
+<td style="text-align:center">1.5E-06</td>
+</tr>
+<tr>
+<td style="text-align:left">18</td>
+<td style="text-align:left">-8</td>
+<td style="text-align:center">10.018</td>
+<td style="text-align:center">1.5E-08</td>
+</tr>
+</tbody>
+</table>
+<p>&lt;!-- 它们在VASP里也有IALGO和ALGO的相似对应, 分别是58 (Conjugate, All), 38 (Normal)和48 (Very_fast). --&gt;</p>
+
 	
 	</div>
   <a type="button" href="/2019/06/19/gpaw-3-diag-gs/#more" class="btn btn-default more">Read More</a>
@@ -291,7 +626,108 @@
   <div class="row">
 	
 	
-		<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>以金刚石结构Si为例, 演示了用GPAW计算材料电子能带结构的过程, 对结果进行了简单分析.
+		<link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2>摘要</h2>
+<p>以金刚石结构Si为例, 演示了用GPAW计算材料电子能带结构的过程, 对结果进行了简单分析.&lt;!--more--&gt;</p>
+<h2>背景</h2>
+<p>一年前我在<a href="/2018/07/20/gpaw-1/" title="GPAW学习笔记(一)——安装及测试">GPAW学习笔记(一)——安装及测试</a>一文中介绍了GPAW的安装和简单测试. 当时主要是为了比较GPAW, abinit和VASP的<em>GW</em>效率, 于是稍微研究了一下GPAW中参数含义, 运行了一些官方网站上的脚本. 在相近的参数下作了三个程序的<em>GW</em>计算交差后, 就没有再管, 当时也没有留下清楚的学习笔记.</p>
+<p>由于最近实际计算的需要, 我又重新学习GPAW, 着重于DFT能带计算, <em>GW</em>和BSE. 这一篇笔记主要记录了基础DFT计算部分的学习, 包括SCF和能带, 简单分析标准输出. 这里使用的结构是金刚石型的硅, 晶格常数$a=5.43$ (A).</p>
+<h2>SCF计算</h2>
+<p>从官网例子中改编得的一个SCF计算脚本如下.</p>
+<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> ase.build <span class="keyword">import</span> bulk</span><br><span class="line"><span class="keyword">from</span> gpaw <span class="keyword">import</span> GPAW, PW, FermiDirac</span><br><span class="line"></span><br><span class="line">si = bulk(<span class="string">'Si'</span>, <span class="string">'diamond'</span>, a=<span class="number">5.43</span>)</span><br><span class="line">calc = GPAW(mode=PW(<span class="number">200</span>), xc=<span class="string">'PBE'</span>, kpts=&#123;<span class="string">'size'</span>: (<span class="number">8</span>,<span class="number">8</span>,<span class="number">8</span>), <span class="string">'gamma'</span>: <span class="keyword">True</span>&#125;,</span><br><span class="line">            random=<span class="keyword">True</span>, occupations=FermiDirac(<span class="number">0.01</span>), txt=<span class="string">'Si_gs.txt'</span>)</span><br><span class="line">si.calc = calc</span><br><span class="line">si.get_potential_energy()</span><br><span class="line">calc.write(<span class="string">'Si_gs.gpw'</span>)</span><br></pre></td></tr></table></figure></p>
+<p>对每行的说明:</p>
+<ul>
+<li>行4: 用<code>bulk</code>方法构造Si模型</li>
+<li>行5-6: 初始化GPAW. 使用平面波基组(截断为200 eV). 泛函为PBE. 布里渊区采样为$\Gamma$中心$8\times8\times8$的均匀格点. 初始波函数随机生成. 占据数计算采用Fermi-Dirac分布, . <code>txt</code>选项指定输出文件.</li>
+<li>行7: 将Si模型的calculator指定为刚刚初始化好的GPAW.</li>
+<li>行8: 开始SCF过程. 具体来说, <code>Atoms.get_potential_energy</code>方法用于获取<code>Atoms._calc</code>的energy属性, 操作上是从<code>Calculator.results</code>字典中提取energy键值. 对于未收敛的GPAW calculator, energy键不存在, 此时会执行<code>GPAW.calculate</code>进行SCF循环, 直到收敛, 添加energy键并返回之.</li>
+<li>行9: 将计算过程的所有信息写入Si_gs.gpw文件中.</li>
+</ul>
+<h2>标准输出分析</h2>
+<p>标准输出保存在Si_gs.txt中. 主要看三部分. 在200行附近给出SCF迭代的流程</p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">                     log10-error:    total        iterations:</span><br><span class="line">           time      wfs    density  energy       fermi  poisson</span><br><span class="line">iter:   1  14:49:29  +1.03   +inf   -10.866303    7</span><br><span class="line">iter:   2  14:49:30  -1.97  -0.80   -10.866989    2</span><br><span class="line">iter:   3  14:49:30  -1.01  -0.81   -11.320728    22</span><br><span class="line">iter:   4  14:49:31  -1.94  -0.56   -10.847586    3</span><br><span class="line">iter:   5  14:49:31  -2.71  -1.11   -10.806417    8</span><br><span class="line">iter:   6  14:49:31  -2.69  -1.35   -10.780669    9</span><br><span class="line">iter:   7  14:49:32  -3.97  -2.59   -10.780801    0</span><br><span class="line">iter:   8  14:49:32  -5.11  -2.71   -10.780798    0</span><br><span class="line">iter:   9  14:49:33  -5.83  -2.71   -10.780763    0</span><br><span class="line">iter:  10  14:49:33  -6.76  -3.19   -10.780765    0</span><br><span class="line">iter:  11  14:49:34  -8.02  -3.59   -10.780765    0</span><br><span class="line">iter:  12  14:49:34  -6.82  -3.60   -10.780765    0</span><br><span class="line">iter:  13  14:49:34  -8.06  -3.60   -10.780764    0</span><br><span class="line">iter:  14  14:49:35 -10.08  -3.78   -10.780764    0</span><br><span class="line">iter:  15  14:49:35  -8.45  -3.78   -10.780764    0</span><br><span class="line">iter:  16  14:49:36  -8.00  -3.68   -10.780764    0</span><br><span class="line">iter:  17  14:49:36  -8.17  -3.80   -10.780764    0</span><br><span class="line">iter:  18  14:49:37  -9.30  -3.92   -10.780764    0</span><br><span class="line">iter:  19  14:49:37  -8.99  -3.95   -10.780764    0</span><br><span class="line">iter:  20  14:49:37  -9.83  -4.06   -10.780764    0</span><br><span class="line"></span><br><span class="line">Converged after 20 iterations.</span><br></pre></td></tr></table></figure></p>
+<p>往下一点是相对PAW原子的总能量成分分析. 从GPAW分析来看, Si在形成晶体后, 电子动能增加, 势能与交换关联能降低. 后面两者容易理解, 但原子形成固体后动能增加这一点从化学成键相悖. 只能说在赝势PAW下, 直接的能量组成并没有物理意义. VASP的OUTCAR中的能量组成分析没有给出动能的部分.</p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Energy contributions relative to reference atoms: (reference = -15772.688500)</span><br><span class="line"></span><br><span class="line">Kinetic:        +15.782785</span><br><span class="line">Potential:      -13.855376</span><br><span class="line">External:        +0.000000</span><br><span class="line">XC:             -12.678254</span><br><span class="line">Entropy (-ST):   -0.000000</span><br><span class="line">Local:           -0.029919</span><br><span class="line">--------------------------</span><br><span class="line">Free energy:    -10.780764</span><br><span class="line">Extrapolated:   -10.780764</span><br></pre></td></tr></table></figure></p>
+<p>再往下是关于能带结构的简单信息. 包括费米能级和前两个k点上的价带导带本征值和占据数. 需要注意的是这里的occupancy是该自旋轨道上的电子数乘以k点分数权重的值. 如果是自旋极化计算, 这部分会给出两个自旋通道的占据数, 占据数会变成非极化的一半. $\Gamma$点带隙为2.56 eV.</p>
+<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Fermi level: 5.73099</span><br><span class="line"></span><br><span class="line">Showing only first 2 kpts</span><br><span class="line"> Kpt  Band  Eigenvalues  Occupancy</span><br><span class="line">  0     2      5.31933    0.00391</span><br><span class="line">  0     3      5.31934    0.00391</span><br><span class="line">  0     4      7.87829    0.00000</span><br><span class="line">  0     5      7.87829    0.00000</span><br><span class="line"></span><br><span class="line">  1     2      4.51004    0.02344</span><br><span class="line">  1     3      4.51006    0.02344</span><br><span class="line">  1     4      7.32815    0.00000</span><br><span class="line">  1     5      9.02227    0.00000</span><br></pre></td></tr></table></figure></p>
+<h2>能带计算</h2>
+<p>PBE能带计算需要使用SCF得到的电子密度. 官方网站给出的一个能带计算例子如下.</p>
+<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">calc = GPAW(<span class="string">'Si_gs.gpw'</span>, nbands=<span class="number">16</span>, fixdensity=<span class="keyword">True</span>, symmetry=<span class="string">'off'</span>,</span><br><span class="line">            kpts=&#123;<span class="string">'path'</span>: <span class="string">'GXWKL'</span>, <span class="string">'npoints'</span>: <span class="number">60</span>&#125;, convergence=&#123;<span class="string">'bands'</span>: <span class="number">8</span>&#125;)</span><br><span class="line">calc.get_potential_energy()</span><br><span class="line">calc.write(<span class="string">'Si_bs.gpw'</span>)</span><br></pre></td></tr></table></figure></p>
+<p>这里主要需要理解<code>GPAW</code>一行</p>
+<ul>
+<li>第一个参数<code>Si_gs.gpw</code>为读入文件.</li>
+<li><code>nbands</code>为SCF迭代所包含的能带数.</li>
+<li><code>fixdensity=True</code>, 顾名思义, 固定电子密度.</li>
+<li><code>kpts</code>为一个字典, 包含<code>path</code>和<code>npoints</code>两个键. <code>path</code>包含BZ特殊点记号. 这里的路径为G-X-W-K-L, 根据总k点数<code>npoints</code>自动设置所需要计算的k点, 不会重复计算特殊k点. 特殊点之间的k点数不是均匀的.</li>
+<li><code>convergence</code>为一个字典, 包含键<code>band</code>, 值为8. 表示使用最低的8个能级的波函数的Kohn-Sham方程余矢量模方作为收敛判据. 可以使用'all'和<code>-8</code>之类的负值, 后者表示收敛除最后8个外的所有能级. 具体参考<a href="https://wiki.fysik.dtu.dk/gpaw/documentation/manual.html#accuracy-of-the-self-consistency-cycle" target="_blank" rel="noopener">Accuracy of the self-consistency cycle</a>条目.</li>
+</ul>
+<p><code>get_potential_energy</code>开始SCF循环, 结束后将calculator写入Si_bs.gpw.</p>
+<p>GPAW提供了能带分析的帮助方法<code>band_structure</code>. 该方法继承自ASE的<code>Calculator</code>类. 使用方式如下</p>
+<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">calc = GPAW(<span class="string">'Si_bs.gpw'</span>)    <span class="comment"># 读取Si能带计算结果</span></span><br><span class="line">bs = calc.band_structure()  <span class="comment"># 调用band_structure方法</span></span><br><span class="line">bs.plot(show=<span class="keyword">True</span>, emax=<span class="number">10.0</span>, filename=<span class="string">"Si_bs.png"</span>) <span class="comment"># 作图</span></span><br></pre></td></tr></table></figure></p>
+<p><code>band_structure</code>方法返回一个<code>ase.dft.band_structure.BandStructure</code>类. 得到能带图如下, 和<a href="https://wiki.fysik.dtu.dk/gpaw/tutorials/bandstructures/bandstructures.html#bandstructures" target="_blank" rel="noopener">官网例子</a>是相同的.</p>
+<p><figure class="null"><img src="Si_bs.png" alt=" "><figcaption> </figcaption></figure></p>
+<h2>与电子结构相关的GPAW方法</h2>
+<p><code>BandStructure</code>作图非常方便, 但如果是自己作图或者需要能级数据做进一步处理, 就需要从<code>GPAW</code>对象直接获取k点和Kohn-Sham本征值. 一些可能用到的方法如下</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">方法</th>
+<th style="text-align:left">继承</th>
+<th style="text-align:left">作用</th>
+<th style="text-align:center">常用参数</th>
+<th style="text-align:center">返回</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>get_fermi_level</code></td>
+<td style="text-align:left"><code>gpaw.paw.PAW</code></td>
+<td style="text-align:left">获取Fermi能级</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"><code>float</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>get_number_of_spins</code></td>
+<td style="text-align:left"><code>gpaw.paw.PAW</code></td>
+<td style="text-align:left">获取自旋通道数量</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"><code>int</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>get_number_of_electrons</code></td>
+<td style="text-align:left"><code>gpaw.paw.PAW</code></td>
+<td style="text-align:left">获取价电子总数</td>
+<td style="text-align:center"></td>
+<td style="text-align:center"><code>float</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><code>get_eigenvalues</code></td>
+<td style="text-align:left"><code>gpaw.paw.PAW</code></td>
+<td style="text-align:left">获取本征值</td>
+<td style="text-align:center"><code>(ik=0, ispin=0)</code></td>
+<td style="text-align:center">1D array</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>get_ibz_k_points</code></td>
+<td style="text-align:left"><code>gpaw.paw.PAW</code></td>
+<td style="text-align:left">获取不可约k点</td>
+<td style="text-align:center"></td>
+<td style="text-align:center">2D array</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>get_bz_k_points</code></td>
+<td style="text-align:left"><code>gpaw.paw.PAW</code></td>
+<td style="text-align:left">获取所有k点</td>
+<td style="text-align:center"></td>
+<td style="text-align:center">2D array</td>
+</tr>
+</tbody>
+</table>
+<p>例如, 获取所有能级到<code>eigens</code>数组</p>
+<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">eigens = np.array([[</span><br><span class="line">                    calc.get_eigenvalues(ik, isp) <span class="keyword">for</span> ik,_ <span class="keyword">in</span> enumerate(calc.get_ibz_k_points())</span><br><span class="line">                   ] <span class="keyword">for</span> isp <span class="keyword">in</span> range(calc.get_number_of_spins())])</span><br></pre></td></tr></table></figure></p>
+<p>获取各k点的直接带隙</p>
+<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vb = int(calc.get_number_of_electrons()/<span class="number">2.0</span>) - <span class="number">1</span></span><br><span class="line">direct_gaps = eigens[<span class="number">0</span>, :, vb+<span class="number">1</span>] - eigens[<span class="number">0</span>, :, vb]</span><br></pre></td></tr></table></figure></p>
+<p>手动制作能带图的方法可以参考<a href="https://www.mantidproject.org/Band_Structures_With_GPAW" target="_blank" rel="noopener">Band Structures With GPAW - Mantid Project</a>.</p>
+
 	
 	</div>
   <a type="button" href="/2019/06/18/gpaw-2-scf-bs/#more" class="btn btn-default more">Read More</a>
@@ -312,7 +748,128 @@
   <div class="row">
 	
 	
-		<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>阅读WIEN2k v16.1版本中例程<code>outwin</code>的源码, 以理解其所用到的算法.
+		<link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2>摘要</h2>
+<p>阅读WIEN2k v16.1版本中例程<code>outwin</code>的源码, 以理解其所用到的算法. &lt;!--more--&gt;</p>
+<h2>背景</h2>
+<p>outwin.f在WIEN2k各程序中出现, 它包含例程<code>outwin</code>. 之前大略知道它是用来计算原子球内的径向波函数的, 但对于其算法一直很模糊, 一方面由于它涉及相对论方程, 另一方面它除了输入参数的德语注释外一句注释也没有. 最近在研究局域基组生成的问题, 而这个例程出现频率非常高, 因此准备多啃一下这块代码.</p>
+<p>不同SRC文件下的outwin.f版本也不尽同. SRC_nmr, SRC_lapw7等仍然使用Adams-Moulton四阶算法, SRC_lapw2对于第四个以外的格点允许用五阶算法. SRC_lapw7中的注释更多一些, 但仍然用的是四阶算法. 这里尝试对SRC_lapw7中的outwin.f源码进行解读.</p>
+<h2>原理</h2>
+<p>在Rydberg单位下, 具有量子数$\kappa$的大分量波函数$u(r)=G(r)/r$满足&lt;sup id=&quot;fnref:1&quot;&gt;&lt;a href=&quot;#fn:1&quot; rel=&quot;footnote&quot;&gt;&lt;span class=&quot;hint--top hint--error hint--medium hint--rounded hint--bounce&quot; aria-label=&quot;参考这一篇<a href="https://users.wfu.edu/natalie/papers/pwpaw/notes/atompaw/scalarrelativistic.pdf" target="_blank" rel="noopener">报告</a>&quot;&gt;[1]&lt;/span&gt;&lt;/a&gt;&lt;/sup&gt;</p>
+<p>$$
+\begin{equation}
+\begin{aligned}
+\frac{d}{d r} G(r) &amp;= \frac{G(r)}{r}+M(r) F(r) \
+\frac{d}{d r} F(r) &amp;= -\frac{F(r)}{r}+\left(\frac{\kappa(\kappa+1)}{r^{2}} \frac{1}{M(r)}-(E-V(r))\right) G(r)
+\end{aligned}
+\end{equation}\label{eq:r-GF}
+$$</p>
+<p>其中</p>
+<p>$$
+\begin{equation}
+M(r) \equiv 1+\left(\frac{\alpha}{2}\right)^{2}(E-V(r)) = 1+\frac{E-V(r)}{c^2}
+\end{equation}\label{eq:m}
+$$</p>
+<p>$\alpha$为精细结构常数, 在Rydberg单位下$\alpha=2/c$, $c$为光速. 为在步长$h$的对数格点上进行数值计算, 作变量替换$r=r_0 e^x$, $\mathrm{d}r=r\mathrm{d}x$, 得到关于$x$的方程组</p>
+<p>$$
+\begin{equation}
+\begin{aligned}
+G' &amp;= G + M r F \
+F' &amp;= - F + \left(\frac{\kappa(\kappa+1)}{rM}-r(E-V)\right) G
+\end{aligned}
+\end{equation}\label{eq:x-GF}
+$$</p>
+<p>方便起见, 上式中略去了<em>G,F,M</em>的变量$r\equiv r(x)$, 撇号表示关于<em>x</em>求导.</p>
+<h2>源码解读</h2>
+<h3>参数</h3>
+<h3>行66-81</h3>
+<h3>行83-91</h3>
+<p>从81行开始是对第四个及以后的格点的循环. <code>X</code>为*-h*, <code>DRDI</code>为<em>rh</em>. 其他一些的中间量与式$\eqref{eq:x-GF}$中量的关系是</p>
+<p>$$
+\begin{equation}
+\begin{aligned}
+\mathrm{PHI} &amp;= rh\frac{E-V}{c}\
+\mathrm{U} &amp;= rhc + \mathrm{PHI} = rhc\left[1+\frac{E-V}{c^2}\right] = rhcM \
+\mathrm{Y} &amp;= -\kappa(\kappa+1)h^2/\mathrm{U} + \mathrm{PHI} = - \frac{h}{c}\left[\frac{\kappa(\kappa+1)}{rM} - r(E-V)\right]
+\end{aligned}
+\end{equation}
+$$</p>
+<p>从而可以将式$\eqref{eq:x-GF}$写成</p>
+<p>$$
+\begin{equation}
+\begin{aligned}
+G' &amp;= G + \frac{\mathrm{U}}{hc}F \
+F' &amp;= - F - \frac{c}{h}\mathrm{Y} G
+\end{aligned}
+\end{equation}\label{eq:UYGF}
+$$</p>
+<p>令$A=G, B=F/c$, $A'=G', B'=F'/c$, 得到</p>
+<p>$$
+\begin{equation}
+\begin{aligned}
+A' &amp;= A + \frac{\mathrm{U}}{h}B \
+B' &amp;= - B - \frac{\mathrm{Y}}{h} A
+\end{aligned}
+\end{equation}\label{eq:UYAB}
+$$</p>
+<h3>行92-96</h3>
+<p>由行列式解线性方程的知识可知, 这部分求解的是这样一个矩阵方程</p>
+<p>$$\begin{equation}
+\begin{bmatrix}
+\frac{8}{3} + X &amp; -U \
+Y &amp; \frac{8}{3} - X \
+\end{bmatrix}
+\begin{bmatrix}
+A_c \
+B_c \
+\end{bmatrix}=
+\begin{bmatrix}
+B1 \
+B2 \
+\end{bmatrix}
+\end{equation}\label{eq:mat-92-96}$$</p>
+<p>这里下标c表示在代码(code)中的定义. <code>B1</code>和<code>B2</code>在93和94行计算, 基于<a href="https://en.wikipedia.org/wiki/Linear_multistep_method#Adams%E2%80%93Moulton_methods" target="_blank" rel="noopener">Adams-Moulton算法</a>, 因为8/3来自于四阶算法</p>
+<p>$$
+y_{n+3}=y_{n+2}+h\left(\frac{9}{24} f\left(t_{n+3}, y_{n+3}\right)+\frac{19}{24} f\left(t_{n+2}, y_{n+2}\right)-\frac{5}{24} f\left(t_{n+1}, y_{n+1}\right)+\frac{1}{24} f\left(t_{n}, y_{n}\right)\right)
+$$</p>
+<p>其中$f(t_n, y_n)=y'<em>n$为第n格点上y的导数. 利用上式可以将$A'</em>{n+3}$表示为</p>
+<p>$$
+hA'<em>{n+3} = \frac{8}{3}A</em>{n+3} - \frac{8}{3}A_{n+2} - \frac{19}{9}hA'<em>{n+2} + \frac{5h}{9}A'</em>{n+1} - \frac{h}{9}A'_n
+$$</p>
+<p>将式$\eqref{eq:UYAB}$两边乘以$h$后, 在格点$n+3$处的表达式为</p>
+<p>$$
+\begin{equation}
+\begin{aligned}
+\left[\frac{8}{3} - h\right]A_{n+3} - U_{n+3} B_{n+3} &amp;= \frac{8}{3}A_{n+2} + \frac{19}{9}hA'<em>{n+2} - \frac{5}{9}hA'</em>{n+1} + \frac{1}{9}hA'<em>n \
+\left[\frac{8}{3} + h\right]B</em>{n+3} + Y_{n+3} A_{n+3} &amp;= \frac{8}{3}B_{n+2} + \frac{19}{9}hB'<em>{n+2} - \frac{5}{9}hB'</em>{n+1} + \frac{1}{9}hB'_n
+\end{aligned}
+\end{equation}\label{eq:n-3-UYAB}
+$$</p>
+<p>如果把上式看成未知数$A_{n+3}$和$B_{n+3}$的二元一次方程, 其系数矩阵和$\eqref{eq:mat-92-96}$是相同的. 检查<code>DGn</code>和<code>DFn</code>的含义(见下面一节)以及系数<code>Rn</code>, 可以发现式子$\eqref{eq:n-3-UYAB}$右侧与<code>B1</code>和<code>B2</code>也是一致的. 因此我们定义的$A$和$B$与outwin.f中的含义是一致的.</p>
+<h3>行98-103</h3>
+<p>更新最外的三个点的导数值, 以用于计算下一个格点上的<code>B1</code>和<code>B2</code>. 其中<code>Dx1</code>和<code>Dx2</code>分别用<code>Dx2</code>和<code>Dx3</code>替代, 即97, 98, 101和102行, 在格点迭代的语境下很好理解. <code>DG3</code>的更新表达式</p>
+<p><figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DG3 = U*B(K) - X*A(K)</span><br></pre></td></tr></table></figure></p>
+<p>由式$\eqref{eq:UYAB}$和<code>X</code>等于*-h*, 可得</p>
+<p>$$
+DG3 = U_K B_K + h A_K = h(A_K + \frac{U_K}{h}B_K) = hA'_K
+$$</p>
+<p>因此<code>DG3</code>是$h$乘以A在格点K上的导数. 同理, <code>DF3</code>的更新表达式</p>
+<p><figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DF3 = X*B(K) - Y*A(K)</span><br></pre></td></tr></table></figure></p>
+<p>意味着$DF3 = -h B_K - Y_K A_K = h B'_K$. 因此<code>DF3</code>是$h$乘以B在格点K上的导数.</p>
+<h3>行107-109</h3>
+<p>这一个循环对<em>B</em>进行了scaling, $B \to cB/2= F/2=\alpha F$. 报告&lt;sup id=&quot;fnref:1&quot;&gt;&lt;a href=&quot;#fn:1&quot; rel=&quot;footnote&quot;&gt;&lt;span class=&quot;hint--top hint--error hint--medium hint--rounded hint--bounce&quot; aria-label=&quot;参考这一篇<a href="https://users.wfu.edu/natalie/papers/pwpaw/notes/atompaw/scalarrelativistic.pdf" target="_blank" rel="noopener">报告</a>&quot;&gt;[1]&lt;/span&gt;&lt;/a&gt;&lt;/sup&gt;指出<em>F</em>与小分量有关, 但具体关系暂未推导.</p>
+<h3>行111-113</h3>
+<p>由于$A=G=ru$, 因此<code>VAL</code>就是最后一个格点上的波函数值. 而<code>SLO</code>的数学表示</p>
+<p>$$
+(h\frac{\mathrm{d}A}{hr\mathrm{d}x}-u)/r
+=\frac{\mathrm{d}(ru)}{r \mathrm{d}r} - \frac{u}{r}
+=\frac{r\mathrm{d}u}{r \mathrm{d}r} = \frac{\mathrm{d}u}{\mathrm{d}r}
+$$</p>
+<p>为波函数在边界上的导数.</p>
+<h2>总结</h2>
+<p>outwin.f中的<code>outwin</code>例程利用Adams-Moulton算法求解标量相对论方程$\eqref{eq:r-GF}$, 在对数格点上得到量子数$\kappa$下的大分量波函数, 以函数乘矢径长的形式存储在$A$中.</p>
+<h2>脚注</h2>
+<p>&lt;div id=&quot;footnotes&quot;&gt;&lt;hr&gt;&lt;div id=&quot;footnotelist&quot;&gt;&lt;ol style=&quot;list-style: none; padding-left: 0; margin-left: 40px&quot;&gt;&lt;li id=&quot;fn:1&quot;&gt;&lt;span style=&quot;display: inline-block; vertical-align: top; padding-right: 10px; margin-left: -40px&quot;&gt;1.&lt;/span&gt;&lt;span style=&quot;display: inline-block; vertical-align: top; margin-left: 10px;&quot;&gt;参考这一篇&lt;a href=&quot;https://users.wfu.edu/natalie/papers/pwpaw/notes/atompaw/scalarrelativistic.pdf&quot;&gt;报告&lt;/a&gt;&lt;a href=&quot;#fnref:1&quot; rev=&quot;footnote&quot;&gt; ↩&lt;/a&gt;&lt;/span&gt;&lt;/li&gt;&lt;/ol&gt;&lt;/div&gt;&lt;/div&gt;</p>
+
 	
 	</div>
   <a type="button" href="/2019/05/24/outwin-read/#more" class="btn btn-default more">Read More</a>
@@ -385,65 +942,65 @@
 		<h4>Tag Cloud</h4>
 		<ul class="tag_box inline list-unstyled">		
 		
-			<li><a href="/tags/XmGrace/">XmGrace<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/GPAW/">GPAW<span class="badge">4</span></a></li>
-		
-			<li><a href="/tags/Numerical-method/">Numerical method<span class="badge">2</span></a></li>
-		
-			<li><a href="/tags/bilibili/">bilibili<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/VPS/">VPS<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/Compilation/">Compilation<span class="badge">5</span></a></li>
+			<li><a href="/tags/Fortran/">Fortran<span class="badge">3</span></a></li>
 		
 			<li><a href="/tags/Youtube/">Youtube<span class="badge">1</span></a></li>
 		
-			<li><a href="/tags/DFT/">DFT<span class="badge">3</span></a></li>
+			<li><a href="/tags/Grid-technique/">Grid technique<span class="badge">1</span></a></li>
 		
-			<li><a href="/tags/Fortran/">Fortran<span class="badge">3</span></a></li>
-		
-			<li><a href="/tags/macOS/">macOS<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/VASP/">VASP<span class="badge">2</span></a></li>
-		
-			<li><a href="/tags/Jupyter/">Jupyter<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/Band-structure/">Band structure<span class="badge">2</span></a></li>
-		
-			<li><a href="/tags/Panflute/">Panflute<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/LIBXC/">LIBXC<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/Make/">Make<span class="badge">1</span></a></li>
-		
-			<li><a href="/tags/regex/">regex<span class="badge">1</span></a></li>
+			<li><a href="/tags/Compilation/">Compilation<span class="badge">5</span></a></li>
 		
 			<li><a href="/tags/Markdown/">Markdown<span class="badge">2</span></a></li>
 		
+			<li><a href="/tags/MPI/">MPI<span class="badge">1</span></a></li>
+		
 			<li><a href="/tags/F2PY/">F2PY<span class="badge">1</span></a></li>
 		
-			<li><a href="/tags/Freemind/">Freemind<span class="badge">1</span></a></li>
+			<li><a href="/tags/Tutorial/">Tutorial<span class="badge">3</span></a></li>
 		
-			<li><a href="/tags/AST/">AST<span class="badge">1</span></a></li>
+			<li><a href="/tags/gprof/">gprof<span class="badge">1</span></a></li>
 		
-			<li><a href="/tags/SOC/">SOC<span class="badge">1</span></a></li>
+			<li><a href="/tags/Blogging/">Blogging<span class="badge">2</span></a></li>
 		
-			<li><a href="/tags/FFTW/">FFTW<span class="badge">1</span></a></li>
+			<li><a href="/tags/Numerical-method/">Numerical method<span class="badge">2</span></a></li>
 		
-			<li><a href="/tags/Pandoc/">Pandoc<span class="badge">2</span></a></li>
-		
-			<li><a href="/tags/Call-graph/">Call graph<span class="badge">1</span></a></li>
+			<li><a href="/tags/Band-structure/">Band structure<span class="badge">2</span></a></li>
 		
 			<li><a href="/tags/Bugfix/">Bugfix<span class="badge">4</span></a></li>
 		
+			<li><a href="/tags/GW/">GW<span class="badge">1</span></a></li>
+		
 			<li><a href="/tags/LaTeX/">LaTeX<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/bilibili/">bilibili<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/Jupyter/">Jupyter<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/XmGrace/">XmGrace<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/DFT/">DFT<span class="badge">3</span></a></li>
 		
 			<li><a href="/tags/WIEN2k/">WIEN2k<span class="badge">4</span></a></li>
 		
-			<li><a href="/tags/ShadowsocksR/">ShadowsocksR<span class="badge">1</span></a></li>
+			<li><a href="/tags/FFTW/">FFTW<span class="badge">1</span></a></li>
 		
-			<li><a href="/tags/MPI/">MPI<span class="badge">1</span></a></li>
+			<li><a href="/tags/Make/">Make<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/Intel/">Intel<span class="badge">4</span></a></li>
+		
+			<li><a href="/tags/AST/">AST<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/macOS/">macOS<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/Python/">Python<span class="badge">2</span></a></li>
+		
+			<li><a href="/tags/Call-graph/">Call graph<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/GPAW/">GPAW<span class="badge">4</span></a></li>
+		
+			<li><a href="/tags/regex/">regex<span class="badge">1</span></a></li>
+		
+			<li><a href="/tags/Hexo/">Hexo<span class="badge">3</span></a></li>
 		
 		
 		   <li><a href="/tags">...<span class="badge">41</span></a></li>
@@ -491,7 +1048,7 @@
     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
   
-	| <span class="post-count">39.5k</span> words
+	| <span class="post-count">41k</span> words
   
 </p>
  </footer>
