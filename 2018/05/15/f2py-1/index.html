@@ -195,9 +195,7 @@
 	<div class="mypage">		
 	  		
 
-	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2>前言</h2>
-<p>本文介绍了如何在Python脚本中，通过引入Fortran动态库调用Fortran子程序，加速Python中的数值计算。以矩阵乘法为例，比较了调用Python中NumPy和SciPy包的方法和使用Fortran子程序两种方式在计算效率上的差别。
-&lt;!--more--&gt;</p>
+	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文介绍了如何在Python脚本中，通过引入Fortran动态库调用Fortran子程序，加速Python中的数值计算。以矩阵乘法为例，比较了调用Python中NumPy和SciPy包的方法和使用Fortran子程序两种方式在计算效率上的差别。<br><a id="more"></a></p>
 <p>Python作为一种动态的解释型编译器，尽管具有新手友好、直观易读、适用范围广的特点，但比起静态的编译型语言Fortran/C，在数值计算方面的表现要差许多，这是由于Python没有被预先编译到机器语言层面。目前流行的Python数值计算包<a href="http://www.numpy.org/" target="_blank" rel="noopener">NumPy</a>和<a href="https://www.scipy.org/scipylib/index.html" target="_blank" rel="noopener">SciPy</a>提供了大量数值计算相关的函数和方法，在很大程度上弥补了Python这一缺点，但仍然无法满足数值计算的全部需求，特别是难以链接一些尚未Python模块化的数学库和工具库。</p>
 <p>作为老牌数值计算语言，Fortran拥有许多高效的数学库，我们很容易在Fortran程序中使用他们，但要把他们用到Python中则并不是那么容易。一种解决方案是使用<a href="https://docs.scipy.org/doc/numpy/f2py/" target="_blank" rel="noopener">F2PY</a>产生Python接口，它是NumPy项目的一部分。基于F2PY，在Python中调用Fortran函数的基本流程是</p>
 <ol>
@@ -206,53 +204,43 @@
 <li>在Python中通过<code>import</code>引入动态库</li>
 </ol>
 <p>这样就能像调用Python包一样使用Fortran代码中定义的子程序和函数了。下面先简单介绍如何使用<code>f2py</code>，再以矩阵乘法作为例子做说明。</p>
-<h2>使用F2PY产生供Python引入的动态库</h2>
-<h3>聪明的方法: 创建署名文件</h3>
-<p><code>f2py</code>安装就不多说了, 直接上用法.</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f2py mysubr.F90 -m mysubr -h mysubr.pyf</span><br></pre></td></tr></table></figure></p>
+<h2 id="使用F2PY产生供Python引入的动态库"><a href="#使用F2PY产生供Python引入的动态库" class="headerlink" title="使用F2PY产生供Python引入的动态库"></a>使用F2PY产生供Python引入的动态库</h2><h3 id="聪明的方法-创建署名文件"><a href="#聪明的方法-创建署名文件" class="headerlink" title="聪明的方法: 创建署名文件"></a>聪明的方法: 创建署名文件</h3><p><code>f2py</code>安装就不多说了, 直接上用法.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f2py mysubr.F90 -m mysubr -h mysubr.pyf</span><br></pre></td></tr></table></figure>
 <p>其中产生的<code>.pyf</code>就是所谓的署名文件(signature file)。其中定义了Python模块<code>mysubr</code>，它包含一个接口，<code>mysubr.F90</code>中所有函数和子程序都被声明在该接口中。每个声明中包含函数所需参量的类型和维度具体信息。具体可参照<a href="https://docs.scipy.org/doc/numpy/f2py/getting-started.html#the-smart-way" target="_blank" rel="noopener">官方文档</a>。产生<code>.pyf</code>文件后，可用下面的命令</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f2py -c mysub.pyf mysubr.F90</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f2py -c mysub.pyf mysubr.F90</span><br></pre></td></tr></table></figure>
 <p>产生动态库。编译时链接外部函数库(MKL或者FFTW)和一般的编译器相同</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># link mysubr against libabc.a in /lib/dir/</span></span><br><span class="line">f2py -c mysub.pyf mysubr.F90 -L/lib/dir/ -labc</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># link mysubr against libabc.a in /lib/dir/</span></span><br><span class="line">f2py -c mysub.pyf mysubr.F90 -L/lib/dir/ -labc</span><br></pre></td></tr></table></figure>
 <p>所有<code>f2py</code>命令可以用<code>python -m numpy.f2py</code>等价替换, 这样做的好处是f2py版本总是与python版本兼容.</p>
-<h2>举例: 矩阵乘法</h2>
-<h3>矩阵生成</h3>
-<p>在进行矩阵乘法前，首先利用<code>random</code>模块产生<code>ndarray</code>类型的矩阵，这里取100维的方阵进行测试。具体代码如下所示:</p>
-<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> random <span class="keyword">import</span> seed, random</span><br><span class="line"></span><br><span class="line"><span class="comment"># set the dimensions</span></span><br><span class="line">m = <span class="number">100</span></span><br><span class="line">k = <span class="number">100</span></span><br><span class="line">n = <span class="number">100</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># create mat1(m,k) and mat2(k,n) matrices</span></span><br><span class="line">seed()</span><br><span class="line">mat1 = np.array([[random() <span class="keyword">for</span> col <span class="keyword">in</span> range(k)] <span class="keyword">for</span> row <span class="keyword">in</span> range(m)], \</span><br><span class="line">                order=<span class="string">'F'</span>, dtype=<span class="string">'float64'</span>)</span><br><span class="line">seed()</span><br><span class="line">mat2 = np.array([[random() <span class="keyword">for</span> col <span class="keyword">in</span> range(n)] <span class="keyword">for</span> row <span class="keyword">in</span> range(k)], \</span><br><span class="line">                order=<span class="string">'F'</span>, dtype=<span class="string">'float64'</span>)</span><br></pre></td></tr></table></figure></p>
-<p><code>order='F'</code>使用Fortran的数据存储方式。为保证计算效率，必须<strong>手动设置该值</strong>。</p>
-<p><div class="alert alert-danger"><i class="fa fa-bug  float-left"></i>  <p>order默认为C。如果不覆盖默认值，Fortran代码的运算效率将下降很多。</p>
-</div></p>
-<h3>执行矩阵乘法</h3>
-<p>我们比较四种不同的矩阵乘法实现</p>
+<h2 id="举例-矩阵乘法"><a href="#举例-矩阵乘法" class="headerlink" title="举例: 矩阵乘法"></a>举例: 矩阵乘法</h2><h3 id="矩阵生成"><a href="#矩阵生成" class="headerlink" title="矩阵生成"></a>矩阵生成</h3><p>在进行矩阵乘法前，首先利用<code>random</code>模块产生<code>ndarray</code>类型的矩阵，这里取100维的方阵进行测试。具体代码如下所示:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> random <span class="keyword">import</span> seed, random</span><br><span class="line"></span><br><span class="line"><span class="comment"># set the dimensions</span></span><br><span class="line">m = <span class="number">100</span></span><br><span class="line">k = <span class="number">100</span></span><br><span class="line">n = <span class="number">100</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># create mat1(m,k) and mat2(k,n) matrices</span></span><br><span class="line">seed()</span><br><span class="line">mat1 = np.array([[random() <span class="keyword">for</span> col <span class="keyword">in</span> range(k)] <span class="keyword">for</span> row <span class="keyword">in</span> range(m)], \</span><br><span class="line">                order=<span class="string">'F'</span>, dtype=<span class="string">'float64'</span>)</span><br><span class="line">seed()</span><br><span class="line">mat2 = np.array([[random() <span class="keyword">for</span> col <span class="keyword">in</span> range(n)] <span class="keyword">for</span> row <span class="keyword">in</span> range(k)], \</span><br><span class="line">                order=<span class="string">'F'</span>, dtype=<span class="string">'float64'</span>)</span><br></pre></td></tr></table></figure>
+<p><code>order=&#39;F&#39;</code>使用Fortran的数据存储方式。为保证计算效率，必须<strong>手动设置该值</strong>。</p>
+<div class="alert alert-danger"><i class="fa fa-bug  float-left"></i>  <p>order默认为C。如果不覆盖默认值，Fortran代码的运算效率将下降很多。</p>
+</div>
+<h3 id="执行矩阵乘法"><a href="#执行矩阵乘法" class="headerlink" title="执行矩阵乘法"></a>执行矩阵乘法</h3><p>我们比较四种不同的矩阵乘法实现</p>
 <ol>
-<li>
-<p>NumPy的<code>matmul</code>函数</p>
-<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mat3 = np.matmul(mat1, mat2)</span><br></pre></td></tr></table></figure></p>
+<li><p>NumPy的<code>matmul</code>函数</p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mat3 = np.matmul(mat1, mat2)</span><br></pre></td></tr></table></figure>
 </li>
-<li>
-<p>SciPy的<code>linalg.blas.dgemm</code>函数</p>
-<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> scipy <span class="keyword">import</span> linalg</span><br><span class="line">mat3 = linalg.blas.dgemm(<span class="number">1.0</span>, mat1, mat2)</span><br></pre></td></tr></table></figure></p>
+<li><p>SciPy的<code>linalg.blas.dgemm</code>函数</p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> scipy <span class="keyword">import</span> linalg</span><br><span class="line">mat3 = linalg.blas.dgemm(<span class="number">1.0</span>, mat1, mat2)</span><br></pre></td></tr></table></figure>
 </li>
-<li>
-<p>Fortran的<code>matmul</code>函数</p>
-<p><figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">! file: f_matmul.F90</span></span><br><span class="line"><span class="function"><span class="keyword">subroutine</span></span> f_matmul(m, n, k, mat1, mat2, mat3)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">integer</span>, <span class="keyword">intent</span>(<span class="keyword">in</span>)  :: m, n, k</span><br><span class="line">    <span class="keyword">real</span>(<span class="number">8</span>), <span class="keyword">intent</span>(<span class="keyword">in</span>)  :: mat1(m,k), mat2(k,n)</span><br><span class="line">    <span class="keyword">real</span>(<span class="number">8</span>), <span class="keyword">intent</span>(<span class="keyword">out</span>) :: mat3(m,n)</span><br><span class="line"></span><br><span class="line">    mat3 = <span class="built_in">matmul</span>(mat1, mat2)</span><br><span class="line"></span><br><span class="line"><span class="keyword">end</span> <span class="function"><span class="keyword">subroutine</span></span> f_matmul</span><br></pre></td></tr></table></figure></p>
-<p><code>m,n,k</code>用于确定矩阵<code>mat1,mat2,mat3</code>的维度，这在纯Fortran中是必须声明的参数，但<code>f2py</code>会将其转化为可选参数，矩阵规模由从Python输入的<code>mat1,mat2</code>确定。在对应Python文件中加入</p>
-<p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> f_matmul <span class="keyword">import</span> f_matmul</span><br></pre></td></tr></table></figure></p>
-<p>即可调用.</p>
+<li><p>Fortran的<code>matmul</code>函数</p>
+ <figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">! file: f_matmul.F90</span></span><br><span class="line"><span class="function"><span class="keyword">subroutine</span></span> f_matmul(m, n, k, mat1, mat2, mat3)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">integer</span>, <span class="keyword">intent</span>(<span class="keyword">in</span>)  :: m, n, k</span><br><span class="line">    <span class="keyword">real</span>(<span class="number">8</span>), <span class="keyword">intent</span>(<span class="keyword">in</span>)  :: mat1(m,k), mat2(k,n)</span><br><span class="line">    <span class="keyword">real</span>(<span class="number">8</span>), <span class="keyword">intent</span>(<span class="keyword">out</span>) :: mat3(m,n)</span><br><span class="line"></span><br><span class="line">    mat3 = <span class="built_in">matmul</span>(mat1, mat2)</span><br><span class="line"></span><br><span class="line"><span class="keyword">end</span> <span class="function"><span class="keyword">subroutine</span></span> f_matmul</span><br></pre></td></tr></table></figure>
+<p> <code>m,n,k</code>用于确定矩阵<code>mat1,mat2,mat3</code>的维度，这在纯Fortran中是必须声明的参数，但<code>f2py</code>会将其转化为可选参数，矩阵规模由从Python输入的<code>mat1,mat2</code>确定。在对应Python文件中加入</p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> f_matmul <span class="keyword">import</span> f_matmul</span><br></pre></td></tr></table></figure>
+<p> 即可调用.</p>
 </li>
-<li>
-<p>Intel MKL的<code>dgemm</code>子程序</p>
-<p>将上面Fortran代码中的<code>matmul</code>行替换为</p>
-<p><figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">! file: f_dgemm.F90</span></span><br><span class="line"><span class="function"><span class="keyword">subroutine</span></span> f_dgemm(m, n, k, mat1, mat2, mat3)</span><br><span class="line"><span class="comment">!...</span></span><br><span class="line">    <span class="keyword">call</span> dgemm(<span class="string">'N'</span>, <span class="string">'N'</span>, m, n, k, <span class="number">1.0D0</span>, mat1, m, mat2, k, <span class="number">0.0D0</span>, mat3, m)</span><br><span class="line"></span><br><span class="line"><span class="keyword">end</span> <span class="function"><span class="keyword">subroutine</span></span> f_dgemm</span><br></pre></td></tr></table></figure></p>
-<p>此时编译需要链接MKL库，编译命令为
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f2py -c f_dgemm.pyf --fcompiler=intelem --compiler=intelem -L<span class="variable">$MKLROOT</span>/lib/intel64/ -lmkl_rt f_dgemm.F90</span><br></pre></td></tr></table></figure></p>
-<p>在对应Python文件中加入
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> f_dgemm <span class="keyword">import</span> f_dgemm</span><br></pre></td></tr></table></figure></p>
+<li><p>Intel MKL的<code>dgemm</code>子程序</p>
+<p> 将上面Fortran代码中的<code>matmul</code>行替换为</p>
+ <figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">! file: f_dgemm.F90</span></span><br><span class="line"><span class="function"><span class="keyword">subroutine</span></span> f_dgemm(m, n, k, mat1, mat2, mat3)</span><br><span class="line"><span class="comment">!...</span></span><br><span class="line">    <span class="keyword">call</span> dgemm(<span class="string">'N'</span>, <span class="string">'N'</span>, m, n, k, <span class="number">1.0D0</span>, mat1, m, mat2, k, <span class="number">0.0D0</span>, mat3, m)</span><br><span class="line"></span><br><span class="line"><span class="keyword">end</span> <span class="function"><span class="keyword">subroutine</span></span> f_dgemm</span><br></pre></td></tr></table></figure>
+<p> 此时编译需要链接MKL库，编译命令为</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f2py -c f_dgemm.pyf --fcompiler=intelem --compiler=intelem -L<span class="variable">$MKLROOT</span>/lib/intel64/ -lmkl_rt f_dgemm.F90</span><br></pre></td></tr></table></figure>
+<p> 在对应Python文件中加入</p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> f_dgemm <span class="keyword">import</span> f_dgemm</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
 <p>所有源码和编译用Makefile打包在这个<a href="f2py-1.tar.gz">压缩包</a>里了, 方便取用.</p>
-<h3>测试结果</h3>
-<p>测试结果如下</p>
+<h3 id="测试结果"><a href="#测试结果" class="headerlink" title="测试结果"></a>测试结果</h3><p>测试结果如下</p>
 <table>
 <thead>
 <tr>
@@ -302,35 +290,27 @@
 <p>其中<code>o=C</code>表示使用C存储方式, 不注明则是用Fortran。通过比较可以得到下面的一些结论</p>
 <ul>
 <li>在Fortran order下，计算效率顺序为Fortran <code>matmul</code>&lt;<code>np.matmul</code>&lt;<code>scipy.linalg.blas.dgemm</code>&lt; Intel MKL <code>dgemm</code>。</li>
-<li><code>np.array</code>在内存中的存储方式(<code>order='C'|'F'</code>)显著影响Fortran <code>matmul</code>, <code>scipy.linalg.blas.dgemm</code>和Intel MKL <code>dgemm</code>的计算效率，<code>order='F'</code>要比<code>'C'</code>快约10%。</li>
-<li>不合理的存储方式(<code>'C'</code>)导致MKL效率低于<code>np.matmul</code>。</li>
+<li><code>np.array</code>在内存中的存储方式(<code>order=&#39;C&#39;|&#39;F&#39;</code>)显著影响Fortran <code>matmul</code>, <code>scipy.linalg.blas.dgemm</code>和Intel MKL <code>dgemm</code>的计算效率，<code>order=&#39;F&#39;</code>要比<code>&#39;C&#39;</code>快约10%。</li>
+<li>不合理的存储方式(<code>&#39;C&#39;</code>)导致MKL效率低于<code>np.matmul</code>。</li>
 <li>存储方式对<code>np.matmul</code>没有显著影响。</li>
 </ul>
-<h2>总结</h2>
-<p>本文介绍了使用F2PY工具将Fortran代码编译为可供Python调用的动态库，并以矩阵乘法为例进行演示。同时，比较了流行的Python数值计算模块NumPy和SciPy中的实现与Fortran语言下<code>matmul</code>和MKL<code>dgemm</code>实现的计算效率。测试结果发现，在高维情况下，Intel MKL具有最高的效率。产生<code>ndarray</code>时的存储方式(<code>order=F</code>)对Fortran库中函数计算效率有显著影响。</p>
-<h2>备注</h2>
-<p>使用MKL的DGEMM时，用<code>f2py</code>链接MKL库编译后执行<code>test_mm.py</code>，报错</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Intel MKL FATAL ERROR: Cannot load libmkl_avx2.so or libmkl_def.so</span><br></pre></td></tr></table></figure></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文介绍了使用F2PY工具将Fortran代码编译为可供Python调用的动态库，并以矩阵乘法为例进行演示。同时，比较了流行的Python数值计算模块NumPy和SciPy中的实现与Fortran语言下<code>matmul</code>和MKL<code>dgemm</code>实现的计算效率。测试结果发现，在高维情况下，Intel MKL具有最高的效率。产生<code>ndarray</code>时的存储方式(<code>order=F</code>)对Fortran库中函数计算效率有显著影响。</p>
+<h2 id="备注"><a href="#备注" class="headerlink" title="备注"></a>备注</h2><p>使用MKL的DGEMM时，用<code>f2py</code>链接MKL库编译后执行<code>test_mm.py</code>，报错</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Intel MKL FATAL ERROR: Cannot load libmkl_avx2.so or libmkl_def.so</span><br></pre></td></tr></table></figure>
 <p>解决方法是在编译前preload几个核心的Intel库</p>
-<p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> LD_PRELOAD=<span class="string">"<span class="variable">$MKLROOT</span>/lib/intel64/libmkl_def.so:<span class="variable">$MKLROOT</span>/lib/intel64/libmkl_sequential.so:<span class="variable">$MKLROOT</span>/lib/intel64/libmkl_core.so"</span></span><br></pre></td></tr></table></figure></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> LD_PRELOAD=<span class="string">"<span class="variable">$MKLROOT</span>/lib/intel64/libmkl_def.so:<span class="variable">$MKLROOT</span>/lib/intel64/libmkl_sequential.so:<span class="variable">$MKLROOT</span>/lib/intel64/libmkl_core.so"</span></span><br></pre></td></tr></table></figure>
 <p>必须按顺序全部预载入，否则<code>ld</code>会报错。</p>
-<h2>更新</h2>
-<h3>2019-05-02</h3>
-<ol>
-<li>
-<p>时隔一年各类包都有更新, 原来的代码运行各种问题, 包括在<code>import f_matmul</code>时出现</p>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ImportError: dynamic module does not define module export function (PyInit_f_matmul)</span><br></pre></td></tr></table></figure></p>
-<p>这一条<a href="https://github.com/pytorch/ELF/issues/98">pytorch issue</a>陈述了类似的问题, 我的理解是由于f2py和python<a href="https://github.com/numpy/numpy/issues/7769">版本不兼容</a>所致. 用<code>python -m numpy.f2py</code>替代<code>f2py</code>即解决了这一问题.</p>
+<h2 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h2><h3 id="2019-05-02"><a href="#2019-05-02" class="headerlink" title="2019-05-02"></a>2019-05-02</h3><ol>
+<li><p>时隔一年各类包都有更新, 原来的代码运行各种问题, 包括在<code>import f_matmul</code>时出现</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ImportError: dynamic module does not define module export function (PyInit_f_matmul)</span><br></pre></td></tr></table></figure>
+<p> 这一条<a href="https://github.com/pytorch/ELF/issues/98">pytorch issue</a>陈述了类似的问题, 我的理解是由于f2py和python<a href="https://github.com/numpy/numpy/issues/7769">版本不兼容</a>所致. 用<code>python -m numpy.f2py</code>替代<code>f2py</code>即解决了这一问题.</p>
 </li>
-<li>
-<p><code>order='Fortran'</code>替换为<code>order='F'</code>.</p>
+<li><p><code>order=&#39;Fortran&#39;</code>替换为<code>order=&#39;F&#39;</code>.</p>
 </li>
-<li>
-<p>为方便测试, 将所有源码和Makefile<a href="f2py-1.tar.gz">打包</a>.</p>
-</li>
+<li>为方便测试, 将所有源码和Makefile<a href="f2py-1.tar.gz">打包</a>.</li>
 </ol>
 <p>修改后, Fedora 27下运行正常, 但macOS 10.14.4下会报错误</p>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ImportError: dlopen(f_matmul.cpython-37m-darwin.so, 2): __dyld section not supported in f_matmul.cpython-37m-darwin.so</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ImportError: dlopen(f_matmul.cpython-37m-darwin.so, 2): __dyld section not supported in f_matmul.cpython-37m-darwin.so</span><br></pre></td></tr></table></figure>
 <p>根据<a href="https://software.intel.com/zh-cn/forums/intel-fortran-compiler-for-linux-and-mac-os-x/topic/799102" target="_blank" rel="noopener">这条18年10月的Intel Forum帖</a>, 这个问题似乎跟Xcode版本有关. 因为要赶ddl所以暂时没有考虑macOS, 如果有人知道如何解决的话麻烦指点我一下 :)</p>
 	  
 	</div>
@@ -451,7 +431,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">前言</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">使用F2PY产生供Python引入的动态库</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">聪明的方法: 创建署名文件</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">举例: 矩阵乘法</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">矩阵生成</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">执行矩阵乘法</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">测试结果</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">总结</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">备注</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">更新</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">2019-05-02</span></a></li></ol></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#前言"><span class="toc-article-text">前言</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#使用F2PY产生供Python引入的动态库"><span class="toc-article-text">使用F2PY产生供Python引入的动态库</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#聪明的方法-创建署名文件"><span class="toc-article-text">聪明的方法: 创建署名文件</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#举例-矩阵乘法"><span class="toc-article-text">举例: 矩阵乘法</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#矩阵生成"><span class="toc-article-text">矩阵生成</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#执行矩阵乘法"><span class="toc-article-text">执行矩阵乘法</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#测试结果"><span class="toc-article-text">测试结果</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#总结"><span class="toc-article-text">总结</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#备注"><span class="toc-article-text">备注</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#更新"><span class="toc-article-text">更新</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#2019-05-02"><span class="toc-article-text">2019-05-02</span></a></li></ol></li></ol>
 		</div>
 	
 	</div>
@@ -491,7 +471,7 @@ var disqus_shortname = 'shigaro';
     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
   
-	| <span class="post-count">41k</span> words
+	| <span class="post-count">39.5k</span> words
   
 </p>
  </footer>

@@ -195,40 +195,25 @@
 	<div class="mypage">		
 	  		
 
-	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2>前言</h2>
-<p>本文收集了一些笔者常用的(Xm)Grace使用的技巧.&lt;!--more--&gt;
-以下操作均可以在<a href="https://sourceforge.net/projects/qtgrace/" target="_blank" rel="noopener">qtgrace</a>下实现.</p>
-<h2>数据集变换</h2>
-<p>Grace中支持多种数据处理, 从简单的求前后两点的差, 到复杂的函数变换和非线性拟合.</p>
-<h3>差分</h3>
-<p>XmGrace包含差分功能, 支持三种不同差分方式: 向前差分(Forward), 向后差分(Backword)或者居中差分(centered).</p>
-<p>$$
-\begin{aligned}
-\text{forward} &amp;: y'<em>{i, f} = \frac{y</em>{i+1}-y_i}{x_{i+1}-x_i}\
-\text{backward} &amp;: y'<em>{i, b} = \frac{y_i-y</em>{i-1}}{x_i-x_{i-1}}\
-\text{centered} &amp;: y'<em>{i, c} = \frac{y</em>{i+1}-y_{i-1}}{x_{i+1}-x_{i-1}}\
-\end{aligned}
-$$</p>
-<p>以函数$y=4(x-0.5)^2$为例, 其导数$y'=8x-4$.</p>
+	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文收集了一些笔者常用的(Xm)Grace使用的技巧.<a id="more"></a><br>以下操作均可以在<a href="https://sourceforge.net/projects/qtgrace/" target="_blank" rel="noopener">qtgrace</a>下实现.</p>
+<h2 id="数据集变换"><a href="#数据集变换" class="headerlink" title="数据集变换"></a>数据集变换</h2><p>Grace中支持多种数据处理, 从简单的求前后两点的差, 到复杂的函数变换和非线性拟合.</p>
+<h3 id="差分"><a href="#差分" class="headerlink" title="差分"></a>差分</h3><p>XmGrace包含差分功能, 支持三种不同差分方式: 向前差分(Forward), 向后差分(Backword)或者居中差分(centered).</p>
+<p>$$<br>\begin{aligned}<br>\text{forward} &amp;: y’_{i, f} = \frac{y_{i+1}-y_i}{x_{i+1}-x_i}\\<br>\text{backward} &amp;: y’_{i, b} = \frac{y_i-y_{i-1}}{x_i-x_{i-1}}\\<br>\text{centered} &amp;: y’_{i, c} = \frac{y_{i+1}-y_{i-1}}{x_{i+1}-x_{i-1}}\\<br>\end{aligned}<br>$$</p>
+<p>以函数$y=4(x-0.5)^2$为例, 其导数$y’=8x-4$.</p>
 <ol>
-<li>
-<p>选中差分功能: Data-&gt;Tranformation-&gt;Differences</p>
-<p><figure class="null"><img src="differences_1.jpg" alt="选中XmGrace的差分功能"><figcaption>选中XmGrace的差分功能</figcaption></figure></p>
+<li><p>选中差分功能: Data-&gt;Tranformation-&gt;Differences</p>
+<p> <figure class="null"><img src="differences_1.jpg" alt="选中XmGrace的差分功能"><figcaption>选中XmGrace的差分功能</figcaption></figure></p>
 </li>
-<li>
-<p>选中一组数据, 确认差分方案</p>
-<p><figure class="null"><img src="differences_2.jpg" alt="差分功能界面, 向前差分"><figcaption>差分功能界面, 向前差分</figcaption></figure></p>
+<li><p>选中一组数据, 确认差分方案</p>
+<p> <figure class="null"><img src="differences_2.jpg" alt="差分功能界面, 向前差分"><figcaption>差分功能界面, 向前差分</figcaption></figure></p>
 </li>
-<li>
-<p>Accept确认.</p>
+<li><p>Accept确认.</p>
 </li>
-<li>
-<p>检查差分结果. 需要注意, 这里向前向后差分结果是相同的, 原因是向后差分的横坐标错了. 因此建议使用向前或居中差分.</p>
-<p><figure class="null"><img src="differences_3.jpg" alt="差分功能界面, 向前差分"><figcaption>差分功能界面, 向前差分</figcaption></figure></p>
+<li><p>检查差分结果. 需要注意, 这里向前向后差分结果是相同的, 原因是向后差分的横坐标错了. 因此建议使用向前或居中差分.</p>
+<p> <figure class="null"><img src="differences_3.jpg" alt="差分功能界面, 向前差分"><figcaption>差分功能界面, 向前差分</figcaption></figure></p>
 </li>
 </ol>
-<h3>表达式求值</h3>
-<p>用<code>Evaluate expression</code>功能, 可以对数据进行自定义的函数变换. 它可以对单组数据的xy进行操作, 也可以在多组数据间操作, 非常方便. 该功能和Differences一样在Transformations标签里, 具体位置见第一张图.</p>
+<h3 id="表达式求值"><a href="#表达式求值" class="headerlink" title="表达式求值"></a>表达式求值</h3><p>用<code>Evaluate expression</code>功能, 可以对数据进行自定义的函数变换. 它可以对单组数据的xy进行操作, 也可以在多组数据间操作, 非常方便. 该功能和Differences一样在Transformations标签里, 具体位置见第一张图.</p>
 <p><figure class="null"><img src="eval_expr_1.jpg" alt="表达式求值, 对数据作变换"><figcaption>表达式求值, 对数据作变换</figcaption></figure></p>
 <ol>
 <li>选中想要操作的数据.</li>
@@ -237,60 +222,35 @@ $$</p>
 <li>确认.</li>
 </ol>
 <p>这里主要说一下第二条. 在写表达式时, <code>y</code>表示纵坐标, <code>x</code>表示横坐标. 一些常用的变换</p>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># 向上平移0.5</span><br><span class="line">y = y + 0.5</span><br><span class="line"># 以第10个数据为零点进行平移</span><br><span class="line">y = y - y[9]</span><br><span class="line"># 求G0.S0和G1.S1之间的差</span><br><span class="line">y = G0.S0.y - G1.S1.y</span><br><span class="line"># 求自然对数</span><br><span class="line">y = ln(y)</span><br><span class="line"># 将横坐标转为角度</span><br><span class="line">x = x * 180 / PI</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># 向上平移0.5</span><br><span class="line">y = y + 0.5</span><br><span class="line"># 以第10个数据为零点进行平移</span><br><span class="line">y = y - y[9]</span><br><span class="line"># 求G0.S0和G1.S1之间的差</span><br><span class="line">y = G0.S0.y - G1.S1.y</span><br><span class="line"># 求自然对数</span><br><span class="line">y = ln(y)</span><br><span class="line"># 将横坐标转为角度</span><br><span class="line">x = x * 180 / PI</span><br></pre></td></tr></table></figure>
 <p>更多的函数可以参考官网<a href="http://plasma-gate.weizmann.ac.il/Xmgr/doc/trans.html" target="_blank" rel="noopener">Xmgr: transformations</a></p>
-<h2>双y轴(Double y-axis)</h2>
-<p>参考这一<a href="sachinashanbhag.blogspot.com/2012/06/grace-tutorial-how-to-plot-graph-with.html">链接</a>, 制作包含两个不同y轴的图, 以在同一张图中展示用有相同横坐标, 但纵坐标范围不同的两组数据.</p>
+<h2 id="双y轴-Double-y-axis"><a href="#双y轴-Double-y-axis" class="headerlink" title="双y轴(Double y-axis)"></a>双y轴(Double y-axis)</h2><p>参考这一<a href="sachinashanbhag.blogspot.com/2012/06/grace-tutorial-how-to-plot-graph-with.html">链接</a>, 制作包含两个不同y轴的图, 以在同一张图中展示用有相同横坐标, 但纵坐标范围不同的两组数据.</p>
 <p><figure class="null"><img src="double_y_1.jpg" alt=" "><figcaption> </figcaption></figure></p>
 <ol>
-<li>
-<p>在窗口个中放置两张并排的图. Edit-&gt;Arrange graphs...</p>
+<li>在窗口个中放置两张并排的图. Edit-&gt;Arrange graphs…</li>
+<li>将cols改为2.</li>
+<li><p>确认.</p>
+<p> <figure class="null"><img src="double_y_2.jpg" alt=" "><figcaption> </figcaption></figure></p>
 </li>
-<li>
-<p>将cols改为2.</p>
+<li><p>将右图盖到左图上. Edit-&gt;Overlay graphs…</p>
 </li>
-<li>
-<p>确认.</p>
-<p><figure class="null"><img src="double_y_2.jpg" alt=" "><figcaption> </figcaption></figure></p>
+<li>选中G1为要覆盖的图.</li>
+<li>选中G0为被覆盖上的图.</li>
+<li>将Smart axis hint设置为”Same X axis scaling”.</li>
+<li><p>确认. 这个时候两张图覆盖在了一起, 都窝在整个窗口的左侧.</p>
+<p> <figure class="null"><img src="double_y_3.jpg" alt=" "><figcaption> </figcaption></figure></p>
 </li>
-<li>
-<p>将右图盖到左图上. Edit-&gt;Overlay graphs...</p>
+<li><p>调节图的范围. Plot-&gt;Graph appearance. 在Viewpoint设置G0的xmax, 例如1.15.</p>
 </li>
-<li>
-<p>选中G1为要覆盖的图.</p>
-</li>
-<li>
-<p>选中G0为被覆盖上的图.</p>
-</li>
-<li>
-<p>将Smart axis hint设置为&quot;Same X axis scaling&quot;.</p>
-</li>
-<li>
-<p>确认. 这个时候两张图覆盖在了一起, 都窝在整个窗口的左侧.</p>
-<p><figure class="null"><img src="double_y_3.jpg" alt=" "><figcaption> </figcaption></figure></p>
-</li>
-<li>
-<p>调节图的范围. Plot-&gt;Graph appearance. 在Viewpoint设置G0的xmax, 例如1.15.</p>
-</li>
-<li>
-<p>对G1作同样的操作.</p>
-</li>
-<li>
-<p>确认.</p>
+<li>对G1作同样的操作.</li>
+<li><p>确认.</p>
 <p><figure class="null"><img src="double_y_4.jpg" alt=" "><figcaption> </figcaption></figure></p>
 </li>
-<li>
-<p>为了分辨两个y轴, 用不同的颜色来区分. 双击右侧的y轴</p>
+<li><p>为了分辨两个y轴, 用不同的颜色来区分. 双击右侧的y轴</p>
 </li>
-<li>
-<p>确认在目前正在操作G1.</p>
-</li>
-<li>
-<p>正常操作, 调节G1 y轴的属性.</p>
-</li>
-<li>
-<p>确认.</p>
-</li>
+<li>确认在目前正在操作G1.</li>
+<li>正常操作, 调节G1 y轴的属性.</li>
+<li>确认.</li>
 </ol>
 <p>有一点需要注意的是, 当调整y轴粗细比1大的时候, 可能会在某个y轴上看到黑线. 这是图的边框, 可以通过将Graph appearance中Frame标签下Frame box的透明度调到最低来消除.</p>
 	  
@@ -377,7 +337,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	<div class="meta-widget">
 	<i class="fa fa-tachometer"></i>
-	<span class="post-count">839</span> words
+	<span class="post-count">837</span> words
 	</div>
 	
 
@@ -412,7 +372,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">前言</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">数据集变换</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">差分</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">表达式求值</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">双y轴(Double y-axis)</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#前言"><span class="toc-article-text">前言</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#数据集变换"><span class="toc-article-text">数据集变换</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#差分"><span class="toc-article-text">差分</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#表达式求值"><span class="toc-article-text">表达式求值</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#双y轴-Double-y-axis"><span class="toc-article-text">双y轴(Double y-axis)</span></a></li></ol>
 		</div>
 	
 	</div>
@@ -452,7 +412,7 @@ var disqus_shortname = 'shigaro';
     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
   
-	| <span class="post-count">41k</span> words
+	| <span class="post-count">39.5k</span> words
   
 </p>
  </footer>

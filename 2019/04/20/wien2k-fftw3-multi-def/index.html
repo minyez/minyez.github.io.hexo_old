@@ -195,15 +195,12 @@
 	<div class="mypage">		
 	  		
 
-	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2>摘要</h2>
-<p>通过使用Intel FFTW3 wrapper, 解决了自编FFTW下编译WIEN2k v14.2时出现的多次定义&quot;fftw_destroy_plan&quot;错误</p>
-<p>&lt;!--more--&gt;</p>
-<h2>问题描述</h2>
-<p>尝试用Intel 2018.0和对应编译的FFTW3库编译WIEN2k v14.2. 用<code>siteconfig_lapw</code>, 在编译<code>SRC_lapw0</code>中的并行程序<code>lapw0_mpi</code>时, 报错</p>
-<p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">libfftw3.a (apiplan.o): In function `fftw_destroy_plan’:</span><br><span class="line">apiplan.c:(.text+0x430): multiple definition of `fftw_destroy_plan’</span><br><span class="line">mkl/lib/intel64/libmkl_intel_lp64.a(fftw_destroy_panl.o):fftw_destroy_plan.c(.text+0x0): first defined here</span><br><span class="line">make[1]: *** [Makefile:99: lapw0_mpi] Error 1</span><br></pre></td></tr></table></figure></p>
+	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>通过使用Intel FFTW3 wrapper, 解决了自编FFTW下编译WIEN2k v14.2时出现的多次定义”fftw_destroy_plan”错误</p>
+<a id="more"></a>
+<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>尝试用Intel 2018.0和对应编译的FFTW3库编译WIEN2k v14.2. 用<code>siteconfig_lapw</code>, 在编译<code>SRC_lapw0</code>中的并行程序<code>lapw0_mpi</code>时, 报错</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">libfftw3.a (apiplan.o): In function `fftw_destroy_plan’:</span><br><span class="line">apiplan.c:(.text+0x430): multiple definition of `fftw_destroy_plan’</span><br><span class="line">mkl/lib/intel64/libmkl_intel_lp64.a(fftw_destroy_panl.o):fftw_destroy_plan.c(.text+0x0): first defined here</span><br><span class="line">make[1]: *** [Makefile:99: lapw0_mpi] Error 1</span><br></pre></td></tr></table></figure>
 <p>最终编译信息里提示<code>tetra</code>, <code>joint</code>, <code>telnes3</code>报错, 错误为<code>Internal compiler error</code>.</p>
-<h2>解决过程</h2>
-<p>因为是FFTW3和MKL的冲突, 所以考虑放弃自己编译的FFTW3, 用Intel自带的FFTW3 wrapper. 在编译好静态库<code>libfftw3xf_intel.a</code>后, 把<code>include</code>改为<code>mkl/interfaces/fftw</code>, 把<code>-lfftw3</code>改为该静态库的绝对路径, 删掉<code>lfftw3_mpi</code></p>
+<h2 id="解决过程"><a href="#解决过程" class="headerlink" title="解决过程"></a>解决过程</h2><p>因为是FFTW3和MKL的冲突, 所以考虑放弃自己编译的FFTW3, 用Intel自带的FFTW3 wrapper. 在编译好静态库<code>libfftw3xf_intel.a</code>后, 把<code>include</code>改为<code>mkl/interfaces/fftw</code>, 把<code>-lfftw3</code>改为该静态库的绝对路径, 删掉<code>lfftw3_mpi</code></p>
 <p>作上述修改后用<code>siteconfig_lapw</code>重新编译<code>lapw0</code>, 出现<code>fft_modules</code>报错, 提示未定义MPI FFTW3变量的引用. 参考Intel的官方文档, 发现对MPI FFTW3有关变量的包装器定义在<code>fftw3x_cdtf</code>中, 需要编译这个lib. 链接时用它取代原来<code>lfftw3_mpi</code>的位置.</p>
 <p>改完后再重新编译, 这一次报错<code>libfftw3x_cdft</code>链接错误: <code>Undefined reference to DftiSetValueDM</code>. 参考该 <a href="https://software.intel.com/en-us/forums/intel-math-kernel-library/topic/284696" target="_blank" rel="noopener">Intel forum链接</a> , 在静态链接时把<code>libmkl_cdft_core.a</code>放入链接的group中. 编译通过! 这时把RP_LIBS中的<code>libfftw3xf.a</code>去掉, 也可以正常编译.</p>
 	  
@@ -290,7 +287,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	<div class="meta-widget">
 	<i class="fa fa-tachometer"></i>
-	<span class="post-count">327</span> words
+	<span class="post-count">322</span> words
 	</div>
 	
 
@@ -314,7 +311,7 @@ s.setAttribute('data-timestamp', +new Date());
 	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
     <ul id="tags" class="tag_box list-unstyled collapse in">	  
 	    
-  <li><a href="/tags/Bugfix/">Bugfix<span class="badge">4</span></a></li> <li><a href="/tags/WIEN2k/">WIEN2k<span class="badge">4</span></a></li> <li><a href="/tags/Intel/">Intel<span class="badge">4</span></a></li> <li><a href="/tags/FFTW/">FFTW<span class="badge">1</span></a></li> <li><a href="/tags/Compilation/">Compilation<span class="badge">5</span></a></li>
+  <li><a href="/tags/Bugfix/">Bugfix<span class="badge">4</span></a></li> <li><a href="/tags/WIEN2k/">WIEN2k<span class="badge">4</span></a></li> <li><a href="/tags/Intel/">Intel<span class="badge">4</span></a></li> <li><a href="/tags/Compilation/">Compilation<span class="badge">5</span></a></li> <li><a href="/tags/FFTW/">FFTW<span class="badge">1</span></a></li>
 
     </ul>
 	</div>
@@ -360,7 +357,7 @@ var disqus_shortname = 'shigaro';
     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
   
-	| <span class="post-count">41k</span> words
+	| <span class="post-count">39.5k</span> words
   
 </p>
  </footer>
