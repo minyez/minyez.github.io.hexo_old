@@ -1,4 +1,5 @@
 ---
+title: Pandoc学习笔记(二)——使用panflute编写过滤器
 categories: Software
 comment: True
 date: 2019-01-05 22:08:03
@@ -8,7 +9,6 @@ tags:
 - Panflute
 - AST
 - Bootstrap
-title: 使用panflute编写pandoc过滤器
 toc: True
 ---
 

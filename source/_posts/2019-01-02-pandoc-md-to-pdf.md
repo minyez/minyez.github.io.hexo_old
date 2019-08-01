@@ -1,5 +1,5 @@
 ---
-title: 利用Pandoc将Markdown转化为PDF
+title: Pandoc学习笔记(一)——转化Markdown为PDF
 date: 2019-01-02 15:28:44
 tags: 
 - Pandoc
@@ -13,7 +13,6 @@ toc: true
 ## 前言
 
 本文介绍了使用pandoc工具将markdown文件转化为PDF文件的方法, 讨论了HTML和LaTeX两种转换中介. 由于LaTeX对学术写作有着更好的支持, 笔者将重点放在了后者上. 文中总结了一些模板变量的用法和注意事项, 最后以转换demo.md为例, 用Makefile展示了markdown+pandoc+xelatex+bibtex的一整条工具链.
-
 <!-- more -->
 
 需求之一来自于最近开始将读文献和看日语原版漫画时遇到的单词和用例记录在一个markdown笔记里. 在电脑上阅读这些markdown笔记完全没有问题, 但是在移动端中阅读就比较困难, 每次在Typora里手动导出也很麻烦, 于是就想着能不能把markdown转化成pdf的过程自动化. 自然就想到了在文件格式转换中非常有名的[pandoc](https://pandoc.org/).
@@ -34,16 +33,20 @@ pandoc demo.md -o demo.pdf
 
 返回错误
 
-    Error producing PDF.
-    ! Package inputenc Error: Unicode character 因 (U+56E0)
-    (inputenc)                not set up for use with LaTeX.
-    ...
-    Try running pandoc with --pdf-engine=xelatex.
+```plain
+Error producing PDF.
+! Package inputenc Error: Unicode character 因 (U+56E0)
+(inputenc)                not set up for use with LaTeX.
+...
+Try running pandoc with --pdf-engine=xelatex.
+```
 
 照错误信息换用`xelatex`则出现了一大堆中文字符的`Missing character`警告
 
-    [WARNING] Missing character: There is no 因 in font [lmroman10-regular]:mapping=tex-text;!
-    [WARNING] ...
+```plain
+[WARNING] Missing character: There is no 因 in font [lmroman10-regular]:mapping=tex-text;!
+[WARNING] ...
+```
 
 生成的PDF里这些中文字符都消失了, 只有孤零零的英文. 看来事情没这么简单.
 
