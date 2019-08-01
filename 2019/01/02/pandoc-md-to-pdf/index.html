@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   
-  <title>利用Pandoc将Markdown转化为PDF | Shigaro</title>
+  <title>Pandoc学习笔记(一)——转化Markdown为PDF | Shigaro</title>
   <meta name="author" content="minyez">
   
   <meta name="description" content="minyez&#39;s blog on life, science and programming">
@@ -11,7 +11,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="利用Pandoc将Markdown转化为PDF"/>
+  <meta property="og:title" content="Pandoc学习笔记(一)——转化Markdown为PDF"/>
   <meta property="og:site_name" content="Shigaro"/>
 
   
@@ -145,9 +145,9 @@
               
               <li><a href="/tags/GPAW/" style="font-size: 15px; font-family: 微软雅黑">GPAW<span></span></a></li>
               
-              <li><a href="/tags/Valgrind/" style="font-size: 15px; font-family: 微软雅黑">Valgrind<span></span></a></li>
-              
               <li><a href="/tags/Hexo/" style="font-size: 15px; font-family: 微软雅黑">Hexo<span></span></a></li>
+              
+              <li><a href="/tags/Valgrind/" style="font-size: 15px; font-family: 微软雅黑">Valgrind<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -178,7 +178,7 @@
 
 	
 		<div class="page-header">		
-			<h1> 利用Pandoc将Markdown转化为PDF</h1>
+			<h1> Pandoc学习笔记(一)——转化Markdown为PDF</h1>
 		</div>		
 	
 
@@ -195,23 +195,17 @@
 	<div class="mypage">		
 	  		
 
-	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文介绍了使用pandoc工具将markdown文件转化为PDF文件的方法, 讨论了HTML和LaTeX两种转换中介. 由于LaTeX对学术写作有着更好的支持, 笔者将重点放在了后者上. 文中总结了一些模板变量的用法和注意事项, 最后以转换demo.md为例, 用Makefile展示了markdown+pandoc+xelatex+bibtex的一整条工具链.</p>
-<a id="more"></a>
+	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文介绍了使用pandoc工具将markdown文件转化为PDF文件的方法, 讨论了HTML和LaTeX两种转换中介. 由于LaTeX对学术写作有着更好的支持, 笔者将重点放在了后者上. 文中总结了一些模板变量的用法和注意事项, 最后以转换demo.md为例, 用Makefile展示了markdown+pandoc+xelatex+bibtex的一整条工具链.<br><a id="more"></a></p>
 <p>需求之一来自于最近开始将读文献和看日语原版漫画时遇到的单词和用例记录在一个markdown笔记里. 在电脑上阅读这些markdown笔记完全没有问题, 但是在移动端中阅读就比较困难, 每次在Typora里手动导出也很麻烦, 于是就想着能不能把markdown转化成pdf的过程自动化. 自然就想到了在文件格式转换中非常有名的<a href="https://pandoc.org/" target="_blank" rel="noopener">pandoc</a>.</p>
 <h2 id="初步尝试"><a href="#初步尝试" class="headerlink" title="初步尝试"></a>初步尝试</h2><p>从Homebrew安装pandoc</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install pandoc</span><br></pre></td></tr></table></figure>
 <p>然后用pandoc转换一个包含中文释义的笔记demo.md(见<a href="demo.tar.gz">压缩包</a>)</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pandoc demo.md -o demo.pdf</span><br></pre></td></tr></table></figure>
 <p>返回错误</p>
-<pre><code>Error producing PDF.
-! Package inputenc Error: Unicode character 因 (U+56E0)
-(inputenc)                not set up for use with LaTeX.
-...
-Try running pandoc with --pdf-engine=xelatex.
-</code></pre><p>照错误信息换用<code>xelatex</code>则出现了一大堆中文字符的<code>Missing character</code>警告</p>
-<pre><code>[WARNING] Missing character: There is no 因 in font [lmroman10-regular]:mapping=tex-text;!
-[WARNING] ...
-</code></pre><p>生成的PDF里这些中文字符都消失了, 只有孤零零的英文. 看来事情没这么简单.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Error producing PDF.</span><br><span class="line">! Package inputenc Error: Unicode character 因 (U+56E0)</span><br><span class="line">(inputenc)                not set up for use with LaTeX.</span><br><span class="line">...</span><br><span class="line">Try running pandoc with --pdf-engine=xelatex.</span><br></pre></td></tr></table></figure>
+<p>照错误信息换用<code>xelatex</code>则出现了一大堆中文字符的<code>Missing character</code>警告</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[WARNING] Missing character: There is no 因 in font [lmroman10-regular]:mapping=tex-text;!</span><br><span class="line">[WARNING] ...</span><br></pre></td></tr></table></figure>
+<p>生成的PDF里这些中文字符都消失了, 只有孤零零的英文. 看来事情没这么简单.</p>
 <h2 id="基于HTML向PDF转化"><a href="#基于HTML向PDF转化" class="headerlink" title="基于HTML向PDF转化"></a>基于HTML向PDF转化</h2><p>一开始转化单词笔记的时候就是想转成GitHub Favored Markdown风格的PDF, 于是第一反应是找了一个类似GFM的<a href="https://gist.github.com/killercup/5917178" target="_blank" rel="noopener">CSS</a>, 下载为<code>gfm.css</code>, 和md存放在一个文件夹下, 运行</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># wrong command</span></span><br><span class="line">pandoc note.md -o note.pdf --css gfm.css</span><br></pre></td></tr></table></figure>
 <p>进行转化, 但这样仍然会报最开始的错误. 其原因是pandoc默认使用LaTeX作为PDF生成引擎, 在这种情况css显然是没有效果的.</p>
