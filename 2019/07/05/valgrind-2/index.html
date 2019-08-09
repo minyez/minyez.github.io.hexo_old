@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Valgrind学习笔记(二)——编译器依赖与内存泄漏类型再探 | Shigaro</title>
+  <title>Valgrind笔记(二)——编译器依赖与内存泄漏类型再探 | Shigaro</title>
   <meta name="author" content="minyez">
   
   <meta name="description" content="minyez&#39;s blog on life, science and programming">
@@ -11,7 +11,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="Valgrind学习笔记(二)——编译器依赖与内存泄漏类型再探"/>
+  <meta property="og:title" content="Valgrind笔记(二)——编译器依赖与内存泄漏类型再探"/>
   <meta property="og:site_name" content="Shigaro"/>
 
   
@@ -135,19 +135,19 @@
               <li><a href="/tags" style="font-size: 20px; font-family: 'Calibri Light',Arial">All Tags</a><span></span></li>
               <li class="divider"></li>
               
+              <li><a href="/tags/WIEN2k/" style="font-size: 15px; font-family: 微软雅黑">WIEN2k<span></span></a></li>
+              
               <li><a href="/tags/Compilation/" style="font-size: 15px; font-family: 微软雅黑">Compilation<span></span></a></li>
               
               <li><a href="/tags/Bugfix/" style="font-size: 15px; font-family: 微软雅黑">Bugfix<span></span></a></li>
               
-              <li><a href="/tags/WIEN2k/" style="font-size: 15px; font-family: 微软雅黑">WIEN2k<span></span></a></li>
-              
               <li><a href="/tags/Intel/" style="font-size: 15px; font-family: 微软雅黑">Intel<span></span></a></li>
+              
+              <li><a href="/tags/DFT/" style="font-size: 15px; font-family: 微软雅黑">DFT<span></span></a></li>
               
               <li><a href="/tags/GPAW/" style="font-size: 15px; font-family: 微软雅黑">GPAW<span></span></a></li>
               
               <li><a href="/tags/Hexo/" style="font-size: 15px; font-family: 微软雅黑">Hexo<span></span></a></li>
-              
-              <li><a href="/tags/Valgrind/" style="font-size: 15px; font-family: 微软雅黑">Valgrind<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -178,7 +178,7 @@
 
 	
 		<div class="page-header">		
-			<h1> Valgrind学习笔记(二)——编译器依赖与内存泄漏类型再探</h1>
+			<h1> Valgrind笔记(二)——编译器依赖与内存泄漏类型再探</h1>
 		</div>		
 	
 
@@ -234,7 +234,7 @@
 <p>Valgrind的泄漏报告中”still reachable”分类指的是只满足第一类定义的内存分配. 这些内存块没有被释放, 但他们是可以被释放的(只要程序员愿意), 因为程序仍然保有指向这些内存块的指针.</p>
 <p>一般而言, 不必担心”still reachable”的内存块. 他们不会带来真正的内存泄漏会导致的问题. 比如说, “still reachable”的内存块通常不会导致堆耗尽. 这是因为这些块都是单次分配, 程序在整个生命周期中都保留对他们的指向. 你当然可以梳理整个程序, 保证这些内存块都被释放, 但这实际并没什么好处, 因为操作系统会在进程结束后回收进程的全部内存. 与之相对, 如果真正的内存泄漏没有被修正, 那么就会导致一个进程在运行足够长时间后耗尽所有内存, 或者说消耗比它所必需的多得多的内存.</p>
 </blockquote>
-<p>这是对之前<a href="/2019/03/23/valgrind-1/" title="Valgrind学习笔记(一)——Memcheck初探">Valgrind学习笔记(一)——Memcheck初探</a>一文最后的泄漏类型梳理的重要补充. 答主非常细心的区分了两种内存泄漏的类型. 我们重新来看当时的abc程序</p>
+<p>这是对之前<a href="/2019/03/23/valgrind-1/" title="Valgrind笔记(一)——Memcheck初探">Valgrind笔记(一)——Memcheck初探</a>一文最后的泄漏类型梳理的重要补充. 答主非常细心的区分了两种内存泄漏的类型. 我们重新来看当时的abc程序</p>
 <figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">program</span></span> abc</span><br><span class="line">    <span class="keyword">integer</span> :: i</span><br><span class="line">    <span class="keyword">integer</span>, <span class="keyword">allocatable</span> :: <span class="keyword">data</span>(:)</span><br><span class="line"></span><br><span class="line">    <span class="built_in">allocate</span>(<span class="keyword">data</span>(<span class="number">5</span>))</span><br><span class="line">    <span class="built_in">print</span>*, rank(<span class="keyword">data</span>), <span class="built_in">size</span>(<span class="keyword">data</span>), loc(<span class="keyword">data</span>)</span><br><span class="line">    <span class="keyword">do</span> i = <span class="number">1</span>, <span class="number">5</span></span><br><span class="line">        <span class="keyword">data</span>(i-<span class="number">1</span>) = i</span><br><span class="line">    <span class="keyword">end</span> <span class="keyword">do</span></span><br><span class="line">    <span class="built_in">print</span>*, <span class="keyword">data</span>(<span class="number">1</span>)</span><br><span class="line">    <span class="built_in">print</span>*, rank(<span class="keyword">data</span>), <span class="built_in">size</span>(<span class="keyword">data</span>), loc(<span class="keyword">data</span>)</span><br><span class="line"><span class="keyword">end</span> <span class="function"><span class="keyword">program</span></span> abc</span><br></pre></td></tr></table></figure>
 <p>并将<code>data</code>越界赋值语句注释. 用gfortran编译会得到20 bytes的definite loss. 如果用ifort, 则会得到60 bytes的possibly lost. 令人摸不着头脑的是, 如果把这一段代码放到main.f90中, 注释掉原来的myarrays的部分, 同样用gfortran编译, 得到的是20 bytes的still reachable leak. ifort仍给出60 bytes的possibly lost.</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>从以上非常直接的例子里可以得到的两个结论, 首先是do not oversmart your compiler. 跟人类语言互译一样, 不同编译器可能将一段高级语言翻译成风格不同的机器码, 这可能就是导致Valgrind检测结果不同的原因. 其次, 也是很自然的, 既然编译器存在这样的不确定性, 那么编程人员就应该写好内存分配和释放的语句, 从源头减少这样的不确定性.</p>
@@ -346,7 +346,7 @@ s.setAttribute('data-timestamp', +new Date());
 	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
     <ul id="tags" class="tag_box list-unstyled collapse in">	  
 	    
-  <li><a href="/tags/Compilation/">Compilation<span class="badge">5</span></a></li> <li><a href="/tags/Valgrind/">Valgrind<span class="badge">3</span></a></li> <li><a href="/tags/Fortran/">Fortran<span class="badge">3</span></a></li>
+  <li><a href="/tags/Valgrind/">Valgrind<span class="badge">3</span></a></li> <li><a href="/tags/Compilation/">Compilation<span class="badge">5</span></a></li> <li><a href="/tags/Fortran/">Fortran<span class="badge">3</span></a></li>
 
     </ul>
 	</div>
@@ -397,7 +397,7 @@ var disqus_shortname = 'shigaro';
     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
   
-	| <span class="post-count">39.5k</span> words
+	| <span class="post-count">40k</span> words
   
 </p>
  </footer>

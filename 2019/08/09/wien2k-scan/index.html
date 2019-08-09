@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   
-  <title>解决运行VASP时set_indpw_full错误 | Shigaro</title>
+  <title>WIEN2k笔记(二)——SCAN metaGGA计算 | Shigaro</title>
   <meta name="author" content="minyez">
   
   <meta name="description" content="minyez&#39;s blog on life, science and programming">
@@ -11,7 +11,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="解决运行VASP时set_indpw_full错误"/>
+  <meta property="og:title" content="WIEN2k笔记(二)——SCAN metaGGA计算"/>
   <meta property="og:site_name" content="Shigaro"/>
 
   
@@ -178,7 +178,7 @@
 
 	
 		<div class="page-header">		
-			<h1> 解决运行VASP时set_indpw_full错误</h1>
+			<h1> WIEN2k笔记(二)——SCAN metaGGA计算</h1>
 		</div>		
 	
 
@@ -195,16 +195,87 @@
 	<div class="mypage">		
 	  		
 
-	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>通过恰当设置KPAR和NPAR, 解决VASP杂化泛函计算中出现的“set_indpw_full”错误.</p>
-<a id="more"></a>
-<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>用ACFDT-RPA计算Ne的EOS曲线, 在进行+8%体积的非自洽HF计算一步时, 标准输出中打印错误</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">internal error in SET_INDPW_FULL: insufficient memory</span><br></pre></td></tr></table></figure>
-<h2 id="解决过程"><a href="#解决过程" class="headerlink" title="解决过程"></a>解决过程</h2><p>谷歌该错误,  在<a href="https://cms.mpi.univie.ac.at/vasp-forum/viewtopic.php?t=17510" target="_blank" rel="noopener">第一条vasp forum链接</a>的最后, 楼主给出了解决方法:</p>
+	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>总结WIEN2k中进行SCAN meta-GGA泛函计算的工作流程, 进行简单的参数收敛测试.<br><a id="more"></a></p>
+<h2 id="计算流程"><a href="#计算流程" class="headerlink" title="计算流程"></a>计算流程</h2><p>WIEN2k在v16.1版本后支持SCAN (Strongly Constrained and Appropriately Normed) meta-GGA泛函的DFT计算. 该泛函目前在分子和固体结构预测上取得了很大成功, 具体可以参看Sun等在2015年的PRL, 2016年的NC.</p>
+<p>根据手册(p113, WIEN2k_17.1, release 07/03/2017), 在WIEN2k中作SCAN计算的工作流程如下</p>
 <ol>
-<li>恰当设置KPAR和NPAR, 使得$\rm KPAR\times NPAR$等于总的核数.</li>
-<li>关闭对称性, ISYM=0.</li>
+<li><p>先用和PBE相同的方式初始化. 这里在非交互模式下, 全部用默认值</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">init_lapw -b -numk 1000 -ecut -6 -rkmax 7.0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>运行一步PBE计算.</p>
+</li>
+<li>自洽运行SCAN计算.</li>
 </ol>
-<p>我试着加上了KPAR=4, 因为总核数为16, NPAR=4, 不再报该错误, 计算顺利完成. 考虑到链接里的错误来自HSE计算, 因此这有可能是进行大体系的VASP杂化泛函计算时容易出现的错误.</p>
+<p>初始化后的流程可以用下面的脚本概括</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line">cn = <span class="string">"Si"</span> <span class="comment"># case name</span></span><br><span class="line"><span class="comment"># 第一步: 拷贝样例文件的case.inm_vresp</span></span><br><span class="line">cp <span class="variable">$WIENROOT</span>/SRC_templates/case.inm_vresp <span class="variable">$cn</span>.inm_vresp</span><br><span class="line"><span class="comment"># 第二步: 用PBE泛函作单步计算</span></span><br><span class="line">sed -i <span class="string">"s/XC_SCAN /XC_PBE /g"</span> <span class="variable">$cn</span>.in0</span><br><span class="line">run_lapw -i 1</span><br><span class="line"><span class="comment"># 第三步: 用SCAN作自洽场计算</span></span><br><span class="line">sed -i <span class="string">"s/XC_PBE /XC_SCAN /g"</span> <span class="variable">$cn</span>.in0</span><br><span class="line">rm -f <span class="variable">$cn</span>.broyd*</span><br><span class="line">run_lapw -ec 0.00000001 -cc 0.00001</span><br></pre></td></tr></table></figure>
+<h2 id="相关参数测试"><a href="#相关参数测试" class="headerlink" title="相关参数测试"></a>相关参数测试</h2><p>根据手册, 主要对in0中FFT格点<code>IFFT</code>和in2中电子密度展开截断<code>GMAX</code>进行测试. 测试体系为硅, 晶格常数10.405822 Bohr, RMT取2.24.</p>
+<p>测试针对的是总能量, 因为WIEN2k中SCAN能量泛函不是自洽包含的, 解KS方程时用的势是PBE的势, 所以PBE和SCAN得到的带隙是相同的. 具体见这一条<a href="https://www.mail-archive.com/wien@zeus.theochem.tuwien.ac.at/msg17640.html" target="_blank" rel="noopener">WIEN2k mailing list</a>.</p>
+<p>PBE总能量的收敛. 可以看到在默认的GMAX=12, IFFT=40的情况下, PBE总能量已经充分收敛到0.1 meV以下.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">GMAX</th>
+<th style="text-align:center">IFFT=40</th>
+<th style="text-align:center">60</th>
+<th style="text-align:center">80</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">12</td>
+<td style="text-align:center">-1160.14169256</td>
+<td style="text-align:center">-1160.14169460</td>
+<td style="text-align:center">-1160.14169529</td>
+</tr>
+<tr>
+<td style="text-align:center">13</td>
+<td style="text-align:center">-1160.14169232</td>
+<td style="text-align:center">-1160.14169441</td>
+<td style="text-align:center">-1160.14169504</td>
+</tr>
+<tr>
+<td style="text-align:center">14</td>
+<td style="text-align:center">-1160.14169228</td>
+<td style="text-align:center">-1160.14169437</td>
+<td style="text-align:center">-1160.14169501</td>
+</tr>
+</tbody>
+</table>
+<p>SCAN总能量的收敛. 比较默认值和最大的参数, 差值大约为4 meV. 可见对这两个参数而言, SCAN收敛速度确实比PBE慢, 尤其是IFFT.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">GMAX</th>
+<th style="text-align:center">IFFT=40</th>
+<th style="text-align:center">60</th>
+<th style="text-align:center">80</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">12</td>
+<td style="text-align:center">-1160.80053722</td>
+<td style="text-align:center">-1160.80033890</td>
+<td style="text-align:center">-1160.80026834</td>
+</tr>
+<tr>
+<td style="text-align:center">13</td>
+<td style="text-align:center">-1160.80050967</td>
+<td style="text-align:center">-1160.80031217</td>
+<td style="text-align:center">-1160.80024159</td>
+</tr>
+<tr>
+<td style="text-align:center">14</td>
+<td style="text-align:center">-1160.80053445</td>
+<td style="text-align:center">-1160.80033894</td>
+<td style="text-align:center">-1160.80026946</td>
+</tr>
+</tbody>
+</table>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>Sun, J. et al. Strongly Constrained and Appropriately Normed Semilocal Density Functional. <a href="http://link.aps.org/doi/10.1103/PhysRevLett.115.036402" target="_blank" rel="noopener">Phys. Rev. Lett. 115, 036402 (2015)</a></p>
+<p>Perdew, J. et al. Semilocal density functionals and constraint satisfaction. <a href="https://onlinelibrary.wiley.com/doi/full/10.1002/qua.25100" target="_blank" rel="noopener">Int. J. Quantum Chem. 116, 847-851 (2016)</a></p>
+<p>Sun, J. et al. Accurate first-principles structures and energies of diversely bonded systems from an efficient density functional. <a href="https://www.nature.com/articles/nchem.2535" target="_blank" rel="noopener">Nat. Chem. 8, 831-836 (2016)</a></p>
+<p>Supplementary material: Performance of various density-functional approximations for cohesive properties of 64 bulk solids. <a href="https://th.fhi-berlin.mpg.de/site/uploads/Publications/suppl-mater-NJP108118-R1.pdf" target="_blank" rel="noopener">Link</a></p>
 	  
 	</div>
 
@@ -214,14 +285,14 @@
 	<div class="pagination">
 <ul class="pagination">
 	 
-				
-    	<li class="prev"><a href="/2019/03/23/valgrind-1/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
-  		
+		
+          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+        
 
         <li><a href="/archives"><i class="fa fa-archive"></i>Archive</a></li>
 
 		
-		   <li class="next"><a href="/2019/03/03/numerov-on-log-grid/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+		   <li class="next"><a href="/2019/07/31/grace-tips/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
         
 	
 </ul>
@@ -278,7 +349,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	<div class="meta-widget">
 	<i class="fa fa-clock-o"></i>
-	2019-03-20 
+	2019-08-09 
 	</div>
 	
 
@@ -289,7 +360,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	<div class="meta-widget">
 	<i class="fa fa-tachometer"></i>
-	<span class="post-count">194</span> words
+	<span class="post-count">580</span> words
 	</div>
 	
 
@@ -313,7 +384,7 @@ s.setAttribute('data-timestamp', +new Date());
 	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
     <ul id="tags" class="tag_box list-unstyled collapse in">	  
 	    
-  <li><a href="/tags/VASP/">VASP<span class="badge">2</span></a></li> <li><a href="/tags/Bugfix/">Bugfix<span class="badge">4</span></a></li> <li><a href="/tags/MPI/">MPI<span class="badge">1</span></a></li>
+  <li><a href="/tags/WIEN2k/">WIEN2k<span class="badge">5</span></a></li> <li><a href="/tags/DFT/">DFT<span class="badge">4</span></a></li> <li><a href="/tags/SCAN/">SCAN<span class="badge">1</span></a></li>
 
     </ul>
 	</div>
@@ -324,7 +395,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#摘要"><span class="toc-article-text">摘要</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#问题描述"><span class="toc-article-text">问题描述</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#解决过程"><span class="toc-article-text">解决过程</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#前言"><span class="toc-article-text">前言</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#计算流程"><span class="toc-article-text">计算流程</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#相关参数测试"><span class="toc-article-text">相关参数测试</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#参考资料"><span class="toc-article-text">参考资料</span></a></li></ol>
 		</div>
 	
 	</div>

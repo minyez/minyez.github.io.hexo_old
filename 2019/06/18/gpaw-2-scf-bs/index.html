@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   
-  <title>GPAW学习笔记(二)——DFT自洽场与能带计算 | Shigaro</title>
+  <title>GPAW笔记(二)——DFT自洽场与能带计算 | Shigaro</title>
   <meta name="author" content="minyez">
   
   <meta name="description" content="minyez&#39;s blog on life, science and programming">
@@ -11,7 +11,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="GPAW学习笔记(二)——DFT自洽场与能带计算"/>
+  <meta property="og:title" content="GPAW笔记(二)——DFT自洽场与能带计算"/>
   <meta property="og:site_name" content="Shigaro"/>
 
   
@@ -135,19 +135,19 @@
               <li><a href="/tags" style="font-size: 20px; font-family: 'Calibri Light',Arial">All Tags</a><span></span></li>
               <li class="divider"></li>
               
+              <li><a href="/tags/WIEN2k/" style="font-size: 15px; font-family: 微软雅黑">WIEN2k<span></span></a></li>
+              
               <li><a href="/tags/Compilation/" style="font-size: 15px; font-family: 微软雅黑">Compilation<span></span></a></li>
               
               <li><a href="/tags/Bugfix/" style="font-size: 15px; font-family: 微软雅黑">Bugfix<span></span></a></li>
               
-              <li><a href="/tags/WIEN2k/" style="font-size: 15px; font-family: 微软雅黑">WIEN2k<span></span></a></li>
-              
               <li><a href="/tags/Intel/" style="font-size: 15px; font-family: 微软雅黑">Intel<span></span></a></li>
+              
+              <li><a href="/tags/DFT/" style="font-size: 15px; font-family: 微软雅黑">DFT<span></span></a></li>
               
               <li><a href="/tags/GPAW/" style="font-size: 15px; font-family: 微软雅黑">GPAW<span></span></a></li>
               
               <li><a href="/tags/Hexo/" style="font-size: 15px; font-family: 微软雅黑">Hexo<span></span></a></li>
-              
-              <li><a href="/tags/Valgrind/" style="font-size: 15px; font-family: 微软雅黑">Valgrind<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -178,7 +178,7 @@
 
 	
 		<div class="page-header">		
-			<h1> GPAW学习笔记(二)——DFT自洽场与能带计算</h1>
+			<h1> GPAW笔记(二)——DFT自洽场与能带计算</h1>
 		</div>		
 	
 
@@ -196,7 +196,7 @@
 	  		
 
 	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>以金刚石结构Si为例, 演示了用GPAW计算材料电子能带结构的过程, 对结果进行了简单分析.<a id="more"></a></p>
-<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>一年前我在<a href="/2018/07/20/gpaw-1/" title="GPAW学习笔记(一)——安装及测试">GPAW学习笔记(一)——安装及测试</a>一文中介绍了GPAW的安装和简单测试. 当时主要是为了比较GPAW, abinit和VASP的<em>GW</em>效率, 于是稍微研究了一下GPAW中参数含义, 运行了一些官方网站上的脚本. 在相近的参数下作了三个程序的<em>GW</em>计算交差后, 就没有再管, 当时也没有留下清楚的学习笔记.</p>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>一年前我在<a href="/2018/07/20/gpaw-1/" title="GPAW笔记(一)——安装及测试">GPAW笔记(一)——安装及测试</a>一文中介绍了GPAW的安装和简单测试. 当时主要是为了比较GPAW, abinit和VASP的<em>GW</em>效率, 于是稍微研究了一下GPAW中参数含义, 运行了一些官方网站上的脚本. 在相近的参数下作了三个程序的<em>GW</em>计算交差后, 就没有再管, 当时也没有留下清楚的学习笔记.</p>
 <p>由于最近实际计算的需要, 我又重新学习GPAW, 着重于DFT能带计算, <em>GW</em>和BSE. 这一篇笔记主要记录了基础DFT计算部分的学习, 包括SCF和能带, 简单分析标准输出. 这里使用的结构是金刚石型的硅, 晶格常数$a=5.43$ (A).</p>
 <h2 id="SCF计算"><a href="#SCF计算" class="headerlink" title="SCF计算"></a>SCF计算</h2><p>从官网例子中改编得的一个SCF计算脚本如下.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> ase.build <span class="keyword">import</span> bulk</span><br><span class="line"><span class="keyword">from</span> gpaw <span class="keyword">import</span> GPAW, PW, FermiDirac</span><br><span class="line"></span><br><span class="line">si = bulk(<span class="string">'Si'</span>, <span class="string">'diamond'</span>, a=<span class="number">5.43</span>)</span><br><span class="line">calc = GPAW(mode=PW(<span class="number">200</span>), xc=<span class="string">'PBE'</span>, kpts=&#123;<span class="string">'size'</span>: (<span class="number">8</span>,<span class="number">8</span>,<span class="number">8</span>), <span class="string">'gamma'</span>: <span class="keyword">True</span>&#125;,</span><br><span class="line">            random=<span class="keyword">True</span>, occupations=FermiDirac(<span class="number">0.01</span>), txt=<span class="string">'Si_gs.txt'</span>)</span><br><span class="line">si.calc = calc</span><br><span class="line">si.get_potential_energy()</span><br><span class="line">calc.write(<span class="string">'Si_gs.gpw'</span>)</span><br></pre></td></tr></table></figure>
@@ -385,7 +385,7 @@ s.setAttribute('data-timestamp', +new Date());
     <ul id="categorys" class="tag_box list-unstyled collapse in">
           
   <li>
-    <li><a href="/categories/Software/">Software<span class="badge">16</span></a></li>
+    <li><a href="/categories/Software/">Software<span class="badge">17</span></a></li>
   </li>
 
     </ul>
@@ -398,7 +398,7 @@ s.setAttribute('data-timestamp', +new Date());
 	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
     <ul id="tags" class="tag_box list-unstyled collapse in">	  
 	    
-  <li><a href="/tags/DFT/">DFT<span class="badge">3</span></a></li> <li><a href="/tags/Tutorial/">Tutorial<span class="badge">3</span></a></li> <li><a href="/tags/GPAW/">GPAW<span class="badge">4</span></a></li> <li><a href="/tags/Band-structure/">Band structure<span class="badge">2</span></a></li>
+  <li><a href="/tags/DFT/">DFT<span class="badge">4</span></a></li> <li><a href="/tags/Tutorial/">Tutorial<span class="badge">3</span></a></li> <li><a href="/tags/GPAW/">GPAW<span class="badge">4</span></a></li> <li><a href="/tags/Band-structure/">Band structure<span class="badge">2</span></a></li>
 
     </ul>
 	</div>
@@ -449,7 +449,7 @@ var disqus_shortname = 'shigaro';
     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
   
-	| <span class="post-count">39.5k</span> words
+	| <span class="post-count">40k</span> words
   
 </p>
  </footer>
