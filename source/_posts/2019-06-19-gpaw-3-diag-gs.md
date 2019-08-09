@@ -1,5 +1,5 @@
 ---
-title: GPAW学习笔记(三)——求解器对全哈密顿量对角化的影响
+title: GPAW笔记(三)——求解器对全哈密顿量对角化的影响
 comment: true
 toc: true
 date: 2019-06-19 20:43:08

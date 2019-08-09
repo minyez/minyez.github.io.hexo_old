@@ -1,5 +1,5 @@
 ---
-title: WIEN2k学习笔记(一)——LAPWSO计算
+title: WIEN2k笔记(一)——LAPWSO计算
 date: 2019-05-07 17:00:00
 tags:
 - WIEN2k
