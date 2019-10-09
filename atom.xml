@@ -106,9 +106,9 @@
       <category term="Programming" scheme="https://github.com/minyez/categories/Programming/"/>
     
     
-      <category term="Valgrind" scheme="https://github.com/minyez/tags/Valgrind/"/>
-    
       <category term="Compilation" scheme="https://github.com/minyez/tags/Compilation/"/>
+    
+      <category term="Valgrind" scheme="https://github.com/minyez/tags/Valgrind/"/>
     
       <category term="Fortran" scheme="https://github.com/minyez/tags/Fortran/"/>
     
