@@ -86,9 +86,9 @@
       
         <tags>
             
-            <tag> Compilation </tag>
-            
             <tag> Valgrind </tag>
+            
+            <tag> Compilation </tag>
             
             <tag> Fortran </tag>
             
