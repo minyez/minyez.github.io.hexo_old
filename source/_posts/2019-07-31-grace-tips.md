@@ -10,8 +10,7 @@ categories: Software
 
 ## 前言
 
-本文收集了一些笔者常用的(Xm)Grace使用的技巧.<!--more-->
-以下操作均可以在[qtgrace](https://sourceforge.net/projects/qtgrace/)下实现.
+本文收集了一些笔者常用的(Xm)Grace使用的技巧.<!--more--> 下面的操作均可以在[qtgrace](https://sourceforge.net/projects/qtgrace/)下实现.
 
 ## 数据集变换
 
@@ -104,3 +103,39 @@ x = x * 180 / PI
 15. 确认.
 
 有一点需要注意的是, 当调整y轴粗细比1大的时候, 可能会在某个y轴上看到黑线. 这是图的边框, 可以通过将Graph appearance中Frame标签下Frame box的透明度调到最低来消除.
+
+## 文本输入
+
+在XmGrace里输入坐标轴标记或者图例时, 有时会需要输入一些希腊字母或上下标之类的复杂组合, 或者使用斜体以表示物理量.
+
+### 上下标
+
+单独的上下标比较容易, 分别`a\Sb\N`是`c\sd\N`. 要输入具有上下标的符号, 用`a\Sb\N\sc\N`会使得下标或上标与符号隔得太远. 此时可以用`\v{}`或者`\h{}`分别调整垂直和水平的位置. 比如
+
+```plain
+a\Sb\N\s\v{0.2}\h{-0.5}c\N
+```
+
+![ ](simult_supsub.png)
+
+### 希腊字母与字体
+
+希腊字符使用和字体调整本质上是相同的, 因为希腊字母实际上使用的是Symbol字体. 使用某种字体对应的语法
+
+```plain
+\f{font}text in font\f{}
+```
+
+比如斜体的Times New Roman
+
+```plain
+\f{Times-Italic}italic here\f{}
+```
+
+希腊字母
+
+```plain
+\f{Symbol}G\f{} = \xG\f{}
+```
+
+可以看到`\x`其实等价于`\f{Symbol}`.
