@@ -1,5 +1,5 @@
 ---
-title: Pandoc学习笔记(一)——转化Markdown为PDF
+title: Pandoc笔记(一)——转化Markdown为PDF
 date: 2019-01-02 15:28:44
 tags: 
 - Pandoc

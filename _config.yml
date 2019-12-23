@@ -149,3 +149,9 @@ search:
 
 # comment
 disqus_shortname: shigaro
+
+feed:
+  type: atom
+  path: atom.xml
+  limit: 10
+

@@ -1,5 +1,5 @@
 ---
-title: Pandoc学习笔记(二)——使用panflute编写过滤器
+title: Pandoc笔记(二)——使用panflute编写过滤器
 categories: Software
 comment: True
 date: 2019-01-05 22:08:03
