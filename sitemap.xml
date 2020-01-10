@@ -2,6 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://github.com/minyez/about/index.html</loc>
+    
+    <lastmod>2020-01-10T05:51:05.544Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://github.com/minyez/2019/04/20/wien2k-libxc-mgga-error/</loc>
+    
+    <lastmod>2020-01-10T05:03:48.534Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://github.com/minyez/2019/04/20/wien2k-fftw3-multi-def/</loc>
+    
+    <lastmod>2020-01-10T05:03:41.716Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://github.com/minyez/2019/10/28/mathpix-ocr/</loc>
     
     <lastmod>2019-11-10T15:33:11.079Z</lastmod>
@@ -135,13 +156,6 @@
   </url>
   
   <url>
-    <loc>https://github.com/minyez/about/index.html</loc>
-    
-    <lastmod>2019-06-14T02:27:46.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://github.com/minyez/2019/05/24/outwin-read/</loc>
     
     <lastmod>2019-06-09T02:46:15.000Z</lastmod>
@@ -152,20 +166,6 @@
     <loc>https://github.com/minyez/2018/01/02/compile_VASP_on_macOS/</loc>
     
     <lastmod>2019-05-25T08:37:20.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://github.com/minyez/2019/04/20/wien2k-libxc-mgga-error/</loc>
-    
-    <lastmod>2019-05-24T05:48:31.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://github.com/minyez/2019/04/20/wien2k-fftw3-multi-def/</loc>
-    
-    <lastmod>2019-05-24T05:48:28.000Z</lastmod>
     
   </url>
   

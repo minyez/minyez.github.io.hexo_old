@@ -407,11 +407,11 @@
             
             <tag> WIEN2k </tag>
             
-            <tag> LIBXC </tag>
-            
             <tag> Intel </tag>
             
             <tag> Compilation </tag>
+            
+            <tag> LIBXC </tag>
             
         </tags>
       
@@ -438,9 +438,9 @@
             
             <tag> Intel </tag>
             
-            <tag> Compilation </tag>
-            
             <tag> FFTW </tag>
+            
+            <tag> Compilation </tag>
             
         </tags>
       
