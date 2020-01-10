@@ -21,7 +21,7 @@ categories: Software
 
 在{% post_link wien2k-fftw3-multi-def %}一文修正FFTW错误基础上, 利用Intel, Intel FFTW和LIBXC编译WIEN2k v16.1的`lapw0`时, 串行版本报错
 
-```
+```plain
 ld: libxc.o: in function `libxc_':
 libxc.F:(.text+0xcf7): undefined reference to `xc_f03_mgga_x_tb09_set_params_'
 ld: libxc.F:(.text+0xd6b): undefined reference to `xc_f03_mgga_x_tb09_set_params_'
