@@ -3,6 +3,29 @@
   
     
     <entry>
+      <title>解决macOS上脚本中运行VASP时动态库未载入问题</title>
+      <link href="/2020/05/09/macos-script-runvasp/"/>
+      <url>/2020/05/09/macos-script-runvasp/</url>
+      <content type="html"><![CDATA[<link rel="stylesheet" type="text/css" href="/css/hint.min.css"><p>macOS上脚本中运行程序遇到dyld: Library not loaded报错. <a id="more"></a></p><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>疫情在家工mo作yu期间, 准备在自己macOS上用VASP做点小的测试. 因为懒得重复输入命令, 于是写了一个最基本的shell脚本</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line">module load vasp/5.4.4-common-intel-2018.0.1</span><br><span class="line">mpirun -np 4 vasp_std</span><br></pre></td></tr></table></figure><p>第一步载入的是事先写好的VASP相关环境变量. 执行, 结果报错</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dyld: Library not loaded: @rpath/libmkl_intel_lp64.dylib</span><br><span class="line">  Referenced from: /Users/stevezhang/software/sci/vasp/vasp.5.4.4-intel-2018.0.1/common/bin/vasp_std</span><br><span class="line">  Reason: image not found</span><br></pre></td></tr></table></figure><p>也即<code>libmkl_intel_lp64.dylib</code>没有加到<code>DYLD_LIBRARY_PATH</code>中. 可比较奇怪的是, 在命令行里echo <code>DYLD_LIBRARY_PATH</code>, 返回的是预期结果.</p><h2 id="探索与解决"><a href="#探索与解决" class="headerlink" title="探索与解决"></a>探索与解决</h2><p>写一个非常简单的脚本，检查脚本执行过程中的环境变量.</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$DYLD_LIBRARY_PATH</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$LIBRARY_PATH</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$PATH</span></span><br><span class="line"></span><br><span class="line">module load intel/2018.1</span><br><span class="line">module load mpich/3.2.1-intel-2018.0.1</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$DYLD_LIBRARY_PATH</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$LIBRARY_PATH</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$PATH</span></span><br></pre></td></tr></table></figure><p>运行前线载入<code>intel/2018.1</code>模块. 运行脚本发现:</p><ul><li>在module load前后, <code>LIBRARY_PATH</code>和<code>PATH</code>同echo的预期结果相同.</li><li>在module load前, <code>DYLD_LIBRARY_PATH</code>是空的.</li><li>在load后, 只有未在zshrc里载入的MPICH里定义的库路径被加入到<code>DYLD_LIBRARY_PATH</code>中.</li></ul><p>搜索后找到几个帖子描述类似问题:<br><a href="https://stackoverflow.com/questions/35568122/why-isnt-dyld-library-path-being-propagated-here" target="_blank" rel="noopener">https://stackoverflow.com/questions/35568122/why-isnt-dyld-library-path-being-propagated-here</a><br><a href="https://apple.stackexchange.com/questions/212945/unable-to-set-dyld-fallback-library-path-in-shell-on-osx-10-11-1" target="_blank" rel="noopener">https://apple.stackexchange.com/questions/212945/unable-to-set-dyld-fallback-library-path-in-shell-on-osx-10-11-1</a><br>原因是，从El Captian开始, macOS引入了系统完整性保护(system integrity protection, SIP), 在调用系统提供的解释器时，所有<code>DYLD_</code>环境变量会被重设. 在使用module管理环境时, 因为intel模块事先被载入过, 因此脚本里面载入intel模块的行为会被module无视, 因此只有MPICH中的变量加入到<code>DYLD_LIBRARY_PATH</code>中.</p><p>一种解决办法是, 在最开始的shell脚本里面手动设置<code>DYLD_LIBRARY_PATH</code>, 缺点是不容易复用bashrc或zshrc里的内容. 更方便的做法是在shell脚本里load完所有module后reload一下，</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line">module load vasp/5.4.4-common-intel-2018.0.1</span><br><span class="line">module reload</span><br><span class="line"></span><br><span class="line">mpirun -np 4 vasp_std <span class="comment"># success</span></span><br></pre></td></tr></table></figure><p>另一种可能的办法是<a href="https://blog.csdn.net/qq285744011/article/details/82219340" target="_blank" rel="noopener">关闭SIP</a>, 不过因为reload完全解决了我的需求, 所以就没有尝试这种稍微麻烦些的办法.</p>]]></content>
+      
+      <categories>
+          
+          <category> Software </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> VASP </tag>
+            
+            <tag> macOS </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    <entry>
       <title>Python笔记(四)——使用MathpixOCR API进行LaTeX公式识别</title>
       <link href="/2019/10/28/mathpix-ocr/"/>
       <url>/2019/10/28/mathpix-ocr/</url>
@@ -134,9 +157,9 @@
       
         <tags>
             
-            <tag> Valgrind </tag>
-            
             <tag> Compilation </tag>
+            
+            <tag> Valgrind </tag>
             
             <tag> Fortran </tag>
             
@@ -507,9 +530,9 @@
       
         <tags>
             
-            <tag> Grid technique </tag>
-            
             <tag> Numerical method </tag>
+            
+            <tag> Grid technique </tag>
             
         </tags>
       
