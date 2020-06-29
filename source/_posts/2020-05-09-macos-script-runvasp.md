@@ -3,6 +3,7 @@ title: 解决macOS上脚本中运行VASP时动态库未载入问题
 comment: true
 toc: true
 date: 2020-05-09 15:30:23
+updateDate: 2020-06-29 15:30:23
 tags:
 - macOS
 - VASP
@@ -56,9 +57,11 @@ echo $PATH
 - 在load后, 只有未在zshrc里载入的MPICH里定义的库路径被加入到`DYLD_LIBRARY_PATH`中.
 
 搜索后找到几个帖子描述类似问题:
+
 <https://stackoverflow.com/questions/35568122/why-isnt-dyld-library-path-being-propagated-here>
 <https://apple.stackexchange.com/questions/212945/unable-to-set-dyld-fallback-library-path-in-shell-on-osx-10-11-1>
-原因是，从El Captian开始, macOS引入了系统完整性保护(system integrity protection, SIP), 在调用系统提供的解释器时，所有`DYLD_`环境变量会被重设. 在使用module管理环境时, 因为intel模块事先被载入过, 因此脚本里面载入intel模块的行为会被module无视, 因此只有MPICH中的变量加入到`DYLD_LIBRARY_PATH`中.
+
+问题原因是，从El Captian开始, macOS引入了系统完整性保护(system integrity protection, SIP), 在调用系统提供的解释器时，所有`DYLD_`环境变量会被重设. 在使用module管理环境时, 因为intel模块事先被载入过, 因此脚本里面载入intel模块的行为会被module无视, 因此只有MPICH中的变量加入到`DYLD_LIBRARY_PATH`中.
 
 一种解决办法是, 在最开始的shell脚本里面手动设置`DYLD_LIBRARY_PATH`, 缺点是不容易复用bashrc或zshrc里的内容. 更方便的做法是在shell脚本里load完所有module后reload一下，
 

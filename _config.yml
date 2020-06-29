@@ -74,8 +74,9 @@ category_generator:
 
 # Pagination
 ## Set per_page to 0 to disable pagination
-per_page: 6
-pagination_dir: page
+index_generator_plus:
+  path: ''
+  per_page: 6
 
 # Extensions
 ## Plugins: https://hexo.io/plugins/
