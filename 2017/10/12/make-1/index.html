@@ -143,9 +143,9 @@
               
               <li><a href="/tags/Bugfix/" style="font-size: 15px; font-family: 微软雅黑">Bugfix<span></span></a></li>
               
-              <li><a href="/tags/DFT/" style="font-size: 15px; font-family: 微软雅黑">DFT<span></span></a></li>
+              <li><a href="/tags/Hexo/" style="font-size: 15px; font-family: 微软雅黑">Hexo<span></span></a></li>
               
-              <li><a href="/tags/VASP/" style="font-size: 15px; font-family: 微软雅黑">VASP<span></span></a></li>
+              <li><a href="/tags/DFT/" style="font-size: 15px; font-family: 微软雅黑">DFT<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -193,7 +193,9 @@
 	<div class="mypage">		
 	  		
 
-	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文从编译一个简单的质数判断程序入手, 介绍了如何利用GNU/Make方便地编译较复杂的程序项目。<a id="more"></a></p>
+	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><div class="alert alert-success"><i class="fa fa-lightbulb-o  float-left"></i>  <p>本文从编译一个简单的质数判断程序入手, 介绍了如何利用GNU/Make方便地编译较复杂的程序项目。</p>
+</div>
+<a id="more"></a>
 <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><h3 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h3><p>如果我们希望用C语言实现判断一个从外部输入的正整数<code>a</code>是否是质数的程序(要求<code>a</code>小于一预设值<code>intmax</code>)，那么我们需要在程序中实现以下功能：</p>
 <ul>
 <li><p>读取外部输入<code>a</code>，并判断<code>a</code>是否为整数且小于<code>intmax</code>；</p>
@@ -435,7 +437,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	<div class="meta-widget">
 	<i class="fa fa-clock-o"></i>
-	2017-10-12 
+	2017-10-12 created
 	</div>
 	
 		
@@ -443,6 +445,13 @@ s.setAttribute('data-timestamp', +new Date());
 	
 
 	<!-- page view by busuanzi -->
+	
+	<div class="meta-widget">
+	<span id="busuanzi_container_page_pv">
+	<i class="fa fa-eye"></i>
+	<span id="busuanzi_value_page_pv"></span> views
+	</span>
+	</div>
 	
 
 	<!-- post word count -->
@@ -484,7 +493,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#前言"><span class="toc-article-text">前言</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#背景"><span class="toc-article-text">背景</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#目标"><span class="toc-article-text">目标</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#实现"><span class="toc-article-text">实现</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#GNU-Make基本"><span class="toc-article-text">GNU/Make基本</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#什么是make"><span class="toc-article-text">什么是make</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#规则"><span class="toc-article-text">规则</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#make运行机制"><span class="toc-article-text">make运行机制</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Makefile具体写法"><span class="toc-article-text">Makefile具体写法</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#最直接的Makefile"><span class="toc-article-text">最直接的Makefile</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#改进Makefile"><span class="toc-article-text">改进Makefile</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#定义显式变量"><span class="toc-article-text">定义显式变量</span></a></li><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#利用预定义隐式规则"><span class="toc-article-text">利用预定义隐式规则</span></a></li><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#修改内置变量"><span class="toc-article-text">修改内置变量</span></a></li><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#模式规则"><span class="toc-article-text">模式规则</span></a></li><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#自动变量"><span class="toc-article-text">自动变量</span></a></li><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#通配符"><span class="toc-article-text">通配符</span></a></li></ol></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#include外部文件"><span class="toc-article-text">include外部文件</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#条件语法"><span class="toc-article-text">条件语法</span></a></li></ol></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#附录"><span class="toc-article-text">附录</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#代码附录"><span class="toc-article-text">代码附录</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#main-c"><span class="toc-article-text">main.c</span></a></li><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#read-a-c"><span class="toc-article-text">read_a.c</span></a></li><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#isqrt-c"><span class="toc-article-text">isqrt.c</span></a></li><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#judge-p-c"><span class="toc-article-text">judge_p.c</span></a></li><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#prime-h"><span class="toc-article-text">prime.h</span></a></li></ol></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#TeX文件编译的Makefile举例"><span class="toc-article-text">TeX文件编译的Makefile举例</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#参考资料"><span class="toc-article-text">参考资料</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#背景"><span class="toc-article-text">背景</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#目标"><span class="toc-article-text">目标</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#实现"><span class="toc-article-text">实现</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#GNU-Make基本"><span class="toc-article-text">GNU/Make基本</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#什么是make"><span class="toc-article-text">什么是make</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#规则"><span class="toc-article-text">规则</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#make运行机制"><span class="toc-article-text">make运行机制</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Makefile具体写法"><span class="toc-article-text">Makefile具体写法</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#最直接的Makefile"><span class="toc-article-text">最直接的Makefile</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#改进Makefile"><span class="toc-article-text">改进Makefile</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#定义显式变量"><span class="toc-article-text">定义显式变量</span></a></li><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#利用预定义隐式规则"><span class="toc-article-text">利用预定义隐式规则</span></a></li><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#修改内置变量"><span class="toc-article-text">修改内置变量</span></a></li><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#模式规则"><span class="toc-article-text">模式规则</span></a></li><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#自动变量"><span class="toc-article-text">自动变量</span></a></li><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#通配符"><span class="toc-article-text">通配符</span></a></li></ol></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#include外部文件"><span class="toc-article-text">include外部文件</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#条件语法"><span class="toc-article-text">条件语法</span></a></li></ol></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#附录"><span class="toc-article-text">附录</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#代码附录"><span class="toc-article-text">代码附录</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#main-c"><span class="toc-article-text">main.c</span></a></li><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#read-a-c"><span class="toc-article-text">read_a.c</span></a></li><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#isqrt-c"><span class="toc-article-text">isqrt.c</span></a></li><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#judge-p-c"><span class="toc-article-text">judge_p.c</span></a></li><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#prime-h"><span class="toc-article-text">prime.h</span></a></li></ol></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#TeX文件编译的Makefile举例"><span class="toc-article-text">TeX文件编译的Makefile举例</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#参考资料"><span class="toc-article-text">参考资料</span></a></li></ol>
 		</div>
 	
 	</div>
@@ -524,7 +533,7 @@ var disqus_shortname = 'shigaro';
     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
   
-	| <span class="post-count">43.5k</span> words
+	| <span class="post-count">44.2k</span> words
   
 </p>
  </footer>

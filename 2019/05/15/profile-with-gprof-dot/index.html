@@ -143,9 +143,9 @@
               
               <li><a href="/tags/Bugfix/" style="font-size: 15px; font-family: 微软雅黑">Bugfix<span></span></a></li>
               
-              <li><a href="/tags/DFT/" style="font-size: 15px; font-family: 微软雅黑">DFT<span></span></a></li>
+              <li><a href="/tags/Hexo/" style="font-size: 15px; font-family: 微软雅黑">Hexo<span></span></a></li>
               
-              <li><a href="/tags/VASP/" style="font-size: 15px; font-family: 微软雅黑">VASP<span></span></a></li>
+              <li><a href="/tags/DFT/" style="font-size: 15px; font-family: 微软雅黑">DFT<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -193,7 +193,9 @@
 	<div class="mypage">		
 	  		
 
-	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>本文简要介绍如何基于gprof或Valgrind的性能分析数据, 使用gprof2dot和Graphviz制作Fortran程序的调用图, 以便对Fortran程序进行调试和优化. <a id="more"></a></p>
+	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><div class="alert alert-success"><i class="fa fa-lightbulb-o  float-left"></i>  <p>简要介绍如何基于gprof或Valgrind的性能分析数据, 使用gprof2dot和Graphviz制作Fortran程序的调用图, 以便对Fortran程序进行调试和优化.</p>
+</div>
+<a id="more"></a>
 <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>程序逻辑或者工作流是程序设计中很重要的部分, 与程序的算法实现及效率紧密相关. 通过分析程序运行中函数的调用顺序和次数等, 可以发现程序中可能存在的设计缺陷和性能瓶颈. 调用图(<a href="https://en.wikipedia.org/wiki/Call_graph" target="_blank" rel="noopener">call graph</a>)是一种展示程序工作流的手段, 包括静态和运行时两种, 前者侧重调用逻辑, 后者侧重实际工作环境中的时间效率.</p>
 <p>之前写代码时一直不是很重视设计这个阶段, 最多用心灵导图稍微画一画需求, 也不是非常严格. 这导致过一段时间回看代码, 会对某些地方为什么要那么写产生疑问, 要想很久才能回忆起来, 很费时间. 这对于个人小型项目问题还好, 对中型或大型项目就会造成很大的困难. 在一顿无望的结果测试后, 最近我重新回到组里GAP3的开发里. 尽管理解工作流程, 但对于GAP3的<em>GW</em>计算如何调用它的各种例程, 仍然没有非常清晰的图象. 于是我希望能用调用图来把程序运行逻辑可视化, 帮助自己理清思路. 网上一顿搜索后, 发现可以用gprof和Valgrind来做性能分析, 用gprof2dot和<code>dot</code>来处理分析数据并作图.</p>
 <p>这篇文章就是自学的一些总结. 以下所有操作都是在Linux (Fedora 27)下完成, 用到的主要工具是</p>
@@ -314,7 +316,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	<div class="meta-widget">
 	<i class="fa fa-clock-o"></i>
-	2019-05-15 
+	2019-05-15 created
 	</div>
 	
 		
@@ -322,6 +324,13 @@ s.setAttribute('data-timestamp', +new Date());
 	
 
 	<!-- page view by busuanzi -->
+	
+	<div class="meta-widget">
+	<span id="busuanzi_container_page_pv">
+	<i class="fa fa-eye"></i>
+	<span id="busuanzi_value_page_pv"></span> views
+	</span>
+	</div>
 	
 
 	<!-- post word count -->
@@ -363,7 +372,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#摘要"><span class="toc-article-text">摘要</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#背景"><span class="toc-article-text">背景</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#一个接口调用的例子"><span class="toc-article-text">一个接口调用的例子</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#使用gprof"><span class="toc-article-text">使用gprof</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#使用callgrind"><span class="toc-article-text">使用callgrind</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#GAP3的调用图"><span class="toc-article-text">GAP3的调用图</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#总结"><span class="toc-article-text">总结</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#参考"><span class="toc-article-text">参考</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#背景"><span class="toc-article-text">背景</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#一个接口调用的例子"><span class="toc-article-text">一个接口调用的例子</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#使用gprof"><span class="toc-article-text">使用gprof</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#使用callgrind"><span class="toc-article-text">使用callgrind</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#GAP3的调用图"><span class="toc-article-text">GAP3的调用图</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#总结"><span class="toc-article-text">总结</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#参考"><span class="toc-article-text">参考</span></a></li></ol>
 		</div>
 	
 	</div>
@@ -403,7 +412,7 @@ var disqus_shortname = 'shigaro';
     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
   
-	| <span class="post-count">43.5k</span> words
+	| <span class="post-count">44.2k</span> words
   
 </p>
  </footer>

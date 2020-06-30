@@ -143,9 +143,9 @@
               
               <li><a href="/tags/Bugfix/" style="font-size: 15px; font-family: 微软雅黑">Bugfix<span></span></a></li>
               
-              <li><a href="/tags/DFT/" style="font-size: 15px; font-family: 微软雅黑">DFT<span></span></a></li>
+              <li><a href="/tags/Hexo/" style="font-size: 15px; font-family: 微软雅黑">Hexo<span></span></a></li>
               
-              <li><a href="/tags/VASP/" style="font-size: 15px; font-family: 微软雅黑">VASP<span></span></a></li>
+              <li><a href="/tags/DFT/" style="font-size: 15px; font-family: 微软雅黑">DFT<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -193,7 +193,10 @@
 	<div class="mypage">		
 	  		
 
-	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文收集了一些笔者常用的(Xm)Grace使用的技巧.<a id="more"></a> 下面的操作均可以在<a href="https://sourceforge.net/projects/qtgrace/" target="_blank" rel="noopener">qtgrace</a>下实现.</p>
+	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><div class="alert alert-success"><i class="fa fa-lightbulb-o  float-left"></i>  <p>收集笔者常用的(Xm)Grace使用的技巧.</p>
+</div>
+<a id="more"></a>
+<p>以下的操作均可以在<a href="https://sourceforge.net/projects/qtgrace/" target="_blank" rel="noopener">qtgrace</a>下实现.</p>
 <h2 id="数据集变换"><a href="#数据集变换" class="headerlink" title="数据集变换"></a>数据集变换</h2><p>Grace中支持多种数据处理, 从简单的求前后两点的差, 到复杂的函数变换和非线性拟合.</p>
 <h3 id="差分"><a href="#差分" class="headerlink" title="差分"></a>差分</h3><p>XmGrace包含差分功能, 支持三种不同差分方式: 向前差分(Forward), 向后差分(Backword)或者居中差分(centered).</p>
 <p>$$<br>\begin{aligned}<br>\text{forward} &amp;: y’_{i, f} = \frac{y_{i+1}-y_i}{x_{i+1}-x_i}\\<br>\text{backward} &amp;: y’_{i, b} = \frac{y_i-y_{i-1}}{x_i-x_{i-1}}\\<br>\text{centered} &amp;: y’_{i, c} = \frac{y_{i+1}-y_{i-1}}{x_{i+1}-x_{i-1}}\\<br>\end{aligned}<br>$$</p>
@@ -335,7 +338,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	<div class="meta-widget">
 	<i class="fa fa-clock-o"></i>
-	2019-07-31 
+	2019-07-31 created
 	</div>
 	
 		
@@ -343,6 +346,13 @@ s.setAttribute('data-timestamp', +new Date());
 	
 
 	<!-- page view by busuanzi -->
+	
+	<div class="meta-widget">
+	<span id="busuanzi_container_page_pv">
+	<i class="fa fa-eye"></i>
+	<span id="busuanzi_value_page_pv"></span> views
+	</span>
+	</div>
 	
 
 	<!-- post word count -->
@@ -360,7 +370,7 @@ s.setAttribute('data-timestamp', +new Date());
     <ul id="categorys" class="tag_box list-unstyled collapse in">
           
   <li>
-    <li><a href="/categories/Software/">Software<span class="badge">20</span></a></li>
+    <li><a href="/categories/Software/">Software<span class="badge">21</span></a></li>
   </li>
 
     </ul>
@@ -384,7 +394,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#前言"><span class="toc-article-text">前言</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#数据集变换"><span class="toc-article-text">数据集变换</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#差分"><span class="toc-article-text">差分</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#表达式求值"><span class="toc-article-text">表达式求值</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#双y轴-Double-y-axis"><span class="toc-article-text">双y轴(Double y-axis)</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#文本输入"><span class="toc-article-text">文本输入</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#上下标"><span class="toc-article-text">上下标</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#希腊字母与字体"><span class="toc-article-text">希腊字母与字体</span></a></li></ol></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#数据集变换"><span class="toc-article-text">数据集变换</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#差分"><span class="toc-article-text">差分</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#表达式求值"><span class="toc-article-text">表达式求值</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#双y轴-Double-y-axis"><span class="toc-article-text">双y轴(Double y-axis)</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#文本输入"><span class="toc-article-text">文本输入</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#上下标"><span class="toc-article-text">上下标</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#希腊字母与字体"><span class="toc-article-text">希腊字母与字体</span></a></li></ol></li></ol>
 		</div>
 	
 	</div>
@@ -424,7 +434,7 @@ var disqus_shortname = 'shigaro';
     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
   
-	| <span class="post-count">43.5k</span> words
+	| <span class="post-count">44.2k</span> words
   
 </p>
  </footer>

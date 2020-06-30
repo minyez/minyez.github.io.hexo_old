@@ -143,9 +143,9 @@
               
               <li><a href="/tags/Bugfix/" style="font-size: 15px; font-family: 微软雅黑">Bugfix<span></span></a></li>
               
-              <li><a href="/tags/DFT/" style="font-size: 15px; font-family: 微软雅黑">DFT<span></span></a></li>
+              <li><a href="/tags/Hexo/" style="font-size: 15px; font-family: 微软雅黑">Hexo<span></span></a></li>
               
-              <li><a href="/tags/VASP/" style="font-size: 15px; font-family: 微软雅黑">VASP<span></span></a></li>
+              <li><a href="/tags/DFT/" style="font-size: 15px; font-family: 微软雅黑">DFT<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -193,7 +193,9 @@
 	<div class="mypage">		
 	  		
 
-	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>整理了调用Python <code>re</code>包时的常用操作和命令. <a id="more"></a></p>
+	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><div class="alert alert-success"><i class="fa fa-lightbulb-o  float-left"></i>  <p>整理调用Python <code>re</code>包时的常用操作和命令.</p>
+</div>
+<a id="more"></a>
 <p>这里主要按照使用情景, 对操作和命令进行分类, 这样也顺带梳理不同情境下可能用到的正则表达式. 目前更新到模式组方法的比较.</p>
 <h2 id="基本函数"><a href="#基本函数" class="headerlink" title="基本函数"></a>基本函数</h2><p>下表列出了常用的re函数, 其中变量类型仅为自己常用的情况, 具体见<a href="https://docs.python.org/3/library/re.html" target="_blank" rel="noopener">re文档</a>(Python 3).</p>
 <table>
@@ -346,7 +348,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	<div class="meta-widget">
 	<i class="fa fa-clock-o"></i>
-	2019-05-06 
+	2019-05-06 created
 	</div>
 	
 		
@@ -354,6 +356,13 @@ s.setAttribute('data-timestamp', +new Date());
 	
 
 	<!-- page view by busuanzi -->
+	
+	<div class="meta-widget">
+	<span id="busuanzi_container_page_pv">
+	<i class="fa fa-eye"></i>
+	<span id="busuanzi_value_page_pv"></span> views
+	</span>
+	</div>
 	
 
 	<!-- post word count -->
@@ -395,7 +404,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#摘要"><span class="toc-article-text">摘要</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#基本函数"><span class="toc-article-text">基本函数</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#一次匹配字符串"><span class="toc-article-text">一次匹配字符串</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#匹配名为V-x-y的文件夹"><span class="toc-article-text">匹配名为V_x.y的文件夹</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#匹配一条K点路径"><span class="toc-article-text">匹配一条K点路径</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#compile函数"><span class="toc-article-text">compile函数</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#利用group和groups获得匹配内容"><span class="toc-article-text">利用group和groups获得匹配内容</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#利用group标记的替换"><span class="toc-article-text">利用group标记的替换</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#基本函数"><span class="toc-article-text">基本函数</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#一次匹配字符串"><span class="toc-article-text">一次匹配字符串</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#匹配名为V-x-y的文件夹"><span class="toc-article-text">匹配名为V_x.y的文件夹</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#匹配一条K点路径"><span class="toc-article-text">匹配一条K点路径</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#compile函数"><span class="toc-article-text">compile函数</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#利用group和groups获得匹配内容"><span class="toc-article-text">利用group和groups获得匹配内容</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#利用group标记的替换"><span class="toc-article-text">利用group标记的替换</span></a></li></ol>
 		</div>
 	
 	</div>
@@ -435,7 +444,7 @@ var disqus_shortname = 'shigaro';
     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
   
-	| <span class="post-count">43.5k</span> words
+	| <span class="post-count">44.2k</span> words
   
 </p>
  </footer>

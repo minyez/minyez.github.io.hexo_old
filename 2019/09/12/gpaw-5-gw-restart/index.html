@@ -143,9 +143,9 @@
               
               <li><a href="/tags/Bugfix/" style="font-size: 15px; font-family: 微软雅黑">Bugfix<span></span></a></li>
               
-              <li><a href="/tags/DFT/" style="font-size: 15px; font-family: 微软雅黑">DFT<span></span></a></li>
+              <li><a href="/tags/Hexo/" style="font-size: 15px; font-family: 微软雅黑">Hexo<span></span></a></li>
               
-              <li><a href="/tags/VASP/" style="font-size: 15px; font-family: 微软雅黑">VASP<span></span></a></li>
+              <li><a href="/tags/DFT/" style="font-size: 15px; font-family: 微软雅黑">DFT<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -193,7 +193,9 @@
 	<div class="mypage">		
 	  		
 
-	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>本文简单记录了如何修改GPAW源码以允许开启ecut外推(<code>ecut_extrapolation=True</code>)的GW计算重启.<a id="more"></a></p>
+	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><div class="alert alert-success"><i class="fa fa-lightbulb-o  float-left"></i>  <p>记录如何修改GPAW源码以允许开启ecut外推(<code>ecut_extrapolation=True</code>)的GW计算重启.</p>
+</div>
+<a id="more"></a>
 <h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p>在超算上进行大体系计算时, 经常会遇到的问题是计算因为超过了单个任务所需时间而被迫停止.</p>
 <p>一般SCF计算可以通过读写波函数来重启, 但GW计算重启起来稍微麻烦一些, 也有不同的策略, 比如单独输出介电矩阵元.</p>
 <p>在GPAW中, 重启GW计算可以通过指定<code>restartfile</code>参数来实现. 对于一个可能超时的计算, 在计算初始就指定<code>restartfile</code>, 那么在计算停止后以同样命令重新执行脚本, GPAW就会从停止的地方继续计算.</p>
@@ -279,7 +281,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	<div class="meta-widget">
 	<i class="fa fa-clock-o"></i>
-	2019-09-12 
+	2019-09-12 created
 	</div>
 	
 		
@@ -288,12 +290,19 @@ s.setAttribute('data-timestamp', +new Date());
 
 	<!-- page view by busuanzi -->
 	
+	<div class="meta-widget">
+	<span id="busuanzi_container_page_pv">
+	<i class="fa fa-eye"></i>
+	<span id="busuanzi_value_page_pv"></span> views
+	</span>
+	</div>
+	
 
 	<!-- post word count -->
 	
 	<div class="meta-widget">
 	<i class="fa fa-tachometer"></i>
-	<span class="post-count">597</span> words
+	<span class="post-count">590</span> words
 	</div>
 	
 
@@ -304,7 +313,7 @@ s.setAttribute('data-timestamp', +new Date());
     <ul id="categorys" class="tag_box list-unstyled collapse in">
           
   <li>
-    <li><a href="/categories/Software/">Software<span class="badge">20</span></a></li>
+    <li><a href="/categories/Software/">Software<span class="badge">21</span></a></li>
   </li>
 
     </ul>
@@ -328,7 +337,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#摘要"><span class="toc-article-text">摘要</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#正文"><span class="toc-article-text">正文</span></a></li></ol>
 		</div>
 	
 	</div>
@@ -368,7 +377,7 @@ var disqus_shortname = 'shigaro';
     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
   
-	| <span class="post-count">43.5k</span> words
+	| <span class="post-count">44.2k</span> words
   
 </p>
  </footer>

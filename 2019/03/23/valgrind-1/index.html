@@ -143,9 +143,9 @@
               
               <li><a href="/tags/Bugfix/" style="font-size: 15px; font-family: 微软雅黑">Bugfix<span></span></a></li>
               
-              <li><a href="/tags/DFT/" style="font-size: 15px; font-family: 微软雅黑">DFT<span></span></a></li>
+              <li><a href="/tags/Hexo/" style="font-size: 15px; font-family: 微软雅黑">Hexo<span></span></a></li>
               
-              <li><a href="/tags/VASP/" style="font-size: 15px; font-family: 微软雅黑">VASP<span></span></a></li>
+              <li><a href="/tags/DFT/" style="font-size: 15px; font-family: 微软雅黑">DFT<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -193,7 +193,8 @@
 	<div class="mypage">		
 	  		
 
-	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>为了对GAP3程序进行调试和优化, 准备使用Valgrind对其内存调用进行检查. 本文是对Valgrind功能的初步探索, 对一个简单程序的Valgrind输出进行了分析.</p>
+	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><div class="alert alert-success"><i class="fa fa-lightbulb-o  float-left"></i>  <p>为了调试和优化GAP3程序, 使用Valgrind对其内存调用进行检查. 本文是对Valgrind功能的初步探索, 对一个简单程序的Valgrind输出进行了分析.</p>
+</div>
 <a id="more"></a>
 <h2 id="八卦"><a href="#八卦" class="headerlink" title="八卦"></a>八卦</h2><p>很早就听说过Valgrind这个软件, 对它的名字和Logo很好奇, 粗略搜了一下名字, 在<a href="http://valgrind.org/docs/manual/faq.html#faq.whence" target="_blank" rel="noopener">官方FAQ</a>里发现这样一段话</p>
 <blockquote>
@@ -347,7 +348,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	<div class="meta-widget">
 	<i class="fa fa-clock-o"></i>
-	2019-03-23 
+	2019-03-23 created
 	</div>
 	
 		
@@ -355,6 +356,13 @@ s.setAttribute('data-timestamp', +new Date());
 	
 
 	<!-- page view by busuanzi -->
+	
+	<div class="meta-widget">
+	<span id="busuanzi_container_page_pv">
+	<i class="fa fa-eye"></i>
+	<span id="busuanzi_value_page_pv"></span> views
+	</span>
+	</div>
 	
 
 	<!-- post word count -->
@@ -396,7 +404,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#摘要"><span class="toc-article-text">摘要</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#八卦"><span class="toc-article-text">八卦</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#安装"><span class="toc-article-text">安装</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#程序编译选项"><span class="toc-article-text">程序编译选项</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#实例-越界赋值与内存泄漏"><span class="toc-article-text">实例: 越界赋值与内存泄漏</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Fortran源码"><span class="toc-article-text">Fortran源码</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#编译和运行"><span class="toc-article-text">编译和运行</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#输出解读"><span class="toc-article-text">输出解读</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#关于memory-lost的类型"><span class="toc-article-text">关于memory lost的类型</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#总结"><span class="toc-article-text">总结</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#八卦"><span class="toc-article-text">八卦</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#安装"><span class="toc-article-text">安装</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#程序编译选项"><span class="toc-article-text">程序编译选项</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#实例-越界赋值与内存泄漏"><span class="toc-article-text">实例: 越界赋值与内存泄漏</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Fortran源码"><span class="toc-article-text">Fortran源码</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#编译和运行"><span class="toc-article-text">编译和运行</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#输出解读"><span class="toc-article-text">输出解读</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#关于memory-lost的类型"><span class="toc-article-text">关于memory lost的类型</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#总结"><span class="toc-article-text">总结</span></a></li></ol>
 		</div>
 	
 	</div>
@@ -436,7 +444,7 @@ var disqus_shortname = 'shigaro';
     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
   
-	| <span class="post-count">43.5k</span> words
+	| <span class="post-count">44.2k</span> words
   
 </p>
  </footer>

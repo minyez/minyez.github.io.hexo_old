@@ -143,9 +143,9 @@
               
               <li><a href="/tags/Bugfix/" style="font-size: 15px; font-family: 微软雅黑">Bugfix<span></span></a></li>
               
-              <li><a href="/tags/DFT/" style="font-size: 15px; font-family: 微软雅黑">DFT<span></span></a></li>
+              <li><a href="/tags/Hexo/" style="font-size: 15px; font-family: 微软雅黑">Hexo<span></span></a></li>
               
-              <li><a href="/tags/VASP/" style="font-size: 15px; font-family: 微软雅黑">VASP<span></span></a></li>
+              <li><a href="/tags/DFT/" style="font-size: 15px; font-family: 微软雅黑">DFT<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -193,7 +193,9 @@
 	<div class="mypage">		
 	  		
 
-	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文介绍了使用pandoc工具将markdown文件转化为PDF文件的方法, 讨论了HTML和LaTeX两种转换中介. 由于LaTeX对学术写作有着更好的支持, 笔者将重点放在了后者上. 文中总结了一些模板变量的用法和注意事项, 最后以转换demo.md为例, 用Makefile展示了markdown+pandoc+xelatex+bibtex的一整条工具链.<br><a id="more"></a></p>
+	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><div class="alert alert-success"><i class="fa fa-lightbulb-o  float-left"></i>  <p>本文介绍了使用pandoc工具将markdown文件转化为PDF文件的方法, 讨论了HTML和LaTeX两种转换中介. 由于LaTeX对学术写作有着更好的支持, 笔者将重点放在了后者上. 文中总结了一些模板变量的用法和注意事项, 最后以转换demo.md为例, 用Makefile展示了markdown+pandoc+xelatex+bibtex的一整条工具链.</p>
+</div>
+<a id="more"></a>
 <p>需求之一来自于最近开始将读文献和看日语原版漫画时遇到的单词和用例记录在一个markdown笔记里. 在电脑上阅读这些markdown笔记完全没有问题, 但是在移动端中阅读就比较困难, 每次在Typora里手动导出也很麻烦, 于是就想着能不能把markdown转化成pdf的过程自动化. 自然就想到了在文件格式转换中非常有名的<a href="https://pandoc.org/" target="_blank" rel="noopener">pandoc</a>.</p>
 <h2 id="初步尝试"><a href="#初步尝试" class="headerlink" title="初步尝试"></a>初步尝试</h2><p>从Homebrew安装pandoc</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install pandoc</span><br></pre></td></tr></table></figure>
@@ -529,7 +531,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	<div class="meta-widget">
 	<i class="fa fa-clock-o"></i>
-	2019-01-02 
+	2019-01-02 created
 	</div>
 	
 		
@@ -537,6 +539,13 @@ s.setAttribute('data-timestamp', +new Date());
 	
 
 	<!-- page view by busuanzi -->
+	
+	<div class="meta-widget">
+	<span id="busuanzi_container_page_pv">
+	<i class="fa fa-eye"></i>
+	<span id="busuanzi_value_page_pv"></span> views
+	</span>
+	</div>
 	
 
 	<!-- post word count -->
@@ -554,7 +563,7 @@ s.setAttribute('data-timestamp', +new Date());
     <ul id="categorys" class="tag_box list-unstyled collapse in">
           
   <li>
-    <li><a href="/categories/Software/">Software<span class="badge">20</span></a></li>
+    <li><a href="/categories/Software/">Software<span class="badge">21</span></a></li>
   </li>
 
     </ul>
@@ -578,7 +587,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#前言"><span class="toc-article-text">前言</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#初步尝试"><span class="toc-article-text">初步尝试</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#基于HTML向PDF转化"><span class="toc-article-text">基于HTML向PDF转化</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#借助模板的基于LaTeX的转化"><span class="toc-article-text">借助模板的基于LaTeX的转化</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#使用模板"><span class="toc-article-text">使用模板</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#编辑模板"><span class="toc-article-text">编辑模板</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#文件元数据控制"><span class="toc-article-text">文件元数据控制</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#TOC和文档首尾"><span class="toc-article-text">TOC和文档首尾</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#语言"><span class="toc-article-text">语言</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#可用的LaTeX变量"><span class="toc-article-text">可用的LaTeX变量</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#排版布局"><span class="toc-article-text">排版布局</span></a></li><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#字体"><span class="toc-article-text">字体</span></a></li><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#颜色"><span class="toc-article-text">颜色</span></a></li><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#参考文献"><span class="toc-article-text">参考文献</span></a></li></ol></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#插入图表"><span class="toc-article-text">插入图表</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#实例-转换demo-md到demo-pdf"><span class="toc-article-text">实例: 转换demo.md到demo.pdf</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#总结"><span class="toc-article-text">总结</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#初步尝试"><span class="toc-article-text">初步尝试</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#基于HTML向PDF转化"><span class="toc-article-text">基于HTML向PDF转化</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#借助模板的基于LaTeX的转化"><span class="toc-article-text">借助模板的基于LaTeX的转化</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#使用模板"><span class="toc-article-text">使用模板</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#编辑模板"><span class="toc-article-text">编辑模板</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#文件元数据控制"><span class="toc-article-text">文件元数据控制</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#TOC和文档首尾"><span class="toc-article-text">TOC和文档首尾</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#语言"><span class="toc-article-text">语言</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#可用的LaTeX变量"><span class="toc-article-text">可用的LaTeX变量</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#排版布局"><span class="toc-article-text">排版布局</span></a></li><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#字体"><span class="toc-article-text">字体</span></a></li><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#颜色"><span class="toc-article-text">颜色</span></a></li><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#参考文献"><span class="toc-article-text">参考文献</span></a></li></ol></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#插入图表"><span class="toc-article-text">插入图表</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#实例-转换demo-md到demo-pdf"><span class="toc-article-text">实例: 转换demo.md到demo.pdf</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#总结"><span class="toc-article-text">总结</span></a></li></ol>
 		</div>
 	
 	</div>
@@ -618,7 +627,7 @@ var disqus_shortname = 'shigaro';
     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
   
-	| <span class="post-count">43.5k</span> words
+	| <span class="post-count">44.2k</span> words
   
 </p>
  </footer>

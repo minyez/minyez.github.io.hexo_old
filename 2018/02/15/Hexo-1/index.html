@@ -143,9 +143,9 @@
               
               <li><a href="/tags/Bugfix/" style="font-size: 15px; font-family: 微软雅黑">Bugfix<span></span></a></li>
               
-              <li><a href="/tags/DFT/" style="font-size: 15px; font-family: 微软雅黑">DFT<span></span></a></li>
+              <li><a href="/tags/Hexo/" style="font-size: 15px; font-family: 微软雅黑">Hexo<span></span></a></li>
               
-              <li><a href="/tags/VASP/" style="font-size: 15px; font-family: 微软雅黑">VASP<span></span></a></li>
+              <li><a href="/tags/DFT/" style="font-size: 15px; font-family: 微软雅黑">DFT<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -193,7 +193,9 @@
 	<div class="mypage">		
 	  		
 
-	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>本文介绍了使用Hexo配置本博客和用Markdown进行博文写作的基本方法和技巧，为撰写排版更好更清晰的技术文本作准备。 <a id="more"></a></p>
+	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><div class="alert alert-success"><i class="fa fa-lightbulb-o  float-left"></i>  <p>介绍使用Hexo配置本博客和用Markdown进行博文写作的基本方法和技巧，为撰写排版更好更清晰的技术文本作准备。</p>
+</div>
+<a id="more"></a>
 <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>之前代码从来都是习惯在组里LinuxPC或者学校HPC上写的，但时常会因为不在随手可及的地方觉得不安。年前从学长手中购入MBP作为自己今后的代码生产主力，同时跑一点简单的科学代码，也想着把Linux和原笔记本上的一些代码项目移到Mac上。这自然就包括了这个Hexo博客。<br>尽管技术写作和笔记并没有停滞，但是一直处于比较粗浅的笔记状态，就没有敢上传到这里(还是希望比较成型后再传)。更主要的一个原因是觉得这个博客的界面配置还始终是未完成状态，自己不甚满意，平时也没有时间好好研究JavaScript和Nodejs代码，最后就没有上传笔记的动力了，导致这个个人域名完全处于浪费钱的状态。于是想趁着春节假期把博客框架好好整一整。<br>这篇文章内所有命令均在macOS High Sierra (10.13)或Mojave (10.14)下执行。默认Homebrew基本配置完成，包括本文所涉及的Git和Nodejs开发环境等，执行命令前需要拥有GitHub账户并完成Git全局配置。</p>
 <h2 id="基本配置"><a href="#基本配置" class="headerlink" title="基本配置"></a>基本配置</h2><h3 id="GitHub-Pages"><a href="#GitHub-Pages" class="headerlink" title="GitHub Pages"></a>GitHub Pages</h3><p>个人博客服务端使用<a href="https://pages.github.com" target="_blank" rel="noopener">Git Pages</a>，它是GitHub专为个人、组织用户和代码项目提供的页面服务，通过Git将本地HTML和CSS文件结构部署(deploy)到Page仓库master分支来实现。创建个人页面的方法是</p>
 <ol>
@@ -284,7 +286,7 @@
 <tr>
 <td style="text-align:left"><code>$a^* b^*$</code></td>
 <td style="text-align:left">公式</td>
-<td style="text-align:left">$a^<em> b^</em>$</td>
+<td style="text-align:left">$a^<em>b^</em>$</td>
 </tr>
 <tr>
 <td style="text-align:left"><code>$a^\ast b^\ast$</code></td>
@@ -356,6 +358,8 @@
 <p>同时修改<code>index.js</code>, 将<code>href</code>的CDN地址改为本地地址</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> node_modules/hexo-reference/</span><br><span class="line">mv index.js index.js_bak <span class="comment"># back up original file</span></span><br><span class="line">sed <span class="string">'s/https:\/\/cdn.jsdelivr.net\/hint.css\/2.4.1\//\/css\//g'</span> index.js_bak &gt; index.js</span><br></pre></td></tr></table></figure>
 <p>测试一下效果.<sup id="fnref:1"><a href="#fn:1" rel="footnote"><span class="hint--top hint--error hint--medium hint--rounded hint--bounce" aria-label="这是一个脚注测试">[1]</span></a></sup></p>
+<h3 id="在首页摘要中移除alert效果"><a href="#在首页摘要中移除alert效果" class="headerlink" title="在首页摘要中移除alert效果"></a>在首页摘要中移除alert效果</h3><p>在<code>&lt;!--more--&gt;</code>前使用Bootstrap的alert对象时, 首页摘要显示也会出现的alert的效果. 这可以通过修改hexo库中的excerpt.js来移除alert的div标签来实现.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 位置在node_modules/hexo/lib/plugins/filter/after_post_render/excerpt.js</span></span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line"><span class="comment">//data.excerpt = content.substring(0, index).trim(); //修改前</span></span><br><span class="line">data.excerpt = content.substring(<span class="number">0</span>, index).replace(</span><br><span class="line">     /<span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"alert alert-\w+"</span>&gt;</span><span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">"fa [\w\s-]+"</span>&gt;</span><span class="tag">&lt;<span class="name">\</span>/<span class="attr">i</span>&gt;</span>([\S\s]+)\s<span class="tag">&lt;<span class="name">\</span>/<span class="attr">div</span>&gt;</span></span><span class="regexp">/g, "$1").trim();</span></span><br></pre></td></tr></table></figure>
 <h3 id="边栏链接及链接图标"><a href="#边栏链接及链接图标" class="headerlink" title="边栏链接及链接图标"></a>边栏链接及链接图标</h3><p>在<code>_config.yml</code>内编辑<code>links</code>标签，每一条短线对应一个链接条目</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">links:</span></span><br><span class="line"><span class="attr">  - title:</span> <span class="string">"Github-minyez"</span></span><br><span class="line"><span class="attr">    url:</span> <span class="attr">https://github.com/minyez</span></span><br><span class="line"><span class="attr">    icon:</span> <span class="string">"fa fa-github"</span></span><br></pre></td></tr></table></figure>
 <p>其中<code>icon</code>对应链接旁显示的图标。本示例使用了<a href="https://fontawesome.com" target="_blank" rel="noopener">Font Awesome</a>提供的图标，该项目提供的全部图标可以在<a href="https://fontawesome.com/icons?d=gallery" target="_blank" rel="noopener">这里</a>找到。</p>
@@ -402,28 +406,24 @@
 <li style="list-style: none"><input type="checkbox"> 文章中侧边栏随正文一同滚动. 对于TOC较长的情形, 鼠标移动到侧边栏上对TOC滚动浏览.</li>
 </ul>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>笔者基于Hexo框架和Freemind主题搭建了个人博客，根据自己的需求进行了自定义，并利用MathJax渲染器和Bootstrap特性进行了Markdown写作。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://jdhao.github.io/2018/01/25/hexo-mathjax-equation-number/" target="_blank" rel="noopener">LaTeX Equation Numbering Done Right in Hexo</a><br>另一个渲染器hexo-math及一个讨论其用法的<a href="https://github.com/hexojs/hexo-math/issues/26">Issue</a><br>如何在自己的主题下实现MathJax支持：<a href="https://www.cnblogs.com/wangxin37/p/8185688.html" target="_blank" rel="noopener">在Hexo中渲染MathJax数学公式</a><br>代码块复制：<a href="https://www.ofind.cn/blog/HEXO/HEXO%E4%BC%98%E5%8C%96%E4%B9%8B%EF%BC%88%E4%BA%8C%EF%BC%89-%E6%B7%BB%E5%8A%A0%E5%A4%8D%E5%88%B6%E5%8A%9F%E8%83%BD.html" target="_blank" rel="noopener">HEXO优化之（二）—-添加复制功能</a><br><a href="https://vonsdite.cn/posts/c08e78b.html" target="_blank" rel="noopener">Hexo 添加背景图片并自适应</a></p>
-<h2 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h2><h3 id="2019-05-07"><a href="#2019-05-07" class="headerlink" title="2019-05-07"></a>2019-05-07</h3><ol>
-<li>增加基于<code>hexo-reference</code>的wiki浮窗式的脚注.</li>
-<li>MathJax: 比较各种情况下<code>*</code>和<code>_</code>的渲染结果. 更改CDN.</li>
-</ol>
-<h3 id="2019-05-10"><a href="#2019-05-10" class="headerlink" title="2019-05-10"></a>2019-05-10</h3><ol>
-<li>增加对不蒜子统计的支持.</li>
-<li>去掉了Archives不必要的下拉菜单, 直接进入<code>archives</code>页面.</li>
-</ol>
-<h3 id="2019-05-22"><a href="#2019-05-22" class="headerlink" title="2019-05-22"></a>2019-05-22</h3><ol>
-<li>增加背景图片, 位置由YAML中<code>background</code>变量指定.</li>
-</ol>
-<h3 id="2019-05-25"><a href="#2019-05-25" class="headerlink" title="2019-05-25"></a>2019-05-25</h3><ol>
-<li>利用<code>hexo-wordcount</code>进行全站和页面字数统计<br><script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script><textarea id="flowchart-0-code" style="display: none">st=>start: Start
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://jdhao.github.io/2018/01/25/hexo-mathjax-equation-number/" target="_blank" rel="noopener">LaTeX Equation Numbering Done Right in Hexo</a></p>
+<p>另一个渲染器hexo-math及一个讨论其用法的<a href="https://github.com/hexojs/hexo-math/issues/26">Issue</a></p>
+<p>如何在自己的主题下实现MathJax支持：<a href="https://www.cnblogs.com/wangxin37/p/8185688.html" target="_blank" rel="noopener">在Hexo中渲染MathJax数学公式</a></p>
+<p>代码块复制：<a href="https://www.ofind.cn/blog/HEXO/HEXO%E4%BC%98%E5%8C%96%E4%B9%8B%EF%BC%88%E4%BA%8C%EF%BC%89-%E6%B7%BB%E5%8A%A0%E5%A4%8D%E5%88%B6%E5%8A%9F%E8%83%BD.html" target="_blank" rel="noopener">HEXO优化之（二）—-添加复制功能</a></p>
+<p><a href="https://vonsdite.cn/posts/c08e78b.html" target="_blank" rel="noopener">Hexo 添加背景图片并自适应</a></p>
+<h2 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h2><h3 id="2019-05-07"><a href="#2019-05-07" class="headerlink" title="2019-05-07"></a>2019-05-07</h3><p>增加基于<code>hexo-reference</code>的wiki浮窗式的脚注. MathJax: 比较各种情况下<code>*</code>和<code>_</code>的渲染结果. 更改CDN.</p>
+<h3 id="2019-05-10"><a href="#2019-05-10" class="headerlink" title="2019-05-10"></a>2019-05-10</h3><p>增加对不蒜子统计的支持. 去掉了Archives不必要的下拉菜单, 直接进入<code>archives</code>页面.</p>
+<h3 id="2019-05-22"><a href="#2019-05-22" class="headerlink" title="2019-05-22"></a>2019-05-22</h3><p>增加背景图片, 位置由YAML中<code>background</code>变量指定.</p>
+<h3 id="2019-05-25"><a href="#2019-05-25" class="headerlink" title="2019-05-25"></a>2019-05-25</h3><p>利用<code>hexo-wordcount</code>进行全站和页面字数统计.</p>
+<h3 id="2020-06-30"><a href="#2020-06-30" class="headerlink" title="2020-06-30"></a>2020-06-30</h3><p>首页摘要中移除alert效果.</p>
+<p><script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script><textarea id="flowchart-0-code" style="display: none">st=>start: Start
 op=>operation: Your Operation
 cond=>condition: Yes or No?
 e=>end
 
 st->op->cond
 cond(yes)->e
-cond(no)->op</textarea><textarea id="flowchart-0-options" style="display: none">{"scale":1,"line-width":3,"line-length":25,"text-margin":10,"font-size":12}</textarea><script>  var code = document.getElementById("flowchart-0-code").value;  var options = JSON.parse(decodeURIComponent(document.getElementById("flowchart-0-options").value));  var diagram = flowchart.parse(code);  diagram.drawSVG("flowchart-0", options);</script><div id="footnotes"><hr><div id="footnotelist"><ol style="list-style: none; padding-left: 0; margin-left: 40px"><li id="fn:1"><span style="display: inline-block; vertical-align: top; padding-right: 10px; margin-left: -40px">1.</span><span style="display: inline-block; vertical-align: top; margin-left: 10px;">这是一个脚注测试<a href="#fnref:1" rev="footnote"> ↩</a></span></li></ol></div></div></li>
-</ol>
+cond(no)->op</textarea><textarea id="flowchart-0-options" style="display: none">{"scale":1,"line-width":3,"line-length":25,"text-margin":10,"font-size":12}</textarea><script>  var code = document.getElementById("flowchart-0-code").value;  var options = JSON.parse(decodeURIComponent(document.getElementById("flowchart-0-options").value));  var diagram = flowchart.parse(code);  diagram.drawSVG("flowchart-0", options);</script><div id="footnotes"><hr><div id="footnotelist"><ol style="list-style: none; padding-left: 0; margin-left: 40px"><li id="fn:1"><span style="display: inline-block; vertical-align: top; padding-right: 10px; margin-left: -40px">1.</span><span style="display: inline-block; vertical-align: top; margin-left: 10px;">这是一个脚注测试<a href="#fnref:1" rev="footnote"> ↩</a></span></li></ol></div></div></p>
 	  
 	</div>
 
@@ -497,21 +497,33 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	<div class="meta-widget">
 	<i class="fa fa-clock-o"></i>
-	2018-02-15 
+	2018-02-15 created
 	</div>
 	
 		
+    	<div class="meta-widget">
+    	<i class="fa fa-pencil"></i>
+    	2020-06-30 last modified
+    	</div>
+    	
     
 	
 
 	<!-- page view by busuanzi -->
+	
+	<div class="meta-widget">
+	<span id="busuanzi_container_page_pv">
+	<i class="fa fa-eye"></i>
+	<span id="busuanzi_value_page_pv"></span> views
+	</span>
+	</div>
 	
 
 	<!-- post word count -->
 	
 	<div class="meta-widget">
 	<i class="fa fa-tachometer"></i>
-	<span class="post-count">4.6k</span> words
+	<span class="post-count">4.7k</span> words
 	</div>
 	
 
@@ -522,7 +534,7 @@ s.setAttribute('data-timestamp', +new Date());
     <ul id="categorys" class="tag_box list-unstyled collapse in">
           
   <li>
-    <li><a href="/categories/Software/">Software<span class="badge">20</span></a></li>
+    <li><a href="/categories/Software/">Software<span class="badge">21</span></a></li>
   </li>
 
     </ul>
@@ -535,7 +547,7 @@ s.setAttribute('data-timestamp', +new Date());
 	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
     <ul id="tags" class="tag_box list-unstyled collapse in">	  
 	    
-  <li><a href="/tags/Hexo/">Hexo<span class="badge">3</span></a></li> <li><a href="/tags/Freemind/">Freemind<span class="badge">1</span></a></li> <li><a href="/tags/Blogging/">Blogging<span class="badge">2</span></a></li>
+  <li><a href="/tags/Hexo/">Hexo<span class="badge">4</span></a></li> <li><a href="/tags/Freemind/">Freemind<span class="badge">2</span></a></li> <li><a href="/tags/Blogging/">Blogging<span class="badge">2</span></a></li>
 
     </ul>
 	</div>
@@ -546,7 +558,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#摘要"><span class="toc-article-text">摘要</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#前言"><span class="toc-article-text">前言</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#基本配置"><span class="toc-article-text">基本配置</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#GitHub-Pages"><span class="toc-article-text">GitHub Pages</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#安装Hexo和Git部署模块"><span class="toc-article-text">安装Hexo和Git部署模块</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#主题选择"><span class="toc-article-text">主题选择</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#开始写作-从模板新建"><span class="toc-article-text">开始写作: 从模板新建</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Hexo写作"><span class="toc-article-text">Hexo写作</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Front-matter"><span class="toc-article-text">Front matter</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#基于MathJax的数学公式插入"><span class="toc-article-text">基于MathJax的数学公式插入</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#链接自己博客内的文章"><span class="toc-article-text">链接自己博客内的文章</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#图片说明"><span class="toc-article-text">图片说明</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#流程图"><span class="toc-article-text">流程图</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Freemind特性"><span class="toc-article-text">Freemind特性</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#首页摘要"><span class="toc-article-text">首页摘要</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#标签插件"><span class="toc-article-text">标签插件</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#标签-label"><span class="toc-article-text">标签(label)</span></a></li><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#警报-alert"><span class="toc-article-text">警报(alert)</span></a></li><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#徽章-badge"><span class="toc-article-text">徽章(badge)</span></a></li></ol></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Freemind调教"><span class="toc-article-text">Freemind调教</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#网站图标"><span class="toc-article-text">网站图标</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Wiki型浮窗式的脚注"><span class="toc-article-text">Wiki型浮窗式的脚注</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#边栏链接及链接图标"><span class="toc-article-text">边栏链接及链接图标</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#谷歌统计GA"><span class="toc-article-text">谷歌统计GA</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#不蒜子站点和页面统计"><span class="toc-article-text">不蒜子站点和页面统计</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#全站字数统计"><span class="toc-article-text">全站字数统计</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#修改页尾标记"><span class="toc-article-text">修改页尾标记</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#配色修改"><span class="toc-article-text">配色修改</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#文字两端对齐"><span class="toc-article-text">文字两端对齐</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#DISQUS评论"><span class="toc-article-text">DISQUS评论</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#三线表"><span class="toc-article-text">三线表</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#背景图片"><span class="toc-article-text">背景图片</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#TODO"><span class="toc-article-text">TODO</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#总结"><span class="toc-article-text">总结</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#参考"><span class="toc-article-text">参考</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#更新"><span class="toc-article-text">更新</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#2019-05-07"><span class="toc-article-text">2019-05-07</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#2019-05-10"><span class="toc-article-text">2019-05-10</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#2019-05-22"><span class="toc-article-text">2019-05-22</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#2019-05-25"><span class="toc-article-text">2019-05-25</span></a></li></ol></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#前言"><span class="toc-article-text">前言</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#基本配置"><span class="toc-article-text">基本配置</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#GitHub-Pages"><span class="toc-article-text">GitHub Pages</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#安装Hexo和Git部署模块"><span class="toc-article-text">安装Hexo和Git部署模块</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#主题选择"><span class="toc-article-text">主题选择</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#开始写作-从模板新建"><span class="toc-article-text">开始写作: 从模板新建</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Hexo写作"><span class="toc-article-text">Hexo写作</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Front-matter"><span class="toc-article-text">Front matter</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#基于MathJax的数学公式插入"><span class="toc-article-text">基于MathJax的数学公式插入</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#链接自己博客内的文章"><span class="toc-article-text">链接自己博客内的文章</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#图片说明"><span class="toc-article-text">图片说明</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#流程图"><span class="toc-article-text">流程图</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Freemind特性"><span class="toc-article-text">Freemind特性</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#首页摘要"><span class="toc-article-text">首页摘要</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#标签插件"><span class="toc-article-text">标签插件</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#标签-label"><span class="toc-article-text">标签(label)</span></a></li><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#警报-alert"><span class="toc-article-text">警报(alert)</span></a></li><li class="toc-article-item toc-article-level-4"><a class="toc-article-link" href="#徽章-badge"><span class="toc-article-text">徽章(badge)</span></a></li></ol></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Freemind调教"><span class="toc-article-text">Freemind调教</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#网站图标"><span class="toc-article-text">网站图标</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Wiki型浮窗式的脚注"><span class="toc-article-text">Wiki型浮窗式的脚注</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#在首页摘要中移除alert效果"><span class="toc-article-text">在首页摘要中移除alert效果</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#边栏链接及链接图标"><span class="toc-article-text">边栏链接及链接图标</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#谷歌统计GA"><span class="toc-article-text">谷歌统计GA</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#不蒜子站点和页面统计"><span class="toc-article-text">不蒜子站点和页面统计</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#全站字数统计"><span class="toc-article-text">全站字数统计</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#修改页尾标记"><span class="toc-article-text">修改页尾标记</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#配色修改"><span class="toc-article-text">配色修改</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#文字两端对齐"><span class="toc-article-text">文字两端对齐</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#DISQUS评论"><span class="toc-article-text">DISQUS评论</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#三线表"><span class="toc-article-text">三线表</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#背景图片"><span class="toc-article-text">背景图片</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#TODO"><span class="toc-article-text">TODO</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#总结"><span class="toc-article-text">总结</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#参考"><span class="toc-article-text">参考</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#更新"><span class="toc-article-text">更新</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#2019-05-07"><span class="toc-article-text">2019-05-07</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#2019-05-10"><span class="toc-article-text">2019-05-10</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#2019-05-22"><span class="toc-article-text">2019-05-22</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#2019-05-25"><span class="toc-article-text">2019-05-25</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#2020-06-30"><span class="toc-article-text">2020-06-30</span></a></li></ol></li></ol>
 		</div>
 	
 	</div>
@@ -586,7 +598,7 @@ var disqus_shortname = 'shigaro';
     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
   
-	| <span class="post-count">43.5k</span> words
+	| <span class="post-count">44.2k</span> words
   
 </p>
  </footer>

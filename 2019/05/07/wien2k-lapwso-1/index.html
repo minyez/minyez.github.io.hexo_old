@@ -143,9 +143,9 @@
               
               <li><a href="/tags/Bugfix/" style="font-size: 15px; font-family: 微软雅黑">Bugfix<span></span></a></li>
               
-              <li><a href="/tags/DFT/" style="font-size: 15px; font-family: 微软雅黑">DFT<span></span></a></li>
+              <li><a href="/tags/Hexo/" style="font-size: 15px; font-family: 微软雅黑">Hexo<span></span></a></li>
               
-              <li><a href="/tags/VASP/" style="font-size: 15px; font-family: 微软雅黑">VASP<span></span></a></li>
+              <li><a href="/tags/DFT/" style="font-size: 15px; font-family: 微软雅黑">DFT<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -193,7 +193,8 @@
 	<div class="mypage">		
 	  		
 
-	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>介绍了WIEN2k中自旋非极化下通过LAPWSO考虑自旋轨道耦合(SOC)效应的第一性原理计算的流程. 以Si和Au为例子, 简单分析了SOC对能带结构的影响.</p>
+	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><div class="alert alert-success"><i class="fa fa-lightbulb-o  float-left"></i>  <p>介绍了WIEN2k中自旋非极化下通过LAPWSO考虑自旋轨道耦合(SOC)效应的第一性原理计算的流程. 以Si和Au为例子, 简单分析了SOC对能带结构的影响.</p>
+</div>
 <a id="more"></a>
 <h2 id="WIEN2k中实现的SOC"><a href="#WIEN2k中实现的SOC" class="headerlink" title="WIEN2k中实现的SOC"></a>WIEN2k中实现的SOC</h2><p>WIEN2k中价层轨道的SOC贡献是通过LAPWSO程序考虑的. 它基于一种所谓的二次变分<sup id="fnref:1"><a href="#fn:1" rel="footnote"><span class="hint--top hint--error hint--medium hint--rounded hint--bounce" aria-label="[Second variation](http://www.encyclopediaofmath.org/index.php?title=Second_variation&oldid=31231). Encyclopedia of Mathematics.">[1]</span></a></sup>的方法, 通过读取LAPW1计算的本征态的波函数与能量, 计算微扰$\hat{H}_{\rm SO}$的矩阵元并对角化, 得到包含SOC的波函数与能量. LAPWSO可以包含在SCF循环里, 也可以非自洽地运行.</p>
 <h2 id="实际例子"><a href="#实际例子" class="headerlink" title="实际例子"></a>实际例子</h2><h3 id="diamond-Si"><a href="#diamond-Si" class="headerlink" title="diamond Si"></a>diamond Si</h3><p>以diamond Si (10.405822 au)为例, RMT取1.8. 初始化命令</p>
@@ -334,7 +335,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	<div class="meta-widget">
 	<i class="fa fa-clock-o"></i>
-	2019-05-07 
+	2019-05-07 created
 	</div>
 	
 		
@@ -342,6 +343,13 @@ s.setAttribute('data-timestamp', +new Date());
 	
 
 	<!-- page view by busuanzi -->
+	
+	<div class="meta-widget">
+	<span id="busuanzi_container_page_pv">
+	<i class="fa fa-eye"></i>
+	<span id="busuanzi_value_page_pv"></span> views
+	</span>
+	</div>
 	
 
 	<!-- post word count -->
@@ -359,7 +367,7 @@ s.setAttribute('data-timestamp', +new Date());
     <ul id="categorys" class="tag_box list-unstyled collapse in">
           
   <li>
-    <li><a href="/categories/Software/">Software<span class="badge">20</span></a></li>
+    <li><a href="/categories/Software/">Software<span class="badge">21</span></a></li>
   </li>
 
     </ul>
@@ -383,7 +391,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#摘要"><span class="toc-article-text">摘要</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#WIEN2k中实现的SOC"><span class="toc-article-text">WIEN2k中实现的SOC</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#实际例子"><span class="toc-article-text">实际例子</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#diamond-Si"><span class="toc-article-text">diamond Si</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#FCC-Au"><span class="toc-article-text">FCC Au</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#TODO"><span class="toc-article-text">TODO</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#WIEN2k中实现的SOC"><span class="toc-article-text">WIEN2k中实现的SOC</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#实际例子"><span class="toc-article-text">实际例子</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#diamond-Si"><span class="toc-article-text">diamond Si</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#FCC-Au"><span class="toc-article-text">FCC Au</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#TODO"><span class="toc-article-text">TODO</span></a></li></ol>
 		</div>
 	
 	</div>
@@ -423,7 +431,7 @@ var disqus_shortname = 'shigaro';
     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
   
-	| <span class="post-count">43.5k</span> words
+	| <span class="post-count">44.2k</span> words
   
 </p>
  </footer>

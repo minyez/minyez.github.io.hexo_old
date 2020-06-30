@@ -143,9 +143,9 @@
               
               <li><a href="/tags/Bugfix/" style="font-size: 15px; font-family: 微软雅黑">Bugfix<span></span></a></li>
               
-              <li><a href="/tags/DFT/" style="font-size: 15px; font-family: 微软雅黑">DFT<span></span></a></li>
+              <li><a href="/tags/Hexo/" style="font-size: 15px; font-family: 微软雅黑">Hexo<span></span></a></li>
               
-              <li><a href="/tags/VASP/" style="font-size: 15px; font-family: 微软雅黑">VASP<span></span></a></li>
+              <li><a href="/tags/DFT/" style="font-size: 15px; font-family: 微软雅黑">DFT<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -193,8 +193,10 @@
 	<div class="mypage">		
 	  		
 
-	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文将简单介绍GPAW中的进行准粒子计算的<code>G0W0</code>类, 并使用<code>GWBands</code>类制作单层二硫化钼的能带结构图.<a id="more"></a></p>
-<p>无论是否自洽, GW计算都需要一组单粒子态作为输入, 这组单粒子态中需要包含大量的非占据态. 目前主流是采用Kohn-Sham DFT产生的Kohn-Sham本征态. 这里主要介绍非自洽计算情形, 此时GW结果受到输入影响.</p>
+	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><div class="alert alert-success"><i class="fa fa-lightbulb-o  float-left"></i>  <p>本文将简单介绍GPAW中的进行准粒子计算的<code>G0W0</code>类, 并使用<code>GWBands</code>类制作单层二硫化钼的能带结构图.</p>
+</div>
+<a id="more"></a>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>无论是否自洽, GW计算都需要一组单粒子态作为输入, 这组单粒子态中需要包含大量的非占据态. 目前主流是采用Kohn-Sham DFT产生的Kohn-Sham本征态. 这里主要介绍非自洽计算情形, 此时GW结果受到输入影响.</p>
 <p>为了得到包含较多非占据态的本征态一般有两种方法. 第一种是在基态计算中包含大量的非占据态, 这种情况电子步迭代效率低. 第二种是首先在较少非占据态下得到收敛的电子密度(电子密度只与占据态有关), 然后在固定电子密度下对角化Kohn-Sham单电子Hamiltonian. 对于局域和半局域泛函, 当电子密度固定时, 久期行列式就完全确定了, 一步即可得到等于基组数量的非占据态. 对于非局域泛函, 也只需要几步以收敛非局域势算符.</p>
 <p>这里用的例子是单层二硫化钼. 首先用ASE构造二硫化钼模型. 晶格常数相比实验上体相稳定结构略有拉伸.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> ase.build <span class="keyword">import</span> mx2</span><br><span class="line">mos2 = mx2(formula=<span class="string">'MoS2'</span>, kind=<span class="string">'2H'</span>, a=<span class="number">3.19</span>, thickness=<span class="number">3.127</span>, size=(<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>), vacuum=<span class="number">5.0</span>)</span><br></pre></td></tr></table></figure>
@@ -309,7 +311,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	<div class="meta-widget">
 	<i class="fa fa-clock-o"></i>
-	2019-06-28 
+	2019-06-28 created
 	</div>
 	
 		
@@ -317,6 +319,13 @@ s.setAttribute('data-timestamp', +new Date());
 	
 
 	<!-- page view by busuanzi -->
+	
+	<div class="meta-widget">
+	<span id="busuanzi_container_page_pv">
+	<i class="fa fa-eye"></i>
+	<span id="busuanzi_value_page_pv"></span> views
+	</span>
+	</div>
 	
 
 	<!-- post word count -->
@@ -334,7 +343,7 @@ s.setAttribute('data-timestamp', +new Date());
     <ul id="categorys" class="tag_box list-unstyled collapse in">
           
   <li>
-    <li><a href="/categories/Software/">Software<span class="badge">20</span></a></li>
+    <li><a href="/categories/Software/">Software<span class="badge">21</span></a></li>
   </li>
 
     </ul>
@@ -398,7 +407,7 @@ var disqus_shortname = 'shigaro';
     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
   
-	| <span class="post-count">43.5k</span> words
+	| <span class="post-count">44.2k</span> words
   
 </p>
  </footer>
