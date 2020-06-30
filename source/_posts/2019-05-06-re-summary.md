@@ -1,6 +1,7 @@
 ---
 title: Python笔记(二)——常用re函数与语句总结
 date: 2019-05-06 10:56:29
+updated: 2019-05-06 10:56:29
 tags:
 - Python
 - regex
@@ -9,9 +10,11 @@ comment: true
 toc: true
 ---
 
-## 摘要
+{% alert success %}
+整理调用Python `re`包时的常用操作和命令.
+{% endalert %}
 
-整理了调用Python `re`包时的常用操作和命令. <!--more-->
+<!--more-->
 
 这里主要按照使用情景, 对操作和命令进行分类, 这样也顺带梳理不同情境下可能用到的正则表达式. 目前更新到模式组方法的比较.
 

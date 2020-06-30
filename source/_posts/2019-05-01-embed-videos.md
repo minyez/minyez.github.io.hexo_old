@@ -1,6 +1,7 @@
 ---
 title: 在Hexo博文中嵌入视频
 date: 2019-05-01 16:18:19
+updated: 2019-05-01 16:18:19
 tags:
 - Hexo
 - Youtube
@@ -8,9 +9,9 @@ tags:
 categories: Software
 ---
 
-## 摘要
-
-总结了如何用HTML源码在博文中嵌入youtube和bilibili视频, 并通过定义样式表, 统一且响应式的控制视频画面尺寸.
+{% alert success %}
+用HTML源码在博文中嵌入youtube和Bilibili视频. 通过定义样式表, 统一且响应式的控制视频画面尺寸.
+{% endalert %}
 
 <!--more-->
 
@@ -78,7 +79,7 @@ categories: Software
 
 本来想在这篇博文里也把上面的B站视频嵌入的, 但是插入B站视频的iframe后本地server查看, 发现两个视频都是TED. 问题原因不是很清楚. 所以暂时一篇博文只能插入一个视频了 :(
 
-## 参考
+## 参考资料
 
 [How To Embed Youtube Videos Within Hexo Blogs](http://www.tangycode.com/How-To-Embed-Youtube-Videos-Within-Hexo-Blogs/)
 

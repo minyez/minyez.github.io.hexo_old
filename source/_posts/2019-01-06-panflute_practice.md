@@ -3,6 +3,7 @@ title: Pandoc笔记(二)——使用panflute编写过滤器
 categories: Software
 comment: True
 date: 2019-01-05 22:08:03
+updated: 2019-01-05 22:08:03
 tags:
 - Pandoc
 - Markdown
@@ -12,9 +13,9 @@ tags:
 toc: True
 ---
 
-## 前言
-
-本文简单介绍了笔者学习通过panflute编写pandoc过滤器的过程, 实现了一个将`#anytag(date, mood)`转化为可用Bootstrap CSS渲染的HTML源码的过滤器.
+{% alert success %}
+记录笔者学习通过panflute编写pandoc过滤器的过程, 实现了一个将`#anytag(date, mood)`转化为可用Bootstrap CSS渲染的HTML源码的过滤器.
+{% endalert %}
 
 <!-- more -->
 
@@ -51,7 +52,7 @@ if __name__ == '__main__':
 运行
 
 ``` bash
-$ pandoc sometext.md --filter emph_so.py -t gfm -o filtered.md 
+pandoc sometext.md --filter emph_so.py -t gfm -o filtered.md
 ```
 
 下面的文字可作为测试
@@ -62,7 +63,7 @@ $ pandoc sometext.md --filter emph_so.py -t gfm -o filtered.md
 
 ### 删除注释
 
-用的是Panflute GitHub repo里的例子[comments.py](https://github.com/sergiocorreia/panflute/blob/master/examples/panflute/comments.py). 注意原链接17行(这里19行)应该是`el.format`, 而不是`doc.format`. 
+用的是Panflute GitHub repo里的例子[comments.py](https://github.com/sergiocorreia/panflute/blob/master/examples/panflute/comments.py). 注意原链接17行(这里19行)应该是`el.format`, 而不是`doc.format`.
 
 ``` python
 #!/usr/bin/env python3
@@ -100,7 +101,7 @@ if __name__ == "__main__":
 ``` markdown
 <!-- BEGIN COMMENT -->
 
-在这里的文字在经过comments.py过滤后会消失. 
+在这里的文字在经过comments.py过滤后会消失.
 
 <!-- END COMMENT -->
 ```
@@ -114,7 +115,7 @@ if __name__ == "__main__":
 # -*- coding: utf-8 -*-
 # filename: header-up.py
 """
-Set headers to 1 level higher. 
+Set headers to 1 level higher.
 Remove h6, and add '.' at the end if there was no '.'
 """
 
@@ -133,7 +134,7 @@ def action(el, doc):
             return Para(*el.content)
 
 def main(doc=None):
-    return run_filter(action, doc=doc) 
+    return run_filter(action, doc=doc)
 
 if __name__ == '__main__':
     main()
@@ -196,7 +197,7 @@ def extract_id_text(raw_inline):
             if token.endswith(("\'", "\"")):
                 _ret[i] = _ret[i][:-1]
     return tuple(_ret)
-    
+
 
 def rawinline_label_badge(el, doc):
     is_rawinline = isinstance(el, pf.RawInline) and (el.format == 'html')
@@ -221,7 +222,7 @@ if __name__ == "__main__":
 右侧两个是可以的 <badge id="warn" text="badge-warn"> <badge id="info" text="badge-info">
 ```
 
-下面有一个单独成行的`badge-danger`是在这个脚本下是渲染不出来的. 
+下面有一个单独成行的`badge-danger`是在这个脚本下是渲染不出来的.
 
 ``` markdown
 <badge id="danger" text="单独成行的badge-danger">
@@ -229,7 +230,7 @@ if __name__ == "__main__":
 
 ## 过滤器调试
 
-直接用`--filter`选项套用过滤器比较难调试. 可以用以下方法来调试, 其中pandoc输出格式必须作为过滤器的第一个变量声明. 
+直接用`--filter`选项套用过滤器比较难调试. 可以用以下方法来调试, 其中pandoc输出格式必须作为过滤器的第一个变量声明.
 
 ``` bash
 pandoc -t json | ./filter.py latex | pandoc -f json -t latex
@@ -254,13 +255,13 @@ pandoc --filter./filter.py -f json -t latex
 
 这个例子的目的是转化`#anytag(date, mood)`到HTML源码
 
-```
+```html
 <span class="badge badge-tag">#anytag(date, mood)</span>
 ```
 
 之所以想做这个转化是因为在笔记软件里会用`#tag`做笔记分类, 想在转化时把这个tag转化成bootstrap的徽章, 这样在借助HTML转化时就能用BS渲染标签.
 
-在上面过滤器调试的`tag1`例子里, 我们看到如果`date`和`mod`之间如果有空格时, 上面的tag会转化成两个`[Str Space Str]`. 这个时候就要用到前面`comments.py`中的`doc.ignore`来判断一个标签是否完成, 以及处理中间出现的空间. 
+在上面过滤器调试的`tag1`例子里, 我们看到如果`date`和`mod`之间如果有空格时, 上面的tag会转化成两个`[Str Space Str]`. 这个时候就要用到前面`comments.py`中的`doc.ignore`来判断一个标签是否完成, 以及处理中间出现的空间.
 
 最后的代码如下
 
@@ -269,7 +270,7 @@ pandoc --filter./filter.py -f json -t latex
 # -*- coding: utf-8 -*-
 # filename: tag_span.py
 """
-Pandoc filter that turns 
+Pandoc filter that turns
    "#XXX(...)" to '<span class="badge badge-warn">#XXX(...)</span>'
 and
    "@XXX(...)" to <span class="badge badge-info">@XXX(...)</span>
@@ -339,7 +340,7 @@ if __name__ == "__main__":
 
 这个脚本里还对`@`开头做进行了同样处理, 在Agenda里它用来代表人名. 尝试转化下面的文字:
 
-```
+```plain
 Tags: #todo , #todo() , #todo(today) , #todo(today, tomorrow)
 People: @todo , @todo() , @todo(today) , @todo(today, tomorrow)
 ```
@@ -358,7 +359,7 @@ People: <span class="badge badge-info">@todo</span> ,
 <span class="badge badge-info">@todo</span>(today, tomorrow)
 ```
 
-可以看到以`#`为前缀的都正确转化了, 而以`@`前缀的, 含括号的字符串都没有正确转化. 
+可以看到以`#`为前缀的都正确转化了, 而以`@`前缀的, 含括号的字符串都没有正确转化.
 
 由于在`re.fullmatch`中`#`和`@`是同样处理的, 出现这种情形只有可能是在`pf.Span`转化字符串时对`#`和`@`做了区别对待. 为了验证, 我们看一下`convert_text`的结果
 
@@ -368,7 +369,7 @@ People: <span class="badge badge-info">@todo</span> ,
 [Para(Cite(Str(@todo)) Str((today,) Space Str(tomorrow)))]
 ```
 
-可见`Str`对象`@todo`是`Cite`对象的子对象, 跟括号所含字符串对应的`Str`完全分开了, 而我上面的代码没有考虑这个问题. 
+可见`Str`对象`@todo`是`Cite`对象的子对象, 跟括号所含字符串对应的`Str`完全分开了, 而我上面的代码没有考虑这个问题.
 
 ## 总结
 

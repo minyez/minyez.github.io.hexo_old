@@ -3,15 +3,16 @@ title: 均匀格点与对数格点上的Numerov方法
 comment: true
 toc: true
 date: 2019-03-03 14:00:00
+updated: 2019-03-03 14:00:00
 tags:
 - Grid technique
 - Numerical method
 categories: Algorithm
 ---
 
-## 摘要
-
-本文在两种数值格点(均匀格点和对数格点)上推导了Numerov方法的递推方程, 给出了简单的Python实现.
+{% alert success %}
+在两种数值格点(均匀格点和对数格点)上推导了Numerov方法的递推方程, 给出了简单的Python实现.
+{% endalert %}
 
 <!--more-->
 

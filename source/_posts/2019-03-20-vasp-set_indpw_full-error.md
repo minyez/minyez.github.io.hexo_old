@@ -3,6 +3,7 @@ title: 解决运行VASP时set_indpw_full错误
 comment: true
 toc: true
 date: 2019-03-20 13:50:59
+updated: 2019-03-20 13:50:59
 tags:
 - VASP
 - Bugfix
@@ -10,9 +11,9 @@ tags:
 categories: Software
 ---
 
-## 摘要
-
+{% alert success %}
 通过恰当设置KPAR和NPAR, 解决VASP杂化泛函计算中出现的“set_indpw_full”错误.
+{% endalert %}
 
 <!--more-->
 

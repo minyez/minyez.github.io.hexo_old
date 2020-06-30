@@ -3,6 +3,7 @@ title: GPAW笔记(三)——求解器对全哈密顿量对角化的影响
 comment: true
 toc: true
 date: 2019-06-19 20:43:08
+updated: 2019-06-19 20:43:08
 tags:
 - GPAW
 - DFT
@@ -10,9 +11,11 @@ tags:
 categories: Software
 ---
 
-## 摘要
+{% alert success %}
+本文比较了GPAW中不同求解器和不同密度收敛条件下对角化哈密顿量得到的本征值. 结果显示, 为了在较大的平面波截断下全对角化得到正确的Kohn-Sham能级, SCF需要使用CG求解器, 并取较严格的密度收敛标准.
+{% endalert %}
 
-本文比较了GPAW中不同求解器和不同密度收敛条件下对角化哈密顿量得到的本征值. 结果显示, 为了在较大的平面波截断下全对角化得到正确的Kohn-Sham能级, SCF需要使用CG求解器, 并取较严格的密度收敛标准. <!--more-->
+<!--more-->
 
 ## 背景
 

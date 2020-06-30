@@ -3,14 +3,19 @@ title: XmGrace小技巧汇总
 comment: true
 toc: true
 date: 2019-07-31 20:14:19
+updated: 2019-07-31 20:14:19
 tags:
 - XmGrace
 categories: Software
 ---
 
-## 前言
+{% alert success %}
+收集笔者常用的(Xm)Grace使用的技巧.
+{% endalert %}
 
-本文收集了一些笔者常用的(Xm)Grace使用的技巧.<!--more--> 下面的操作均可以在[qtgrace](https://sourceforge.net/projects/qtgrace/)下实现.
+<!--more-->
+
+以下的操作均可以在[qtgrace](https://sourceforge.net/projects/qtgrace/)下实现.
 
 ## 数据集变换
 

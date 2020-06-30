@@ -3,14 +3,18 @@ title: 解决macOS上脚本中运行VASP时动态库未载入问题
 comment: true
 toc: true
 date: 2020-05-09 15:30:23
-updateDate: 2020-06-29 15:30:23
+updated: 2020-06-29 15:30:23
 tags:
 - macOS
 - VASP
 categories: Software
 ---
 
-macOS上脚本中运行程序遇到dyld: Library not loaded报错. <!--more-->
+{% alert success %}
+解决macOS上脚本中运行程序遇到dyld: Library not loaded报错.
+{% endalert %}
+
+<!--more-->
 
 ## 背景
 

@@ -3,15 +3,18 @@ title: outwin算法解读
 comment: true
 toc: true
 date: 2019-05-24 16:14:53
+updated: 2019-05-24 16:14:53
 tags:
 - WIEN2k
 - Numerical method
 categories: Algorithm
 ---
 
-## 摘要
+{% alert success %}
+阅读WIEN2k v16.1版本中例程`outwin`的源码, 以理解其所用到的算法.
+{% endalert %}
 
-阅读WIEN2k v16.1版本中例程`outwin`的源码, 以理解其所用到的算法. <!--more-->
+<!--more-->
 
 ## 背景
 

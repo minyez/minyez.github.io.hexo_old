@@ -2,6 +2,7 @@
 title: 解决编译WIEN2k时找不到meta-GGA例程的问题
 comment: true
 date: 2019-04-20 14:05:10
+updated: 2019-04-20 14:05:10
 tags:
 - WIEN2k
 - Bugfix
@@ -11,9 +12,9 @@ tags:
 categories: Software
 ---
 
-## 摘要
-
-通过修改libxc.F, 解决编译WIEN2k v16.1时出现的未定义"xc_f03_mgga_x_tb09_set_params_"的错误
+{% alert success %}
+修改libxc.F, 解决编译WIEN2k v16.1时出现的未定义"xc_f03_mgga_x_tb09_set_params_"的错误
+{% endalert %}
 
 <!--more-->
 

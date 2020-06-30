@@ -1,15 +1,18 @@
 ---
 title: 解决macOS上编译VASP时遇到的libparser.a未定义符号问题
-date: 2018-01-02
+date: 2018-01-02 12:00:00
+updated: 2018-01-02 12:00:00
 tags: [VASP, Compilation, macOS, Intel, Bugfix]
 categories: Software
 toc: true
 comment: true
 ---
 
-## 摘要
+{% alert success %}
+介绍了笔者在macOS High Sierra上编译VASP.5.4.4时解决libparser.a中undefined symbols的问题.
+{% endalert %}
 
-本文介绍了笔者在macOS High Sierra上编译VASP.5.4.4时解决libparser.a中undefined symbols的问题. <!--more-->
+<!--more-->
 
 ## 背景
 
@@ -284,6 +287,6 @@ Environment module 4.2.1已经修正了`DYLD_LIBRARY_PATH`的问题
 
 [Darwin 百度百科](https://baike.baidu.com/item/Darwin/2537108?fr=aladdin)
 
-http://d.hatena.ne.jp/kimuraw/20150919/p1
+<http://d.hatena.ne.jp/kimuraw/20150919/p1>
 
 [man dyld](https://developer.apple.com/legacy/library/documentation/Darwin/Reference/ManPages/man1/dyld.1.html)

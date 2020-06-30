@@ -3,15 +3,18 @@ title: GPAW笔记(五)——重启GW
 comment: true
 toc: true
 date: 2019-09-12 19:07:28
+updated: 2019-09-12 19:07:28
 tags:
 - GPAW
 - GW
 categories: Software
 ---
 
-## 摘要
+{% alert success %}
+记录如何修改GPAW源码以允许开启ecut外推(`ecut_extrapolation=True`)的GW计算重启.
+{% endalert %}
 
-本文简单记录了如何修改GPAW源码以允许开启ecut外推(`ecut_extrapolation=True`)的GW计算重启.<!--more-->
+<!--more-->
 
 ## 正文
 

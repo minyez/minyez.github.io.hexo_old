@@ -1,6 +1,7 @@
 ---
 title: VPS与SSR配置科学上网
 date: 2017-12-22 16:46:46
+updated: 2017-12-22 16:46:46
 tags: 
 - ShadowsocksR
 - VPS
@@ -9,9 +10,10 @@ comment: true
 toc: true
 ---
 
-## 前言
-
-本文简单介绍了使用Shadowsocks翻越GFW实现对包括Google、Youtube、Twitter在内的国外网站的访问，叙述了基于Vultr公司服务器的SSR服务端部署和macOS/Windows客户端使用方法。 <!--more-->
+{% alert success %}
+本文简单介绍了使用Shadowsocks翻越GFW实现对包括Google、Youtube、Twitter在内的国外网站的访问，叙述了基于Vultr公司服务器的SSR服务端部署和macOS/Windows客户端使用方法。
+{% endalert %}
+<!--more-->
 
 ## 背景
 

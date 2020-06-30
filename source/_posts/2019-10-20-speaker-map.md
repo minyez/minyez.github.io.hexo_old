@@ -3,6 +3,7 @@ title: Python笔记(三)——用pyecharts制作统计地图
 comment: true
 toc: true
 date: 2019-10-20 22:47:28
+updated: 2019-10-20 22:47:28
 tags:
 - Python
 - pyecharts
@@ -10,10 +11,13 @@ tags:
 categories: Programming
 ---
 
-## 前言
+{% alert success %}
+以会议报告人所在机构的分布为例, 介绍如何基于pyecharts制作地理分布图.
+{% endalert %}
 
-本文以会议报告人所在机构的分布为例, 介绍了如何基于pyecharts制作地理分布图.
 <!--more-->
+
+## 前言
 
 前段时间去深圳参加一个研究方向有关的会议, 国内做实验和理论研究的老师都来了, 于是心血来潮想有没有可能做一个统计来看看老师们所在机构的地理分布. 虽然报告人并不多, 但应该也能提供一些定性的信息, 也算是学习一种图片制作和数据展示技巧.
 经过一番搜索, 决定采用Python包`pyecharts`中的地理图标`Geo`类来制作. 使用Python版本为3.7.1, pyecharts版本为1.5.1.

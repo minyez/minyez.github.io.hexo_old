@@ -1,6 +1,7 @@
 ---
 title: 使用gprof2dot+dot制作Fortran程序的调用图
 date: 2019-05-15 16:57:40
+updated: 2019-05-15 16:57:40
 tags:
 - gprof
 - Fortran
@@ -11,9 +12,11 @@ comment: true
 toc: true
 ---
 
-## 摘要
+{% alert success %}
+简要介绍如何基于gprof或Valgrind的性能分析数据, 使用gprof2dot和Graphviz制作Fortran程序的调用图, 以便对Fortran程序进行调试和优化.
+{% endalert %}
 
-本文简要介绍如何基于gprof或Valgrind的性能分析数据, 使用gprof2dot和Graphviz制作Fortran程序的调用图, 以便对Fortran程序进行调试和优化. <!--more-->
+<!--more-->
 
 ## 背景
 

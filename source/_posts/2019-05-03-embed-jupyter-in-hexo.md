@@ -3,21 +3,22 @@ title: 在Hexo博文中嵌入Jupyter notebook
 comment: true
 toc: true
 date: 2019-05-03 13:23:51
+updated: 2019-05-03 13:23:51
 tags:
 - Hexo
 - Jupyter
 categories: Software
 ---
 
-## 摘要
-
-尝试在Hexo博文中嵌入Jupyter notebook (`.ipynb`)以展示Python代码 (快速入门到光速入土).
+{% alert success %}
+嵌入Jupyter notebook (`.ipynb`)以展示Python代码 (从入门到入土).
+{% endalert %}
 
 <!--more-->
 
 ## 前提准备
 
-首先安装`hexo-jupyter-notebook`和`co`两个npm包, 后者为前者的依赖
+安装`hexo-jupyter-notebook`和`co`两个npm包, 后者为前者的依赖
 
 ```shell
 npm install hexo-jupyter-notebook --save

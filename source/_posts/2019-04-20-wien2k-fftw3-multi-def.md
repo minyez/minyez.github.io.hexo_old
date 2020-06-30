@@ -1,6 +1,7 @@
 ---
 title: 解决编译WIEN2k时FFTW3 multiple definition错误
 date: 2019-04-20 13:50:59
+updated: 2019-04-20 13:50:59
 tags:
 - WIEN2k
 - Bugfix
@@ -13,7 +14,9 @@ comment: true
 
 ## 摘要
 
-通过使用Intel FFTW3 wrapper, 解决了自编FFTW下编译WIEN2k v14.2时出现的多次定义"fftw_destroy_plan"错误
+{% alert success %}
+使用Intel FFTW3 wrapper, 解决自编FFTW下编译WIEN2k v14.2时出现的多次定义"fftw_destroy_plan"错误
+{% endalert %}
 
 <!--more-->
 
