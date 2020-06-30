@@ -133,15 +133,15 @@
               <li><a href="/tags" style="font-size: 20px; font-family: 'Calibri Light',Arial">All Tags</a><span></span></li>
               <li class="divider"></li>
               
-              <li><a href="/tags/WIEN2k/" style="font-size: 15px; font-family: 微软雅黑">WIEN2k<span></span></a></li>
-              
               <li><a href="/tags/Compilation/" style="font-size: 15px; font-family: 微软雅黑">Compilation<span></span></a></li>
               
               <li><a href="/tags/GPAW/" style="font-size: 15px; font-family: 微软雅黑">GPAW<span></span></a></li>
               
-              <li><a href="/tags/Bugfix/" style="font-size: 15px; font-family: 微软雅黑">Bugfix<span></span></a></li>
+              <li><a href="/tags/WIEN2k/" style="font-size: 15px; font-family: 微软雅黑">WIEN2k<span></span></a></li>
               
               <li><a href="/tags/Intel/" style="font-size: 15px; font-family: 微软雅黑">Intel<span></span></a></li>
+              
+              <li><a href="/tags/Bugfix/" style="font-size: 15px; font-family: 微软雅黑">Bugfix<span></span></a></li>
               
               <li><a href="/tags/DFT/" style="font-size: 15px; font-family: 微软雅黑">DFT<span></span></a></li>
               
@@ -207,7 +207,9 @@
 <li>在module load前, <code>DYLD_LIBRARY_PATH</code>是空的.</li>
 <li>在load后, 只有未在zshrc里载入的MPICH里定义的库路径被加入到<code>DYLD_LIBRARY_PATH</code>中.</li>
 </ul>
-<p>搜索后找到几个帖子描述类似问题:<br><a href="https://stackoverflow.com/questions/35568122/why-isnt-dyld-library-path-being-propagated-here" target="_blank" rel="noopener">https://stackoverflow.com/questions/35568122/why-isnt-dyld-library-path-being-propagated-here</a><br><a href="https://apple.stackexchange.com/questions/212945/unable-to-set-dyld-fallback-library-path-in-shell-on-osx-10-11-1" target="_blank" rel="noopener">https://apple.stackexchange.com/questions/212945/unable-to-set-dyld-fallback-library-path-in-shell-on-osx-10-11-1</a><br>原因是，从El Captian开始, macOS引入了系统完整性保护(system integrity protection, SIP), 在调用系统提供的解释器时，所有<code>DYLD_</code>环境变量会被重设. 在使用module管理环境时, 因为intel模块事先被载入过, 因此脚本里面载入intel模块的行为会被module无视, 因此只有MPICH中的变量加入到<code>DYLD_LIBRARY_PATH</code>中.</p>
+<p>搜索后找到几个帖子描述类似问题:</p>
+<p><a href="https://stackoverflow.com/questions/35568122/why-isnt-dyld-library-path-being-propagated-here" target="_blank" rel="noopener">https://stackoverflow.com/questions/35568122/why-isnt-dyld-library-path-being-propagated-here</a><br><a href="https://apple.stackexchange.com/questions/212945/unable-to-set-dyld-fallback-library-path-in-shell-on-osx-10-11-1" target="_blank" rel="noopener">https://apple.stackexchange.com/questions/212945/unable-to-set-dyld-fallback-library-path-in-shell-on-osx-10-11-1</a></p>
+<p>问题原因是，从El Captian开始, macOS引入了系统完整性保护(system integrity protection, SIP), 在调用系统提供的解释器时，所有<code>DYLD_</code>环境变量会被重设. 在使用module管理环境时, 因为intel模块事先被载入过, 因此脚本里面载入intel模块的行为会被module无视, 因此只有MPICH中的变量加入到<code>DYLD_LIBRARY_PATH</code>中.</p>
 <p>一种解决办法是, 在最开始的shell脚本里面手动设置<code>DYLD_LIBRARY_PATH</code>, 缺点是不容易复用bashrc或zshrc里的内容. 更方便的做法是在shell脚本里load完所有module后reload一下，</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line">module load vasp/5.4.4-common-intel-2018.0.1</span><br><span class="line">module reload</span><br><span class="line"></span><br><span class="line">mpirun -np 4 vasp_std <span class="comment"># success</span></span><br></pre></td></tr></table></figure>
 <p>另一种可能的办法是<a href="https://blog.csdn.net/qq285744011/article/details/82219340" target="_blank" rel="noopener">关闭SIP</a>, 不过因为reload完全解决了我的需求, 所以就没有尝试这种稍微麻烦些的办法.</p>
@@ -287,6 +289,14 @@ s.setAttribute('data-timestamp', +new Date());
 	2020-05-09 
 	</div>
 	
+		
+    	<div class="meta-widget">
+    	<i class="fa fa-pencil"></i>
+    	2020-06-29 
+    	</div>
+    	
+    
+	
 
 	<!-- page view by busuanzi -->
 	
@@ -295,7 +305,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	<div class="meta-widget">
 	<i class="fa fa-tachometer"></i>
-	<span class="post-count">544</span> words
+	<span class="post-count">546</span> words
 	</div>
 	
 
