@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Emacs(一)——安装与配置Doom Emacs | Shigaro</title>
+  <title>Emacs笔记(一)——安装与配置Doom Emacs | Shigaro</title>
   <meta name="author" content="minyez">
   
   <meta name="description" content="minyez&#39;s blog on life, science and programming">
@@ -11,7 +11,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="Emacs(一)——安装与配置Doom Emacs"/>
+  <meta property="og:title" content="Emacs笔记(一)——安装与配置Doom Emacs"/>
   <meta property="og:site_name" content="Shigaro"/>
 
   
@@ -139,13 +139,13 @@
               
               <li><a href="/tags/WIEN2k/" style="font-size: 15px; font-family: 微软雅黑">WIEN2k<span></span></a></li>
               
+              <li><a href="/tags/macOS/" style="font-size: 15px; font-family: 微软雅黑">macOS<span></span></a></li>
+              
               <li><a href="/tags/Intel/" style="font-size: 15px; font-family: 微软雅黑">Intel<span></span></a></li>
               
               <li><a href="/tags/Bugfix/" style="font-size: 15px; font-family: 微软雅黑">Bugfix<span></span></a></li>
               
               <li><a href="/tags/Hexo/" style="font-size: 15px; font-family: 微软雅黑">Hexo<span></span></a></li>
-              
-              <li><a href="/tags/DFT/" style="font-size: 15px; font-family: 微软雅黑">DFT<span></span></a></li>
               
               <li class="divider"></li>
             </ul>
@@ -176,7 +176,7 @@
 
 	
 		<div class="page-header">		
-			<h1> Emacs(一)——安装与配置Doom Emacs</h1>
+			<h1> Emacs笔记(一)——安装与配置Doom Emacs</h1>
 		</div>		
 	
 
@@ -215,7 +215,7 @@
 <p><figure class="null"><img src="doom-ui.png" alt="Doom Emacs UI"><figcaption>Doom Emacs UI</figcaption></figure></p>
 <p>Doom Emacs安装完后, 编辑<code>~/.doom.d/</code>下的<code>init.el</code>文件打开或关闭一些Doom模块. 一些模块包含可选功能, 需要通过<code>+</code>指定, 例如打开<a href="https://orgmode.org/" target="_blank" rel="noopener">Org-mode</a>的可选功能 (<span class="label label-Q">info</span>如何检查一个包有哪些可选功能?)</p>
 <figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">doom!</span> <span class="symbol">:lang</span></span><br><span class="line">  (<span class="name">org</span> +brain</span><br><span class="line">       +dragdrop</span><br><span class="line">       +gnuplot</span><br><span class="line">       +jupyter)      <span class="comment">; organize your plain life in plain text</span></span><br><span class="line">  )</span><br></pre></td></tr></table></figure>
-<p>在<code>~/.doom.d/packages.el</code>下用<code>package!</code>命令指定安装ELPA/MELPA上的插件包,<sup id="fnref:2"><a href="#fn:2" rel="footnote"><span class="hint--top hint--error hint--medium hint--rounded hint--bounce" aria-label="ELPA: 全称Emacs Lisp Package Archive, Emacs默认的软件包存储库. MELPA的M指的是Milkypostman ELPA">[2]</span></a></sup> 例如</p>
+<p>在<code>~/.doom.d/packages.el</code>下用<code>package!</code>命令指定安装ELPA/MELPA上的插件包,<sup id="fnref:2"><a href="#fn:2" rel="footnote"><span class="hint--top hint--error hint--medium hint--rounded hint--bounce" aria-label="ELPA: 全称Emacs Lisp Package Archive, Emacs默认的软件包存储库. MELPA = Milkypostman ELPA">[2]</span></a></sup> 例如</p>
 <figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">;; 安装ELPA或者MELPA上的包</span></span><br><span class="line">(<span class="name">package!</span> markdown-mode)</span><br><span class="line"><span class="comment">;; 从GitHub仓库安装最新版markdown-mode</span></span><br><span class="line">(<span class="name">package!</span> markdown-mode</span><br><span class="line"> <span class="symbol">:recipe</span> (<span class="symbol">:host</span> github <span class="symbol">:repo</span> jrblevin/markdown-mode))</span><br></pre></td></tr></table></figure>
 <p>设置完后运行</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/.emacs.d/bin/doom sync</span><br></pre></td></tr></table></figure>
@@ -337,7 +337,7 @@
 <figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">package!</span> pdf-tools)</span><br></pre></td></tr></table></figure>
 <p>重新打开Emacs新建文件, 不需要重新build epdfinfo了.</p>
 <h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>Master Emacs in 21 Days: <a href="http://book.emacs-china.org/" target="_blank" rel="noopener">http://book.emacs-china.org/</a></p>
-<div id="footnotes"><hr><div id="footnotelist"><ol style="list-style: none; padding-left: 0; margin-left: 40px"><li id="fn:1"><span style="display: inline-block; vertical-align: top; padding-right: 10px; margin-left: -40px">1.</span><span style="display: inline-block; vertical-align: top; margin-left: 10px;">Zettelkasten是一个德语词, 对应英语slip box, 类似于图书馆存放索引卡的盒子.<a href="#fnref:1" rev="footnote"> ↩</a></span></li><li id="fn:2"><span style="display: inline-block; vertical-align: top; padding-right: 10px; margin-left: -40px">2.</span><span style="display: inline-block; vertical-align: top; margin-left: 10px;">ELPA: 全称Emacs Lisp Package Archive, Emacs默认的软件包存储库. MELPA的M指的是Milkypostman ELPA<a href="#fnref:2" rev="footnote"> ↩</a></span></li></ol></div></div>	  
+<div id="footnotes"><hr><div id="footnotelist"><ol style="list-style: none; padding-left: 0; margin-left: 40px"><li id="fn:1"><span style="display: inline-block; vertical-align: top; padding-right: 10px; margin-left: -40px">1.</span><span style="display: inline-block; vertical-align: top; margin-left: 10px;">Zettelkasten是一个德语词, 对应英语slip box, 类似于图书馆存放索引卡的盒子.<a href="#fnref:1" rev="footnote"> ↩</a></span></li><li id="fn:2"><span style="display: inline-block; vertical-align: top; padding-right: 10px; margin-left: -40px">2.</span><span style="display: inline-block; vertical-align: top; margin-left: 10px;">ELPA: 全称Emacs Lisp Package Archive, Emacs默认的软件包存储库. MELPA = Milkypostman ELPA<a href="#fnref:2" rev="footnote"> ↩</a></span></li></ol></div></div>	  
 	</div>
 
     
@@ -346,9 +346,9 @@
 	<div class="pagination">
 <ul class="pagination">
 	 
-		
-          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
-        
+				
+    	<li class="prev"><a href="/2020/07/01/macos-float-window/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
 
         <li><a href="/archives"><i class="fa fa-archive"></i>Archive</a></li>
 
@@ -442,7 +442,7 @@ s.setAttribute('data-timestamp', +new Date());
     <ul id="categorys" class="tag_box list-unstyled collapse in">
           
   <li>
-    <li><a href="/categories/Software/">Software<span class="badge">22</span></a></li>
+    <li><a href="/categories/Software/">Software<span class="badge">23</span></a></li>
   </li>
 
     </ul>
@@ -455,7 +455,7 @@ s.setAttribute('data-timestamp', +new Date());
 	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
     <ul id="tags" class="tag_box list-unstyled collapse in">	  
 	    
-  <li><a href="/tags/macOS/">macOS<span class="badge">3</span></a></li> <li><a href="/tags/Emacs/">Emacs<span class="badge">1</span></a></li> <li><a href="/tags/Org-roam/">Org-roam<span class="badge">1</span></a></li>
+  <li><a href="/tags/macOS/">macOS<span class="badge">4</span></a></li> <li><a href="/tags/Emacs/">Emacs<span class="badge">1</span></a></li> <li><a href="/tags/Org-roam/">Org-roam<span class="badge">1</span></a></li>
 
     </ul>
 	</div>
@@ -506,7 +506,7 @@ var disqus_shortname = 'shigaro';
     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
   
-	| <span class="post-count">46.2k</span> words
+	| <span class="post-count">46.9k</span> words
   
 </p>
  </footer>
@@ -559,6 +559,24 @@ var disqus_shortname = 'shigaro';
   gtag('config', 'UA-111612868-1');
 </script>
 
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        },
+        TeX: {equationNumbers: { autoNumber: "AMS" }}
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<!--<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
 </body>
    </html>
