@@ -14,12 +14,13 @@ npm install hexo-filter-sub --save
 # Use MathJax
 npm install hexo-renderer-mathjax --save
 # prism highlight
-npm insatll hexo-prism-plugin --save
+# npm insatll hexo-prism-plugin --save
 # rtl support
 npm install hexo-tag-rtl --save
 # word count
 npm install hexo-wordcount --save
-
+npm install -g browsersync
+npm install hexo-browsersync --save
 
 # clone theme
 cd themes/
