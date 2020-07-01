@@ -2,9 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://github.com/minyez/2020/07/01/emacs-1/</loc>
+    
+    <lastmod>2020-07-01T06:51:07.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://github.com/minyez/2019/05/06/re-summary/</loc>
+    
+    <lastmod>2020-07-01T04:52:55.608Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://github.com/minyez/2020/06/30/hexo-2-update-time/</loc>
     
-    <lastmod>2020-06-30T15:45:00.000Z</lastmod>
+    <lastmod>2020-07-01T04:29:31.000Z</lastmod>
     
   </url>
   
@@ -131,13 +145,6 @@
     <loc>https://github.com/minyez/2019/05/07/wien2k-lapwso-1/</loc>
     
     <lastmod>2019-05-07T09:00:00.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://github.com/minyez/2019/05/06/re-summary/</loc>
-    
-    <lastmod>2019-05-06T02:56:29.000Z</lastmod>
     
   </url>
   
