@@ -1,15 +1,15 @@
 ---
-title: Hexo笔记(二)——显示博文修改时间
+title: Hexo笔记(二)——显示博文修改时间等
 comment: true
 toc: true
 date: 2020-06-30 12:12:12
-updated: 2020-06-30 23:45:00
+updated: 2020-07-01 12:29:31
 tags: [Hexo, Freemind, JavaScript]
 categories: Software
 ---
 
 {% alert success %}
-给Freemind主题增加显示博文修改时间的功能
+给Freemind主题增加显示博文修改时间的功能. 用hexo-browsersync实现server模式实时预览.
 {% endalert %}
 
 <!--more-->
@@ -50,9 +50,15 @@ if (data.updated) {
     data.updated = moment(data.updated);
 }
 else {
-  fp = pathFn.resolve(config.source_dir, data.source);
-  lastMod = execSync(`date -r ${fp} "+%Y-%m-%d %H:%M:%S"`).toString().trim();
-  data.updated = moment(lastMod);
+  // 对data.source进行判断, 否则在新建post时会报错
+  if (data.source) {
+    fp = pathFn.resolve(config.source_dir, data.source);
+    lastMod = execSync(`date -r ${fp} "+%Y-%m-%d %H:%M:%S"`).toString().trim();
+    data.updated = moment(lastMod);
+  }
+  else {
+    data.updated = data.date;
+  }
 }
 ```
 
@@ -86,6 +92,17 @@ else {
 
 完工 (ง •̀_•́)ง
 
+## Server模式实时预览
+
+每次修改博文都要重新hexo generate再server挺麻烦的. 原来用的[hexo-livereload](https://github.com/hexojs/hexo-livereload)已被归档, 现在可以用[hexo-browsersync](https://github.com/hexojs/hexo-browsersync)
+
+```shell
+npm install -g browsersync
+npm install hexo-browsersync --save
+```
+
+之后再运行server模式. 当md文件有改动时, localhost页面会自动更新.
+
 ## 相关文章
 
 {% post_link Hexo-1 %}
@@ -95,3 +112,4 @@ else {
 1. [hexo-filter-date-from-git/index.js](https://github.com/xcatliu/hexo-filter-date-from-git/blob/master/index.js)
 2. [SO - Print a file's last modified date in Bash](https://stackoverflow.com/a/20807343)
 3. [grep 递归指定文件遍历方法](https://blog.csdn.net/dengxu11/article/details/6947078?utm_source=blogxgwz0)
+4. [Hexo利用browsersync进行自动刷新](https://blog.singee.me/2018/05/16/hexo/hexo-auto-refresh/)

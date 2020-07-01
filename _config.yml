@@ -143,6 +143,10 @@ search:
 
 #livereload: # deprecated
 #  port: 4001
+browsersync:
+  logLevel: "warn"
+  ghostMode:
+    scroll: true
 
 # douban_generator
 # douban:
