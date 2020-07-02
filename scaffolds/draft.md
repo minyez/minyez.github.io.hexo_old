@@ -1,11 +1,14 @@
 ---
 title: {{ title }}
 date: {{ date }}
+updated: {{ date }}
 tags:
 categories:
 comment: true
 toc: true
 ---
 
-abstract here <!--more-->
-
+{% alert success %}
+abstract
+{% endalert %}
+<!--more-->

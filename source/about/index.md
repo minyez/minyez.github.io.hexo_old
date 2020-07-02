@@ -3,6 +3,8 @@ title: Minye Zhang
 layout: page
 ---
 
+[CN version](index_cn.html)
+
 ## Introduction
 
 I'm currently a Ph.D candidate at [College of Chemistry and Molecular Engineering](http://www.chem.pku.edu.cn/en/) (CCME), [Peking University](https://en.wikipedia.org/wiki/Peking_University) (PKU). Previously I graduated from PKU with B. S. degree in Chemistry in 2015.
