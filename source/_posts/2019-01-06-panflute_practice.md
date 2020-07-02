@@ -16,7 +16,6 @@ toc: True
 {% alert success %}
 记录笔者学习通过panflute编写pandoc过滤器的过程, 实现了一个将`#anytag(date, mood)`转化为可用Bootstrap CSS渲染的HTML源码的过滤器.
 {% endalert %}
-
 <!-- more -->
 
 在{% post_link pandoc-md-to-pdf %}一文里我尝试用HTML和LaTeX转化Markdown文本到PDF, 包括用CSS和LaTeX模板自定义PDF输出. 但有时我们需要在转化时对Markdown文本本身进行on-the-fly的修改. 这是仅仅修改样式无法完成的, 需要借助[pandoc过滤器](https://pandoc.org/filters.html)直接修改抽象语义树(abstract syntax tree, AST).

@@ -14,7 +14,6 @@ categories: Programming
 {% alert success %}
 以会议报告人所在机构的分布为例, 介绍如何基于pyecharts制作地理分布图.
 {% endalert %}
-
 <!--more-->
 
 ## 前言

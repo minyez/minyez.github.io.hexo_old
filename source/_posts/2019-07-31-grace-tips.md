@@ -12,7 +12,6 @@ categories: Software
 {% alert success %}
 收集笔者常用的(Xm)Grace使用的技巧.
 {% endalert %}
-
 <!--more-->
 
 以下的操作均可以在[qtgrace](https://sourceforge.net/projects/qtgrace/)下实现.

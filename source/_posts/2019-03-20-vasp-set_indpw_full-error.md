@@ -14,7 +14,6 @@ categories: Software
 {% alert success %}
 通过恰当设置KPAR和NPAR, 解决VASP杂化泛函计算中出现的“set_indpw_full”错误.
 {% endalert %}
-
 <!--more-->
 
 ## 问题描述

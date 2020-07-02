@@ -13,7 +13,6 @@ categories: Software
 {% alert success %}
 记录如何修改GPAW源码以允许开启ecut外推(`ecut_extrapolation=True`)的GW计算重启.
 {% endalert %}
-
 <!--more-->
 
 ## 正文

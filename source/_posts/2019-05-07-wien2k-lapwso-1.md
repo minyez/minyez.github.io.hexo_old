@@ -15,7 +15,6 @@ toc: true
 {% alert success %}
 介绍了WIEN2k中自旋非极化下通过LAPWSO考虑自旋轨道耦合(SOC)效应的第一性原理计算的流程. 以Si和Au为例子, 简单分析了SOC对能带结构的影响.
 {% endalert %}
-
 <!--more-->
 
 ## WIEN2k中实现的SOC

@@ -13,7 +13,6 @@ categories: Software
 {% alert success %}
 编写MathpixOCR API的Python包装器和简单的Automator workflow, 模拟Mathpix Snip Tool的公式识别体验.
 {% endalert %}
-
 <!--more-->
 
 ## 前言

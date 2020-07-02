@@ -13,7 +13,6 @@ categories: Algorithm
 {% alert success %}
 在两种数值格点(均匀格点和对数格点)上推导了Numerov方法的递推方程, 给出了简单的Python实现.
 {% endalert %}
-
 <!--more-->
 
 ## 背景

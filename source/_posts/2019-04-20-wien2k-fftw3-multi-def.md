@@ -17,7 +17,6 @@ comment: true
 {% alert success %}
 使用Intel FFTW3 wrapper, 解决自编FFTW下编译WIEN2k v14.2时出现的多次定义"fftw_destroy_plan"错误
 {% endalert %}
-
 <!--more-->
 
 ## 问题描述

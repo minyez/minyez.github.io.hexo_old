@@ -11,7 +11,6 @@ comment: true
 {% alert success %}
 介绍了笔者在macOS High Sierra上编译VASP.5.4.4时解决libparser.a中undefined symbols的问题.
 {% endalert %}
-
 <!--more-->
 
 ## 背景

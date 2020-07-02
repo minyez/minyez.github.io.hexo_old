@@ -14,7 +14,6 @@ toc: true
 {% alert success %}
 本文介绍了使用pandoc工具将markdown文件转化为PDF文件的方法, 讨论了HTML和LaTeX两种转换中介. 由于LaTeX对学术写作有着更好的支持, 笔者将重点放在了后者上. 文中总结了一些模板变量的用法和注意事项, 最后以转换demo.md为例, 用Makefile展示了markdown+pandoc+xelatex+bibtex的一整条工具链.
 {% endalert %}
-
 <!-- more -->
 
 需求之一来自于最近开始将读文献和看日语原版漫画时遇到的单词和用例记录在一个markdown笔记里. 在电脑上阅读这些markdown笔记完全没有问题, 但是在移动端中阅读就比较困难, 每次在Typora里手动导出也很麻烦, 于是就想着能不能把markdown转化成pdf的过程自动化. 自然就想到了在文件格式转换中非常有名的[pandoc](https://pandoc.org/).
@@ -362,9 +361,9 @@ biblatexoptions:
 在制作表格时, pandoc支持单元格含多行文字的表格, 也能非常方便的调整列的对齐方式, 比如以下三列分别是左中右对齐的.
 
 ```markdown
-|left | center | right|
-|:----|:------:|-----:|
-|l    |c       |r     |
+| left | center | right |
+| :--- | :----: | ----: |
+| l    |   c    |     r |
 
 Table: demo left-center-right table {#tbl:demo-tbl}
 ```
