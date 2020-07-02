@@ -213,7 +213,7 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d</span><br><span class="line">~/.emacs.d/bin/doom install</span><br></pre></td></tr></table></figure>
 <p>此时命令行打开Emacs, 可以看到下面这样十分炫酷的界面. 这跟我印象里面一个大白框UI迥然不同.</p>
 <p><figure class="null"><img src="doom-ui.png" alt="Doom Emacs UI"><figcaption>Doom Emacs UI</figcaption></figure></p>
-<p>Doom Emacs安装完后, 编辑<code>~/.doom.d/</code>下的<code>init.el</code>文件打开或关闭一些Doom模块. 一些模块包含可选功能, 需要通过<code>+</code>指定, 例如打开<a href="https://orgmode.org/" target="_blank" rel="noopener">Org-mode</a>的可选功能 (<span class="label label-Q">info</span>如何检查一个包有哪些可选功能?)</p>
+<p>Doom Emacs安装完后, 编辑<code>~/.doom.d/</code>下的<code>init.el</code>文件打开或关闭一些Doom模块. 一些模块包含可选功能, 需要通过<code>+</code>指定, 例如打开<a href="https://orgmode.org/" target="_blank" rel="noopener">Org-mode</a>的可选功能 (<span class="label label-info">Q</span>如何检查一个包有哪些可选功能?)</p>
 <figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">doom!</span> <span class="symbol">:lang</span></span><br><span class="line">  (<span class="name">org</span> +brain</span><br><span class="line">       +dragdrop</span><br><span class="line">       +gnuplot</span><br><span class="line">       +jupyter)      <span class="comment">; organize your plain life in plain text</span></span><br><span class="line">  )</span><br></pre></td></tr></table></figure>
 <p>在<code>~/.doom.d/packages.el</code>下用<code>package!</code>命令指定安装ELPA/MELPA上的插件包,<sup id="fnref:2"><a href="#fn:2" rel="footnote"><span class="hint--top hint--error hint--medium hint--rounded hint--bounce" aria-label="ELPA: 全称Emacs Lisp Package Archive, Emacs默认的软件包存储库. MELPA = Milkypostman ELPA">[2]</span></a></sup> 例如</p>
 <figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">;; 安装ELPA或者MELPA上的包</span></span><br><span class="line">(<span class="name">package!</span> markdown-mode)</span><br><span class="line"><span class="comment">;; 从GitHub仓库安装最新版markdown-mode</span></span><br><span class="line">(<span class="name">package!</span> markdown-mode</span><br><span class="line"> <span class="symbol">:recipe</span> (<span class="symbol">:host</span> github <span class="symbol">:repo</span> jrblevin/markdown-mode))</span><br></pre></td></tr></table></figure>
@@ -226,12 +226,13 @@
 <figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">doom!</span> <span class="symbol">:lang</span></span><br><span class="line">  (<span class="name">org</span> +roam)</span><br><span class="line">  )</span><br></pre></td></tr></table></figure>
 <p>也可以在<code>packags.el</code>中加入</p>
 <figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">package!</span> org-roam)</span><br><span class="line">(<span class="name">package!</span> company-org-roam) <span class="comment">;org-roam相关的代码补全</span></span><br></pre></td></tr></table></figure>
-<p>安装. 随后在<code>config.el</code>中配置</p>
+<p>安装. 随后在<code>config.el</code>中用<code>use-package!</code>函数配置</p>
 <figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">use-package!</span> org-roam</span><br><span class="line">  <span class="symbol">:commands</span> (<span class="name">org-roam-insert</span> org-roam-find-file org-roam)</span><br><span class="line">  <span class="symbol">:init</span></span><br><span class="line">  (<span class="name">setq</span> org-roam-directory <span class="string">"~/Documents/SelfDevelopment/org-roam/"</span>)</span><br><span class="line">  (<span class="name">setq</span> org-roam-graph-viewer <span class="string">"/usr/bin/open"</span>)</span><br><span class="line">  (<span class="name">map!</span> <span class="symbol">:leader</span></span><br><span class="line">  <span class="symbol">:prefix</span> <span class="string">"r"</span></span><br><span class="line">  <span class="symbol">:desc</span> <span class="string">"Org-Roam-Insert"</span> <span class="string">"i"</span> #'org-roam-insert</span><br><span class="line">  <span class="symbol">:desc</span> <span class="string">"Org-Roam-Find"</span>   <span class="string">"/"</span> #'org-roam-find-file</span><br><span class="line">  <span class="symbol">:desc</span> <span class="string">"Org-Roam-Buffer"</span> <span class="string">"r"</span> #'org-roam)</span><br><span class="line">  <span class="symbol">:config</span></span><br><span class="line">  (<span class="name">org-roam-mode</span> <span class="number">+1</span>))</span><br><span class="line"><span class="comment">;(add-to-list 'exec-path' "/usr/local/Cellar/sqlite/3.32.1/bin/sqlite3");用macOS自带</span></span><br><span class="line">(<span class="name">add-hook</span> 'after-init-hook 'org-roam-mode)</span><br></pre></td></tr></table></figure>
 <p>随后打开Emacs, <code>M-x org-roam-find-file</code>或<code>SPC r /</code>, 会检查<code>org-roam-directory</code>下的所以org文件. 输出文件名进行编辑或者新建</p>
 <p><figure class="null"><img src="first_file.png" alt=" "><figcaption> </figcaption></figure></p>
-<p>编辑完后<code>C-c C-c</code>保存. 更进一步的Org-mode, Org-roam配置和使用过程将会在下一篇文章中记录. 在本文接下来部分中仅涉及Emacs编辑和指令的基本使用.</p>
-<h2 id="Emacs使用"><a href="#Emacs使用" class="headerlink" title="Emacs使用"></a>Emacs使用</h2><p><a href="https://www.youtube.com/watch?v=rCMh7srOqvw&amp;list=PLhXZp00uXBk4np17N39WvB80zgxlZfVwj" target="_blank" rel="noopener">Zaiste</a>制作了一系列非常好的Youtube视频介绍Emacs Doom的使用, 这里的记录基本上是练习他的视频内容的整理.</p>
+<p>编辑完后<code>C-c C-c</code>保存. 对于config中不了解的函数, 可以输入<code>SPC(空格) h f</code>来查询.</p>
+<p>更进一步的Org-mode, Org-roam配置和使用过程将会在下一篇文章中记录. 在本文接下来部分中仅涉及Emacs编辑和指令的基本使用.</p>
+<h2 id="Emacs使用"><a href="#Emacs使用" class="headerlink" title="Emacs使用"></a>Emacs使用</h2><p><a href="https://www.youtube.com/watch?v=rCMh7srOqvw&amp;list=PLhXZp00uXBk4np17N39WvB80zgxlZfVwj" target="_blank" rel="noopener">Zaiste</a>制作了一系列非常好的Youtube视频介绍Doom Emacs和Org-mode的使用, 这里的记录基本上是练习他的Doom视频内容的整理.</p>
 <h3 id="文件操作"><a href="#文件操作" class="headerlink" title="文件操作"></a>文件操作</h3><p>Dired模式下可以对文件夹与文件进行操作.</p>
 <table>
 <thead>
@@ -265,6 +266,10 @@
 <td><code>m</code>/<code>u</code></td>
 <td>选择/反选文件</td>
 </tr>
+<tr>
+<td><code>R</code></td>
+<td>重命名/移动文件</td>
+</tr>
 </tbody>
 </table>
 <h3 id="常用键位和命令"><a href="#常用键位和命令" class="headerlink" title="常用键位和命令"></a>常用键位和命令</h3><table>
@@ -288,7 +293,15 @@
 <td>在iTerm中打开当前文件夹</td>
 </tr>
 <tr>
+<td>修饰键<code>C</code></td>
+<td>Mac上为Ctrl键</td>
+</tr>
+<tr>
 <td>修饰键<code>M</code></td>
+<td>Mac上为Alt键 (在Doom中如果是第一个输入, CMD键也可以)</td>
+</tr>
+<tr>
+<td>修饰键<code>s</code></td>
 <td>Mac上为CMD键</td>
 </tr>
 <tr>
@@ -308,7 +321,82 @@
 <p>如果想将vterm的默认shell设为zsh需要在<code>config.el</code>中加入</p>
 <figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">;; set zsh to default shell of vterm</span></span><br><span class="line">(<span class="name">use-package!</span> vterm</span><br><span class="line">  <span class="symbol">:config</span></span><br><span class="line">  (<span class="name">setq</span> vterm-shell <span class="string">"zsh"</span>))</span><br></pre></td></tr></table></figure>
 <p>此时可以用<code>SPC o T</code>打开vterm, 使用的是zsh.</p>
-<h3 id="文本编辑命令"><a href="#文本编辑命令" class="headerlink" title="文本编辑命令"></a>文本编辑命令</h3><p>这里文本编辑想表达的是类似Vim中文本操作键位和command mode下的命令(<code>:</code>). 好在Doom Emacs将许多Vim与Emacs命令绑定在了一起, 省去了学习Emacs原生编辑操作的麻烦. 但是有一些命令比较特殊</p>
+<h3 id="缓冲区和窗口操作"><a href="#缓冲区和窗口操作" class="headerlink" title="缓冲区和窗口操作"></a>缓冲区和窗口操作</h3><p>和Vim类似, 打开文件时, Emacs会打开一个缓冲区(buffer), 载入当前文件的所有内容. 所有编辑都在buffer中进行. 但buffer不必一定是文件, 它也可以是shell, 或者Dired文件树等等.</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SPC b N</code></td>
+<td>新建缓冲区</td>
+</tr>
+<tr>
+<td><code>CMD-n</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>SPC b k</code></td>
+<td>杀死当前缓冲区</td>
+</tr>
+<tr>
+<td><code>CMD-k</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>SPC b b</code></td>
+<td>切换工作区缓冲区</td>
+</tr>
+<tr>
+<td>或<code>SPC ,</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>SPC b B</code></td>
+<td>切换全局缓冲区</td>
+</tr>
+<tr>
+<td>或<code>SPC &lt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>C-w v</code></td>
+<td>水平复制缓冲区到新窗口</td>
+</tr>
+<tr>
+<td><code>C-w s</code></td>
+<td>垂直复制缓冲区到新窗口</td>
+</tr>
+<tr>
+<td><code>C-w w</code></td>
+<td>转到下一个缓冲区窗口</td>
+</tr>
+<tr>
+<td><code>C-w h/j/k/l</code></td>
+<td>Vi式窗口转移</td>
+</tr>
+<tr>
+<td><code>C-w q</code></td>
+<td>关闭窗口</td>
+</tr>
+<tr>
+<td><code>C-w &gt;/&lt;</code></td>
+<td>向右/左扩展窗口</td>
+</tr>
+<tr>
+<td><code>C-w +/-</code></td>
+<td>向上/下扩展窗口</td>
+</tr>
+<tr>
+<td><code>C-w =</code></td>
+<td>使所有窗口等宽等高</td>
+</tr>
+</tbody>
+</table>
+<h3 id="文本编辑命令"><a href="#文本编辑命令" class="headerlink" title="文本编辑命令"></a>文本编辑命令</h3><p>这里文本编辑想表达的是类似Vim中文本操作键位和command mode下的命令(<code>:</code>). 好在Doom Emacs将许多Vim与Emacs命令绑定在了一起, 省去了学习Emacs原生编辑操作的麻烦. 但是Domm Emacs额外提供了许多方便的编辑命令</p>
 <table>
 <thead>
 <tr>
@@ -320,6 +408,18 @@
 <tr>
 <td><code>C-x k</code></td>
 <td>关闭buffer但不保存, 类似Vim <code>:q!</code>. 如果直接输入<code>:q</code>将会关闭整个Emacs</td>
+</tr>
+<tr>
+<td><code>g s SPC STR</code></td>
+<td>Avy搜索<code>STR</code>所在位置, 跳转</td>
+</tr>
+<tr>
+<td><code>g s SPC STR x</code></td>
+<td>Avy搜索<code>STR</code>所在位置, 跳转并剪切</td>
+</tr>
+<tr>
+<td><code>g s SPC STR i</code></td>
+<td>Avy搜索<code>STR</code>所在位置, 跳转并提供ispell修改意见</td>
 </tr>
 </tbody>
 </table>
@@ -337,6 +437,8 @@
 <figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">package!</span> pdf-tools)</span><br></pre></td></tr></table></figure>
 <p>重新打开Emacs新建文件, 不需要重新build epdfinfo了.</p>
 <h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>Master Emacs in 21 Days: <a href="http://book.emacs-china.org/" target="_blank" rel="noopener">http://book.emacs-china.org/</a></p>
+<p>Emacs Key Bindings: <a href="https://caiorss.github.io/Emacs-Elisp-Programming/Keybindings.html" target="_blank" rel="noopener">https://caiorss.github.io/Emacs-Elisp-Programming/Keybindings.html</a></p>
+<p><a href="http://emacslife.com/read-lisp-tweak-emacs/beginner-3-make-things-more-convenient.html" target="_blank" rel="noopener">How can I customize Emacs to make things more convenient?</a></p>
 <div id="footnotes"><hr><div id="footnotelist"><ol style="list-style: none; padding-left: 0; margin-left: 40px"><li id="fn:1"><span style="display: inline-block; vertical-align: top; padding-right: 10px; margin-left: -40px">1.</span><span style="display: inline-block; vertical-align: top; margin-left: 10px;">Zettelkasten是一个德语词, 对应英语slip box, 类似于图书馆存放索引卡的盒子.<a href="#fnref:1" rev="footnote"> ↩</a></span></li><li id="fn:2"><span style="display: inline-block; vertical-align: top; padding-right: 10px; margin-left: -40px">2.</span><span style="display: inline-block; vertical-align: top; margin-left: 10px;">ELPA: 全称Emacs Lisp Package Archive, Emacs默认的软件包存储库. MELPA = Milkypostman ELPA<a href="#fnref:2" rev="footnote"> ↩</a></span></li></ol></div></div>	  
 	</div>
 
@@ -414,6 +516,11 @@ s.setAttribute('data-timestamp', +new Date());
 	</div>
 	
 		
+    	<div class="meta-widget">
+    	<i class="fa fa-pencil"></i>
+    	2020-07-02 last modified
+    	</div>
+    	
     
 	
 
@@ -431,7 +538,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	<div class="meta-widget">
 	<i class="fa fa-tachometer"></i>
-	<span class="post-count">1.7k</span> words
+	<span class="post-count">2k</span> words
 	</div>
 	
 
@@ -442,7 +549,7 @@ s.setAttribute('data-timestamp', +new Date());
     <ul id="categorys" class="tag_box list-unstyled collapse in">
           
   <li>
-    <li><a href="/categories/Software/">Software<span class="badge">23</span></a></li>
+    <li><a href="/categories/Software/">Software<span class="badge">24</span></a></li>
   </li>
 
     </ul>
@@ -455,7 +562,7 @@ s.setAttribute('data-timestamp', +new Date());
 	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
     <ul id="tags" class="tag_box list-unstyled collapse in">	  
 	    
-  <li><a href="/tags/macOS/">macOS<span class="badge">4</span></a></li> <li><a href="/tags/Emacs/">Emacs<span class="badge">1</span></a></li> <li><a href="/tags/Org-roam/">Org-roam<span class="badge">1</span></a></li>
+  <li><a href="/tags/macOS/">macOS<span class="badge">4</span></a></li> <li><a href="/tags/Emacs/">Emacs<span class="badge">2</span></a></li> <li><a href="/tags/Org-roam/">Org-roam<span class="badge">1</span></a></li>
 
     </ul>
 	</div>
@@ -466,7 +573,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#前言"><span class="toc-article-text">前言</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#安装"><span class="toc-article-text">安装</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Doom-Emacs"><span class="toc-article-text">Doom Emacs</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Org-roam"><span class="toc-article-text">Org-roam</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Emacs使用"><span class="toc-article-text">Emacs使用</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#文件操作"><span class="toc-article-text">文件操作</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#常用键位和命令"><span class="toc-article-text">常用键位和命令</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#文本编辑命令"><span class="toc-article-text">文本编辑命令</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Markdown编辑和预览"><span class="toc-article-text">Markdown编辑和预览</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Troubleshooting"><span class="toc-article-text">Troubleshooting</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#GitHub图标显示不正常"><span class="toc-article-text">GitHub图标显示不正常</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Package-cl-is-deprecated警告"><span class="toc-article-text">Package cl is deprecated警告</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#新建文档时安装PDF-tools出错"><span class="toc-article-text">新建文档时安装PDF-tools出错</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#参考资料"><span class="toc-article-text">参考资料</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#前言"><span class="toc-article-text">前言</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#安装"><span class="toc-article-text">安装</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Doom-Emacs"><span class="toc-article-text">Doom Emacs</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Org-roam"><span class="toc-article-text">Org-roam</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Emacs使用"><span class="toc-article-text">Emacs使用</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#文件操作"><span class="toc-article-text">文件操作</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#常用键位和命令"><span class="toc-article-text">常用键位和命令</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#缓冲区和窗口操作"><span class="toc-article-text">缓冲区和窗口操作</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#文本编辑命令"><span class="toc-article-text">文本编辑命令</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Markdown编辑和预览"><span class="toc-article-text">Markdown编辑和预览</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Troubleshooting"><span class="toc-article-text">Troubleshooting</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#GitHub图标显示不正常"><span class="toc-article-text">GitHub图标显示不正常</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Package-cl-is-deprecated警告"><span class="toc-article-text">Package cl is deprecated警告</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#新建文档时安装PDF-tools出错"><span class="toc-article-text">新建文档时安装PDF-tools出错</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#参考资料"><span class="toc-article-text">参考资料</span></a></li></ol>
 		</div>
 	
 	</div>
@@ -506,7 +613,7 @@ var disqus_shortname = 'shigaro';
     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
   
-	| <span class="post-count">46.9k</span> words
+	| <span class="post-count">48.1k</span> words
   
 </p>
  </footer>

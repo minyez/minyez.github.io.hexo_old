@@ -196,6 +196,7 @@
 	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><div class="alert alert-success"><i class="fa fa-lightbulb-o  float-left"></i>  <p>本系列将介绍如何使用第一性原理电子结构计算Python包<a href="https://wiki.fysik.dtu.dk/gpaw/index.html" target="_blank" rel="noopener">GPAW</a>，进行材料的电子结构模拟，包括最基本的DFT基态计算以及更高级的准粒子<em>GW</em>和BSE的光谱性质计算。本文作为该系列的第一篇文章，对GPAW在本地和集群上的安装、样例测试进行介绍，总结了这一过程中遇到的问题和解决方案。</p>
 </div>
  <a id="more"></a>
+<p> a</p>
 <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>相比较VASP、WIEN2k、QE等主流材料几何和电子结构计算程序，GPAW具有的最大特点就是它是一个Python模块，而不是一个独立的程序。你可以像读其他Python模块代码一样读它，查看它属性和docstring，函数依赖参数明确。GPAW中体系构筑依赖于<a href="https://wiki.fysik.dtu.dk/ase" target="_blank" rel="noopener">ASE</a>，一个集成度很高的原子模拟函数模块，作为各种DFT calculator的接口和数据处理及可视化模块被广泛使用。事实上GPAW和ASE都是DTU Thygesen课题组开发维护，因此可以把GPAW看成是ASE自己的first-principles calculator。GPAW中一些performance-critical组件由NumPy或自编的C扩展实现，因此GPAW的计算效率也是有保证的。</p>
 <p>我对GPAW的了解始于对低维体系准粒子能带结构的研究，在这方面Thygesen课题组做了很多重要的工作，这些自然是在GPAW中进行的代码实现，包括参数收敛测试和analytical correction to long wavelength limit，尤其后者是我们希望在LAPW框架下实现的。在读懂代码之前，总应该先熟悉它的使用吧。于是想到了做这个系列。这一回从编译安装开始。</p>
 <p>GPAW安装基于Python模块ASE、NumPy，线性代数库BLAS/LAPACK以及交换关联泛函库LIBXC。快速傅里叶变换可以通过链接FFTW3加速，并行计算可(大规模并行时必须)链接ScaLAPACK。本文将利用以上所有的库，其中线性代数库和ScaLAPACK用Intel MKL代替。</p>
@@ -339,7 +340,7 @@ s.setAttribute('data-timestamp', +new Date());
     <ul id="categorys" class="tag_box list-unstyled collapse in">
           
   <li>
-    <li><a href="/categories/Software/">Software<span class="badge">23</span></a></li>
+    <li><a href="/categories/Software/">Software<span class="badge">24</span></a></li>
   </li>
 
     </ul>
@@ -403,7 +404,7 @@ var disqus_shortname = 'shigaro';
     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
   
-	| <span class="post-count">46.9k</span> words
+	| <span class="post-count">48.1k</span> words
   
 </p>
  </footer>
