@@ -13,7 +13,7 @@ categories: Software
 {% alert success %}
 嵌入Jupyter notebook (`.ipynb`)以展示Python代码 (从入门到入土).
 {% endalert %}
-<!--more-->
+<!-- more -->
 
 ## 前提准备
 

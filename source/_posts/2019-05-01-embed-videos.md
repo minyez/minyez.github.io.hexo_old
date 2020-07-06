@@ -12,7 +12,7 @@ categories: Software
 {% alert success %}
 用HTML源码在博文中嵌入youtube和Bilibili视频. 通过定义样式表, 统一且响应式的控制视频画面尺寸.
 {% endalert %}
-<!--more-->
+<!-- more -->
 
 ## Youtube视频
 

@@ -7,7 +7,6 @@ tags:
 - WIEN2k
 - Bugfix
 - LIBXC
-- Intel
 - Compilation
 categories: Software
 ---
@@ -15,7 +14,7 @@ categories: Software
 {% alert success %}
 修改libxc.F, 解决编译WIEN2k v16.1时出现的未定义"xc_f03_mgga_x_tb09_set_params_"的错误
 {% endalert %}
-<!--more-->
+<!-- more -->
 
 ## 问题描述
 

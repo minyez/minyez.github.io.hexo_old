@@ -13,7 +13,7 @@ categories: Software
 {% alert success %}
 编写MathpixOCR API的Python包装器和简单的Automator workflow, 模拟Mathpix Snip Tool的公式识别体验.
 {% endalert %}
-<!--more-->
+<!-- more -->
 
 ## 前言
 
@@ -118,6 +118,8 @@ r = requests.post('https://api.mathpix.com/v3/latex',
 ![ ](shortcut.png)
 
 如此一来, `cmd+shift+4`将公式截屏到剪贴板后`cmd+shift+M`, 等待片刻即可从剪贴板黏贴转换好的公式. 大功告成!
+
+## 黏贴到到Word公式中
 
 ## 参考资料
 

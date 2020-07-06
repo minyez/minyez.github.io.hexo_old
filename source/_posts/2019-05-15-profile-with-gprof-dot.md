@@ -15,7 +15,7 @@ toc: true
 {% alert success %}
 简要介绍如何基于gprof或Valgrind的性能分析数据, 使用gprof2dot和Graphviz制作Fortran程序的调用图, 以便对Fortran程序进行调试和优化.
 {% endalert %}
-<!--more-->
+<!-- more -->
 
 ## 背景
 

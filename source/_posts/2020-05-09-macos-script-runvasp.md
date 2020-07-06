@@ -13,7 +13,7 @@ categories: Software
 {% alert success %}
 解决macOS上脚本中运行程序遇到dyld: Library not loaded报错.
 {% endalert %}
-<!--more-->
+<!-- more -->
 
 ## 背景
 

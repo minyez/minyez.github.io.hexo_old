@@ -14,7 +14,7 @@ categories: Software
 {% alert success %}
 本文比较了GPAW中不同求解器和不同密度收敛条件下对角化哈密顿量得到的本征值. 结果显示, 为了在较大的平面波截断下全对角化得到正确的Kohn-Sham能级, SCF需要使用CG求解器, 并取较严格的密度收敛标准.
 {% endalert %}
-<!--more-->
+<!-- more -->
 
 ## 背景
 

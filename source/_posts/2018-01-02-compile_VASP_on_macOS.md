@@ -2,7 +2,7 @@
 title: 解决macOS上编译VASP时遇到的libparser.a未定义符号问题
 date: 2018-01-02 12:00:00
 updated: 2018-01-02 12:00:00
-tags: [VASP, Compilation, macOS, Intel, Bugfix]
+tags: [VASP, Compilation, macOS, Bugfix]
 categories: Software
 toc: true
 comment: true
@@ -11,7 +11,7 @@ comment: true
 {% alert success %}
 介绍了笔者在macOS High Sierra上编译VASP.5.4.4时解决libparser.a中undefined symbols的问题.
 {% endalert %}
-<!--more-->
+<!-- more -->
 
 ## 背景
 

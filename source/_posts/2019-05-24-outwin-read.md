@@ -13,7 +13,7 @@ categories: Algorithm
 {% alert success %}
 阅读WIEN2k v16.1版本中例程`outwin`的源码, 以理解其所用到的算法.
 {% endalert %}
-<!--more-->
+<!-- more -->
 
 ## 背景
 

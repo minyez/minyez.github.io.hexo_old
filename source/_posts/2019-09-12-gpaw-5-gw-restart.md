@@ -13,7 +13,7 @@ categories: Software
 {% alert success %}
 记录如何修改GPAW源码以允许开启ecut外推(`ecut_extrapolation=True`)的GW计算重启.
 {% endalert %}
-<!--more-->
+<!-- more -->
 
 在超算上进行大体系计算时, 经常会遇到的问题是计算因为超过了单个任务所需时间而被迫停止. 对于较大体系或者较严格参数的GW计算, 遇到这种问题的可能性很高. 一般SCF计算可以通过读写波函数来重启, 但GW计算重启起来稍微麻烦一些, 也有不同的策略, 比如单独输出介电矩阵元.
 

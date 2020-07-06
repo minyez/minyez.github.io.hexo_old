@@ -6,10 +6,8 @@ date: 2019-01-05 22:08:03
 updated: 2019-01-05 22:08:03
 tags:
 - Pandoc
-- Markdown
 - Panflute
 - AST
-- Bootstrap
 toc: True
 ---
 

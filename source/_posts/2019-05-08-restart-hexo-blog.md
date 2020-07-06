@@ -10,7 +10,7 @@ categories: Life
 {% alert warning %}
 碎碎念而已.
 {% endalert %}
-<!--more-->
+<!-- more -->
 
 在经历了草稿里的一些乌龙后, Hexo又能正常工作了. 我也在过了很久一段时间后回到这里, 重新打理这片虚拟的土地, 重新开始上传技术文字. 目前大部分是存在熊掌记和Agenda里后整理出来的bugfix和初步学习笔记.
 

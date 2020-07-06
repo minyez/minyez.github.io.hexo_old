@@ -11,7 +11,7 @@ categories: Software
 {% alert success %}
 给Freemind主题增加显示博文修改时间的功能. 用hexo-browsersync实现server模式实时预览.
 {% endalert %}
-<!--more-->
+<!-- more -->
 
 ## 背景
 
