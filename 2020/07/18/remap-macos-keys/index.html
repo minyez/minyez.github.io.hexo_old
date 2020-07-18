@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   
-  <title>在macOS中置顶窗口 | Shigaro</title>
+  <title>修改macOS上外设键盘的键位映射 | Shigaro</title>
   <meta name="author" content="minyez">
   
   <meta name="description" content="minyez&#39;s blog on life, science and programming">
@@ -11,7 +11,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="在macOS中置顶窗口"/>
+  <meta property="og:title" content="修改macOS上外设键盘的键位映射"/>
   <meta property="og:site_name" content="Shigaro"/>
 
   
@@ -163,7 +163,7 @@
 
 	
 		<div class="page-header">		
-			<h1> 在macOS中置顶窗口</h1>
+			<h1> 修改macOS上外设键盘的键位映射</h1>
 		</div>		
 	
 
@@ -180,22 +180,25 @@
 	<div class="mypage">		
 	  		
 
-	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><div class="alert alert-success"><i class="fa fa-lightbulb-o  float-left"></i>  <p>使用MacForge和AfloatX插件, 在Mojave系统下允许窗口置顶.</p>
+	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><div class="alert alert-success"><i class="fa fa-lightbulb-o  float-left"></i>  <p>用<code>hidutil</code>对macOS外设键盘改键, 并设置开机自启.</p>
 </div>
 <a id="more"></a>
-<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>macOS上一直困扰我的问题是没有简单的窗口置顶工具. 在PC下, 播放器之类的很多软件在任务栏上都有一个小图钉图标, 点一下就可以置顶. 但是macOS上竟然找不到自带这样功能的软件. 这归因于自Mac OS El Capitan以后苹果引入的系统完整性保护 (System Integrity Protection, SIP). 根据<a href="https://en.wikipedia.org/wiki/System_Integrity_Protection#Functions" target="_blank" rel="noopener">维基百科</a>, SIP禁止用户对根目录下<code>/System</code>和<code>/usr</code>等特定文件夹的修改, 关闭代码注入和运行时进程附着, 禁止未签名的内核扩展. 由此看来, 将窗口置顶可能涉及向Finder运行时进行代码注入从而被SIP禁止, 因此按正常流程发布的app就不可能实现这个功能了. 但另一方面, 窗口置顶是否有可能通过由app发送置顶请求到Finder, Finder向用户一次性请求权限的方式来实现呢? 这就要看今后Apple对macOS的改进了.</p>
-<p>可是对于Mojave来说恐怕等不到那个时候, 所以还是得自己想办法. <a href="https://www.maketecheasier.com/mac-keeping-your-application-window-always-on-top/" target="_blank" rel="noopener">这篇文章</a>提供了比较完整的思路, 主要是利用mySIMBL进行代码注入, 置顶功能由<a href="https://github.com/rwu823/afloat">Afloat</a>提供. 有点遗憾的是, 这篇文章时间比较久远了, mySIMBL已经升级成了<a href="https://github.com/MacEnhance/MacForge">MacForge</a>, Afloat数年没有更新, 几乎被<a href="https://github.com/jslegendre/AfloatX">AfloatX</a>取代. 不过基本思路没有变化, 就在这里简单记录一下流程.</p>
-<h2 id="流程记录"><a href="#流程记录" class="headerlink" title="流程记录"></a>流程记录</h2><h3 id="Step-1-部分关闭SIP"><a href="#Step-1-部分关闭SIP" class="headerlink" title="Step 1 部分关闭SIP"></a>Step 1 部分关闭SIP</h3><p>这一部分在<a href="https://github.com/MacEnhance/MacForge/wiki/Installation">MacForge Wiki页</a>上有充分的描述. 重启, 按住<code>CMD+R</code>进入recovery mode. 从左上角菜单栏打开终端, 输入以下部分关闭SIP的命令</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">csrutil enable --without fs --without nvram --without debug</span><br></pre></td></tr></table></figure>
-<p><code>without</code>选项指定禁止的SIP功能. 对应内容可由直接输入<code>csrutil</code>来理解</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ csrutil</span><br><span class="line">System Integrity Protection status: enabled (Custom Configuration).</span><br><span class="line">Configuration:</span><br><span class="line">    Apple Internal: disabled</span><br><span class="line">    Kext Signing: enabled</span><br><span class="line">    Filesystem Protections: disabled</span><br><span class="line">    Debugging Restrictions: disabled</span><br><span class="line">    DTrace Restrictions: enabled</span><br><span class="line">    NVRAM Protections: disabled</span><br><span class="line">    BaseSystem Verification: enabled</span><br><span class="line"></span><br><span class="line">This is an unsupported configuration, likely to break in the future and leave your machine in an unknown state.</span><br></pre></td></tr></table></figure>
-<p><code>fs</code>指的是文件系统保护, <code>debug</code>指调试限制, <code>nvram</code>指非易失性存储器(<a href="https://en.wikipedia.org/wiki/Non-volatile_random-access_memory" target="_blank" rel="noopener">Non-volatile random-access memory</a>, NVRAM)保护. NVRAM是内存的一部分, 用于存储快速访问的设置, 包括<a href="https://support.apple.com/zh-cn/HT204063" target="_blank" rel="noopener">内核崩溃信息</a>.</p>
-<h3 id="Step-2-安装MacForge"><a href="#Step-2-安装MacForge" class="headerlink" title="Step 2 安装MacForge"></a>Step 2 安装MacForge</h3><p>解压GitHub中<a href="https://github.com/w0lfschild/app_updates/raw/master/MacForge/MacForge.zip">最新发布的压缩包</a>, 然后将<code>.app</code>移到应用程序中.</p>
-<h3 id="Step-3-安装AfloatX"><a href="#Step-3-安装AfloatX" class="headerlink" title="Step 3 安装AfloatX"></a>Step 3 安装AfloatX</h3><p>打开MacForge, 从Featured页面找到AfloatX, GET即可.</p>
-<p><figure class="null"><img src="plugin.png" alt=" "><figcaption> </figcaption></figure></p>
-<h3 id="Step-4-置顶窗口"><a href="#Step-4-置顶窗口" class="headerlink" title="Step 4 置顶窗口"></a>Step 4 置顶窗口</h3><p>打开想要置顶的窗口, 右击对应app的Dock图标, 在AfloatX里选择<code>Float Window</code>, 窗口置顶就完成了. 关闭一次窗口重新打开, 就可以取消置顶.</p>
-<p><figure class="null"><img src="float-taskpaper.png" alt=" "><figcaption> </figcaption></figure></p>
-<p>完工 (ง •̀_•́)ง 置顶GTD app窗口对于健忘+拖延的我来说就是救命恩人(bushi).</p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在用Emacs编写文本时遇到的一个问题就是频繁地缩回小拇指去按左ctrl很不方便. 因此想着把大小写锁定键改成ctrl. 在macOS上, 修改内置键盘键位是比较容易的, <code>系统偏好</code> =&gt; <code>键盘</code> =&gt; <code>修饰键</code>, 就可以随便改. 但这一修改不会应用到外接键盘上 (笔者用的是Logi MX Keys). <a href="https://mic-kul.com/2020/01/25/mx-keys-remap-right-alt/" target="_blank" rel="noopener">搜索</a>后发现可以用<code>hidutil</code>解决这个问题.</p>
+<h2 id="修改外设键盘映射"><a href="#修改外设键盘映射" class="headerlink" title="修改外设键盘映射"></a>修改外设键盘映射</h2><p>手册上, <code>hidutil</code>被解释为用于管理人机接口设备 (Human Interface Device, HID) 事件系统的实用程序. 我理解的HID就是键鼠, 手柄, 方向盘之类. 修改键位需要用到它的<code>property</code>命令, 通过脚本来说明可能更加直接. 编写<code>remap_keyboard.sh</code>脚本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line">hidutil property --matching <span class="string">'&#123;"Product": "MX Keys"&#125;'</span> \</span><br><span class="line">    --<span class="built_in">set</span> <span class="string">'&#123;"UserKeyMapping": [&#123;"HIDKeyboardModifierMappingSrc":0x700000039,</span></span><br><span class="line"><span class="string">                                "HIDKeyboardModifierMappingDst":0x7000000e0&#125;]&#125;'</span></span><br></pre></td></tr></table></figure>
+<p>选项的具体含义可通过<code>hidutil property --help</code>了解. 这里做一些简单说明</p>
+<ul>
+<li><code>--matching</code>选项用来匹配需要修改的外设, 值是一个字典. 这里用的Key是产品名<code>Product</code>. 如果不知道产品名, 可以用<code>hidutil list</code>了解设备情况. RegistryID等信息也能从这里看到.</li>
+<li><code>--set</code>用来设置属性值. 相应的, 提取属性是<code>--get</code>.</li>
+<li>改键对应的Key是<code>UserKeyMapping</code>, 值是一个列表. 列表中每一个元素是一个字典. 这里用于映射修饰键的Key是<code>HIDKeyboardModifierMappingSrc</code>和<code>HIDKeyboardModifierMappingDst</code>. 通俗的说, <code>Src</code>是键盘上的键, <code>Dst</code>是机器实际接收的按键, 用16进制数表示. 键位值是<code>0x700000000</code>加上对应的Usage ID, 可以在<a href="https://developer.apple.com/library/archive/technotes/tn2450/_index.html" target="_blank" rel="noopener">Apple文档</a>上查到. CapsLock是<code>39</code>, 左Ctrl是<code>e0</code>.</li>
+</ul>
+<p>写完后, 加上权限运行即可</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chmod +x remap_keyboard.sh</span><br><span class="line">./remap_keyboard.sh</span><br></pre></td></tr></table></figure>
+<h2 id="开机自启"><a href="#开机自启" class="headerlink" title="开机自启"></a>开机自启</h2><p>系统重启后, 映射会失效. 所以需要把它写进开机自启动项里. 可以用Automator的App, 也可以用<code>launchctl</code>. 参考<a href="https://stackoverflow.com/questions/6442364/running-script-upon-login-mac" target="_blank" rel="noopener">SO回答</a>, 编写plist</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">plist</span> <span class="meta-keyword">PUBLIC</span> <span class="meta-string">"-//Apple Computer//DTD PLIST 1.0//EN"</span> <span class="meta-string">"http://www.apple.com/DTDs/PropertyList-1.0.dtd"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">plist</span> <span class="attr">version</span>=<span class="string">"1.0"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dict</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">key</span>&gt;</span>Label<span class="tag">&lt;/<span class="name">key</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">string</span>&gt;</span>com.user.loginscript<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">key</span>&gt;</span>ProgramArguments<span class="tag">&lt;/<span class="name">key</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">array</span>&gt;</span><span class="tag">&lt;<span class="name">string</span>&gt;</span>/path/to/remap_keyboard.sh<span class="tag">&lt;/<span class="name">string</span>&gt;</span><span class="tag">&lt;/<span class="name">array</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">key</span>&gt;</span>RunAtLoad<span class="tag">&lt;/<span class="name">key</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">true</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dict</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plist</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>命名为<code>com.user.loginscript.plist</code>, 保存到<code>~/Library/LaunchAgents</code>下. 然后用 <code>launchctl</code> 修改启动项</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">launchctl load ~/Library/LaunchAgents/com.user.loginscript.plist</span><br></pre></td></tr></table></figure>
+<p>重启完成 (大概) (ง•̀_•́)ง .</p>
 	  
 	</div>
 
@@ -205,14 +208,14 @@
 	<div class="pagination">
 <ul class="pagination">
 	 
-				
-    	<li class="prev"><a href="/2020/07/02/emacs-2/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
-  		
+		
+          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+        
 
         <li><a href="/archives"><i class="fa fa-archive"></i>Archive</a></li>
 
 		
-		   <li class="next"><a href="/2020/07/01/emacs-1/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+		   <li class="next"><a href="/2020/07/02/emacs-2/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
         
 	
 </ul>
@@ -269,7 +272,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	<div class="meta-widget">
 	<i class="fa fa-clock-o"></i>
-	2020-07-01 created
+	2020-07-18 created
 	</div>
 	
 		
@@ -290,7 +293,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	<div class="meta-widget">
 	<i class="fa fa-tachometer"></i>
-	<span class="post-count">718</span> words
+	<span class="post-count">636</span> words
 	</div>
 	
 
@@ -314,7 +317,7 @@ s.setAttribute('data-timestamp', +new Date());
 	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
     <ul id="tags" class="tag_box list-unstyled collapse in">	  
 	    
-  <li><a href="/tags/macOS/">macOS<span class="badge">5</span></a></li> <li><a href="/tags/MacForge/">MacForge<span class="badge">1</span></a></li> <li><a href="/tags/Afloatx/">Afloatx<span class="badge">1</span></a></li> <li><a href="/tags/GTD/">GTD<span class="badge">1</span></a></li>
+  <li><a href="/tags/macOS/">macOS<span class="badge">5</span></a></li> <li><a href="/tags/keyboard/">keyboard<span class="badge">1</span></a></li>
 
     </ul>
 	</div>
@@ -325,7 +328,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#前言"><span class="toc-article-text">前言</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#流程记录"><span class="toc-article-text">流程记录</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Step-1-部分关闭SIP"><span class="toc-article-text">Step 1 部分关闭SIP</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Step-2-安装MacForge"><span class="toc-article-text">Step 2 安装MacForge</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Step-3-安装AfloatX"><span class="toc-article-text">Step 3 安装AfloatX</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Step-4-置顶窗口"><span class="toc-article-text">Step 4 置顶窗口</span></a></li></ol></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#前言"><span class="toc-article-text">前言</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#修改外设键盘映射"><span class="toc-article-text">修改外设键盘映射</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#开机自启"><span class="toc-article-text">开机自启</span></a></li></ol>
 		</div>
 	
 	</div>

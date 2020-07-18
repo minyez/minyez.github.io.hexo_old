@@ -186,7 +186,7 @@
 <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>一年前我在<a href="/2018/07/20/gpaw-1/" title="GPAW笔记(一)——安装及测试">GPAW笔记(一)——安装及测试</a>一文中介绍了GPAW的安装和简单测试. 当时主要是为了比较GPAW, abinit和VASP的<em>GW</em>效率, 于是稍微研究了一下GPAW中参数含义, 运行了一些官方网站上的脚本. 在相近的参数下作了三个程序的<em>GW</em>计算交差后, 就没有再管, 当时也没有留下清楚的学习笔记.</p>
 <p>由于最近实际计算的需要, 我又重新学习GPAW, 着重于DFT能带计算, <em>GW</em>和BSE. 这一篇笔记主要记录了基础DFT计算部分的学习, 包括SCF和能带, 简单分析标准输出. 这里使用的结构是金刚石型的硅, 晶格常数$a=5.43$ (A).</p>
 <h2 id="SCF计算"><a href="#SCF计算" class="headerlink" title="SCF计算"></a>SCF计算</h2><p>从官网例子中改编得的一个SCF计算脚本如下.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> ase.build <span class="keyword">import</span> bulk</span><br><span class="line"><span class="keyword">from</span> gpaw <span class="keyword">import</span> GPAW, PW, FermiDirac</span><br><span class="line"></span><br><span class="line">si = bulk(<span class="string">'Si'</span>, <span class="string">'diamond'</span>, a=<span class="number">5.43</span>)</span><br><span class="line">calc = GPAW(mode=PW(<span class="number">200</span>), xc=<span class="string">'PBE'</span>, kpts=&#123;<span class="string">'size'</span>: (<span class="number">8</span>,<span class="number">8</span>,<span class="number">8</span>), <span class="string">'gamma'</span>: <span class="keyword">True</span>&#125;,</span><br><span class="line">            random=<span class="keyword">True</span>, occupations=FermiDirac(<span class="number">0.01</span>), txt=<span class="string">'Si_gs.txt'</span>)</span><br><span class="line">si.calc = calc</span><br><span class="line">si.get_potential_energy()</span><br><span class="line">calc.write(<span class="string">'Si_gs.gpw'</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> ase.build <span class="keyword">import</span> bulk</span><br><span class="line"><span class="keyword">from</span> gpaw <span class="keyword">import</span> GPAW, PW, FermiDirac</span><br><span class="line"></span><br><span class="line">si = bulk(<span class="string">'Si'</span>, <span class="string">'diamond'</span>, a=<span class="number">5.43</span>)</span><br><span class="line">calc = GPAW(mode=PW(<span class="number">200</span>), xc=<span class="string">'PBE'</span>, kpts=&#123;<span class="string">'size'</span>: (<span class="number">8</span>,<span class="number">8</span>,<span class="number">8</span>), <span class="string">'gamma'</span>: <span class="literal">True</span>&#125;,</span><br><span class="line">            random=<span class="literal">True</span>, occupations=FermiDirac(<span class="number">0.01</span>), txt=<span class="string">'Si_gs.txt'</span>)</span><br><span class="line">si.calc = calc</span><br><span class="line">si.get_potential_energy()</span><br><span class="line">calc.write(<span class="string">'Si_gs.gpw'</span>)</span><br></pre></td></tr></table></figure>
 <p>对每行的说明:</p>
 <ul>
 <li>行4: 用<code>bulk</code>方法构造Si模型</li>
@@ -202,7 +202,7 @@
 <p>再往下是关于能带结构的简单信息. 包括费米能级和前两个k点上的价带导带本征值和占据数. 需要注意的是这里的occupancy是该自旋轨道上的电子数乘以k点分数权重的值. 如果是自旋极化计算, 这部分会给出两个自旋通道的占据数, 占据数会变成非极化的一半. $\Gamma$点带隙为2.56 eV.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Fermi level: 5.73099</span><br><span class="line"></span><br><span class="line">Showing only first 2 kpts</span><br><span class="line"> Kpt  Band  Eigenvalues  Occupancy</span><br><span class="line">  0     2      5.31933    0.00391</span><br><span class="line">  0     3      5.31934    0.00391</span><br><span class="line">  0     4      7.87829    0.00000</span><br><span class="line">  0     5      7.87829    0.00000</span><br><span class="line"></span><br><span class="line">  1     2      4.51004    0.02344</span><br><span class="line">  1     3      4.51006    0.02344</span><br><span class="line">  1     4      7.32815    0.00000</span><br><span class="line">  1     5      9.02227    0.00000</span><br></pre></td></tr></table></figure>
 <h2 id="能带计算"><a href="#能带计算" class="headerlink" title="能带计算"></a>能带计算</h2><p>PBE能带计算需要使用SCF得到的电子密度. 官方网站给出的一个能带计算例子如下.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">calc = GPAW(<span class="string">'Si_gs.gpw'</span>, nbands=<span class="number">16</span>, fixdensity=<span class="keyword">True</span>, symmetry=<span class="string">'off'</span>,</span><br><span class="line">            kpts=&#123;<span class="string">'path'</span>: <span class="string">'GXWKL'</span>, <span class="string">'npoints'</span>: <span class="number">60</span>&#125;, convergence=&#123;<span class="string">'bands'</span>: <span class="number">8</span>&#125;)</span><br><span class="line">calc.get_potential_energy()</span><br><span class="line">calc.write(<span class="string">'Si_bs.gpw'</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">calc = GPAW(<span class="string">'Si_gs.gpw'</span>, nbands=<span class="number">16</span>, fixdensity=<span class="literal">True</span>, symmetry=<span class="string">'off'</span>,</span><br><span class="line">            kpts=&#123;<span class="string">'path'</span>: <span class="string">'GXWKL'</span>, <span class="string">'npoints'</span>: <span class="number">60</span>&#125;, convergence=&#123;<span class="string">'bands'</span>: <span class="number">8</span>&#125;)</span><br><span class="line">calc.get_potential_energy()</span><br><span class="line">calc.write(<span class="string">'Si_bs.gpw'</span>)</span><br></pre></td></tr></table></figure>
 <p>这里主要需要理解<code>GPAW</code>一行</p>
 <ul>
 <li>第一个参数<code>Si_gs.gpw</code>为读入文件.</li>
@@ -213,7 +213,7 @@
 </ul>
 <p><code>get_potential_energy</code>开始SCF循环, 结束后将calculator写入Si_bs.gpw.</p>
 <p>GPAW提供了能带分析的帮助方法<code>band_structure</code>. 该方法继承自ASE的<code>Calculator</code>类. 使用方式如下</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">calc = GPAW(<span class="string">'Si_bs.gpw'</span>)    <span class="comment"># 读取Si能带计算结果</span></span><br><span class="line">bs = calc.band_structure()  <span class="comment"># 调用band_structure方法</span></span><br><span class="line">bs.plot(show=<span class="keyword">True</span>, emax=<span class="number">10.0</span>, filename=<span class="string">"Si_bs.png"</span>) <span class="comment"># 作图</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">calc = GPAW(<span class="string">'Si_bs.gpw'</span>)    <span class="comment"># 读取Si能带计算结果</span></span><br><span class="line">bs = calc.band_structure()  <span class="comment"># 调用band_structure方法</span></span><br><span class="line">bs.plot(show=<span class="literal">True</span>, emax=<span class="number">10.0</span>, filename=<span class="string">"Si_bs.png"</span>) <span class="comment"># 作图</span></span><br></pre></td></tr></table></figure>
 <p><code>band_structure</code>方法返回一个<code>ase.dft.band_structure.BandStructure</code>类. 得到能带图如下, 和<a href="https://wiki.fysik.dtu.dk/gpaw/tutorials/bandstructures/bandstructures.html#bandstructures" target="_blank" rel="noopener">官网例子</a>是相同的.</p>
 <p><figure class="null"><img src="Si_bs.png" alt=" "><figcaption> </figcaption></figure></p>
 <h2 id="与电子结构相关的GPAW方法"><a href="#与电子结构相关的GPAW方法" class="headerlink" title="与电子结构相关的GPAW方法"></a>与电子结构相关的GPAW方法</h2><p><code>BandStructure</code>作图非常方便, 但如果是自己作图或者需要能级数据做进一步处理, 就需要从<code>GPAW</code>对象直接获取k点和Kohn-Sham本征值. 一些可能用到的方法如下</p>
@@ -382,7 +382,7 @@ s.setAttribute('data-timestamp', +new Date());
     <ul id="categorys" class="tag_box list-unstyled collapse in">
           
   <li>
-    <li><a href="/categories/Software/">Software<span class="badge">24</span></a></li>
+    <li><a href="/categories/Software/">Software<span class="badge">25</span></a></li>
   </li>
 
     </ul>
@@ -395,7 +395,7 @@ s.setAttribute('data-timestamp', +new Date());
 	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
     <ul id="tags" class="tag_box list-unstyled collapse in">	  
 	    
-  <li><a href="/tags/GPAW/">GPAW<span class="badge">5</span></a></li> <li><a href="/tags/Tutorial/">Tutorial<span class="badge">3</span></a></li> <li><a href="/tags/DFT/">DFT<span class="badge">4</span></a></li> <li><a href="/tags/Band-structure/">Band structure<span class="badge">2</span></a></li>
+  <li><a href="/tags/GPAW/">GPAW<span class="badge">5</span></a></li> <li><a href="/tags/DFT/">DFT<span class="badge">4</span></a></li> <li><a href="/tags/Tutorial/">Tutorial<span class="badge">1</span></a></li> <li><a href="/tags/Band-structure/">Band structure<span class="badge">2</span></a></li>
 
     </ul>
 	</div>
@@ -446,7 +446,7 @@ var disqus_shortname = 'shigaro';
     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
   
-	| <span class="post-count">48.1k</span> words
+	| <span class="post-count">48.9k</span> words
   
 </p>
  </footer>

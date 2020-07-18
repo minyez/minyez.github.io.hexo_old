@@ -188,7 +188,7 @@
 <p>最终脚本已上传到<a href="https://github.com/minyez/mathpixocr_wrapper">GitHub仓库</a>, 欢迎下载使用.</p>
 <h2 id="API包装"><a href="#API包装" class="headerlink" title="API包装"></a>API包装</h2><h3 id="获取API密钥"><a href="#获取API密钥" class="headerlink" title="获取API密钥"></a>获取API密钥</h3><p>首先需要在Mathpix上注册用户并填写信用卡信息, 注册后获得<code>app_key</code>和<code>app_id</code>作为API密钥. 脚本采用了两种从外部获取密钥的方式, 一种是环境变量, 另一种是从同路径下JSON读取.</p>
 <h3 id="从系统剪贴板获取图片"><a href="#从系统剪贴板获取图片" class="headerlink" title="从系统剪贴板获取图片"></a>从系统剪贴板获取图片</h3><p>使用pillow包中的<code>ImageGrab.grabclipboard</code>获取剪贴版中的图片, 并产生<code>Image</code>对象. 注意, 此后剪贴板中的临时文件会被删除, 无法再直接通过路径获得</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> PIL <span class="keyword">import</span> ImageGrab</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>im = ImageGrab.grabclipboard()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>os.path.isfile(im.filename)</span><br><span class="line"><span class="keyword">False</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> PIL <span class="keyword">import</span> ImageGrab</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>im = ImageGrab.grabclipboard()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>os.path.isfile(im.filename)</span><br><span class="line"><span class="literal">False</span></span><br></pre></td></tr></table></figure>
 <p>因此需要先把图片保存下来才能在后续继续使用</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">im = ImageGrab.grabclipboard()</span><br><span class="line">fn = <span class="string">".temp_eq.png"</span></span><br><span class="line">im.save(fn, <span class="string">"PNG"</span>)</span><br></pre></td></tr></table></figure>
 <h3 id="base64编码"><a href="#base64编码" class="headerlink" title="base64编码"></a>base64编码</h3><p>OCR要求图片编码为base64. 编码转换可以参考官方例子</p>
@@ -234,7 +234,7 @@
 <p>然后在系统设置-键盘-快捷键设置服务的快捷键</p>
 <p><figure class="null"><img src="shortcut.png" alt=" "><figcaption> </figcaption></figure></p>
 <p>如此一来, <code>cmd+shift+4</code>将公式截屏到剪贴板后<code>cmd+shift+M</code>, 等待片刻即可从剪贴板黏贴转换好的公式. 大功告成!</p>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>使用pillow包来获取剪贴板图片: <a href="https://zhuanlan.zhihu.com/p/83678942" target="_blank" rel="noopener">Mathpix收费了？快使用API吧，一个月免费识别1000次！</a></p>
+<h2 id="黏贴到到Word公式中"><a href="#黏贴到到Word公式中" class="headerlink" title="黏贴到到Word公式中"></a>黏贴到到Word公式中</h2><h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>使用pillow包来获取剪贴板图片: <a href="https://zhuanlan.zhihu.com/p/83678942" target="_blank" rel="noopener">Mathpix收费了？快使用API吧，一个月免费识别1000次！</a></p>
 	  
 	</div>
 
@@ -345,7 +345,7 @@ s.setAttribute('data-timestamp', +new Date());
     <ul id="categorys" class="tag_box list-unstyled collapse in">
           
   <li>
-    <li><a href="/categories/Software/">Software<span class="badge">24</span></a></li>
+    <li><a href="/categories/Software/">Software<span class="badge">25</span></a></li>
   </li>
 
     </ul>
@@ -369,7 +369,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#前言"><span class="toc-article-text">前言</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#API包装"><span class="toc-article-text">API包装</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#获取API密钥"><span class="toc-article-text">获取API密钥</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#从系统剪贴板获取图片"><span class="toc-article-text">从系统剪贴板获取图片</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#base64编码"><span class="toc-article-text">base64编码</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#调用API"><span class="toc-article-text">调用API</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#拷贝转化好的LaTeX到系统剪贴板"><span class="toc-article-text">拷贝转化好的LaTeX到系统剪贴板</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#附加功能"><span class="toc-article-text">附加功能</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Automator服务"><span class="toc-article-text">Automator服务</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#参考资料"><span class="toc-article-text">参考资料</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#前言"><span class="toc-article-text">前言</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#API包装"><span class="toc-article-text">API包装</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#获取API密钥"><span class="toc-article-text">获取API密钥</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#从系统剪贴板获取图片"><span class="toc-article-text">从系统剪贴板获取图片</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#base64编码"><span class="toc-article-text">base64编码</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#调用API"><span class="toc-article-text">调用API</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#拷贝转化好的LaTeX到系统剪贴板"><span class="toc-article-text">拷贝转化好的LaTeX到系统剪贴板</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#附加功能"><span class="toc-article-text">附加功能</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Automator服务"><span class="toc-article-text">Automator服务</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#黏贴到到Word公式中"><span class="toc-article-text">黏贴到到Word公式中</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#参考资料"><span class="toc-article-text">参考资料</span></a></li></ol>
 		</div>
 	
 	</div>
@@ -409,7 +409,7 @@ var disqus_shortname = 'shigaro';
     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
   
-	| <span class="post-count">48.1k</span> words
+	| <span class="post-count">48.9k</span> words
   
 </p>
  </footer>

@@ -214,11 +214,11 @@
 <p>也可以在<code>packags.el</code>中加入</p>
 <figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">package!</span> org-roam)</span><br><span class="line">(<span class="name">package!</span> company-org-roam) <span class="comment">;org-roam相关的代码补全</span></span><br></pre></td></tr></table></figure>
 <p>安装. 随后在<code>config.el</code>中用<code>use-package!</code>函数配置</p>
-<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">use-package!</span> org-roam</span><br><span class="line">  <span class="symbol">:commands</span> (<span class="name">org-roam-insert</span> org-roam-find-file org-roam)</span><br><span class="line">  <span class="symbol">:init</span></span><br><span class="line">  (<span class="name">setq</span> org-roam-directory <span class="string">"~/Documents/SelfDevelopment/org-roam/"</span>)</span><br><span class="line">  (<span class="name">setq</span> org-roam-graph-viewer <span class="string">"/usr/bin/open"</span>)</span><br><span class="line">  (<span class="name">map!</span> <span class="symbol">:leader</span></span><br><span class="line">  <span class="symbol">:prefix</span> <span class="string">"r"</span></span><br><span class="line">  <span class="symbol">:desc</span> <span class="string">"Org-Roam-Insert"</span> <span class="string">"i"</span> #'org-roam-insert</span><br><span class="line">  <span class="symbol">:desc</span> <span class="string">"Org-Roam-Find"</span>   <span class="string">"/"</span> #'org-roam-find-file</span><br><span class="line">  <span class="symbol">:desc</span> <span class="string">"Org-Roam-Buffer"</span> <span class="string">"r"</span> #'org-roam)</span><br><span class="line">  <span class="symbol">:config</span></span><br><span class="line">  (<span class="name">org-roam-mode</span> <span class="number">+1</span>))</span><br><span class="line"><span class="comment">;(add-to-list 'exec-path' "/usr/local/Cellar/sqlite/3.32.1/bin/sqlite3");用macOS自带</span></span><br><span class="line">(<span class="name">add-hook</span> 'after-init-hook 'org-roam-mode)</span><br></pre></td></tr></table></figure>
+<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">use-package!</span> org-roam</span><br><span class="line">  <span class="symbol">:commands</span> (<span class="name">org-roam-insert</span> org-roam-find-file org-roam)</span><br><span class="line">  <span class="symbol">:init</span></span><br><span class="line">  (<span class="name">setq</span> org-roam-directory <span class="string">"~/Documents/SelfDevelopment/org-roam/"</span>)</span><br><span class="line">  (<span class="name">setq</span> org-roam-graph-viewer <span class="string">"/usr/bin/open"</span>)</span><br><span class="line">  (<span class="name">map!</span> <span class="symbol">:leader</span></span><br><span class="line">  <span class="symbol">:prefix</span> <span class="string">"r"</span></span><br><span class="line">  <span class="symbol">:desc</span> <span class="string">"Org-Roam-Insert"</span> <span class="string">"i"</span> #'org-roam-insert</span><br><span class="line">  <span class="symbol">:desc</span> <span class="string">"Org-Roam-Find"</span>   <span class="string">"/"</span> #'org-roam-find-file</span><br><span class="line">  <span class="symbol">:desc</span> <span class="string">"Org-Roam-Buffer"</span> <span class="string">"r"</span> #'org-roam)</span><br><span class="line">  <span class="symbol">:config</span></span><br><span class="line">  (<span class="name">org-roam-mode</span> <span class="number">+1</span>))</span><br><span class="line">(<span class="name">add-hook</span> 'after-init-hook 'org-roam-mode)</span><br></pre></td></tr></table></figure>
 <p>随后打开Emacs, <code>M-x org-roam-find-file</code>或<code>SPC r /</code>, 会检查<code>org-roam-directory</code>下的所以org文件. 输出文件名进行编辑或者新建</p>
 <p><figure class="null"><img src="first_file.png" alt=" "><figcaption> </figcaption></figure></p>
 <p>编辑完后<code>C-c C-c</code>保存. 对于config中不了解的函数, 可以输入<code>SPC(空格) h f</code>来查询.</p>
-<p>更进一步的Org-mode, Org-roam配置和使用过程将会在下一篇文章中记录. 在本文接下来部分中仅涉及Emacs编辑和指令的基本使用.</p>
+<p>更进一步的Org-mode, Org-roam配置和使用将会在今后的文章中记录. 在本文接下来部分中仅涉及Emacs编辑和指令的基本使用.</p>
 <h2 id="Emacs使用"><a href="#Emacs使用" class="headerlink" title="Emacs使用"></a>Emacs使用</h2><p><a href="https://www.youtube.com/watch?v=rCMh7srOqvw&amp;list=PLhXZp00uXBk4np17N39WvB80zgxlZfVwj" target="_blank" rel="noopener">Zaiste</a>制作了一系列非常好的Youtube视频介绍Doom Emacs和Org-mode的使用, 这里的记录基本上是练习他的Doom视频内容的整理.</p>
 <h3 id="文件操作"><a href="#文件操作" class="headerlink" title="文件操作"></a>文件操作</h3><p>Dired模式下可以对文件夹与文件进行操作.</p>
 <table>
@@ -234,8 +234,12 @@
 <td>进入上层/子文件夹</td>
 </tr>
 <tr>
-<td><code>+</code>/<code>d x</code></td>
-<td>新建/删除文件夹</td>
+<td><code>+</code></td>
+<td>新建文件夹</td>
+</tr>
+<tr>
+<td><code>d x</code></td>
+<td>标记要删除的文件(夹), 执行删除</td>
 </tr>
 <tr>
 <td><code>o</code></td>
@@ -251,11 +255,23 @@
 </tr>
 <tr>
 <td><code>m</code>/<code>u</code></td>
-<td>选择/反选文件</td>
+<td>选择/取消选择文件</td>
+</tr>
+<tr>
+<td><code>U</code></td>
+<td>取消所有选择</td>
 </tr>
 <tr>
 <td><code>R</code></td>
 <td>重命名/移动文件</td>
+</tr>
+<tr>
+<td><code>C</code></td>
+<td>复制文件</td>
+</tr>
+<tr>
+<td><code>c</code></td>
+<td>压缩选中文件</td>
 </tr>
 </tbody>
 </table>
@@ -318,36 +334,20 @@
 </thead>
 <tbody>
 <tr>
-<td><code>SPC b N</code></td>
+<td><code>SPC b N</code> 或 <code>CMD-n</code></td>
 <td>新建缓冲区</td>
 </tr>
 <tr>
-<td><code>CMD-n</code></td>
-<td></td>
-</tr>
-<tr>
-<td><code>SPC b k</code></td>
+<td><code>SPC b k</code> 或 <code>CMD-k</code></td>
 <td>杀死当前缓冲区</td>
 </tr>
 <tr>
-<td><code>CMD-k</code></td>
-<td></td>
-</tr>
-<tr>
-<td><code>SPC b b</code></td>
+<td><code>SPC b b</code> 或 <code>SPC ,</code></td>
 <td>切换工作区缓冲区</td>
 </tr>
 <tr>
-<td>或<code>SPC ,</code></td>
-<td></td>
-</tr>
-<tr>
-<td><code>SPC b B</code></td>
+<td><code>SPC b B</code> 或 <code>SPC &lt;</code></td>
 <td>切换全局缓冲区</td>
-</tr>
-<tr>
-<td>或<code>SPC &lt;</code></td>
-<td></td>
 </tr>
 <tr>
 <td><code>C-w v</code></td>
@@ -426,6 +426,7 @@
 <h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>Master Emacs in 21 Days: <a href="http://book.emacs-china.org/" target="_blank" rel="noopener">http://book.emacs-china.org/</a></p>
 <p>Emacs Key Bindings: <a href="https://caiorss.github.io/Emacs-Elisp-Programming/Keybindings.html" target="_blank" rel="noopener">https://caiorss.github.io/Emacs-Elisp-Programming/Keybindings.html</a></p>
 <p><a href="http://emacslife.com/read-lisp-tweak-emacs/beginner-3-make-things-more-convenient.html" target="_blank" rel="noopener">How can I customize Emacs to make things more convenient?</a></p>
+<p>Using Emacs Series: <a href="https://cestlaz.github.io/stories/emacs/" target="_blank" rel="noopener">https://cestlaz.github.io/stories/emacs/</a></p>
 <div id="footnotes"><hr><div id="footnotelist"><ol style="list-style: none; padding-left: 0; margin-left: 40px"><li id="fn:1"><span style="display: inline-block; vertical-align: top; padding-right: 10px; margin-left: -40px">1.</span><span style="display: inline-block; vertical-align: top; margin-left: 10px;">Zettelkasten是一个德语词, 对应英语slip box, 类似于图书馆存放索引卡的盒子.<a href="#fnref:1" rev="footnote"> ↩</a></span></li><li id="fn:2"><span style="display: inline-block; vertical-align: top; padding-right: 10px; margin-left: -40px">2.</span><span style="display: inline-block; vertical-align: top; margin-left: 10px;">ELPA: 全称Emacs Lisp Package Archive, Emacs默认的软件包存储库. MELPA = Milkypostman ELPA<a href="#fnref:2" rev="footnote"> ↩</a></span></li></ol></div></div>	  
 	</div>
 
@@ -505,7 +506,7 @@ s.setAttribute('data-timestamp', +new Date());
 		
     	<div class="meta-widget">
     	<i class="fa fa-pencil"></i>
-    	2020-07-02 last modified
+    	2020-07-11 last modified
     	</div>
     	
     
@@ -525,7 +526,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	<div class="meta-widget">
 	<i class="fa fa-tachometer"></i>
-	<span class="post-count">2k</span> words
+	<span class="post-count">2.1k</span> words
 	</div>
 	
 
@@ -536,7 +537,7 @@ s.setAttribute('data-timestamp', +new Date());
     <ul id="categorys" class="tag_box list-unstyled collapse in">
           
   <li>
-    <li><a href="/categories/Software/">Software<span class="badge">24</span></a></li>
+    <li><a href="/categories/Software/">Software<span class="badge">25</span></a></li>
   </li>
 
     </ul>
@@ -549,7 +550,7 @@ s.setAttribute('data-timestamp', +new Date());
 	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
     <ul id="tags" class="tag_box list-unstyled collapse in">	  
 	    
-  <li><a href="/tags/Emacs/">Emacs<span class="badge">2</span></a></li> <li><a href="/tags/Org-roam/">Org-roam<span class="badge">1</span></a></li> <li><a href="/tags/macOS/">macOS<span class="badge">4</span></a></li>
+  <li><a href="/tags/Emacs/">Emacs<span class="badge">2</span></a></li> <li><a href="/tags/macOS/">macOS<span class="badge">5</span></a></li> <li><a href="/tags/Org-roam/">Org-roam<span class="badge">1</span></a></li>
 
     </ul>
 	</div>
@@ -600,7 +601,7 @@ var disqus_shortname = 'shigaro';
     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
   
-	| <span class="post-count">48.1k</span> words
+	| <span class="post-count">48.9k</span> words
   
 </p>
  </footer>

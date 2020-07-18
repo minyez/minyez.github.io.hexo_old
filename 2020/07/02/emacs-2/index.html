@@ -184,7 +184,7 @@
 </div>
 <a id="more"></a>
 <p>在使用Org-roam前首先是学习Org-mode的使用. 这里大量参考了Zaiste的<a href="https://www.youtube.com/watch?v=rCMh7srOqvw&amp;list=PLhXZp00uXBk4np17N39WvB80zgxlZfVwj" target="_blank" rel="noopener">Doom Emacs系列视频</a>, 特别是E09-E13.</p>
-<h2 id="Org文件"><a href="#Org文件" class="headerlink" title="Org文件"></a>Org文件</h2><p>任何格式的纯文本都可以用Org-mode打开. 而在打开<code>.org</code>后缀文件时, Emacs会自动启用Org-mode. 与Markdown和rST等轻量标记语言类似, org文件也需要一些标记符号来激活它的功能.</p>
+<h2 id="Org文件"><a href="#Org文件" class="headerlink" title="Org文件"></a>Org文件</h2><p>任何格式的纯文本都可以用Org-mode打开. 在打开<code>.org</code>后缀文件时, Emacs会自动启用Org-mode. 与Markdown和rST等轻量标记语言类似, org文件也需要一些标记符号来激活它的功能.</p>
 <table>
 <thead>
 <tr>
@@ -196,6 +196,10 @@
 <tr>
 <td><code>*</code></td>
 <td>层级标题</td>
+</tr>
+<tr>
+<td><code>+</code></td>
+<td>无序列表</td>
 </tr>
 <tr>
 <td><code>&lt;&lt;nanme&gt;&gt;</code></td>
@@ -231,7 +235,7 @@
 </tr>
 <tr>
 <td><code>=text=</code></td>
-<td>打字机模式</td>
+<td>打字机(verbatim)模式</td>
 </tr>
 <tr>
 <td><code>~text~</code></td>
@@ -239,8 +243,9 @@
 </tr>
 </tbody>
 </table>
-<p>其中强调记号可以通过<code>org-emphasis-alist</code>变量进行自定义.</p>
-<h2 id="按键操作"><a href="#按键操作" class="headerlink" title="按键操作"></a>按键操作</h2><table>
+<p>在导出时, 打字机和代码模式都统一导出为打字机模式各种强调记号可以通过<code>org-emphasis-alist</code>变量进行自定义.</p>
+<h2 id="按键操作"><a href="#按键操作" class="headerlink" title="按键操作"></a>按键操作</h2><p>一些会经常用到的捆绑键位, 作为简单的cheatsheet</p>
+<table>
 <thead>
 <tr>
 <th>Key</th>
@@ -262,7 +267,11 @@
 </tr>
 <tr>
 <td><code>C-RET</code></td>
-<td>新建同层级段落</td>
+<td>在下方插入新条目(表格, 清单)</td>
+</tr>
+<tr>
+<td><code>C-s-RET</code></td>
+<td>在上方插入新条目(表格, 清单)</td>
 </tr>
 <tr>
 <td><code>SPC m l l</code></td>
@@ -285,23 +294,24 @@
 <td>转到链接目标</td>
 </tr>
 <tr>
-<td><code>C-C C-x C-n/p</code></td>
-<td>下/上一个链接</td>
+<td><code>D</code> (大写D)</td>
+<td>返回链接位置</td>
 </tr>
 <tr>
-<td><code>M-x org-mark-ring-goto</code></td>
-<td>返回链接位置</td>
+<td><code>C-C C-x C-n/p</code></td>
+<td>下/上一个链接位置</td>
 </tr>
 </tbody>
 </table>
+<p>一个小贴士是, 可以用<code>M-x general-describe-keybindings</code>确认一个捆绑键对应的函数.</p>
 <h2 id="org文件编辑"><a href="#org文件编辑" class="headerlink" title="org文件编辑"></a>org文件编辑</h2><h3 id="创建链接"><a href="#创建链接" class="headerlink" title="创建链接"></a>创建链接</h3><p>Org-mode尤其有用的功能是其方便的内链创建.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">* Heading 1</span><br><span class="line">  ** Subheading 1</span><br><span class="line">    This is link to [[Heading 2]]</span><br><span class="line">    这是一个锚&lt;&lt;anchor&gt;&gt;</span><br><span class="line"></span><br><span class="line">  ** Subheading 2</span><br><span class="line">    跳转到锚[[anchor]]</span><br><span class="line"></span><br><span class="line">* Heading 2</span><br><span class="line">  Go to [[https://www.google.com][Google.com]]</span><br></pre></td></tr></table></figure>
-<p>此外, Org-mode还支持多种<a href="https://orgmode.org/manual/External-Links.html#External-Links" target="_blank" rel="noopener">外部链接</a>. 除内链和网页外还支持<code>file:</code>, <code>doi:</code>, Emacs Lisp脚本<code>elisp:</code>以及Shell脚本<code>shell:</code>等. 另外它还支持自定义链接. 在<code>config.el</code>中加入下列代码</p>
+<p>此外, Org-mode支持多种<a href="https://orgmode.org/manual/External-Links.html#External-Links" target="_blank" rel="noopener">外部链接</a>. 除内链和网页外还支持本地文件<code>file:</code>, <code>doi:</code>, Emacs Lisp脚本<code>elisp:</code>以及Shell脚本<code>shell:</code>等. 它允许自定义链接, 例如在<code>config.el</code>中加入下列代码可以创建由AV或BV号到b站视频的链接<code>blbl:</code></p>
 <figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">; 创建连接bilibili视频的链接</span></span><br><span class="line">(<span class="name">defun</span> make-bilibili-link (<span class="name">vid</span>)</span><br><span class="line">  (<span class="name">browse-url</span> (<span class="name">concat</span> <span class="string">"https://www.bilibili.com/video/"</span> vid))  </span><br><span class="line">)</span><br><span class="line">(<span class="name">after!</span> org</span><br><span class="line">  (<span class="name">org-add-link-type</span> <span class="string">"blbl"</span> #'make-bilibili-link)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
 <h3 id="可执行代码块"><a href="#可执行代码块" class="headerlink" title="可执行代码块"></a>可执行代码块</h3><p>输入<code>&lt;s</code>后<code>TAB</code>, 创建一个如下环境, 可在其中编写代码.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#+BEGIN_SRC</span><br><span class="line"></span><br><span class="line">#+END_SRC</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#+BEGIN_SRC LANG</span><br><span class="line">// code here</span><br><span class="line">#+END_SRC</span><br></pre></td></tr></table></figure>
 <p>比如我们在其中用C编写Hello World:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#+BEGIN_SRC</span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">int main() &#123;</span><br><span class="line">  printf(&quot;Hello World!&quot;);</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br><span class="line">#+END_SRC</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#+BEGIN_SRC c</span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">int main() &#123;</span><br><span class="line">  printf(&quot;Hello World!&quot;);</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br><span class="line">#+END_SRC</span><br></pre></td></tr></table></figure>
 <p>编写完成后, 退出编辑模式. 在<code>END_SRC</code>下回车, 就会自动将输出结果添加到源代码块下方.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#+RESULTS:</span><br><span class="line">: Hello World!</span><br></pre></td></tr></table></figure>
 <p>如果改变了代码的内容, 只要选中代码块任意位置重新回车, 即可更新输出结果. <span class="label label-info">Q</span> <code>#+RESULTS</code>部分似乎不会被导出, 有待确认)</p>
@@ -331,7 +341,7 @@
 </tr>
 </tbody>
 </table>
-<p>在用LaTeX导出时, 用如下代码块包围的内容不会被转换器处理</p>
+<p>在用LaTeX导出时, 用如下代码块包围的内容会被直接导出</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#+BEGIN_LATEX</span><br><span class="line">\LaTeX</span><br><span class="line">#+END_LATEX</span><br></pre></td></tr></table></figure>
 <p>导出结果为</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\LaTeX</span><br></pre></td></tr></table></figure>
@@ -346,9 +356,9 @@
 	<div class="pagination">
 <ul class="pagination">
 	 
-		
-          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
-        
+				
+    	<li class="prev"><a href="/2020/07/18/remap-macos-keys/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
 
         <li><a href="/archives"><i class="fa fa-archive"></i>Archive</a></li>
 
@@ -414,6 +424,11 @@ s.setAttribute('data-timestamp', +new Date());
 	</div>
 	
 		
+    	<div class="meta-widget">
+    	<i class="fa fa-pencil"></i>
+    	2020-07-04 last modified
+    	</div>
+    	
     
 	
 
@@ -431,7 +446,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	<div class="meta-widget">
 	<i class="fa fa-tachometer"></i>
-	<span class="post-count">784</span> words
+	<span class="post-count">893</span> words
 	</div>
 	
 
@@ -442,7 +457,7 @@ s.setAttribute('data-timestamp', +new Date());
     <ul id="categorys" class="tag_box list-unstyled collapse in">
           
   <li>
-    <li><a href="/categories/Software/">Software<span class="badge">24</span></a></li>
+    <li><a href="/categories/Software/">Software<span class="badge">25</span></a></li>
   </li>
 
     </ul>
@@ -506,7 +521,7 @@ var disqus_shortname = 'shigaro';
     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
   
-	| <span class="post-count">48.1k</span> words
+	| <span class="post-count">48.9k</span> words
   
 </p>
  </footer>

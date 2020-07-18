@@ -2,6 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://github.com/minyez/2020/07/18/remap-macos-keys/</loc>
+    
+    <lastmod>2020-07-18T08:05:58.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://github.com/minyez/2020/07/01/emacs-1/</loc>
+    
+    <lastmod>2020-07-10T16:09:16.540Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://github.com/minyez/2018/02/15/Hexo-1/</loc>
+    
+    <lastmod>2020-07-04T05:50:15.612Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://github.com/minyez/2020/07/02/emacs-2/</loc>
+    
+    <lastmod>2020-07-04T03:38:02.439Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://github.com/minyez/about/index_cn.html</loc>
     
     <lastmod>2020-07-02T14:12:11.672Z</lastmod>
@@ -12,20 +40,6 @@
     <loc>https://github.com/minyez/about/index.html</loc>
     
     <lastmod>2020-07-02T14:11:23.634Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://github.com/minyez/2020/07/02/emacs-2/</loc>
-    
-    <lastmod>2020-07-02T09:39:19.423Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://github.com/minyez/2020/07/01/emacs-1/</loc>
-    
-    <lastmod>2020-07-02T09:30:59.399Z</lastmod>
     
   </url>
   
@@ -47,13 +61,6 @@
     <loc>https://github.com/minyez/2020/06/30/hexo-2-update-time/</loc>
     
     <lastmod>2020-07-01T04:29:31.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://github.com/minyez/2018/02/15/Hexo-1/</loc>
-    
-    <lastmod>2020-06-30T11:56:55.923Z</lastmod>
     
   </url>
   
