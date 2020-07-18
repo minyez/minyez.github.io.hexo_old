@@ -184,8 +184,8 @@
 </div>
 <a id="more"></a>
 <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>用LaTeX准备文献报告时一个比较头疼的问题是输入文献中包含复杂符号的长公式. <a href="https://mathpix.com/" target="_blank" rel="noopener">Mathpix Snip Tool</a> (MST)提供了方便的光学字符识别功能, 可以将包含公式的截图转化为LaTeX代码. 今年MST从完全免费的1.0版本升级到了2.0, 自此个人用户每月只能免费识别50次, 这对于苦逼PhD显然是不够用的.</p>
-<p>好在作为MST底层的MathpixOCR服务, API每月可免费调用1000次, 所得结果和MST相同, 只是没有MST方便的截图和GUI功能. 归根结底, 我们想实现的无非是识别剪贴板中的公式图片, 转化图片到LaTeX代码并复制到剪贴板而已. 这可以通过将OCR与OS命令包装在一起来实现. 官方提供了简单的<a href="https://github.com/Mathpix/api-examples/tree/master/python">例子</a>供我们学习OCR API的使用, 而OS API可以通过Python包和CLI命令调用. 这篇文章是学习包装器编写的记录.</p>
-<p>最终脚本已上传到<a href="https://github.com/minyez/mathpixocr_wrapper">GitHub仓库</a>, 欢迎下载使用.</p>
+<p>好在作为MST底层的MathpixOCR服务, API每月可免费调用1000次, 所得结果和MST相同, 只是没有MST方便的截图和GUI功能. 归根结底, 我们想实现的无非是识别剪贴板中的公式图片, 转化图片到LaTeX代码并复制到剪贴板而已. 这可以通过将OCR与OS命令包装在一起来实现. 官方提供了简单的<a href="https://github.com/Mathpix/api-examples/tree/master/python" target="_blank" rel="noopener">例子</a>供我们学习OCR API的使用, 而OS API可以通过Python包和CLI命令调用. 这篇文章是学习包装器编写的记录.</p>
+<p>最终脚本已上传到<a href="https://github.com/minyez/mathpixocr_wrapper" target="_blank" rel="noopener">GitHub仓库</a>, 欢迎下载使用.</p>
 <h2 id="API包装"><a href="#API包装" class="headerlink" title="API包装"></a>API包装</h2><h3 id="获取API密钥"><a href="#获取API密钥" class="headerlink" title="获取API密钥"></a>获取API密钥</h3><p>首先需要在Mathpix上注册用户并填写信用卡信息, 注册后获得<code>app_key</code>和<code>app_id</code>作为API密钥. 脚本采用了两种从外部获取密钥的方式, 一种是环境变量, 另一种是从同路径下JSON读取.</p>
 <h3 id="从系统剪贴板获取图片"><a href="#从系统剪贴板获取图片" class="headerlink" title="从系统剪贴板获取图片"></a>从系统剪贴板获取图片</h3><p>使用pillow包中的<code>ImageGrab.grabclipboard</code>获取剪贴版中的图片, 并产生<code>Image</code>对象. 注意, 此后剪贴板中的临时文件会被删除, 无法再直接通过路径获得</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">from</span> PIL <span class="keyword">import</span> ImageGrab</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>im = ImageGrab.grabclipboard()</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>os.path.isfile(im.filename)</span><br><span class="line"><span class="literal">False</span></span><br></pre></td></tr></table></figure>
@@ -401,7 +401,7 @@ var disqus_shortname = 'shigaro';
   <div class="container-narrow">
   <footer> <p>
   
-  &copy; 2020 by <a href="https://github.com/minyez"> minyez </a>
+  &copy; 2020 by <a href="shigaro.org"> minyez </a>
   
     | <a href="http://github.com/minyez/hexo-theme-freemind/">Theme</a> based on two Freemind themes by <a href="https://github.com/wzpan/hexo-theme-freemind/">wzpan</a> and <a href="https://github.com/PytLab/hexo-theme-freemind/">PytLab</a> 
     | Powered by <a href="https://github.com/hexojs/hexo">Hexo</a>

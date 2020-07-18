@@ -183,7 +183,7 @@
 	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><div class="alert alert-warning"><i class="fa fa-bell  float-left"></i>  <p>记录从零开始的Emacs. 目标是熟练地使用Org-roam编辑个人维基!</p>
 </div>
 <a id="more"></a>
-<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>因缘巧合, 今日我在搜索转化$\rm\LaTeX$到MathML的解决方案时, 偶然看到了<a href="https://github.com/org-roam/org-roam">Org-roam</a>项目. 它的个人知识库构建和展示方式引起了我很大的兴趣.</p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>因缘巧合, 今日我在搜索转化$\rm\LaTeX$到MathML的解决方案时, 偶然看到了<a href="https://github.com/org-roam/org-roam" target="_blank" rel="noopener">Org-roam</a>项目. 它的个人知识库构建和展示方式引起了我很大的兴趣.</p>
 <p>Org-roam基于Emacs的Org-mode, 后者是Emacs中纯文本笔记管理+GTD+写作系统. “Org”指代organize, “roam”则取自<a href="https://roamresearch.com/" target="_blank" rel="noopener">Roam Research</a>. Org-roam采纳了<a href="https://zettelkasten.de/" target="_blank" rel="noopener">Zettelkasten笔记法</a>的思想.<sup id="fnref:1"><a href="#fn:1" rel="footnote"><span class="hint--top hint--error hint--medium hint--rounded hint--bounce" aria-label="Zettelkasten是一个德语词, 对应英语slip box, 类似于图书馆存放索引卡的盒子.">[1]</span></a></sup> 这种方法认为知识不是层级化的而是扁平化的, 重要的是知识之间的关联. 这种关联通过笔记中用<code>[[...]]</code>包围的关键词建立. Org-roam能对这种连接进行可视化.</p>
 <p><figure class="null"><img src="org-roam-graph-demo.png" alt="Graph view, from Org-roam GitHub site"><figcaption>Graph view, from Org-roam GitHub site</figcaption></figure></p>
 <p>相比较其他Zettelkasten实现, Org-roam的特点是</p>
@@ -194,7 +194,7 @@
 <li><del>Emacs与Vim水火不容</del></li>
 </ol>
 <p>一直以来也接触过挺多笔记记录的方式, Agenda, Bear, OneNote, Notion, 甚至是本地文件夹, 但总是觉得不得劲. 现在又多了这样一种选择, 自然还是想试一下. 然而作为Vim用户, 第一个应该跨过的关卡应该是Emacs的基本使用. 现在就说道说道吧.</p>
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h3 id="Doom-Emacs"><a href="#Doom-Emacs" class="headerlink" title="Doom Emacs"></a>Doom Emacs</h3><p>从安装开始. 为免去Emacs基本设置, 在<a href="https://www.youtube.com/watch?v=Lg61ocfxk3c" target="_blank" rel="noopener">Matt Williams</a>的推荐下安装<a href="https://github.com/d12frosted/homebrew-emacs-plus">emacs-plus</a>和<a href="https://github.com/hlissner/doom-emacs">Doom Emacs</a>. 用homebrew安装Emacs</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h3 id="Doom-Emacs"><a href="#Doom-Emacs" class="headerlink" title="Doom Emacs"></a>Doom Emacs</h3><p>从安装开始. 为免去Emacs基本设置, 在<a href="https://www.youtube.com/watch?v=Lg61ocfxk3c" target="_blank" rel="noopener">Matt Williams</a>的推荐下安装<a href="https://github.com/d12frosted/homebrew-emacs-plus" target="_blank" rel="noopener">emacs-plus</a>和<a href="https://github.com/hlissner/doom-emacs" target="_blank" rel="noopener">Doom Emacs</a>. 用homebrew安装Emacs</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">brew tap d12frosted/emacs-plus</span><br><span class="line"><span class="meta">#</span><span class="bash"> 若出现403错误, 在前面加上all_proxy=socks5://127.0.0.1:1086</span></span><br><span class="line">brew install emacs-plus@27 --with-modern-icon-cg433n</span><br><span class="line">ln -s /usr/local/opt/emacs-plus/Emacs.app /Applications/Emacs.app</span><br></pre></td></tr></table></figure>
 <p>完成后再从GitHub安装Doom Emacs</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d</span><br><span class="line">~/.emacs.d/bin/doom install</span><br></pre></td></tr></table></figure>
@@ -411,14 +411,14 @@
 </tbody>
 </table>
 <h3 id="Markdown编辑和预览"><a href="#Markdown编辑和预览" class="headerlink" title="Markdown编辑和预览"></a>Markdown编辑和预览</h3><p>markdown文件的文本渲染和快速编辑可以使用<a href="https://jblevins.org/projects/markdown-mode/" target="_blank" rel="noopener">markdown-mode</a>. <a href="https://blog.bitsandbobs.net/blog/emacs-markdown-live-preview/" target="_blank" rel="noopener">Markus Opitz</a>基于<code>simple-httpd</code>包实现了一个HTTP服务器实时预览的功能. 编辑命令可参考这个<a href="https://cheatography.com/xaon/cheat-sheets/emacs-markdown-mode/" target="_blank" rel="noopener">Cheatsheet</a>.</p>
-<h2 id="Troubleshooting"><a href="#Troubleshooting" class="headerlink" title="Troubleshooting"></a>Troubleshooting</h2><h3 id="GitHub图标显示不正常"><a href="#GitHub图标显示不正常" class="headerlink" title="GitHub图标显示不正常"></a>GitHub图标显示不正常</h3><p>安装完后打开Doom Emacs, 首页上的GitHub图标显示有可能<a href="https://github.com/hlissner/doom-emacs/issues/724">不正常</a>, 此时需要在Emacs下安装<code>all-the-icons</code>.</p>
+<h2 id="Troubleshooting"><a href="#Troubleshooting" class="headerlink" title="Troubleshooting"></a>Troubleshooting</h2><h3 id="GitHub图标显示不正常"><a href="#GitHub图标显示不正常" class="headerlink" title="GitHub图标显示不正常"></a>GitHub图标显示不正常</h3><p>安装完后打开Doom Emacs, 首页上的GitHub图标显示有可能<a href="https://github.com/hlissner/doom-emacs/issues/724" target="_blank" rel="noopener">不正常</a>, 此时需要在Emacs下安装<code>all-the-icons</code>.</p>
 <figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">M-x all-the-icons-install-fonts</span><br></pre></td></tr></table></figure>
 <p>如果出现403错误, 可以用<a href="https://blog.fazero.me/2015/08/31/%E5%88%A9%E7%94%A8proxychains%E5%9C%A8%E7%BB%88%E7%AB%AF%E4%BD%BF%E7%94%A8socks5%E4%BB%A3%E7%90%86/" target="_blank" rel="noopener">proxychains-ng</a>和SS解决</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxychains4 emacs</span><br></pre></td></tr></table></figure>
-<h3 id="Package-cl-is-deprecated警告"><a href="#Package-cl-is-deprecated警告" class="headerlink" title="Package cl is deprecated警告"></a><code>Package cl is deprecated</code>警告</h3><p>在打开Doom Emacs后底部会出现这一警告. 原因是在Emacs 24后<code>cl</code>程序包已经被<code>cl-lib</code>取代, 而部分依赖于<code>cl</code>的包(如<a href="https://github.com/jrblevin/deft/issues/77#issue-616735753">deft</a>)未相应更新. 目前除了等待源码更新外, 没有好的解决办法.</p>
+<h3 id="Package-cl-is-deprecated警告"><a href="#Package-cl-is-deprecated警告" class="headerlink" title="Package cl is deprecated警告"></a><code>Package cl is deprecated</code>警告</h3><p>在打开Doom Emacs后底部会出现这一警告. 原因是在Emacs 24后<code>cl</code>程序包已经被<code>cl-lib</code>取代, 而部分依赖于<code>cl</code>的包(如<a href="https://github.com/jrblevin/deft/issues/77#issue-616735753" target="_blank" rel="noopener">deft</a>)未相应更新. 目前除了等待源码更新外, 没有好的解决办法.</p>
 <h3 id="新建文档时安装PDF-tools出错"><a href="#新建文档时安装PDF-tools出错" class="headerlink" title="新建文档时安装PDF-tools出错"></a>新建文档时安装PDF-tools出错</h3><p>首次用<code>M-X org-roam-find-file</code>创建新文件, 会弹出build epdfinfo的请求, 确定后自动安装pdf-tools. 此时出现了build failed的情况, 主要错误信息是</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">configure: error: cannot find necessary  poppler-private header (see README.org)</span><br><span class="line">Build failed.  ;o(</span><br></pre></td></tr></table></figure>
-<p>解决办法参考这个<a href="https://github.com/politza/pdf-tools/issues/480#issuecomment-472223334">issue comment</a>, 从Homebrew安装pdf-tools</p>
+<p>解决办法参考这个<a href="https://github.com/politza/pdf-tools/issues/480#issuecomment-472223334" target="_blank" rel="noopener">issue comment</a>, 从Homebrew安装pdf-tools</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">brew tap dunn/homebrew-emacs</span><br><span class="line">brew install --HEAD pdf-tools</span><br></pre></td></tr></table></figure>
 <p>然后在packages.el中加入</p>
 <figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">package!</span> pdf-tools)</span><br></pre></td></tr></table></figure>
@@ -593,7 +593,7 @@ var disqus_shortname = 'shigaro';
   <div class="container-narrow">
   <footer> <p>
   
-  &copy; 2020 by <a href="https://github.com/minyez"> minyez </a>
+  &copy; 2020 by <a href="shigaro.org"> minyez </a>
   
     | <a href="http://github.com/minyez/hexo-theme-freemind/">Theme</a> based on two Freemind themes by <a href="https://github.com/wzpan/hexo-theme-freemind/">wzpan</a> and <a href="https://github.com/PytLab/hexo-theme-freemind/">PytLab</a> 
     | Powered by <a href="https://github.com/hexojs/hexo">Hexo</a>
