@@ -6,14 +6,13 @@ generate() {
 }
 
 # use to hide draft post in _posts dir when deploying
-drafts=""
-draftsDir="source/_drafts"
+drafts="" # container of drafts
+draftsDir="drafts"
 postsDir="source/_posts"
 cwd=`pwd`
 
 # static server as default for debugging
 if [[ $# == 0 ]]; then
-    # change wordcount to false
     generate
     hexo s -p 4002
 # deploy to gitpages with one argument d
