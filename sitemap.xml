@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>shigaro.org/2020/07/19/fiddle-proof/</loc>
+    
+    <lastmod>2020-07-19T15:44:04.808Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>shigaro.org/2020/07/02/emacs-2/</loc>
+    
+    <lastmod>2020-07-19T09:51:25.467Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>shigaro.org/2020/07/18/remap-macos-keys/</loc>
     
     <lastmod>2020-07-18T08:05:58.000Z</lastmod>
@@ -19,13 +33,6 @@
     <loc>shigaro.org/2018/02/15/Hexo-1/</loc>
     
     <lastmod>2020-07-04T05:50:15.612Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>shigaro.org/2020/07/02/emacs-2/</loc>
-    
-    <lastmod>2020-07-04T03:38:02.439Z</lastmod>
     
   </url>
   
