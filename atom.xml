@@ -5,9 +5,9 @@
   
   <link href="/atom.xml" rel="self"/>
   
-  <link href="shigaro.org/"/>
+  <link href="http://shigaro.org/"/>
   <updated>2020-07-19T15:44:04.808Z</updated>
-  <id>shigaro.org/</id>
+  <id>http://shigaro.org/</id>
   
   <author>
     <name>minyez</name>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>fiddle-proof 与拖延症</title>
-    <link href="shigaro.org/2020/07/19/fiddle-proof/"/>
-    <id>shigaro.org/2020/07/19/fiddle-proof/</id>
+    <link href="http://shigaro.org/2020/07/19/fiddle-proof/"/>
+    <id>http://shigaro.org/2020/07/19/fiddle-proof/</id>
     <published>2020-07-19T08:56:37.000Z</published>
     <updated>2020-07-19T15:44:04.808Z</updated>
     
@@ -31,23 +31,23 @@
     
     </summary>
     
-      <category term="Comment" scheme="shigaro.org/categories/Comment/"/>
+      <category term="Comment" scheme="http://shigaro.org/categories/Comment/"/>
     
     
-      <category term="GTD" scheme="shigaro.org/tags/GTD/"/>
+      <category term="GTD" scheme="http://shigaro.org/tags/GTD/"/>
     
-      <category term="Org-mode" scheme="shigaro.org/tags/Org-mode/"/>
+      <category term="Org-mode" scheme="http://shigaro.org/tags/Org-mode/"/>
     
-      <category term="note-taking" scheme="shigaro.org/tags/note-taking/"/>
+      <category term="note-taking" scheme="http://shigaro.org/tags/note-taking/"/>
     
-      <category term="TaskPaper" scheme="shigaro.org/tags/TaskPaper/"/>
+      <category term="TaskPaper" scheme="http://shigaro.org/tags/TaskPaper/"/>
     
   </entry>
   
   <entry>
     <title>修改 macOS 上外设键盘的键位映射</title>
-    <link href="shigaro.org/2020/07/18/remap-macos-keys/"/>
-    <id>shigaro.org/2020/07/18/remap-macos-keys/</id>
+    <link href="http://shigaro.org/2020/07/18/remap-macos-keys/"/>
+    <id>http://shigaro.org/2020/07/18/remap-macos-keys/</id>
     <published>2020-07-18T08:05:58.000Z</published>
     <updated>2020-07-18T08:05:58.000Z</updated>
     
@@ -59,19 +59,19 @@
     
     </summary>
     
-      <category term="Software" scheme="shigaro.org/categories/Software/"/>
+      <category term="Software" scheme="http://shigaro.org/categories/Software/"/>
     
     
-      <category term="macOS" scheme="shigaro.org/tags/macOS/"/>
+      <category term="macOS" scheme="http://shigaro.org/tags/macOS/"/>
     
-      <category term="keyboard" scheme="shigaro.org/tags/keyboard/"/>
+      <category term="keyboard" scheme="http://shigaro.org/tags/keyboard/"/>
     
   </entry>
   
   <entry>
     <title>Emacs 笔记 (二)——Org-mode</title>
-    <link href="shigaro.org/2020/07/02/emacs-2/"/>
-    <id>shigaro.org/2020/07/02/emacs-2/</id>
+    <link href="http://shigaro.org/2020/07/02/emacs-2/"/>
+    <id>http://shigaro.org/2020/07/02/emacs-2/</id>
     <published>2020-07-01T23:55:07.000Z</published>
     <updated>2020-07-19T09:51:25.467Z</updated>
     
@@ -83,21 +83,21 @@
     
     </summary>
     
-      <category term="Software" scheme="shigaro.org/categories/Software/"/>
+      <category term="Software" scheme="http://shigaro.org/categories/Software/"/>
     
     
-      <category term="Emacs" scheme="shigaro.org/tags/Emacs/"/>
+      <category term="Emacs" scheme="http://shigaro.org/tags/Emacs/"/>
     
-      <category term="Org-mode" scheme="shigaro.org/tags/Org-mode/"/>
+      <category term="Org-mode" scheme="http://shigaro.org/tags/Org-mode/"/>
     
-      <category term="note-taking" scheme="shigaro.org/tags/note-taking/"/>
+      <category term="note-taking" scheme="http://shigaro.org/tags/note-taking/"/>
     
   </entry>
   
   <entry>
     <title>在macOS中置顶窗口</title>
-    <link href="shigaro.org/2020/07/01/macos-float-window/"/>
-    <id>shigaro.org/2020/07/01/macos-float-window/</id>
+    <link href="http://shigaro.org/2020/07/01/macos-float-window/"/>
+    <id>http://shigaro.org/2020/07/01/macos-float-window/</id>
     <published>2020-07-01T09:40:49.000Z</published>
     <updated>2020-07-01T15:07:09.000Z</updated>
     
@@ -109,23 +109,23 @@
     
     </summary>
     
-      <category term="Software" scheme="shigaro.org/categories/Software/"/>
+      <category term="Software" scheme="http://shigaro.org/categories/Software/"/>
     
     
-      <category term="macOS" scheme="shigaro.org/tags/macOS/"/>
+      <category term="macOS" scheme="http://shigaro.org/tags/macOS/"/>
     
-      <category term="MacForge" scheme="shigaro.org/tags/MacForge/"/>
+      <category term="MacForge" scheme="http://shigaro.org/tags/MacForge/"/>
     
-      <category term="Afloatx" scheme="shigaro.org/tags/Afloatx/"/>
+      <category term="Afloatx" scheme="http://shigaro.org/tags/Afloatx/"/>
     
-      <category term="GTD" scheme="shigaro.org/tags/GTD/"/>
+      <category term="GTD" scheme="http://shigaro.org/tags/GTD/"/>
     
   </entry>
   
   <entry>
     <title>Emacs笔记(一)——安装与配置Doom Emacs</title>
-    <link href="shigaro.org/2020/07/01/emacs-1/"/>
-    <id>shigaro.org/2020/07/01/emacs-1/</id>
+    <link href="http://shigaro.org/2020/07/01/emacs-1/"/>
+    <id>http://shigaro.org/2020/07/01/emacs-1/</id>
     <published>2020-07-01T06:51:07.000Z</published>
     <updated>2020-07-10T16:09:16.540Z</updated>
     
@@ -137,21 +137,21 @@
     
     </summary>
     
-      <category term="Software" scheme="shigaro.org/categories/Software/"/>
+      <category term="Software" scheme="http://shigaro.org/categories/Software/"/>
     
     
-      <category term="macOS" scheme="shigaro.org/tags/macOS/"/>
+      <category term="macOS" scheme="http://shigaro.org/tags/macOS/"/>
     
-      <category term="Emacs" scheme="shigaro.org/tags/Emacs/"/>
+      <category term="Emacs" scheme="http://shigaro.org/tags/Emacs/"/>
     
-      <category term="Org-roam" scheme="shigaro.org/tags/Org-roam/"/>
+      <category term="Org-roam" scheme="http://shigaro.org/tags/Org-roam/"/>
     
   </entry>
   
   <entry>
     <title>Hexo笔记(二)——显示博文修改时间等</title>
-    <link href="shigaro.org/2020/06/30/hexo-2-update-time/"/>
-    <id>shigaro.org/2020/06/30/hexo-2-update-time/</id>
+    <link href="http://shigaro.org/2020/06/30/hexo-2-update-time/"/>
+    <id>http://shigaro.org/2020/06/30/hexo-2-update-time/</id>
     <published>2020-06-30T04:12:12.000Z</published>
     <updated>2020-07-01T04:29:31.000Z</updated>
     
@@ -163,21 +163,21 @@
     
     </summary>
     
-      <category term="Software" scheme="shigaro.org/categories/Software/"/>
+      <category term="Software" scheme="http://shigaro.org/categories/Software/"/>
     
     
-      <category term="Hexo" scheme="shigaro.org/tags/Hexo/"/>
+      <category term="Hexo" scheme="http://shigaro.org/tags/Hexo/"/>
     
-      <category term="Freemind" scheme="shigaro.org/tags/Freemind/"/>
+      <category term="Freemind" scheme="http://shigaro.org/tags/Freemind/"/>
     
-      <category term="JavaScript" scheme="shigaro.org/tags/JavaScript/"/>
+      <category term="JavaScript" scheme="http://shigaro.org/tags/JavaScript/"/>
     
   </entry>
   
   <entry>
     <title>解决macOS上脚本中运行VASP时动态库未载入问题</title>
-    <link href="shigaro.org/2020/05/09/macos-script-runvasp/"/>
-    <id>shigaro.org/2020/05/09/macos-script-runvasp/</id>
+    <link href="http://shigaro.org/2020/05/09/macos-script-runvasp/"/>
+    <id>http://shigaro.org/2020/05/09/macos-script-runvasp/</id>
     <published>2020-05-09T07:30:23.000Z</published>
     <updated>2020-06-29T07:30:23.000Z</updated>
     
@@ -189,19 +189,19 @@
     
     </summary>
     
-      <category term="Software" scheme="shigaro.org/categories/Software/"/>
+      <category term="Software" scheme="http://shigaro.org/categories/Software/"/>
     
     
-      <category term="VASP" scheme="shigaro.org/tags/VASP/"/>
+      <category term="VASP" scheme="http://shigaro.org/tags/VASP/"/>
     
-      <category term="macOS" scheme="shigaro.org/tags/macOS/"/>
+      <category term="macOS" scheme="http://shigaro.org/tags/macOS/"/>
     
   </entry>
   
   <entry>
     <title>Python笔记(四)——使用MathpixOCR API进行LaTeX公式识别</title>
-    <link href="shigaro.org/2019/10/28/mathpix-ocr/"/>
-    <id>shigaro.org/2019/10/28/mathpix-ocr/</id>
+    <link href="http://shigaro.org/2019/10/28/mathpix-ocr/"/>
+    <id>http://shigaro.org/2019/10/28/mathpix-ocr/</id>
     <published>2019-10-28T08:39:23.000Z</published>
     <updated>2020-06-30T01:36:41.000Z</updated>
     
@@ -213,19 +213,19 @@
     
     </summary>
     
-      <category term="Software" scheme="shigaro.org/categories/Software/"/>
+      <category term="Software" scheme="http://shigaro.org/categories/Software/"/>
     
     
-      <category term="LaTeX" scheme="shigaro.org/tags/LaTeX/"/>
+      <category term="LaTeX" scheme="http://shigaro.org/tags/LaTeX/"/>
     
-      <category term="MathpixOCR" scheme="shigaro.org/tags/MathpixOCR/"/>
+      <category term="MathpixOCR" scheme="http://shigaro.org/tags/MathpixOCR/"/>
     
   </entry>
   
   <entry>
     <title>Python笔记(三)——用pyecharts制作统计地图</title>
-    <link href="shigaro.org/2019/10/20/speaker-map/"/>
-    <id>shigaro.org/2019/10/20/speaker-map/</id>
+    <link href="http://shigaro.org/2019/10/20/speaker-map/"/>
+    <id>http://shigaro.org/2019/10/20/speaker-map/</id>
     <published>2019-10-20T14:47:28.000Z</published>
     <updated>2019-10-20T14:47:28.000Z</updated>
     
@@ -237,21 +237,21 @@
     
     </summary>
     
-      <category term="Programming" scheme="shigaro.org/categories/Programming/"/>
+      <category term="Programming" scheme="http://shigaro.org/categories/Programming/"/>
     
     
-      <category term="Python" scheme="shigaro.org/tags/Python/"/>
+      <category term="Python" scheme="http://shigaro.org/tags/Python/"/>
     
-      <category term="pyecharts" scheme="shigaro.org/tags/pyecharts/"/>
+      <category term="pyecharts" scheme="http://shigaro.org/tags/pyecharts/"/>
     
-      <category term="map" scheme="shigaro.org/tags/map/"/>
+      <category term="map" scheme="http://shigaro.org/tags/map/"/>
     
   </entry>
   
   <entry>
     <title>GPAW笔记(五)——重启GW</title>
-    <link href="shigaro.org/2019/09/12/gpaw-5-gw-restart/"/>
-    <id>shigaro.org/2019/09/12/gpaw-5-gw-restart/</id>
+    <link href="http://shigaro.org/2019/09/12/gpaw-5-gw-restart/"/>
+    <id>http://shigaro.org/2019/09/12/gpaw-5-gw-restart/</id>
     <published>2019-09-12T11:07:28.000Z</published>
     <updated>2019-09-12T11:07:28.000Z</updated>
     
@@ -263,12 +263,12 @@
     
     </summary>
     
-      <category term="Software" scheme="shigaro.org/categories/Software/"/>
+      <category term="Software" scheme="http://shigaro.org/categories/Software/"/>
     
     
-      <category term="GPAW" scheme="shigaro.org/tags/GPAW/"/>
+      <category term="GPAW" scheme="http://shigaro.org/tags/GPAW/"/>
     
-      <category term="GW" scheme="shigaro.org/tags/GW/"/>
+      <category term="GW" scheme="http://shigaro.org/tags/GW/"/>
     
   </entry>
   
