@@ -195,7 +195,7 @@
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">plist</span> <span class="meta-keyword">PUBLIC</span> <span class="meta-string">"-//Apple Computer//DTD PLIST 1.0//EN"</span> <span class="meta-string">"http://www.apple.com/DTDs/PropertyList-1.0.dtd"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">plist</span> <span class="attr">version</span>=<span class="string">"1.0"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dict</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">key</span>&gt;</span>Label<span class="tag">&lt;/<span class="name">key</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">string</span>&gt;</span>com.user.loginscript<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">key</span>&gt;</span>ProgramArguments<span class="tag">&lt;/<span class="name">key</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">array</span>&gt;</span><span class="tag">&lt;<span class="name">string</span>&gt;</span>/path/to/remap_keyboard.sh<span class="tag">&lt;/<span class="name">string</span>&gt;</span><span class="tag">&lt;/<span class="name">array</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">key</span>&gt;</span>RunAtLoad<span class="tag">&lt;/<span class="name">key</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">true</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dict</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plist</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>命名为 <code>com.user.loginscript.plist</code>, 保存到 <code>~/Library/LaunchAgents</code> 下。然后用 <code>launchctl</code> 修改启动项</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">launchctl load ~/Library/LaunchAgents/com.user.loginscript.plist</span><br></pre></td></tr></table></figure>
-<p>重启测试似乎并没有成功 (<em>/ω＼</em>) 索性放到 bin 下，发现 capslock 恢复后就手动运行，倒也算是解决了吧.</p>
+<p>重启测试似乎并没有成功 (*/ω＼*) 索性放到 bin 下，发现 capslock 恢复后就手动运行，倒也算是解决了吧.</p>
 	  
 	</div>
 
@@ -273,6 +273,11 @@ s.setAttribute('data-timestamp', +new Date());
 	</div>
 	
 		
+    	<div class="meta-widget">
+    	<i class="fa fa-pencil"></i>
+    	2020-07-20 last modified
+    	</div>
+    	
     
 	
 
@@ -365,7 +370,7 @@ var disqus_shortname = 'shigaro';
     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
   
-	| <span class="post-count">49.7k</span> words
+	| <span class="post-count">49.8k</span> words
   
 </p>
  </footer>

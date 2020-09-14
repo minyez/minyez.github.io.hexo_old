@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://shigaro.org/2019/06/18/gpaw-2-scf-bs/</loc>
+    
+    <lastmod>2020-09-14T03:20:27.618Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://shigaro.org/2020/07/18/remap-macos-keys/</loc>
+    
+    <lastmod>2020-07-20T01:51:10.610Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://shigaro.org/2020/07/19/fiddle-proof/</loc>
     
     <lastmod>2020-07-19T15:44:04.808Z</lastmod>
@@ -12,13 +26,6 @@
     <loc>http://shigaro.org/2020/07/02/emacs-2/</loc>
     
     <lastmod>2020-07-19T09:51:25.467Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://shigaro.org/2020/07/18/remap-macos-keys/</loc>
-    
-    <lastmod>2020-07-18T08:05:58.000Z</lastmod>
     
   </url>
   
@@ -145,13 +152,6 @@
     <loc>http://shigaro.org/2019/06/19/gpaw-3-diag-gs/</loc>
     
     <lastmod>2019-06-19T12:43:08.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://shigaro.org/2019/06/18/gpaw-2-scf-bs/</loc>
-    
-    <lastmod>2019-06-18T08:54:14.000Z</lastmod>
     
   </url>
   
