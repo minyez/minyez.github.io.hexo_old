@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://shigaro.org/2020/07/02/emacs-2/</loc>
+    
+    <lastmod>2020-10-01T12:02:52.054Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://shigaro.org/2020/10/01/emacs-3-org-latex-export/</loc>
     
-    <lastmod>2020-10-01T11:54:25.697Z</lastmod>
+    <lastmod>2020-10-01T12:02:00.772Z</lastmod>
     
   </url>
   
@@ -12,13 +19,6 @@
     <loc>http://shigaro.org/2020/07/01/emacs-1/</loc>
     
     <lastmod>2020-10-01T11:40:52.530Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://shigaro.org/2020/07/02/emacs-2/</loc>
-    
-    <lastmod>2020-10-01T11:35:28.215Z</lastmod>
     
   </url>
   
