@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Emacs笔记(一)——安装与配置Doom Emacs | Shigaro</title>
+  <title>Emacs 笔记 (一) —— 安装与配置 Doom Emacs | Shigaro</title>
   <meta name="author" content="minyez">
   
   <meta name="description" content="minyez&#39;s blog on life, science and programming">
@@ -11,7 +11,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <meta property="og:title" content="Emacs笔记(一)——安装与配置Doom Emacs"/>
+  <meta property="og:title" content="Emacs 笔记 (一) —— 安装与配置 Doom Emacs"/>
   <meta property="og:site_name" content="Shigaro"/>
 
   
@@ -160,7 +160,7 @@
 
 	
 		<div class="page-header">		
-			<h1> Emacs笔记(一)——安装与配置Doom Emacs</h1>
+			<h1> Emacs 笔记 (一) —— 安装与配置 Doom Emacs</h1>
 		</div>		
 	
 
@@ -177,47 +177,46 @@
 	<div class="mypage">		
 	  		
 
-	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><div class="alert alert-warning"><i class="fa fa-bell  float-left"></i>  <p>记录从零开始的Emacs. 目标是熟练地使用Org-roam编辑个人维基!</p>
+	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><div class="alert alert-warning"><i class="fa fa-bell  float-left"></i>  <p>记录从零开始的 Emacs. 目标是熟练地使用 Org-roam 编辑个人维基!</p>
 </div>
 <a id="more"></a>
 <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>因缘巧合, 今日我在搜索转化$\rm\LaTeX$到MathML的解决方案时, 偶然看到了<a href="https://github.com/org-roam/org-roam" target="_blank" rel="noopener">Org-roam</a>项目. 它的个人知识库构建和展示方式引起了我很大的兴趣.</p>
-<p>Org-roam基于Emacs的Org-mode, 后者是Emacs中纯文本笔记管理+GTD+写作系统. “Org”指代organize, “roam”则取自<a href="https://roamresearch.com/" target="_blank" rel="noopener">Roam Research</a>. Org-roam采纳了<a href="https://zettelkasten.de/" target="_blank" rel="noopener">Zettelkasten笔记法</a>的思想.<sup id="fnref:1"><a href="#fn:1" rel="footnote"><span class="hint--top hint--error hint--medium hint--rounded hint--bounce" aria-label="Zettelkasten是一个德语词, 对应英语slip box, 类似于图书馆存放索引卡的盒子.">[1]</span></a></sup> 这种方法认为知识不是层级化的而是扁平化的, 重要的是知识之间的关联. 这种关联通过笔记中用<code>[[...]]</code>包围的关键词建立. Org-roam能对这种连接进行可视化.</p>
+<p>Org-roam 基于 Emacs 的 Org-mode, 后者是 Emacs 中纯文本笔记管理+GTD+写作系统. “Org” 指代 organize, “roam” 则取自<a href="https://roamresearch.com/" target="_blank" rel="noopener">Roam Research</a>. Org-roam 采纳了 <a href="https://zettelkasten.de/" target="_blank" rel="noopener">Zettelkasten笔记法</a>的思想.<sup id="fnref:1"><a href="#fn:1" rel="footnote"><span class="hint--top hint--error hint--medium hint--rounded hint--bounce" aria-label="Zettelkasten是一个德语词, 对应英语slip box, 类似于图书馆存放索引卡的盒子.">[1]</span></a></sup> 这种方法认为知识不是层级化的而是扁平化的, 重要的是知识之间的关联. 这种关联通过笔记中用<code>[[...]]</code>包围的关键词建立. Org-roam能对这种连接进行可视化.</p>
 <p><figure class="null"><img src="org-roam-graph-demo.png" alt="Graph view, from Org-roam GitHub site"><figcaption>Graph view, from Org-roam GitHub site</figcaption></figure></p>
-<p>相比较其他Zettelkasten实现, Org-roam的特点是</p>
+<p>相比较其他 Zettelkasten 实现, Org-roam 的特点是</p>
 <ol>
 <li>完全免费开源, 数据库本地存储而不是封存托管在企业云端数据库.</li>
-<li>基于Org-mode纯文本系统, 可利用Emacs生态扩展.</li>
+<li>基于 Org-mode 纯文本系统, 可利用 Emacs 生态扩展.</li>
 <li>配置复杂, 学习曲线陡峭.</li>
-<li><del>Emacs与Vim水火不容</del></li>
 </ol>
-<p>一直以来也接触过挺多笔记记录的方式, Agenda, Bear, OneNote, Notion, 甚至是本地文件夹, 但总是觉得不得劲. 现在又多了这样一种选择, 自然还是想试一下. 然而作为Vim用户, 第一个应该跨过的关卡应该是Emacs的基本使用. 现在就说道说道吧.</p>
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h3 id="Doom-Emacs"><a href="#Doom-Emacs" class="headerlink" title="Doom Emacs"></a>Doom Emacs</h3><p>从安装开始. 为免去Emacs基本设置, 在<a href="https://www.youtube.com/watch?v=Lg61ocfxk3c" target="_blank" rel="noopener">Matt Williams</a>的推荐下安装<a href="https://github.com/d12frosted/homebrew-emacs-plus" target="_blank" rel="noopener">emacs-plus</a>和<a href="https://github.com/hlissner/doom-emacs" target="_blank" rel="noopener">Doom Emacs</a>. 用homebrew安装Emacs</p>
+<p>一直以来也接触过挺多笔记记录的方式, Agenda, Bear, OneNote, Notion, 甚至是本地文件夹, 但总是觉得不得劲. 现在又多了这样一种选择, 自然还是想试一下. 然而作为 Vim 用户, 第一个应该跨过的关卡应该是 Emacs 的基本使用. 现在就说道说道吧.</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h3 id="Doom-Emacs"><a href="#Doom-Emacs" class="headerlink" title="Doom Emacs"></a>Doom Emacs</h3><p>从安装开始. 为免去 Emacs 基本设置, 在<a href="https://www.youtube.com/watch?v=Lg61ocfxk3c" target="_blank" rel="noopener">Matt Williams</a>的推荐下安装 <a href="https://github.com/d12frosted/homebrew-emacs-plus" target="_blank" rel="noopener">emacs-plus</a> 和 <a href="https://github.com/hlissner/doom-emacs" target="_blank" rel="noopener">Doom Emacs</a>. 通过 Homebrew 安装 Emacs</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">brew tap d12frosted/emacs-plus</span><br><span class="line"><span class="meta">#</span><span class="bash"> 若出现403错误, 在前面加上all_proxy=socks5://127.0.0.1:1086</span></span><br><span class="line">brew install emacs-plus@27 --with-modern-icon-cg433n</span><br><span class="line">ln -s /usr/local/opt/emacs-plus/Emacs.app /Applications/Emacs.app</span><br></pre></td></tr></table></figure>
-<p>完成后再从GitHub安装Doom Emacs</p>
+<p>完成后再从 GitHub 安装 Doom Emacs</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d</span><br><span class="line">~/.emacs.d/bin/doom install</span><br></pre></td></tr></table></figure>
-<p>此时命令行打开Emacs, 可以看到下面这样十分炫酷的界面. 这跟我印象里面一个大白框UI迥然不同.</p>
+<p>此时命令行打开 Emacs, 可以看到下面这样十分炫酷的界面. 这跟我印象里面一个大白框UI迥然不同.</p>
 <p><figure class="null"><img src="doom-ui.png" alt="Doom Emacs UI"><figcaption>Doom Emacs UI</figcaption></figure></p>
-<p>Doom Emacs安装完后, 编辑<code>~/.doom.d/</code>下的<code>init.el</code>文件打开或关闭一些Doom模块. 一些模块包含可选功能, 需要通过<code>+</code>指定, 例如打开<a href="https://orgmode.org/" target="_blank" rel="noopener">Org-mode</a>的可选功能 (<span class="label label-info">Q</span>如何检查一个包有哪些可选功能?)</p>
+<p>Doom Emacs 安装完后, 编辑 <code>~/.doom.d/</code> 下 <code>init.el</code> 文件, 打开或关闭一些 Doom 模块. 一些模块包含可选功能, 需要通过 <code>+</code> 指定, 例如打开 <a href="https://orgmode.org/" target="_blank" rel="noopener">Org-mode</a> 的可选功能</p>
 <figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">doom!</span> <span class="symbol">:lang</span></span><br><span class="line">  (<span class="name">org</span> +brain</span><br><span class="line">       +dragdrop</span><br><span class="line">       +gnuplot</span><br><span class="line">       +jupyter)      <span class="comment">; organize your plain life in plain text</span></span><br><span class="line">  )</span><br></pre></td></tr></table></figure>
-<p>在<code>~/.doom.d/packages.el</code>下用<code>package!</code>命令指定安装ELPA/MELPA上的插件包,<sup id="fnref:2"><a href="#fn:2" rel="footnote"><span class="hint--top hint--error hint--medium hint--rounded hint--bounce" aria-label="ELPA: 全称Emacs Lisp Package Archive, Emacs默认的软件包存储库. MELPA = Milkypostman ELPA">[2]</span></a></sup> 例如</p>
+<p>在 <code>~/.doom.d/packages.el</code> 下用 <code>package!</code> 命令指定安装 ELPA/MELPA 上的插件包,<sup id="fnref:2"><a href="#fn:2" rel="footnote"><span class="hint--top hint--error hint--medium hint--rounded hint--bounce" aria-label="ELPA: 全称Emacs Lisp Package Archive, Emacs默认的软件包存储库. MELPA = Milkypostman ELPA">[2]</span></a></sup> 例如</p>
 <figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">;; 安装ELPA或者MELPA上的包</span></span><br><span class="line">(<span class="name">package!</span> markdown-mode)</span><br><span class="line"><span class="comment">;; 从GitHub仓库安装最新版markdown-mode</span></span><br><span class="line">(<span class="name">package!</span> markdown-mode</span><br><span class="line"> <span class="symbol">:recipe</span> (<span class="symbol">:host</span> github <span class="symbol">:repo</span> jrblevin/markdown-mode))</span><br></pre></td></tr></table></figure>
 <p>设置完后运行</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/.emacs.d/bin/doom sync</span><br></pre></td></tr></table></figure>
-<p>以应用两个文件的变化. 如果遇到安装问题, 可在<code>packages.el</code>中注释掉对应代码, 命令行执行</p>
+<p>以应用两个文件的变化. 如果遇到安装问题, 可在 <code>packages.el</code> 中注释掉对应代码, 命令行执行</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">doom purge</span><br></pre></td></tr></table></figure>
 <p>卸载程序包, 再反注释掉, 重新安装即可.</p>
-<h3 id="Org-roam"><a href="#Org-roam" class="headerlink" title="Org-roam"></a>Org-roam</h3><p>Org-roam的安装可以采用<code>+</code>方式安装(<a href="https://orgroam.slack.com/archives/CV160S8EL/p1590857012127400" target="_blank" rel="noopener">slack讨论</a>)</p>
+<h3 id="Org-roam"><a href="#Org-roam" class="headerlink" title="Org-roam"></a>Org-roam</h3><p>Org-roam 的安装可以采用 <code>+</code> 方式安装 (<a href="https://orgroam.slack.com/archives/CV160S8EL/p1590857012127400" target="_blank" rel="noopener">slack讨论</a>)</p>
 <figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">doom!</span> <span class="symbol">:lang</span></span><br><span class="line">  (<span class="name">org</span> +roam)</span><br><span class="line">  )</span><br></pre></td></tr></table></figure>
-<p>也可以在<code>packags.el</code>中加入</p>
+<p>也可以在 <code>packags.el</code> 中加入</p>
 <figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">package!</span> org-roam)</span><br><span class="line">(<span class="name">package!</span> company-org-roam) <span class="comment">;org-roam相关的代码补全</span></span><br></pre></td></tr></table></figure>
-<p>安装. 随后在<code>config.el</code>中用<code>use-package!</code>函数配置</p>
+<p>安装. 随后在 <code>config.el</code> 中用 <code>use-package!</code> 函数配置</p>
 <figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">use-package!</span> org-roam</span><br><span class="line">  <span class="symbol">:commands</span> (<span class="name">org-roam-insert</span> org-roam-find-file org-roam)</span><br><span class="line">  <span class="symbol">:init</span></span><br><span class="line">  (<span class="name">setq</span> org-roam-directory <span class="string">"~/Documents/SelfDevelopment/org-roam/"</span>)</span><br><span class="line">  (<span class="name">setq</span> org-roam-graph-viewer <span class="string">"/usr/bin/open"</span>)</span><br><span class="line">  (<span class="name">map!</span> <span class="symbol">:leader</span></span><br><span class="line">  <span class="symbol">:prefix</span> <span class="string">"r"</span></span><br><span class="line">  <span class="symbol">:desc</span> <span class="string">"Org-Roam-Insert"</span> <span class="string">"i"</span> #'org-roam-insert</span><br><span class="line">  <span class="symbol">:desc</span> <span class="string">"Org-Roam-Find"</span>   <span class="string">"/"</span> #'org-roam-find-file</span><br><span class="line">  <span class="symbol">:desc</span> <span class="string">"Org-Roam-Buffer"</span> <span class="string">"r"</span> #'org-roam)</span><br><span class="line">  <span class="symbol">:config</span></span><br><span class="line">  (<span class="name">org-roam-mode</span> <span class="number">+1</span>))</span><br><span class="line">(<span class="name">add-hook</span> 'after-init-hook 'org-roam-mode)</span><br></pre></td></tr></table></figure>
-<p>随后打开Emacs, <code>M-x org-roam-find-file</code>或<code>SPC r /</code>, 会检查<code>org-roam-directory</code>下的所以org文件. 输出文件名进行编辑或者新建</p>
+<p>随后打开 Emacs, <code>M-x org-roam-find-file</code> 或 <code>SPC r /</code>, 会检查 <code>org-roam-directory</code> 下的所有 org 文件. 输出文件名进行编辑或者新建</p>
 <p><figure class="null"><img src="first_file.png" alt=" "><figcaption> </figcaption></figure></p>
-<p>编辑完后<code>C-c C-c</code>保存. 对于config中不了解的函数, 可以输入<code>SPC(空格) h f</code>来查询.</p>
-<p>更进一步的Org-mode, Org-roam配置和使用将会在今后的文章中记录. 在本文接下来部分中仅涉及Emacs编辑和指令的基本使用.</p>
-<h2 id="Emacs使用"><a href="#Emacs使用" class="headerlink" title="Emacs使用"></a>Emacs使用</h2><p><a href="https://www.youtube.com/watch?v=rCMh7srOqvw&amp;list=PLhXZp00uXBk4np17N39WvB80zgxlZfVwj" target="_blank" rel="noopener">Zaiste</a>制作了一系列非常好的Youtube视频介绍Doom Emacs和Org-mode的使用, 这里的记录基本上是练习他的Doom视频内容的整理.</p>
-<h3 id="文件操作"><a href="#文件操作" class="headerlink" title="文件操作"></a>文件操作</h3><p>Dired模式下可以对文件夹与文件进行操作.</p>
+<p>编辑完后 <code>C-c C-c</code> 保存. 对于 config 中不了解的函数, 可以输入 <code>SPC(空格) h f</code> 来查询.</p>
+<p>更进一步的 Org-mode, Org-roam 配置和使用将会在今后的文章中记录. 在本文接下来部分中仅涉及 Emacs 编辑和指令的基本使用.</p>
+<h2 id="Emacs使用"><a href="#Emacs使用" class="headerlink" title="Emacs使用"></a>Emacs使用</h2><p><a href="https://www.youtube.com/watch?v=rCMh7srOqvw&amp;list=PLhXZp00uXBk4np17N39WvB80zgxlZfVwj" target="_blank" rel="noopener">Zaiste</a> 制作了一系列非常好的 Youtube 视频介绍 Doom Emacs 和 Org-mode 的使用, 这里的记录基本上是练习他的 Doom 视频内容的整理.</p>
+<h3 id="文件操作"><a href="#文件操作" class="headerlink" title="文件操作"></a>文件操作</h3><p>Dired 模式下可以对文件夹与文件进行操作.</p>
 <table>
 <thead>
 <tr>
@@ -320,8 +319,8 @@
 </table>
 <p>如果想将vterm的默认shell设为zsh需要在<code>config.el</code>中加入</p>
 <figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">;; set zsh to default shell of vterm</span></span><br><span class="line">(<span class="name">use-package!</span> vterm</span><br><span class="line">  <span class="symbol">:config</span></span><br><span class="line">  (<span class="name">setq</span> vterm-shell <span class="string">"zsh"</span>))</span><br></pre></td></tr></table></figure>
-<p>此时可以用<code>SPC o T</code>打开vterm, 使用的是zsh.</p>
-<h3 id="缓冲区和窗口操作"><a href="#缓冲区和窗口操作" class="headerlink" title="缓冲区和窗口操作"></a>缓冲区和窗口操作</h3><p>和Vim类似, 打开文件时, Emacs会打开一个缓冲区(buffer), 载入当前文件的所有内容. 所有编辑都在buffer中进行. 但buffer不必一定是文件, 它也可以是shell, 或者Dired文件树等等.</p>
+<p>此时可以用 <code>SPC o T</code> 打开 vterm, 使用的是 zsh.</p>
+<h3 id="缓冲区和窗口操作"><a href="#缓冲区和窗口操作" class="headerlink" title="缓冲区和窗口操作"></a>缓冲区和窗口操作</h3><p>和 Vim 类似, 打开文件时, Emacs 会打开一个缓冲区 (buffer), 载入当前文件的所有内容. 所有编辑都在 buffer 中进行. 但 buffer 不必一定是文件, 它也可以是 shell, 或者 Dired 文件树等等.</p>
 <table>
 <thead>
 <tr>
@@ -380,7 +379,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="文本编辑命令"><a href="#文本编辑命令" class="headerlink" title="文本编辑命令"></a>文本编辑命令</h3><p>这里文本编辑想表达的是类似Vim中文本操作键位和command mode下的命令(<code>:</code>). 好在Doom Emacs将许多Vim与Emacs命令绑定在了一起, 省去了学习Emacs原生编辑操作的麻烦. 但是Domm Emacs额外提供了许多方便的编辑命令</p>
+<h3 id="文本编辑命令"><a href="#文本编辑命令" class="headerlink" title="文本编辑命令"></a>文本编辑命令</h3><p>这里文本编辑想表达的是类似 Vim 中文本操作键位和 command mode 下的命令(<code>:</code>). 好在 Doom Emacs 将许多 Vim 与 Emacs 命令绑定在了一起, 省去了学习 Emacs原生编辑操作的麻烦. 同时 Domm Emacs 额外提供了许多方便的编辑命令</p>
 <table>
 <thead>
 <tr>
@@ -407,19 +406,19 @@
 </tr>
 </tbody>
 </table>
-<h3 id="Markdown编辑和预览"><a href="#Markdown编辑和预览" class="headerlink" title="Markdown编辑和预览"></a>Markdown编辑和预览</h3><p>markdown文件的文本渲染和快速编辑可以使用<a href="https://jblevins.org/projects/markdown-mode/" target="_blank" rel="noopener">markdown-mode</a>. <a href="https://blog.bitsandbobs.net/blog/emacs-markdown-live-preview/" target="_blank" rel="noopener">Markus Opitz</a>基于<code>simple-httpd</code>包实现了一个HTTP服务器实时预览的功能. 编辑命令可参考这个<a href="https://cheatography.com/xaon/cheat-sheets/emacs-markdown-mode/" target="_blank" rel="noopener">Cheatsheet</a>.</p>
-<h2 id="Troubleshooting"><a href="#Troubleshooting" class="headerlink" title="Troubleshooting"></a>Troubleshooting</h2><h3 id="GitHub图标显示不正常"><a href="#GitHub图标显示不正常" class="headerlink" title="GitHub图标显示不正常"></a>GitHub图标显示不正常</h3><p>安装完后打开Doom Emacs, 首页上的GitHub图标显示有可能<a href="https://github.com/hlissner/doom-emacs/issues/724" target="_blank" rel="noopener">不正常</a>, 此时需要在Emacs下安装<code>all-the-icons</code>.</p>
+<h3 id="Markdown编辑和预览"><a href="#Markdown编辑和预览" class="headerlink" title="Markdown编辑和预览"></a>Markdown编辑和预览</h3><p>Markdown 文件的文本渲染和快速编辑可以使用 <a href="https://jblevins.org/projects/markdown-mode/" target="_blank" rel="noopener">markdown-mode</a>. <a href="https://blog.bitsandbobs.net/blog/emacs-markdown-live-preview/" target="_blank" rel="noopener">Markus Opitz</a> 基于 <code>simple-httpd</code> 包实现了一个 HTTP 服务器实时预览的功能. 编辑命令可参考这个 <a href="https://cheatography.com/xaon/cheat-sheets/emacs-markdown-mode/" target="_blank" rel="noopener">Cheatsheet</a>.</p>
+<h2 id="Troubleshooting"><a href="#Troubleshooting" class="headerlink" title="Troubleshooting"></a>Troubleshooting</h2><h3 id="GitHub图标显示不正常"><a href="#GitHub图标显示不正常" class="headerlink" title="GitHub图标显示不正常"></a>GitHub图标显示不正常</h3><p>安装完后打开 Doom Emacs, 首页上的 GitHub 图标显示有可能<a href="https://github.com/hlissner/doom-emacs/issues/724" target="_blank" rel="noopener">不正常</a>, 此时需要在 Emacs 下安装<code>all-the-icons</code>.</p>
 <figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">M-x all-the-icons-install-fonts</span><br></pre></td></tr></table></figure>
-<p>如果出现403错误, 可以用<a href="https://blog.fazero.me/2015/08/31/%E5%88%A9%E7%94%A8proxychains%E5%9C%A8%E7%BB%88%E7%AB%AF%E4%BD%BF%E7%94%A8socks5%E4%BB%A3%E7%90%86/" target="_blank" rel="noopener">proxychains-ng</a>和SS解决</p>
+<p>如果出现 403 错误, 可以用 <a href="https://blog.fazero.me/2015/08/31/%E5%88%A9%E7%94%A8proxychains%E5%9C%A8%E7%BB%88%E7%AB%AF%E4%BD%BF%E7%94%A8socks5%E4%BB%A3%E7%90%86/" target="_blank" rel="noopener">proxychains-ng</a>和 SS 解决</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxychains4 emacs</span><br></pre></td></tr></table></figure>
-<h3 id="Package-cl-is-deprecated警告"><a href="#Package-cl-is-deprecated警告" class="headerlink" title="Package cl is deprecated警告"></a><code>Package cl is deprecated</code>警告</h3><p>在打开Doom Emacs后底部会出现这一警告. 原因是在Emacs 24后<code>cl</code>程序包已经被<code>cl-lib</code>取代, 而部分依赖于<code>cl</code>的包(如<a href="https://github.com/jrblevin/deft/issues/77#issue-616735753" target="_blank" rel="noopener">deft</a>)未相应更新. 目前除了等待源码更新外, 没有好的解决办法.</p>
-<h3 id="新建文档时安装PDF-tools出错"><a href="#新建文档时安装PDF-tools出错" class="headerlink" title="新建文档时安装PDF-tools出错"></a>新建文档时安装PDF-tools出错</h3><p>首次用<code>M-X org-roam-find-file</code>创建新文件, 会弹出build epdfinfo的请求, 确定后自动安装pdf-tools. 此时出现了build failed的情况, 主要错误信息是</p>
+<h3 id="Package-cl-is-deprecated-警告"><a href="#Package-cl-is-deprecated-警告" class="headerlink" title="Package cl is deprecated 警告"></a><code>Package cl is deprecated</code> 警告</h3><p>在打开 Doom Emacs 后底部会出现这一警告. 原因是在 Emacs 24 后 <code>cl</code> 程序包已经被 <code>cl-lib</code> 取代, 而部分依赖于 <code>cl</code> 的包 (如 <a href="https://github.com/jrblevin/deft/issues/77#issue-616735753" target="_blank" rel="noopener">deft</a>) 未相应更新. 目前除了等待源码更新外, 没有好的解决办法.</p>
+<h3 id="新建文档时安装-PDF-tools-出错"><a href="#新建文档时安装-PDF-tools-出错" class="headerlink" title="新建文档时安装 PDF-tools 出错"></a>新建文档时安装 PDF-tools 出错</h3><p>首次用 <code>M-X org-roam-find-file</code> 创建新文件, 会弹出 build epdfinfo 的请求, 确定后自动安装 pdf-tools. 此时出现了 build failed 的情况, 主要错误信息是</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">configure: error: cannot find necessary  poppler-private header (see README.org)</span><br><span class="line">Build failed.  ;o(</span><br></pre></td></tr></table></figure>
-<p>解决办法参考这个<a href="https://github.com/politza/pdf-tools/issues/480#issuecomment-472223334" target="_blank" rel="noopener">issue comment</a>, 从Homebrew安装pdf-tools</p>
+<p>解决办法参考这个 <a href="https://github.com/politza/pdf-tools/issues/480#issuecomment-472223334" target="_blank" rel="noopener">issue comment</a>, 从 Homebrew 安装 pdf-tools</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">brew tap dunn/homebrew-emacs</span><br><span class="line">brew install --HEAD pdf-tools</span><br></pre></td></tr></table></figure>
-<p>然后在packages.el中加入</p>
+<p>然后在 <code>packages.el</code> 中加入</p>
 <figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">package!</span> pdf-tools)</span><br></pre></td></tr></table></figure>
-<p>重新打开Emacs新建文件, 不需要重新build epdfinfo了.</p>
+<p>重新打开 Emacs 新建文件, 不需要重新 build epdfinfo了.</p>
 <h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>Master Emacs in 21 Days: <a href="http://book.emacs-china.org/" target="_blank" rel="noopener">http://book.emacs-china.org/</a></p>
 <p>Emacs Key Bindings: <a href="https://caiorss.github.io/Emacs-Elisp-Programming/Keybindings.html" target="_blank" rel="noopener">https://caiorss.github.io/Emacs-Elisp-Programming/Keybindings.html</a></p>
 <p><a href="http://emacslife.com/read-lisp-tweak-emacs/beginner-3-make-things-more-convenient.html" target="_blank" rel="noopener">How can I customize Emacs to make things more convenient?</a></p>
@@ -503,7 +502,7 @@ s.setAttribute('data-timestamp', +new Date());
 		
     	<div class="meta-widget">
     	<i class="fa fa-pencil"></i>
-    	2020-07-11 last modified
+    	2020-10-01 last modified
     	</div>
     	
     
@@ -534,7 +533,7 @@ s.setAttribute('data-timestamp', +new Date());
     <ul id="categorys" class="tag_box list-unstyled collapse in">
           
   <li>
-    <li><a href="/categories/Software/">Software<span class="badge">25</span></a></li>
+    <li><a href="/categories/Software/">Software<span class="badge">26</span></a></li>
   </li>
 
     </ul>
@@ -547,7 +546,7 @@ s.setAttribute('data-timestamp', +new Date());
 	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
     <ul id="tags" class="tag_box list-unstyled collapse in">	  
 	    
-  <li><a href="/tags/macOS/">macOS<span class="badge">5</span></a></li> <li><a href="/tags/Emacs/">Emacs<span class="badge">2</span></a></li> <li><a href="/tags/Org-roam/">Org-roam<span class="badge">1</span></a></li>
+  <li><a href="/tags/macOS/">macOS<span class="badge">5</span></a></li> <li><a href="/tags/Emacs/">Emacs<span class="badge">3</span></a></li> <li><a href="/tags/Org-roam/">Org-roam<span class="badge">1</span></a></li>
 
     </ul>
 	</div>
@@ -558,7 +557,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#前言"><span class="toc-article-text">前言</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#安装"><span class="toc-article-text">安装</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Doom-Emacs"><span class="toc-article-text">Doom Emacs</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Org-roam"><span class="toc-article-text">Org-roam</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Emacs使用"><span class="toc-article-text">Emacs使用</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#文件操作"><span class="toc-article-text">文件操作</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#常用键位和命令"><span class="toc-article-text">常用键位和命令</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#缓冲区和窗口操作"><span class="toc-article-text">缓冲区和窗口操作</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#文本编辑命令"><span class="toc-article-text">文本编辑命令</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Markdown编辑和预览"><span class="toc-article-text">Markdown编辑和预览</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Troubleshooting"><span class="toc-article-text">Troubleshooting</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#GitHub图标显示不正常"><span class="toc-article-text">GitHub图标显示不正常</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Package-cl-is-deprecated警告"><span class="toc-article-text">Package cl is deprecated警告</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#新建文档时安装PDF-tools出错"><span class="toc-article-text">新建文档时安装PDF-tools出错</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#参考资料"><span class="toc-article-text">参考资料</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#前言"><span class="toc-article-text">前言</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#安装"><span class="toc-article-text">安装</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Doom-Emacs"><span class="toc-article-text">Doom Emacs</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Org-roam"><span class="toc-article-text">Org-roam</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Emacs使用"><span class="toc-article-text">Emacs使用</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#文件操作"><span class="toc-article-text">文件操作</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#常用键位和命令"><span class="toc-article-text">常用键位和命令</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#缓冲区和窗口操作"><span class="toc-article-text">缓冲区和窗口操作</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#文本编辑命令"><span class="toc-article-text">文本编辑命令</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Markdown编辑和预览"><span class="toc-article-text">Markdown编辑和预览</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Troubleshooting"><span class="toc-article-text">Troubleshooting</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#GitHub图标显示不正常"><span class="toc-article-text">GitHub图标显示不正常</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Package-cl-is-deprecated-警告"><span class="toc-article-text">Package cl is deprecated 警告</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#新建文档时安装-PDF-tools-出错"><span class="toc-article-text">新建文档时安装 PDF-tools 出错</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#参考资料"><span class="toc-article-text">参考资料</span></a></li></ol>
 		</div>
 	
 	</div>
@@ -598,7 +597,7 @@ var disqus_shortname = 'shigaro';
     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
   
-	| <span class="post-count">49.8k</span> words
+	| <span class="post-count">52.4k</span> words
   
 </p>
  </footer>

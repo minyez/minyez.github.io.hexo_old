@@ -189,7 +189,7 @@
 <li>行 4: 用 <code>bulk</code> 方法构造 Si 模型</li>
 <li>行 5-6: 初始化 GPAW. 使用平面波基组 (截断为 200 eV). 泛函为 PBE. 布里渊区采样为 $\Gamma$ 中心 $8\times8\times8$ 的均匀格点。初始波函数随机生成。占据数计算采用 Fermi-Dirac 分布，. <code>txt</code> 选项指定输出文件.</li>
 <li>行 7: 将 Si 模型的 calculator 指定为刚刚初始化好的 GPAW.</li>
-<li>行 8: 开始 SCF 过程。具体来说，<code>Atoms.get_potential_energy</code> 方法用于获取 <code>Atoms._calc</code> 的 energy 属性，操作上是从 <code>Calculator.results</code> 字典中提取 energy 键值。对于未收敛的 GPAW calculator, energy 键不存在，此时会执行 <code>GPAW.calculate</code> 进行 SCF 循环，直到收敛，添加 energy 键并返回之.</li>
+<li>行 8: 开始 SCF 过程。具体来说，<code>Atoms.get_potential_energy</code> 方法用于获取 <code>Atoms._calc</code> 的 <code>energy</code> 属性，操作上是从 <code>Calculator.results</code> 字典中提取关键字 <code>energy</code> 值。对于未收敛的 GPAW calculator, <code>energy</code> 关键字不存在，此时会执行 <code>GPAW.calculate</code> 进行 SCF 循环，直到收敛，添加 <code>energy</code> 并返回之.</li>
 <li>行 9: 将计算过程的所有信息写入 Si_gs.gpw 文件中.</li>
 </ul>
 <h2 id="标准输出分析"><a href="#标准输出分析" class="headerlink" title="标准输出分析"></a>标准输出分析</h2><p>标准输出保存在 Si_gs.txt 中。主要看三部分。在 200 行附近给出 SCF 迭代的流程</p>
@@ -198,15 +198,15 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Energy contributions relative to reference atoms: (reference = -15772.688500)</span><br><span class="line"></span><br><span class="line">Kinetic:        +15.782785</span><br><span class="line">Potential:      -13.855376</span><br><span class="line">External:        +0.000000</span><br><span class="line">XC:             -12.678254</span><br><span class="line">Entropy (-ST):   -0.000000</span><br><span class="line">Local:           -0.029919</span><br><span class="line">--------------------------</span><br><span class="line">Free energy:    -10.780764</span><br><span class="line">Extrapolated:   -10.780764</span><br></pre></td></tr></table></figure>
 <p>再往下是关于能带结构的简单信息。包括费米能级和前两个 k 点上的价带导带本征值和占据数。需要注意的是这里的 Occupancy 是该自旋轨道上的电子数乘以 k 点分数权重的值。例如 $\Gamma$ 点权重是固定的 1/512, 价带全占满有 2 个电子，2 / 512 = 0.00391。如果是自旋极化计算，这部分会给出两个自旋通道的占据数，占据数会变成非极化的一半. $\Gamma$ 点带隙为 2.56 eV.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Fermi level: 5.73099</span><br><span class="line"></span><br><span class="line">Showing only first 2 kpts</span><br><span class="line"> Kpt  Band  Eigenvalues  Occupancy</span><br><span class="line">  0     2      5.31933    0.00391</span><br><span class="line">  0     3      5.31934    0.00391</span><br><span class="line">  0     4      7.87829    0.00000</span><br><span class="line">  0     5      7.87829    0.00000</span><br><span class="line"></span><br><span class="line">  1     2      4.51004    0.02344</span><br><span class="line">  1     3      4.51006    0.02344</span><br><span class="line">  1     4      7.32815    0.00000</span><br><span class="line">  1     5      9.02227    0.00000</span><br></pre></td></tr></table></figure>
-<h2 id="能带计算"><a href="#能带计算" class="headerlink" title="能带计算"></a>能带计算</h2><p>PBE 能带计算需要使用 SCF 得到的电子密度。官方网站给出的一个能带计算例子如下.</p>
+<h2 id="能带计算"><a href="#能带计算" class="headerlink" title="能带计算"></a>能带计算</h2><p>PBE 能带计算需要使用 SCF 得到的电子密度。官方网站给出的一个能带计算例子如下</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">calc = GPAW (<span class="string">'Si_gs.gpw'</span>, nbands=<span class="number">16</span>, fixdensity=<span class="literal">True</span>, symmetry=<span class="string">'off'</span>,</span><br><span class="line">            kpts=&#123;<span class="string">'path'</span>: <span class="string">'GXWKL'</span>, <span class="string">'npoints'</span>: <span class="number">60</span>&#125;, convergence=&#123;<span class="string">'bands'</span>: <span class="number">8</span>&#125;)</span><br><span class="line">calc.get_potential_energy ()</span><br><span class="line">calc.write (<span class="string">'Si_bs.gpw'</span>)</span><br></pre></td></tr></table></figure>
 <p>这里主要需要理解 <code>GPAW</code> 一行</p>
 <ul>
 <li>第一个参数 <code>Si_gs.gpw</code> 为读入文件.</li>
 <li><code>nbands</code> 为 SCF 迭代所包含的能带数.</li>
 <li><code>fixdensity=True</code>, 顾名思义，固定电子密度.</li>
-<li><code>kpts</code> 为一个字典，包含 <code>path</code> 和 <code>npoints</code> 两个键. <code>path</code> 包含 BZ 特殊点记号。这里的路径为 G-X-W-K-L, 根据总 k 点数 <code>npoints</code> 自动设置所需要计算的 k 点，不会重复计算特殊 k 点。特殊点之间的 k 点数不是均匀的.</li>
-<li><code>convergence</code> 为一个字典，包含键 <code>band</code>, 值为 8. 表示使用最低的 8 个能级的波函数的 Kohn-Sham 方程余矢量模方作为收敛判据。可以使用 ‘all’ 和 <code>-8</code> 之类的负值，后者表示收敛除最后 8 个外的所有能级。具体参考 <a href="https://wiki.fysik.dtu.dk/gpaw/documentation/manual.html#accuracy-of-the-self-consistency-cycle" target="_blank" rel="noopener">Accuracy of the self-consistency cycle</a> 条目.</li>
+<li><code>kpts</code> 为一个字典，包含 <code>path</code> 和 <code>npoints</code> 两个关键字. <code>path</code> 包含 BZ 特殊点记号。这里的路径为 G-X-W-K-L, 根据总 k 点数 <code>npoints</code> 自动设置所需要计算的 k 点，不会重复计算特殊 k 点。特殊点之间的 k 点数不是均匀的.</li>
+<li><code>convergence</code> 为一个字典，包含关键字 <code>band</code>, 值为 8. 表示使用最低的 8 个能级的波函数的 Kohn-Sham 方程余矢量模方作为收敛判据。可以使用 ‘all’ 和 <code>-8</code> 之类的负值，后者表示收敛除最后 8 个外的所有能级。具体参考 <a href="https://wiki.fysik.dtu.dk/gpaw/documentation/manual.html#accuracy-of-the-self-consistency-cycle" target="_blank" rel="noopener">Accuracy of the self-consistency cycle</a> 条目.</li>
 </ul>
 <p><code>get_potential_energy</code> 开始 SCF 循环，结束后将 calculator 写入 Si_bs.gpw.</p>
 <p>GPAW 提供了能带分析的帮助方法 <code>band_structure</code>. 该方法继承自 ASE 的 <code>Calculator</code> 类。使用方式如下</p>
@@ -249,15 +249,15 @@
 <tr>
 <td style="text-align:left"><code>get_eigenvalues</code></td>
 <td style="text-align:left"><code>gpaw.paw.PAW</code></td>
-<td style="text-align:left">获取本征值</td>
-<td style="text-align:center"><code>(ik=0, ispin=0)</code></td>
+<td style="text-align:left">获取本征值 (eV)</td>
+<td style="text-align:center"><code>(kpt=0, spin=0)</code></td>
 <td style="text-align:center">1D array</td>
 </tr>
 <tr>
 <td style="text-align:left"><code>get_occupation_numbers</code></td>
 <td style="text-align:left"><code>gpaw.paw.PAW</code></td>
 <td style="text-align:left">获取轨道占据数</td>
-<td style="text-align:center"></td>
+<td style="text-align:center"><code>(kpt=0, spin=0)</code></td>
 <td style="text-align:center">1D array</td>
 </tr>
 <tr>
@@ -391,7 +391,7 @@ s.setAttribute('data-timestamp', +new Date());
     <ul id="categorys" class="tag_box list-unstyled collapse in">
           
   <li>
-    <li><a href="/categories/Software/">Software<span class="badge">25</span></a></li>
+    <li><a href="/categories/Software/">Software<span class="badge">26</span></a></li>
   </li>
 
     </ul>
@@ -455,7 +455,7 @@ var disqus_shortname = 'shigaro';
     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
   
-	| <span class="post-count">49.8k</span> words
+	| <span class="post-count">52.4k</span> words
   
 </p>
  </footer>
