@@ -70,11 +70,11 @@
     
       <category term="GTD" scheme="http://shigaro.org/tags/GTD/"/>
     
+      <category term="Org-mode" scheme="http://shigaro.org/tags/Org-mode/"/>
+    
       <category term="note-taking" scheme="http://shigaro.org/tags/note-taking/"/>
     
       <category term="TaskPaper" scheme="http://shigaro.org/tags/TaskPaper/"/>
-    
-      <category term="Org-mode" scheme="http://shigaro.org/tags/Org-mode/"/>
     
   </entry>
   
@@ -128,9 +128,9 @@
     
       <category term="Emacs" scheme="http://shigaro.org/tags/Emacs/"/>
     
-      <category term="note-taking" scheme="http://shigaro.org/tags/note-taking/"/>
-    
       <category term="Org-mode" scheme="http://shigaro.org/tags/Org-mode/"/>
+    
+      <category term="note-taking" scheme="http://shigaro.org/tags/note-taking/"/>
     
   </entry>
   

@@ -46,11 +46,11 @@
             
             <tag> GTD </tag>
             
+            <tag> Org-mode </tag>
+            
             <tag> note-taking </tag>
             
             <tag> TaskPaper </tag>
-            
-            <tag> Org-mode </tag>
             
         </tags>
       
@@ -96,9 +96,9 @@
             
             <tag> Emacs </tag>
             
-            <tag> note-taking </tag>
-            
             <tag> Org-mode </tag>
+            
+            <tag> note-taking </tag>
             
         </tags>
       
@@ -703,9 +703,9 @@
       
         <tags>
             
-            <tag> Numerical method </tag>
-            
             <tag> Grid technique </tag>
+            
+            <tag> Numerical method </tag>
             
         </tags>
       
