@@ -177,11 +177,12 @@
 	<div class="mypage">		
 	  		
 
-	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><div class="alert alert-warning"><i class="fa fa-bell  float-left"></i>  <p>有关 Org-mode 基本使用的学习笔记.</p>
+	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><p><div class="alert alert-warning"><i class="fa fa-bell  float-left"></i>  <p>有关 Org-mode 基本使用的学习笔记.</p>
 </div>
-<a id="more"></a>
+&lt;!--more--&gt;</p>
 <p>在使用 Org-roam 前首先是学习 Org-mode 的使用。这里大量参考了 Zaiste 的 <a href="https://www.youtube.com/watch?v=rCMh7srOqvw&amp;list=PLhXZp00uXBk4np17N39WvB80zgxlZfVwj" target="_blank" rel="noopener">Doom Emacs 系列视频</a>, 特别是 E09-E13.</p>
-<h2 id="Org-文件"><a href="#Org-文件" class="headerlink" title="Org 文件"></a>Org 文件</h2><p>任何格式的纯文本都可以用 Org-mode 打开。在打开 <code>.org</code> 后缀文件时，Emacs 会自动启用 Org-mode. 与 Markdown 和 rST 等轻量标记语言类似，org 文件也需要一些标记符号来激活它的功能.</p>
+<h2>Org 文件</h2>
+<p>任何格式的纯文本都可以用 Org-mode 打开。在打开 <code>.org</code> 后缀文件时，Emacs 会自动启用 Org-mode. 与 Markdown 和 rST 等轻量标记语言类似，org 文件也需要一些标记符号来激活它的功能.</p>
 <table>
 <thead>
 <tr>
@@ -241,7 +242,8 @@
 </tbody>
 </table>
 <p>在导出时，打字机和代码模式都统一导出为打字机模式各种强调记号可以通过 <code>org-emphasis-alist</code> 变量进行自定义.</p>
-<h2 id="按键操作"><a href="#按键操作" class="headerlink" title="按键操作"></a>按键操作</h2><p>一些会经常用到的捆绑键位，作为简单的 cheatsheet</p>
+<h2>按键操作</h2>
+<p>一些会经常用到的捆绑键位，作为简单的 cheatsheet</p>
 <table>
 <thead>
 <tr>
@@ -283,7 +285,7 @@
 <td>为选定文本制作书签，存入链接库备选</td>
 </tr>
 <tr>
-<td><code>SPC m &#39;</code></td>
+<td><code>SPC m '</code></td>
 <td>为选中元素调用特殊编辑器</td>
 </tr>
 <tr>
@@ -301,18 +303,22 @@
 </tbody>
 </table>
 <p>一个小贴士是，可以用 <code>M-x general-describe-keybindings</code> 确认一个捆绑键对应的函数.</p>
-<h2 id="org-文件编辑"><a href="#org-文件编辑" class="headerlink" title="org 文件编辑"></a>org 文件编辑</h2><h3 id="创建链接"><a href="#创建链接" class="headerlink" title="创建链接"></a>创建链接</h3><p>Org-mode 尤其有用的功能是其方便的内链创建.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">* Heading 1</span><br><span class="line">  ** Subheading 1</span><br><span class="line">    This is link to [[Heading 2]]</span><br><span class="line">    这是一个锚 &lt;&lt;anchor&gt;&gt;</span><br><span class="line"></span><br><span class="line">  ** Subheading 2</span><br><span class="line">    跳转到锚 [[anchor]]</span><br><span class="line"></span><br><span class="line">* Heading 2</span><br><span class="line">  Go to [[https://www.google.com][Google.com]]</span><br></pre></td></tr></table></figure>
+<h2>org 文件编辑</h2>
+<h3>创建链接</h3>
+<p>Org-mode 尤其有用的功能是其方便的内链创建.</p>
+<p><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">* Heading 1</span><br><span class="line">  ** Subheading 1</span><br><span class="line">    This is link to [[Heading 2]]</span><br><span class="line">    这是一个锚 &lt;&lt;anchor&gt;&gt;</span><br><span class="line"></span><br><span class="line">  ** Subheading 2</span><br><span class="line">    跳转到锚 [[anchor]]</span><br><span class="line"></span><br><span class="line">* Heading 2</span><br><span class="line">  Go to [[https://www.google.com][Google.com]]</span><br></pre></td></tr></table></figure></p>
 <p>此外，Org-mode 支持多种 <a href="https://orgmode.org/manual/External-Links.html#External-Links" target="_blank" rel="noopener">外部链接</a>. 除内链和网页外还支持本地文件 <code>file:</code>, <code>doi:</code>, Emacs Lisp 脚本 <code>elisp:</code> 以及 Shell 脚本 <code>shell:</code> 等。它允许自定义链接，例如在 <code>config.el</code> 中加入下列代码可以创建由 AV 或 BV 号到 b 站视频的链接 <code>blbl:</code></p>
-<figure class="highlight lisp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">; 创建连接 bilibili 视频的链接</span></span><br><span class="line">(<span class="name">defun</span> make-bilibili-link (<span class="name">vid</span>)</span><br><span class="line">  (<span class="name">browse-url</span> (<span class="name">concat</span> <span class="string">"https://www.bilibili.com/video/"</span> vid))  </span><br><span class="line">)</span><br><span class="line">(<span class="name">after!</span> org</span><br><span class="line">  (<span class="name">org-add-link-type</span> <span class="string">"blbl"</span> #'make-bilibili-link)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-<h3 id="可执行代码块"><a href="#可执行代码块" class="headerlink" title="可执行代码块"></a>可执行代码块</h3><p>输入 <code>&lt;s</code> 后 <code>TAB</code>, 创建一个如下环境，可在其中编写代码.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#+BEGIN_SRC LANG</span><br><span class="line">//code here</span><br><span class="line">#+END_SRC</span><br></pre></td></tr></table></figure>
+<p><figure class="highlight lisp"><table><tr><td class="code"><pre><span class="line"><span class="comment">; 创建连接 bilibili 视频的链接</span></span><br><span class="line">(<span class="name">defun</span> make-bilibili-link (<span class="name">vid</span>)</span><br><span class="line">  (<span class="name">browse-url</span> (<span class="name">concat</span> <span class="string">"https://www.bilibili.com/video/"</span> vid))  </span><br><span class="line">)</span><br><span class="line">(<span class="name">after!</span> org</span><br><span class="line">  (<span class="name">org-add-link-type</span> <span class="string">"blbl"</span> #'make-bilibili-link)</span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
+<h3>可执行代码块</h3>
+<p>输入 <code>&lt;s</code> 后 <code>TAB</code>, 创建一个如下环境，可在其中编写代码.</p>
+<p><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#+BEGIN_SRC LANG</span><br><span class="line">//code here</span><br><span class="line">#+END_SRC</span><br></pre></td></tr></table></figure></p>
 <p>比如我们在其中用 C 编写 Hello World:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#+BEGIN_SRC c</span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">int main () &#123;</span><br><span class="line">  printf (&quot;Hello World!&quot;);</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br><span class="line">#+END_SRC</span><br></pre></td></tr></table></figure>
+<p><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#+BEGIN_SRC c</span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">int main () &#123;</span><br><span class="line">  printf (&quot;Hello World!&quot;);</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br><span class="line">#+END_SRC</span><br></pre></td></tr></table></figure></p>
 <p>编写完成后，退出编辑模式。在 <code>END_SRC</code> 下回车，就会自动将输出结果添加到源代码块下方.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#+RESULTS:</span><br><span class="line">: Hello World!</span><br></pre></td></tr></table></figure>
+<p><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#+RESULTS:</span><br><span class="line">: Hello World!</span><br></pre></td></tr></table></figure></p>
 <p>如果改变了代码的内容，只要选中代码块任意位置重新回车，即可更新输出结果. <span class="label label-info">Q</span> <code>#+RESULTS</code> 部分似乎不会被导出，有待确认)</p>
-<h3 id="LaTeX-导出初探"><a href="#LaTeX-导出初探" class="headerlink" title="LaTeX 导出初探"></a>LaTeX 导出初探</h3><table>
+<h3>LaTeX 导出初探</h3>
+<table>
 <thead>
 <tr>
 <th>Key</th>
@@ -339,11 +345,13 @@
 </tbody>
 </table>
 <p>在用 LaTeX 导出时，用如下代码块包围的内容会被直接导出</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#+BEGIN_LATEX</span><br><span class="line">\LaTeX</span><br><span class="line">#+END_LATEX</span><br></pre></td></tr></table></figure>
+<p><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#+BEGIN_LATEX</span><br><span class="line">\LaTeX</span><br><span class="line">#+END_LATEX</span><br></pre></td></tr></table></figure></p>
 <p>导出结果为</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\LaTeX</span><br></pre></td></tr></table></figure>
-<h2 id="相关文章"><a href="#相关文章" class="headerlink" title="相关文章"></a>相关文章</h2><a href="/2020/07/01/emacs-1/" title="Emacs 笔记 (一) —— 安装与配置 Doom Emacs">Emacs 笔记 (一) —— 安装与配置 Doom Emacs</a>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>Org-mode 官方手册: <a href="https://orgmode.org/manual/" target="_blank" rel="noopener">https://orgmode.org/manual/</a></p>
+<p><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">\LaTeX</span><br></pre></td></tr></table></figure></p>
+<h2>相关文章</h2>
+<p><a href="/2020/07/01/emacs-1/" title="Emacs 笔记 (一) —— 安装与配置 Doom Emacs">Emacs 笔记 (一) —— 安装与配置 Doom Emacs</a></p>
+<h2>参考资料</h2>
+<p>Org-mode 官方手册: <a href="https://orgmode.org/manual/" target="_blank" rel="noopener">https://orgmode.org/manual/</a></p>
 	  
 	</div>
 
@@ -443,7 +451,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	<div class="meta-widget">
 	<i class="fa fa-tachometer"></i>
-	<span class="post-count">914</span> words
+	<span class="post-count">909</span> words
 	</div>
 	
 
@@ -467,7 +475,7 @@ s.setAttribute('data-timestamp', +new Date());
 	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
     <ul id="tags" class="tag_box list-unstyled collapse in">	  
 	    
-  <li><a href="/tags/Emacs/">Emacs<span class="badge">3</span></a></li> <li><a href="/tags/Org-mode/">Org-mode<span class="badge">3</span></a></li> <li><a href="/tags/note-taking/">note-taking<span class="badge">2</span></a></li>
+  <li><a href="/tags/Emacs/">Emacs<span class="badge">3</span></a></li> <li><a href="/tags/note-taking/">note-taking<span class="badge">2</span></a></li> <li><a href="/tags/Org-mode/">Org-mode<span class="badge">3</span></a></li>
 
     </ul>
 	</div>
@@ -478,7 +486,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Org-文件"><span class="toc-article-text">Org 文件</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#按键操作"><span class="toc-article-text">按键操作</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#org-文件编辑"><span class="toc-article-text">org 文件编辑</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#创建链接"><span class="toc-article-text">创建链接</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#可执行代码块"><span class="toc-article-text">可执行代码块</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#LaTeX-导出初探"><span class="toc-article-text">LaTeX 导出初探</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#相关文章"><span class="toc-article-text">相关文章</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#参考资料"><span class="toc-article-text">参考资料</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">Org 文件</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">按键操作</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">org 文件编辑</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">创建链接</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">可执行代码块</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">LaTeX 导出初探</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">相关文章</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">参考资料</span></a></li></ol>
 		</div>
 	
 	</div>
@@ -518,7 +526,7 @@ var disqus_shortname = 'shigaro';
     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
   
-	| <span class="post-count">52.4k</span> words
+	| <span class="post-count">54.3k</span> words
   
 </p>
  </footer>

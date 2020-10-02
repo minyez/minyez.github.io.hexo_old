@@ -177,12 +177,14 @@
 	<div class="mypage">		
 	  		
 
-	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><div class="alert alert-success"><i class="fa fa-lightbulb-o  float-left"></i>  <p>用 <code>hidutil</code> 对 macOS 外设键盘改键，并设置开机自启.</p>
+	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><p><div class="alert alert-success"><i class="fa fa-lightbulb-o  float-left"></i>  <p>用 <code>hidutil</code> 对 macOS 外设键盘改键，并设置开机自启.</p>
 </div>
-<a id="more"></a>
-<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在用 Emacs 编写文本时遇到的一个问题就是频繁地缩回小拇指去按左 ctrl 很不方便。因此想着把大小写锁定键改成 ctrl. 在 macOS 上，修改内置键盘键位是比较容易的，<code>系统偏好</code> =&gt; <code>键盘</code> =&gt; <code>修饰键</code>, 就可以随便改。但这一修改不会应用到外接键盘上 (笔者用的是 Logi MX Keys). <a href="https://mic-kul.com/2020/01/25/mx-keys-remap-right-alt/" target="_blank" rel="noopener">搜索</a> 后发现可以用 <code>hidutil</code> 解决这个问题.</p>
-<h2 id="修改外设键盘映射"><a href="#修改外设键盘映射" class="headerlink" title="修改外设键盘映射"></a>修改外设键盘映射</h2><p>手册上，<code>hidutil</code> 被解释为用于管理人机接口设备 (Human Interface Device, HID) 事件系统的实用程序。我理解的 HID 就是键鼠，手柄，方向盘之类。修改键位需要用到它的 <code>property</code> 命令，通过脚本来说明可能更加直接。编写 <code>remap_keyboard.sh</code> 脚本</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line">hidutil property --matching <span class="string">'&#123;"Product": "MX Keys"&#125;'</span> \</span><br><span class="line">    --<span class="built_in">set</span> <span class="string">'&#123;"UserKeyMapping": [&#123;"HIDKeyboardModifierMappingSrc":0x700000039,</span></span><br><span class="line"><span class="string">                                "HIDKeyboardModifierMappingDst":0x7000000e0&#125;]&#125;'</span></span><br></pre></td></tr></table></figure>
+&lt;!-- more --&gt;</p>
+<h2>前言</h2>
+<p>最近在用 Emacs 编写文本时遇到的一个问题就是频繁地缩回小拇指去按左 ctrl 很不方便。因此想着把大小写锁定键改成 ctrl. 在 macOS 上，修改内置键盘键位是比较容易的，<code>系统偏好</code> =&gt; <code>键盘</code> =&gt; <code>修饰键</code>, 就可以随便改。但这一修改不会应用到外接键盘上 (笔者用的是 Logi MX Keys). <a href="https://mic-kul.com/2020/01/25/mx-keys-remap-right-alt/" target="_blank" rel="noopener">搜索</a> 后发现可以用 <code>hidutil</code> 解决这个问题.</p>
+<h2>修改外设键盘映射</h2>
+<p>手册上，<code>hidutil</code> 被解释为用于管理人机接口设备 (Human Interface Device, HID) 事件系统的实用程序。我理解的 HID 就是键鼠，手柄，方向盘之类。修改键位需要用到它的 <code>property</code> 命令，通过脚本来说明可能更加直接。编写 <code>remap_keyboard.sh</code> 脚本</p>
+<p><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/usr/bin/env bash</span></span><br><span class="line">hidutil property --matching <span class="string">'&#123;"Product": "MX Keys"&#125;'</span> \</span><br><span class="line">    --<span class="built_in">set</span> <span class="string">'&#123;"UserKeyMapping": [&#123;"HIDKeyboardModifierMappingSrc":0x700000039,</span></span><br><span class="line"><span class="string">                                "HIDKeyboardModifierMappingDst":0x7000000e0&#125;]&#125;'</span></span><br></pre></td></tr></table></figure></p>
 <p>选项的具体含义可通过 <code>hidutil property --help</code> 了解。这里做一些简单说明</p>
 <ul>
 <li><code>--matching</code> 选项用来匹配需要修改的外设，值是一个字典。这里用的 Key 是产品名 <code>Product</code>. 如果不知道产品名，可以用 <code>hidutil list</code> 了解设备情况. RegistryID 等信息也能从这里看到.</li>
@@ -190,11 +192,12 @@
 <li>改键对应的 Key 是 <code>UserKeyMapping</code>, 值是一个列表。列表中每一个元素是一个字典。这里用于映射修饰键的 Key 是 <code>HIDKeyboardModifierMappingSrc</code> 和 <code>HIDKeyboardModifierMappingDst</code>. 通俗的说，<code>Src</code> 是键盘上的键，<code>Dst</code> 是机器实际接收的按键，用 16 进制数表示。键位值是 <code>0x700000000</code> 加上对应的 Usage ID, 可以在 <a href="https://developer.apple.com/library/archive/technotes/tn2450/_index.html" target="_blank" rel="noopener">Apple 文档</a> 上查到. CapsLock 是 <code>39</code>, 左 Ctrl 是 <code>e0</code>.</li>
 </ul>
 <p>写完后，加上权限运行即可</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chmod +x remap_keyboard.sh</span><br><span class="line">./remap_keyboard.sh</span><br></pre></td></tr></table></figure>
-<h2 id="开机自启"><a href="#开机自启" class="headerlink" title="开机自启"></a>开机自启</h2><p>系统重启后，映射会失效。所以需要把它写进开机自启动项里。可以用 Automator 的 App, 也可以用 <code>launchctl</code>. 参考 <a href="https://stackoverflow.com/questions/6442364/running-script-upon-login-mac" target="_blank" rel="noopener">SO 回答</a>, 编写 plist</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">plist</span> <span class="meta-keyword">PUBLIC</span> <span class="meta-string">"-//Apple Computer//DTD PLIST 1.0//EN"</span> <span class="meta-string">"http://www.apple.com/DTDs/PropertyList-1.0.dtd"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">plist</span> <span class="attr">version</span>=<span class="string">"1.0"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dict</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">key</span>&gt;</span>Label<span class="tag">&lt;/<span class="name">key</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">string</span>&gt;</span>com.user.loginscript<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">key</span>&gt;</span>ProgramArguments<span class="tag">&lt;/<span class="name">key</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">array</span>&gt;</span><span class="tag">&lt;<span class="name">string</span>&gt;</span>/path/to/remap_keyboard.sh<span class="tag">&lt;/<span class="name">string</span>&gt;</span><span class="tag">&lt;/<span class="name">array</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">key</span>&gt;</span>RunAtLoad<span class="tag">&lt;/<span class="name">key</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">true</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dict</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plist</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">chmod +x remap_keyboard.sh</span><br><span class="line">./remap_keyboard.sh</span><br></pre></td></tr></table></figure></p>
+<h2>开机自启</h2>
+<p>系统重启后，映射会失效。所以需要把它写进开机自启动项里。可以用 Automator 的 App, 也可以用 <code>launchctl</code>. 参考 <a href="https://stackoverflow.com/questions/6442364/running-script-upon-login-mac" target="_blank" rel="noopener">SO 回答</a>, 编写 plist</p>
+<p><figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">plist</span> <span class="meta-keyword">PUBLIC</span> <span class="meta-string">"-//Apple Computer//DTD PLIST 1.0//EN"</span> <span class="meta-string">"http://www.apple.com/DTDs/PropertyList-1.0.dtd"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">plist</span> <span class="attr">version</span>=<span class="string">"1.0"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dict</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">key</span>&gt;</span>Label<span class="tag">&lt;/<span class="name">key</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">string</span>&gt;</span>com.user.loginscript<span class="tag">&lt;/<span class="name">string</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">key</span>&gt;</span>ProgramArguments<span class="tag">&lt;/<span class="name">key</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">array</span>&gt;</span><span class="tag">&lt;<span class="name">string</span>&gt;</span>/path/to/remap_keyboard.sh<span class="tag">&lt;/<span class="name">string</span>&gt;</span><span class="tag">&lt;/<span class="name">array</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">key</span>&gt;</span>RunAtLoad<span class="tag">&lt;/<span class="name">key</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">true</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dict</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plist</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
 <p>命名为 <code>com.user.loginscript.plist</code>, 保存到 <code>~/Library/LaunchAgents</code> 下。然后用 <code>launchctl</code> 修改启动项</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">launchctl load ~/Library/LaunchAgents/com.user.loginscript.plist</span><br></pre></td></tr></table></figure>
+<p><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">launchctl load ~/Library/LaunchAgents/com.user.loginscript.plist</span><br></pre></td></tr></table></figure></p>
 <p>重启测试似乎并没有成功 (*/ω＼*) 索性放到 bin 下，发现 capslock 恢复后就手动运行，倒也算是解决了吧.</p>
 	  
 	</div>
@@ -295,7 +298,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	<div class="meta-widget">
 	<i class="fa fa-tachometer"></i>
-	<span class="post-count">676</span> words
+	<span class="post-count">677</span> words
 	</div>
 	
 
@@ -330,7 +333,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#前言"><span class="toc-article-text">前言</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#修改外设键盘映射"><span class="toc-article-text">修改外设键盘映射</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#开机自启"><span class="toc-article-text">开机自启</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">前言</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">修改外设键盘映射</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#undefined"><span class="toc-article-text">开机自启</span></a></li></ol>
 		</div>
 	
 	</div>
@@ -370,7 +373,7 @@ var disqus_shortname = 'shigaro';
     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
   
-	| <span class="post-count">52.4k</span> words
+	| <span class="post-count">54.3k</span> words
   
 </p>
  </footer>
