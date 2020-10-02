@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://shigaro.org/2019/10/20/speaker-map/</loc>
+    
+    <lastmod>2020-10-02T02:39:13.291Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://shigaro.org/2020/10/01/emacs-3-org-latex-export/</loc>
     
     <lastmod>2020-10-02T02:36:06.485Z</lastmod>
@@ -110,13 +117,6 @@
     <loc>http://shigaro.org/tags/index.html</loc>
     
     <lastmod>2020-06-27T09:53:08.724Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://shigaro.org/2019/10/20/speaker-map/</loc>
-    
-    <lastmod>2019-10-20T14:47:28.000Z</lastmod>
     
   </url>
   
