@@ -177,15 +177,15 @@
 	<div class="mypage">		
 	  		
 
-	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><div class="alert alert-success"><i class="fa fa-lightbulb-o  float-left"></i>  <p>介绍了笔者在macOS High Sierra上编译VASP.5.4.4时解决libparser.a中undefined symbols的问题.</p>
+	  <link rel="stylesheet" type="text/css" href="/css/hint.min.css"><div class="alert alert-success"><i class="fa fa-lightbulb-o  float-left"></i>  <p>介绍了笔者在 macOS High Sierra 上编译 VASP.5.4.4 时解决 libparser.a 中 undefined symbols 问题.</p>
 </div>
 <a id="more"></a>
-<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>购买mac后，我希望能在macOS运行常用的科学计算程序，方便我做小规模测试，其中之一是<a href="https://www.vasp.at/" target="_blank" rel="noopener">VASP</a>。系统环境为macOS High Sierra 10.13，编译VASP时编译环境为</p>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>购买mac后，我希望能在 macOS 运行常用的科学计算程序，方便我做小规模测试，其中之一是 <a href="https://www.vasp.at/" target="_blank" rel="noopener">VASP</a>。系统环境为 macOS High Sierra 10.13，编译环境为</p>
 <ul>
 <li>Intel Parallel Composer XE 2018.0.1</li>
-<li>Intel ifort和icc编译的MPICH3</li>
-<li>Intel ifort和icc编译的FFTW3 (MPICH3并行)</li>
-<li>Intel ifort和icc编译的ScaLAPACK和BLACS (MPICH3并行)</li>
+<li>Intel ifort 和 icc 编译的 MPICH3</li>
+<li>Intel ifort 和 icc 编译的 FFTW3 (MPICH3 并行)</li>
+<li>Intel ifort 和 icc 编译的 ScaLAPACK 和 BLACS (MPICH3 并行)</li>
 </ul>
 <p>我的目标是编译5.4.1和VASP.5.4.4两个版本并成功用于Silicon的算例. VASP.5.4.1的编译很容易就通过了并能够正常地跑Silicon的例子, 但VASP.5.4.4始终无法编译通过，主要问题是在用C++编译parser库时无法链接到部分symbol上。</p>
 <h2 id="问题细节"><a href="#问题细节" class="headerlink" title="问题细节"></a>问题细节</h2><p>VASP编译过程用到的<code>makefile.include</code>文件如下所示。5.4.4版同5.4.1版include文件的主要区别，除了最后的GPU部分外，还有一个用C++编译<code>libparser.a</code>的选项，即<code>CXX_PARS</code>。</p>
@@ -389,7 +389,7 @@ var disqus_shortname = 'shigaro';
     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
   
-	| <span class="post-count">52.3k</span> words
+	| <span class="post-count">53.6k</span> words
   
 </p>
  </footer>
@@ -442,24 +442,6 @@ var disqus_shortname = 'shigaro';
   gtag('config', 'UA-111612868-1');
 </script>
 
-
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        },
-        TeX: {equationNumbers: { autoNumber: "AMS" }}
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<!--<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
-<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
 </body>
    </html>

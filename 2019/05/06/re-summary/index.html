@@ -339,7 +339,7 @@
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_pattern</span><span class="params">(n)</span>:</span></span><br><span class="line">    <span class="string">'''Generate n parameters pattern'''</span></span><br><span class="line">    s = [<span class="string">r"([\w \.-]+)"</span>, ] * n</span><br><span class="line">    <span class="keyword">return</span> <span class="string">r'^'</span> + <span class="string">r'\|'</span>.join(s) + <span class="string">r'(#[\w \(\),\.-]*)?$'</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_substr</span><span class="params">(n, i, value)</span>:</span></span><br><span class="line">    <span class="string">'''Return the sub string of n-parameter line with i+1-th parameter as value'''</span></span><br><span class="line">    sublist = [<span class="string">"\\"</span>+str(i+<span class="number">1</span>) <span class="keyword">for</span> i <span class="keyword">in</span> range(n)]</span><br><span class="line">    sublist[i] = str(value)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">' | '</span>.join(sublist) + <span class="string">' \\'</span> + str(n+<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
 <p>还是用前面的两个参数的行( <code>s</code> )作为例子, 替换参数的位置记录在字典 <code>params</code> 里, 要替换的参数值记录在字典 <code>new_value</code> 中</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">s = <span class="string">"2.0  |  1.E-15   # pwm, stctol"</span></span><br><span class="line">params = &#123;<span class="string">"pwm"</span>: (<span class="number">2</span>, <span class="number">0</span>), <span class="string">"stctol"</span>: (<span class="number">2</span>, <span class="number">1</span>)&#125;</span><br><span class="line">new_value = &#123;<span class="string">"pwm"</span>: <span class="number">5.0</span>, <span class="string">"stctol"</span>: <span class="number">1.0e-20</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> k, nv <span class="keyword">in</span> new_value.items():</span><br><span class="line">    n, i = params.get(k, (<span class="literal">None</span>, <span class="literal">None</span>))</span><br><span class="line">    <span class="keyword">if</span> n <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">        pat = get_pattern(n)</span><br><span class="line">        sub = get_substr(n, i, nv)</span><br><span class="line">        s = re.sub(pat, sub, s)</span><br><span class="line">print(s)</span><br><span class="line"><span class="comment"># result: "5.0  | 1e-20 # pwm, stctol"</span></span><br></pre></td></tr></table></figure>
-	  
+<h2 id="re-finditer-和-re-findall-匹配全部"><a href="#re-finditer-和-re-findall-匹配全部" class="headerlink" title="re.finditer 和 re.findall 匹配全部"></a><code>re.finditer</code> 和 <code>re.findall</code> 匹配全部</h2>	  
 	</div>
 
     
@@ -418,7 +418,7 @@ s.setAttribute('data-timestamp', +new Date());
 		
     	<div class="meta-widget">
     	<i class="fa fa-pencil"></i>
-    	2020-07-02 last modified
+    	2020-10-20 last modified
     	</div>
     	
     
@@ -449,7 +449,7 @@ s.setAttribute('data-timestamp', +new Date());
     <ul id="categorys" class="tag_box list-unstyled collapse in">
           
   <li>
-    <li><a href="/categories/Programming/">Programming<span class="badge">7</span></a></li>
+    <li><a href="/categories/Programming/">Programming<span class="badge">8</span></a></li>
   </li>
 
     </ul>
@@ -462,7 +462,7 @@ s.setAttribute('data-timestamp', +new Date());
 	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
     <ul id="tags" class="tag_box list-unstyled collapse in">	  
 	    
-  <li><a href="/tags/Python/">Python<span class="badge">3</span></a></li> <li><a href="/tags/regex/">regex<span class="badge">1</span></a></li>
+  <li><a href="/tags/Python/">Python<span class="badge">4</span></a></li> <li><a href="/tags/regex/">regex<span class="badge">1</span></a></li>
 
     </ul>
 	</div>
@@ -473,7 +473,7 @@ s.setAttribute('data-timestamp', +new Date());
 	
 	   <a data-toggle="collapse" data-target="#toc"><i class="fa fa-bars"></i></a>
 	   <div id="toc" class="toc collapse in">
-			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#基本函数"><span class="toc-article-text">基本函数</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#常用匹配模式"><span class="toc-article-text">常用匹配模式</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#一次匹配字符串"><span class="toc-article-text">一次匹配字符串</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#匹配名为-V-x-y-的文件夹"><span class="toc-article-text">匹配名为 V_x.y 的文件夹</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#匹配一条K点路径"><span class="toc-article-text">匹配一条K点路径</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#compile函数"><span class="toc-article-text">compile函数</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#利用group和groups获得匹配内容"><span class="toc-article-text">利用group和groups获得匹配内容</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#利用group标记的替换"><span class="toc-article-text">利用group标记的替换</span></a></li></ol>
+			<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#基本函数"><span class="toc-article-text">基本函数</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#常用匹配模式"><span class="toc-article-text">常用匹配模式</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#一次匹配字符串"><span class="toc-article-text">一次匹配字符串</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#匹配名为-V-x-y-的文件夹"><span class="toc-article-text">匹配名为 V_x.y 的文件夹</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#匹配一条K点路径"><span class="toc-article-text">匹配一条K点路径</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#compile函数"><span class="toc-article-text">compile函数</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#利用group和groups获得匹配内容"><span class="toc-article-text">利用group和groups获得匹配内容</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#利用group标记的替换"><span class="toc-article-text">利用group标记的替换</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#re-finditer-和-re-findall-匹配全部"><span class="toc-article-text">re.finditer 和 re.findall 匹配全部</span></a></li></ol>
 		</div>
 	
 	</div>
@@ -513,7 +513,7 @@ var disqus_shortname = 'shigaro';
     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
   
-	| <span class="post-count">52.3k</span> words
+	| <span class="post-count">53.6k</span> words
   
 </p>
  </footer>
@@ -566,24 +566,6 @@ var disqus_shortname = 'shigaro';
   gtag('config', 'UA-111612868-1');
 </script>
 
-
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        },
-        TeX: {equationNumbers: { autoNumber: "AMS" }}
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<!--<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>-->
-<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
 </body>
    </html>

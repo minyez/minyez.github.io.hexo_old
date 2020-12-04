@@ -2,79 +2,86 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://shigaro.org/2019/10/20/speaker-map/</loc>
+    <loc>http://shigaro.org/2020/12/04/build-discourse/</loc>
     
-    <lastmod>2020-10-02T02:39:13.291Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://shigaro.org/2020/10/01/emacs-3-org-latex-export/</loc>
-    
-    <lastmod>2020-10-02T02:36:06.485Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://shigaro.org/2020/07/02/emacs-2/</loc>
-    
-    <lastmod>2020-10-01T12:02:52.054Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://shigaro.org/2020/07/01/emacs-1/</loc>
-    
-    <lastmod>2020-10-01T11:40:52.530Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://shigaro.org/2019/06/18/gpaw-2-scf-bs/</loc>
-    
-    <lastmod>2020-09-14T04:17:40.685Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://shigaro.org/2020/07/18/remap-macos-keys/</loc>
-    
-    <lastmod>2020-07-20T01:51:10.610Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://shigaro.org/2020/07/19/fiddle-proof/</loc>
-    
-    <lastmod>2020-07-19T15:44:04.808Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://shigaro.org/2018/02/15/Hexo-1/</loc>
-    
-    <lastmod>2020-07-04T05:50:15.612Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://shigaro.org/about/index_cn.html</loc>
-    
-    <lastmod>2020-07-02T14:12:11.672Z</lastmod>
+    <lastmod>2020-12-04T07:21:22.000Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://shigaro.org/about/index.html</loc>
     
-    <lastmod>2020-07-02T14:11:23.634Z</lastmod>
+    <lastmod>2020-10-26T05:18:09.000Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://shigaro.org/2019/05/06/re-summary/</loc>
     
-    <lastmod>2020-07-02T05:17:05.556Z</lastmod>
+    <lastmod>2020-10-20T11:42:26.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://shigaro.org/2019/10/20/speaker-map/</loc>
+    
+    <lastmod>2020-10-02T02:39:13.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://shigaro.org/2020/10/01/emacs-3-org-latex-export/</loc>
+    
+    <lastmod>2020-10-02T02:36:06.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://shigaro.org/2020/07/02/emacs-2/</loc>
+    
+    <lastmod>2020-10-01T12:02:52.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://shigaro.org/2020/07/01/emacs-1/</loc>
+    
+    <lastmod>2020-10-01T11:40:52.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://shigaro.org/2019/06/18/gpaw-2-scf-bs/</loc>
+    
+    <lastmod>2020-09-14T04:17:40.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://shigaro.org/2020/07/18/remap-macos-keys/</loc>
+    
+    <lastmod>2020-07-20T01:51:10.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://shigaro.org/2020/07/19/fiddle-proof/</loc>
+    
+    <lastmod>2020-07-19T15:44:04.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://shigaro.org/2018/02/15/Hexo-1/</loc>
+    
+    <lastmod>2020-07-04T05:50:15.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://shigaro.org/about/index_cn.html</loc>
+    
+    <lastmod>2020-07-02T14:12:11.000Z</lastmod>
     
   </url>
   
@@ -109,14 +116,14 @@
   <url>
     <loc>http://shigaro.org/categories/index.html</loc>
     
-    <lastmod>2020-06-27T09:53:08.728Z</lastmod>
+    <lastmod>2020-06-27T09:53:08.000Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://shigaro.org/tags/index.html</loc>
     
-    <lastmod>2020-06-27T09:53:08.724Z</lastmod>
+    <lastmod>2020-06-27T09:53:08.000Z</lastmod>
     
   </url>
   
