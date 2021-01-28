@@ -179,3 +179,5 @@ for k, nv in new_value.items():
 print(s)
 # result: "5.0  | 1e-20 # pwm, stctol"
 ```
+
+## `re.finditer` 和 `re.findall` 匹配全部

@@ -9,18 +9,18 @@ comment: true
 ---
 
 {% alert success %}
-介绍了笔者在macOS High Sierra上编译VASP.5.4.4时解决libparser.a中undefined symbols的问题.
+介绍了笔者在 macOS High Sierra 上编译 VASP.5.4.4 时解决 libparser.a 中 undefined symbols 问题.
 {% endalert %}
 <!-- more -->
 
 ## 背景
 
-购买mac后，我希望能在macOS运行常用的科学计算程序，方便我做小规模测试，其中之一是[VASP](https://www.vasp.at/)。系统环境为macOS High Sierra 10.13，编译VASP时编译环境为
+购买mac后，我希望能在 macOS 运行常用的科学计算程序，方便我做小规模测试，其中之一是 [VASP](https://www.vasp.at/)。系统环境为 macOS High Sierra 10.13，编译环境为
 
 - Intel Parallel Composer XE 2018.0.1
-- Intel ifort和icc编译的MPICH3
-- Intel ifort和icc编译的FFTW3 (MPICH3并行)
-- Intel ifort和icc编译的ScaLAPACK和BLACS (MPICH3并行)
+- Intel ifort 和 icc 编译的 MPICH3
+- Intel ifort 和 icc 编译的 FFTW3 (MPICH3 并行)
+- Intel ifort 和 icc 编译的 ScaLAPACK 和 BLACS (MPICH3 并行)
 
 我的目标是编译5.4.1和VASP.5.4.4两个版本并成功用于Silicon的算例. VASP.5.4.1的编译很容易就通过了并能够正常地跑Silicon的例子, 但VASP.5.4.4始终无法编译通过，主要问题是在用C++编译parser库时无法链接到部分symbol上。
 
@@ -30,16 +30,15 @@ VASP编译过程用到的`makefile.include`文件如下所示。5.4.4版同5.4.1
 
 ```makefile
 # Precompiler options
-CPP_OPTIONS= -DHOST=\"LinuxIFC\"\
-             -DMPI -DMPI_BLOCK=8000 \
-             -Duse_collective \
-             -DscaLAPACK \
-             -DCACHE_SIZE=4000 \
-             -Davoidalloc \
-             -Duse_bse_te \
-             -Dtbdyn \
-             -Duse_shmem
-
+CPP_OPTIONS = -DHOST="LinuxIFC" \
+              -DMPI -DMPI_BLOCK=8000 \
+              -Duse_collective \
+              -DscaLAPACK \
+              -DCACHE_SIZE=4000 \
+              -Davoidalloc \
+              -Duse_bse_te \
+              -Dtbdyn \
+              -Duse_shmem
 CPP        = fpp -f_com=no -free -w0  $*$(FUFFIX) $*$(SUFFIX) $(CPP_OPTIONS)
 FC         = mpifort
 FCL        = mpifort #-mkl=sequential -lstdc++
@@ -95,7 +94,7 @@ make std
 
 在最后链接产生`vasp`前报错, 提示libparser.a中大量Undefined symbols,
 
-```bash
+```plaintext
 Undefined symbols for architecture x86_64:
 ...
 ...
@@ -137,13 +136,13 @@ __ZNSt3__18ios_base5clearEj
 
 首先在`makefile.include`里面的`CXX_PARS`后面加上Homebrew安装的GCC库和`-lstdc++`，即
 
-```bash
+```text
 -L/usr/local/Cellar/gcc/7.2.0/lib/gcc/7 -lstdc++
 ```
 
 这样子可以正常编译通过。但是跑VASP时会出现错误
 
-```bash
+```text
  running on    1 total cores
  distrk:  each k-point on    1 cores,    1 groups
  distr:  one band on    1 cores,    1 groups
@@ -193,18 +192,17 @@ source compilervars.sh intel64
 
 ```makefile
 # Precompiler options
-CPP_OPTIONS= -DHOST=\"LinuxIFC\"\
-             -DMPI -DMPI_BLOCK=8000 \
-             -Duse_collective \
-             -DscaLAPACK \
-             -DCACHE_SIZE=4000 \
-             -Davoidalloc \
-             -Duse_bse_te \
-             -Dtbdyn \
-             -Duse_shmem
+CPP_OPTIONS = -DHOST="LinuxIFC" \
+              -DMPI -DMPI_BLOCK=8000 \
+              -Duse_collective \
+              -DscaLAPACK \
+              -DCACHE_SIZE=4000 \
+              -Davoidalloc \
+              -Duse_bse_te \
+              -Dtbdyn \
+              -Duse_shmem
 
 CPP        = fpp -f_com=no -free -w0  $*$(FUFFIX) $*$(SUFFIX) $(CPP_OPTIONS)
-
 FC         = mpifort
 FCL        = mpifort -mkl=sequential -lstdc++
 

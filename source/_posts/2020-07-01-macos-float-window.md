@@ -9,7 +9,7 @@ categories: Software
 ---
 
 {% alert success %}
-使用MacForge和AfloatX插件, 在Mojave系统下允许窗口置顶.
+使用 MacForge 和 AfloatX 插件, 在 Mojave 系统下允许窗口置顶.
 {% endalert %}
 <!--more-->
 

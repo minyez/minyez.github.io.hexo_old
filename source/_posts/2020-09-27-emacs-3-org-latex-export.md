@@ -14,6 +14,7 @@ date: 2020-10-01 19:50
 {% alert success %}
 简单介绍了将 org 文件导出为 LaTeX 普通文档或 Beamer 演示所需要的基本准备, 包括 org 文档格式和相关 Lisp 变量的自定义.
 {% endalert %}
+
 <!-- more -->
 
 ## 前言
@@ -39,7 +40,7 @@ This is a \colortext{Blue}{minimal} working example for \LaTeX export of org fil
 
 第一, 导出的核心是头部参数 `LATEX_CLASS`。前者需要在变量 `org-latex-classes` (一个 list) 中预先定义. 它的默认值是
 
-```lisp
+```Lisp
 (
   ("article"
    "\\documentclass[11pt]{article}"

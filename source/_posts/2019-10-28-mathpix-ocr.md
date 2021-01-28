@@ -7,6 +7,7 @@ updated: 2020-06-30 09:36:41
 tags:
 - LaTeX
 - MathpixOCR
+- Python
 categories: Software
 ---
 

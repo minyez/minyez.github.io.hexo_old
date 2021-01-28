@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
-generate() {
-    hexo clean;
-    hexo g;
-    hexo g;
+function generate () {
+    hexo clean
+    hexo g
+    #hexo g
 }
 
 # use to hide draft post in _posts dir when deploying
 drafts="" # container of drafts
 draftsDir="drafts"
 postsDir="source/_posts"
-cwd=`pwd`
+cwd=$(pwd)
 
 # static server as default for debugging
 if [[ $# == 0 ]]; then
@@ -17,15 +17,15 @@ if [[ $# == 0 ]]; then
     hexo s -p 4002
 # deploy to gitpages with one argument d
 elif [[ $# == 1 ]] && [[ $1 == 'd' ]]; then
-    cd $postsDir
+    cd "$postsDir" || exit 1
     echo "transfer draft posts tp _draft..."
-    for i in $(ls *.md)
+    for i in ./*.md
     do
-        s=`head -5 $i | grep -q '^draft: true'; echo $?`
-        if [ $s -eq 0 ]; then
+        s=$(head -5 "$i" | grep -q '^draft: true'; echo $?)
+        if (( s == 0 )); then
             echo "- $i"
             drafts="$drafts $i"
-            mv $i $cwd/$draftsDir/
+            mv "$i" "$cwd/$draftsDir/"
         fi
     done
 
@@ -37,7 +37,7 @@ elif [[ $# == 1 ]] && [[ $1 == 'd' ]]; then
     for i in $drafts
     do
         echo "+ $i"
-        mv $draftsDir/$i $postsDir/
+        mv "$draftsDir/$i" "$postsDir/"
     done
     echo "done"
 fi

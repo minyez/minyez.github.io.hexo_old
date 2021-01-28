@@ -41,17 +41,17 @@ post_asset_folder: true
 relative_link: false
 word_count: true
 future: true
+#highlight: false
 highlight:
   enable: true
-  line_number: true
+  line_number: false
   auto_detect: true
   tab_replace:
-# use prism instead of default highlight
+## use prism instead of default highlight
 #prism_plugin:
-#  mode: 'preprocess'    # realtime/preprocess
-#  theme: 'duotone-dark'
+#  mode: 'realtime'    # realtime/preprocess
+#  theme: 'ghcolors'
 #  line_number: true    # default false
-#  no_assets: false
 
 # Category & Tag
 default_category: uncategorized
