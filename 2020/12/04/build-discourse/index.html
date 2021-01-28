@@ -206,11 +206,11 @@
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Hostname for your Discourse? [discourse.example.com]: discourse.domain.abc</span><br><span class="line">Email address for admin account (s)?: zmysmile0929@gmail.com</span><br><span class="line">SMTP server address? [in-v3.mailjet.com]: in-v3.mailjet.com</span><br><span class="line">SMTP port? [587]: 587</span><br><span class="line">SMTP user name? [reply@example.com]: &lt;mailjet-API&gt;</span><br><span class="line">SMTP password? [pa$$wd]: &lt;mailjet-secret&gt;</span><br><span class="line">Optional email address for Let&apos;s Encrypt warnings? (ENTER to skip) [me@example.com]:</span><br></pre></td></tr></table></figure>
 <p>其中 <code>&lt;mailjet-API&gt;</code> 和 <code>&lt;mailjet-secret&gt;</code> 使用 mailjet 用户界面给出的值. admin 账户可以输入多个邮件，在初始化时。输入完成后，安装程序自动执行。安装结束后在浏览器输入 <code>discourse.domain.abc</code>, 如果出现了撒花页面就表示成功了 :P</p>
 <h3 id="插件安装"><a href="#插件安装" class="headerlink" title="插件安装"></a>插件安装</h3><p>启用论坛插件需要两步。首先，修改 <code>container/app.yml</code> 安装插件，具体办法是在 <code>after_code</code> 后面添加 Git 命令:</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">hooks:</span></span><br><span class="line"><span class="attr">after_code:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">exec:</span></span><br><span class="line">        <span class="attr">cd:</span> <span class="string">$home/plugins</span></span><br><span class="line">        <span class="attr">cmd:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">git</span> <span class="string">clone</span> <span class="string">https://github.com/discourse/docker_manager.git</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">git</span> <span class="string">clone</span> <span class="string">https://github.com/discourse/discourse-math.git</span>       <span class="comment"># MathJax/KaTeX 数学支持</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">git</span> <span class="string">clone</span> <span class="string">https://github.com/discourse/discourse-checklist.git</span>  <span class="comment"># 代办列表</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">hooks:</span></span><br><span class="line"><span class="attr">after_code:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">exec:</span></span><br><span class="line">        <span class="attr">cd:</span> <span class="string">$home/plugins</span></span><br><span class="line">        <span class="attr">cmd:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">git</span> <span class="string">clone</span> <span class="string">https://github.com/discourse/docker_manager.git</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">git</span> <span class="string">clone</span> <span class="string">https://github.com/discourse/discourse-math.git</span>          <span class="comment"># MathJax/KaTeX 数学支持</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">git</span> <span class="string">clone</span> <span class="string">https://github.com/discourse/discourse-footnote.git</span>      <span class="comment"># 脚注</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">git</span> <span class="string">clone</span> <span class="string">https://github.com/discourse/discourse-checklist.git</span>     <span class="comment"># 代办列表</span></span><br><span class="line">        <span class="bullet">-</span> <span class="string">git</span> <span class="string">clone</span> <span class="string">https://github.com/discourse/discourse-bbcode-color.git</span>  <span class="comment"># 颜色代码环境</span></span><br></pre></td></tr></table></figure>
 <p>然后运行</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">./launch rebuild app</span><br></pre></td></tr></table></figure>
 <p>重新构建论坛。构建完成后，从浏览器进入管理界面，在如图所示的插件标签下，点击想要启用的插件的设置按钮，勾选启用即可.</p>
-<p><figure class="null"><img src="switch_on_plugins.png" alt="开启插件"><figcaption>开启插件</figcaption></figure></p>
+<p><figure class="null"><img src="switch_on_plugins.png" alt="开启插件 (并未包含上述全部插件) "><figcaption>开启插件 (并未包含上述全部插件) </figcaption></figure></p>
 	  
 	</div>
 
@@ -288,6 +288,11 @@ s.setAttribute('data-timestamp', +new Date());
 	</div>
 	
 		
+    	<div class="meta-widget">
+    	<i class="fa fa-pencil"></i>
+    	2021-01-28 last modified
+    	</div>
+    	
     
 	
 
@@ -372,7 +377,7 @@ var disqus_shortname = 'shigaro';
   <div class="container-narrow">
   <footer> <p>
   
-  &copy; 2020 by <a href="http://shigaro.org"> minyez </a>
+  &copy; 2021 by <a href="http://shigaro.org"> minyez </a>
   
     | <a href="http://github.com/minyez/hexo-theme-freemind/">Theme</a> based on two Freemind themes by <a href="https://github.com/wzpan/hexo-theme-freemind/">wzpan</a> and <a href="https://github.com/PytLab/hexo-theme-freemind/">PytLab</a> 
     | Powered by <a href="https://github.com/hexojs/hexo">Hexo</a>
@@ -380,7 +385,7 @@ var disqus_shortname = 'shigaro';
     <span id="busuanzi_container_site_uv">| <span id="busuanzi_value_site_uv"></span> visitors</span>
   
   
-	| <span class="post-count">53.6k</span> words
+	| <span class="post-count">53.7k</span> words
   
 </p>
  </footer>
