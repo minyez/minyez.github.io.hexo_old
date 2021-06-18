@@ -127,3 +127,56 @@ after_code:
 重新构建论坛。构建完成后，从浏览器进入管理界面，在如图所示的插件标签下，点击想要启用的插件的设置按钮，勾选启用即可.
 
 ![开启插件 (并未包含上述全部插件) ](switch_on_plugins.png)
+
+## 解决 git 错误
+
+在国内 VPS 上用 Docker 方式安装 Discourse 存在的一个问题是，使用 `git` 拉取 GitHub 仓库时会遇到 `gnutls_handshake ()` 或者 `curl 56` 错误导致 Discourse 构建失败。[即使](https://zilongshanren.com/post/setup-a-discourse-forum-from-scratch/) 构建时使用有效的代理工具，这一问题也仍然会出现，而且由于构建过程中不同阶段都有拉取行为，其中任一个出错都会导致构建失败，需要从头来过，这使得在国内 VPS 上构建 Discourse 非常磨人.
+
+网上很多经验都指出这一问题与 libGnuTLS 中的 bug 有关。除了将插件的 GitHub 链接改为 Gitee 链接外，一种更根本的解决办法是使用 OpenSSL 的 Git. 然而在 VPS 上安装 `openssl-git` 无法解决问题，因为构建 Discourse 使用的是 Docker 镜像中的 git, 而 VPS 上的操作与 Docker 镜像独立，因此为解决问题必须重新构建一个包含 `openssl-git` 的 Docker 镜像.
+
+诚然，我们不需要完全从头构建，只需要在官方镜像基础上安装 `openssl-git` 取代 `/usr/bin` 下的 `git`. 新建 Dockerfile 内容如下
+
+```Dockerfile
+# NAME:     discourse/base-newgit
+# VERSION:  dev
+FROM _DOCKER_BASE_ID_
+
+# TUNA debian mirror, useful for mainland China users in the edu network
+RUN { echo "deb https://mirrors.tuna.tsinghua.edu.cn/debian buster main contrib non-free" && \
+      echo "deb-src https://mirrors.tuna.tsinghua.edu.cn/debian buster main contrib non-free" && \
+      echo "deb https://mirrors.tuna.tsinghua.edu.cn/debian buster-updates main contrib non-free" && \
+      echo "deb-src https://mirrors.tuna.tsinghua.edu.cn/debian buster-updates main contrib non-free" && \
+      echo "deb https://mirrors.tuna.tsinghua.edu.cn/debian buster-backports main contrib non-free" && \
+      echo "deb-src https://mirrors.tuna.tsinghua.edu.cn/debian buster-backports main contrib non-free" && \
+      echo "deb https://mirrors.tuna.tsinghua.edu.cn/debian-security buster/updates main contrib non-free" && \
+      echo "deb-src https://mirrors.tuna.tsinghua.edu.cn/debian-security buster/updates main contrib non-free"; } > /etc/apt/sources.list
+RUN apt update
+
+# install a git free of gnutls
+RUN cd / && \
+    vcurl=7.68.0 && wget http://dl.uxnr.de/mirror/curl/curl-$vcurl.tar.gz && \
+    vssl=1.1.1f && wget http://www.openssl.org/source/openssl-$vssl.tar.gz && \
+    vgit=2.31.1 && wget http://mirrors.edge.kernel.org/pub/software/scm/git/git-$vgit.tar.gz && \
+    tar -zxf curl-$vcurl.tar.gz && tar -zxf openssl-$vssl.tar.gz && \
+    tar -zxf git-$vgit.tar.gz && \
+    cd openssl-$vssl && apt -y install perl && ./config --prefix=/usr/local && make && make install && cd .. && \
+    cd curl-$vcurl && ./configure --with-ssl=/usr/local --prefix=/usr/local --without-gnutls --disable-ldap --without-librtmp && make && make install && cd .. && \
+    cd git-$vgit && make configure && ./configure --prefix=/usr/local --with-openssl=/usr/local --with-curl=/usr/local && make && make install && cd ../ && \
+    rm -rf /curl-${vurl}* /openssl-${vssl}* /git-${vgit}*
+# check git install
+RUN which git && git version && (ldd -v /usr/local/libexec/git-core/git-remote-https | grep gnutls) || echo "Git is not linked to libgnutls"
+```
+
+其中 `_DOCKER_BASE_ID_` 需要替换为通过 `launcher` 拉取的官方 base 镜像的 ID, 可以用下面的命令获取
+
+```shell
+docker images 2>/dev/null | awk '/^discourse\/base   [0-9]/ {print $3}' | tail -1
+```
+
+前两个 `RUN` 用 TUNA 源替换了官方 debian 源，非教育网用户可以跳过。第三个 `RUN` 安装使用 OpenSSL 的 Git. 由于 libGnuTLS 可能通过 curl 引入，这里需要关掉一些 curl 的功能来完全消除 curl 对 libGnuTLS 的依赖，例如 LDAP 和 RTMP。最后一个 `RUN` 通过 `ldd` 检查 git 是否有 libGnuTLS 依赖。在理解这些内容的基础上将其构建为标签 `discourse/base:newgit` 的镜像
+
+```shell
+docker build . --no-cache --tag "discourse/base:newgit"  --squash
+```
+
+构建结束且成功显示 "Git is not linked to libgnutls" 后，修改 `launcher` 中的 `image` 变量为 `discourse/base:newgit`, 再重新 rebuild, 这时应该就不会出现前述的 `gnutls_handshake ()` 错误了.
