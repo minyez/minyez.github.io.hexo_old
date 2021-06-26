@@ -180,3 +180,30 @@ docker build . --no-cache --tag "discourse/base:newgit"  --squash
 ```
 
 构建结束且成功显示 "Git is not linked to libgnutls" 后，修改 `launcher` 中的 `image` 变量为 `discourse/base:newgit`, 再重新 rebuild, 这时应该就不会出现前述的 `gnutls_handshake ()` 错误了.
+
+## 迁移备份
+
+在成功 build 一次之后，需要从备份恢复论坛数据。这里采用命令行的方式，恢复前需要先进入 rails 后台启用 `allow_restore`, 然后再用 discourse restore 恢复备份.
+
+```shell
+root:~# cd /var/discourse/
+root:/var/discourse/# ./launch enter app
+root-app:/var/discourse/# rails c
+[1] pry (main)> SiteSetting.allow_restore = true
+=> true
+[1] pry (main)> quit
+root-app:/var/discourse/# discourse restore ccme-tmc-xxxx.tar.gz
+..........
+..........
+[Success!]
+root-app:/var/discourse/# exit
+```
+
+恢复完后再次 rebuild 即可。注意到备份里面包含了一些主题，这些主题拉取的是 GitHub 链接，为了提高构建成功率，恢复前先解压 gz 文件，将 SQL 数据库中的主题 GitHub 链接改成 Gitee 上的对应，随后重新打包再恢复.
+
+## 参考资料
+
+Discourse Rails console 控制
+
+- <https://meta.discourse.org/t/how-do-i-open-the-rails-console-in-discourse-docker-in-production-mode/16970>
+- <https://meta.discourse.org/t/how-to-change-a-site-setting-via-the-console/32761>
